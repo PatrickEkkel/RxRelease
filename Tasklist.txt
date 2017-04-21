@@ -2,6 +2,6 @@ task list RxRelease
 
 
 
-- Setup bootstrap GUI for frontend
+- Setup bootstrap GUI for frontend (done)
 - Setup Python for backend
 - Design interface scheduling and deploying a release
