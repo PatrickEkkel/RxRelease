@@ -1,7 +1,13 @@
 task list RxRelease
 
+Boostrap for styling
+Backbonejs for rendering/interaction with backend
+Python as backend
+
 
 
 - Setup bootstrap GUI for frontend (done)
+- Make choice what kind of frontend framekwork/library we are going to use (done)
 - Setup Python for backend
+- Get backbonejs and project infrastructure working with the help of this (http://dailyjs.com/post/backbone-tutorial-1) and this (https://github.com/alexyoung/dailyjs-backbone-tutorial/tree/2a8517e011a8e1041c7f86f8311336ffba7e85e8/app/js)
 - Design interface scheduling and deploying a release
