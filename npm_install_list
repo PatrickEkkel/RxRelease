@@ -14,3 +14,8 @@ npm install --save react react-dom
 npm install --save-dev react-hot-loader
 sudo pacman -S atom
 apm install react
+
+
+install modal react bootstrap for modal windows
+
+npm install --save react-modal-bootstrap

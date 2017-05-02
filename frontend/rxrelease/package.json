@@ -33,6 +33,7 @@
   "dependencies": {
     "immutable": "^3.8.1",
     "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.5.4",
+    "react-modal-bootstrap": "^1.1.1"
   }
 }
