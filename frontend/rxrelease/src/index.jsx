@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Voting from './components/Voting';
 import Table from './components/Table';
+import Menu from  './components/Menu';
 
 const pair = ['Trainspotting', '28 Days Later'];
 
@@ -17,5 +18,6 @@ data[1] = ['2','test1','test2','test3','test4','test5'];
 ReactDOM.render(
 
   <Table headers={headers} data={data} />,
+  <Menu/>,
   document.getElementById('app')
 );
