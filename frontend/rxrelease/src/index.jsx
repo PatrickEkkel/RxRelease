@@ -2,38 +2,32 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Voting from './components/Voting';
 import Table from './components/Table';
-<<<<<<< HEAD
-import Menu from  './components/Menu';
-=======
 import Button from './components/Button';
 import Modal from './components/Modal';
->>>>>>> origin/master
-
-const pair = ['Trainspotting', '28 Days Later'];
+import Menu from './components/Menu';
 
 const headers = ['#','Version','Date','Docker image','Version image','Jira ticket'];
 
 
 var data = [];
+var menuitems = [];
 
 data[0] = ['1','test1','test2','test3','test4','test5'];
 data[1] = ['2','test1','test2','test3','test4','test5'];
 
-var test = function() {
-  console.log("lekker testen")
+menuitems  = ['Release','Logging','Reports','Configuration'];
+
+var test = function(id) {
 }
 
 
   <Table headers={headers} data={data} />,
-  <Menu/>,
 ReactDOM.render(
   <div className="vertical-center">
   <Modal modalId="myModal" closeButtonText="Lekker testen"  saveButtonText="boemboem" vote={test} />
     <div className="row">
      <div className="col-md-5 col-xs-offset-2">
-       <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-         Launch demo modal
-       </button>
+    <Button modal_target="#myModal" data_toggle="modal"/>
      </div>
     </div>
 
@@ -44,7 +38,7 @@ ReactDOM.render(
     </div>
     <div className="row">
     <div className="col-md-1 col-xs-offset-2">
-    <Button/>
+    <Menu menuitems={menuitems} onclick={test}/>
     </div>
     </div>
   </div>,

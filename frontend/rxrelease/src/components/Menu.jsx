@@ -1,18 +1,47 @@
 import React from 'react';
 
-export default React.createClass({
+class Menu extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      selectedItem: "empty"
+    }
+  }
+  getMenuItems() {
+    return this.props.menuitems || [];
+  }
+  onClickEvent(id) {
+    this.setState({selectedItem: id})
+    this.props.onclick(id);
+  }
+  render() {
 
-  render: function() {
-return     <div className="container-fluid">
-      <div className="row">
+    var rows = [];
+    var currentContext = this;
+    var link = "";
+    var menuitem = "";
+    this.getMenuItems().forEach(function(entry) {
+      //entry =>
+
+      link =  <a href="#"  onClick={currentContext.onClickEvent.bind(currentContext,entry)}>{entry}</a>
+      if(entry == currentContext.state.selectedItem) {
+          rows.push(<li className="active">{link}</li>)
+      }
+      else {
+       rows.push(<li>{link}</li>)
+      }
+      //  rows.push({menuitem});
+
+    });
+
+
+return <div className="container-fluid">
         <div className="col-sm-3 col-md-2 sidebar">
           <ul className="nav nav-sidebar">
-            <li className="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">Release</a></li>
-            <li><a href="#">Logging</a></li>
-            <li><a href="#">Reports</a></li>
-            <li><a href="#">Configuration</a></li>
+            {rows}
           </ul>
-        </div>;
+        </div>
+      </div>
   }
-});
+}
+export default Menu;
