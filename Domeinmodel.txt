@@ -1,0 +1,10 @@
+Voor je iets kan doenmoeten we een Profile hebben. Een Profile is de kapstok waar we alles aan ophangen Aan het profile kan je verschillende hosts koppelen. Hosts zijn aan verschillende profiles te koppelen. 
+Om een deployment van een applicatie te managen moeten we alle  gegevens die te maken hebben met een release ook ergens registreren. Onder het  profiel  kunnen we dus  ook DeploymentConfiguration  registeren.
+
+Bij het  maken van een DeploymentConfiguration  moeten we hosts toevoegen aan  de configuratie  en een recept hoe we het moeten deployen
+
+
+
+Profile
+-Hosts
+-DeploymentConfiguration
