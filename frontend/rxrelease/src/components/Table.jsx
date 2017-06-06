@@ -1,17 +1,5 @@
 import React from 'react';
 
-
-//Class Table extends React.Component {
-//constructor() {
-//  super()
-//  this.state = {
-//    selectedItem: "empty"
-//  }
-///}
-//}
-
-//export default table
-
 export default React.createClass({
   getHeaders: function() {
     return this.props.headers || [];
@@ -39,6 +27,10 @@ return <div className="table-responsive" >
        }
       </tbody>
     </table>
+    <form class="form-horizontal">
+
+</form>
+
 </div>;
   }
 });
