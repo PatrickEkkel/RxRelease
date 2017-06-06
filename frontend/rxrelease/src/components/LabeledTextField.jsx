@@ -4,15 +4,30 @@ class LabeledTextField extends React.Component {
   constructor() {
     super()
   }
+  getCol() {
+    var returnValue =   this.props.col || "col-md-4"
+
+    return returnValue;
+  }
+  getLabelCol() {
+    var returnValue = this.getCol();
+    returnValue += " control-label"
+    return returnValue;
+  }
+  getLabel() {
+    return this.props.label || "Empty"
+  }
+  getPlaceholder() {
+    return this.props.placeholder;
+  }
 
   render() {
     return  <fieldset>
-        <div className="form-group">
-          <label className="col-md-4 control-label" for="textinput">Text Input</label>
-          <div className="col-md-4">
-            <input id="textinput" name="textinput" placeholder="placeholder" className="form-control input-md" type="text"/>
+
+          <label className={this.getLabelCol()} for="textinput">{this.getLabel()}</label>
+          <div className={this.getCol()}>
+            <input id="textinput" name="textinput" placeholder={this.getPlaceholder()} className="form-control input-md" type="text"/>
           </div>
-        </div>
       </fieldset>
   }
 }

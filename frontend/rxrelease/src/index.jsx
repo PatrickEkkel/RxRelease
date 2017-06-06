@@ -38,18 +38,19 @@ var test = function(id) {
 
 
 ReactDOM.render(
-  <div className="vertical-center">
+  <div className="vertical-left">
   <Modal modalId="myModal" closeButtonText="Lekker testen"  saveButtonText="boemboem" vote={test} />
-    <div className="row">
-    <div className="col-md-7 col-xs-offset-2">
-      <ComponentContainer ref={(container) => { currentComponent = container }}  innerComponent={buttondropdown}/>
-    </div>
-    </div>
     <div className="row">
     <div className="col-md-1 col-xs-offset-2">
      <Menu menuitems={menuitems} onclick={test}/>
     </div>
     </div>
+    <div className="row">
+    <div className="col-md-1 col-xs-offset-2">
+      <ComponentContainer ref={(container) => { currentComponent = container }}  innerComponent={buttondropdown}/>
+    </div>
+    </div>
+
   </div>,
   document.getElementById('app')
 
