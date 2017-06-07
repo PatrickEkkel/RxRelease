@@ -39,7 +39,7 @@ var test = function(id) {
 
 ReactDOM.render(
   <div className="vertical-left">
-  <Modal modalId="myModal" closeButtonText="Lekker testen"  saveButtonText="boemboem" vote={test} />
+  <Modal modalId="myModal" closeButtonText="Cancel" title="New Profile"  saveButtonText="Create" vote={test} body={profilePanel} />
     <div className="row">
     <div className="col-md-1 col-xs-offset-2">
      <Menu menuitems={menuitems} onclick={test}/>

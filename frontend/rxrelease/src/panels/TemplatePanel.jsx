@@ -3,7 +3,7 @@ import LabeledTextField from '../components/LabeledTextField';
 import LabeledDropdown from '../components/LabeledDropdown';
 import Button from '../components/Button';
 
-class  ProfilePanel  extends React.Component {
+class  TemplatePanel  extends React.Component {
   constructor() {
     super()
   }
@@ -14,14 +14,19 @@ class  ProfilePanel  extends React.Component {
 
     return <div className="container">
       <form className="form-horizontal">
-      <div className="form-group row">
-       <LabeledTextField placeholder="Profile name" label="Name" col="col-md-2" labelcol="col-md-1"/>
+      <div className="form-group">
+       <LabeledTextField placeholder="Profile name" label="Name"/>
       </div>
       <div className="form-group">
-       <LabeledDropdown items={items} label="Type" col="col-md-3" labelcol="col-md-1"/>
+       <LabeledDropdown items={items} label="Type"/>
       </div>
+      <div className="form-group">
+      <label className="col-md-4 control-label" for="textinput"/>
+      <div className="col-md-4 "><Button title="Save"/> <Button title="Cancel"/></div>
+      </div>
+
       </form>
    </div>
   }
 }
-export default ProfilePanel;
+export default TemplatePanel;

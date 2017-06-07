@@ -1,26 +1,34 @@
 import React from 'react';
 
-export default React.createClass({
-
-  getModalId: function() {
+class  Modal  extends React.Component {
+  constructor() {
+    super()
+  }
+  getModalId() {
     return this.props.modalId || null;
-  },
-  getCloseButtonText: function() {
+  }
+  getBody() {
+    return this.props.body;
+  }
+  getCloseButtonText() {
     return this.props.closeButtonText || "Close";
-  },
-  getSaveButtonText: function() {
+  }
+  getSaveButtonText() {
     return this.props.saveButtonText || "Save Changes";
-  },
-  render: function() {
+  }
+  getTitle() {
+    return this.props.title || "Empty"
+  }
+  render() {
   return  <div className="modal fade" id={this.getModalId()} tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">
             <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 className="modal-title" id="myModalLabel">Modal title</h4>
+            <h4 className="modal-title" id="myModalLabel">{this.getTitle()}</h4>
           </div>
           <div className="modal-body">
-            condor cunt!
+            {this.getBody()}
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-default" data-dismiss="modal" key={this.getModalId() + "_Close"}>{this.getCloseButtonText()}</button>
@@ -30,4 +38,6 @@ export default React.createClass({
       </div>
     </div>
   }
-});
+}
+
+export default Modal;

@@ -10,7 +10,7 @@ class LabeledTextField extends React.Component {
     return returnValue;
   }
   getLabelCol() {
-    var returnValue = this.getCol();
+    var returnValue = this.props.labelcol || "col-md-4"
     returnValue += " control-label"
     return returnValue;
   }
