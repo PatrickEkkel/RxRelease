@@ -1,4 +1,5 @@
 import React from 'react';
+import Axios from 'axios';
 import ReactDOM from 'react-dom';
 import Table from './components/Table';
 import Button from './components/Button';
@@ -10,6 +11,18 @@ import ProfilePanel  from './panels/ProfilePanel';
 
 const headers_1 = ['#','Version 1','Date','Docker image','Version image','Jira ticket'];
 const headers_2 = ['#','Version 2','Date','Docker image','Version image','Jira ticket'];
+
+
+Axios.post('http://localhost:8000/user', {
+    firstName: 'Fred',
+    lastName: 'Flintstone'
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 
 var data = [];
 var menuitems = [];
