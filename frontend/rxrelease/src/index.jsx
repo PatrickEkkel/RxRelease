@@ -12,18 +12,6 @@ import ProfilePanel  from './panels/ProfilePanel';
 const headers_1 = ['#','Version 1','Date','Docker image','Version image','Jira ticket'];
 const headers_2 = ['#','Version 2','Date','Docker image','Version image','Jira ticket'];
 
-
-Axios.post('http://localhost:8000/user', {
-    firstName: 'Fred',
-    lastName: 'Flintstone'
-  })
-  .then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-
 var data = [];
 var menuitems = [];
 var components = [];
@@ -48,11 +36,18 @@ var test = function(id) {
     currentComponent.setInnerComponent(buttondropdown)
   }
 }
+var saveprofile = function()  {
+  Axios.post('http://localhost:8080/rxbackend/profiles/',
+      {
+      name: 'Freds Profile',
+      type: 'Flintstone'
+    });
+}
 
 
 ReactDOM.render(
   <div className="vertical-left">
-  <Modal modalId="myModal" closeButtonText="Cancel" title="New Profile"  saveButtonText="Create" vote={test} body={profilePanel} />
+  <Modal modalId="myModal" closeButtonText="Cancel" title="New Profile"  saveButtonText="Create" vote={test} body={profilePanel}  onclick={saveprofile} />
     <div className="row">
     <div className="col-md-1 col-xs-offset-2">
      <Menu menuitems={menuitems} onclick={test}/>

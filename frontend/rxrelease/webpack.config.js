@@ -23,7 +23,14 @@ module.exports = {
   },
   devServer: {
     contentBase: './dist',
-    hot: true
+    hot: true,
+    proxy: {
+    '/rxbackend/*': {
+      target: 'http://localhost:8000/',
+      secure: false,
+      changeOrigin: true
+    }
+  }
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin()

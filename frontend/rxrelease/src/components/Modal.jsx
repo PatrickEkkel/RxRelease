@@ -19,7 +19,14 @@ class  Modal  extends React.Component {
   getTitle() {
     return this.props.title || "Empty"
   }
+  
+  onClickEvent()  {
+    if(this.props.onclick != null) {
+      this.props.onclick();
+    }
+  }
   render() {
+    var currentContext = this
   return  <div className="modal fade" id={this.getModalId()} tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div className="modal-dialog" role="document">
         <div className="modal-content">
@@ -32,7 +39,7 @@ class  Modal  extends React.Component {
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-default" data-dismiss="modal" key={this.getModalId() + "_Close"}>{this.getCloseButtonText()}</button>
-            <button type="button" className="btn btn-primary" key={this.getModalId() + "_Save"} onClick={() => this.props.vote(this.getModalId() + "_Save")}>{this.getSaveButtonText()}</button>
+            <button type="button" className="btn btn-primary" key={this.getModalId() + "_Save"} onClick={currentContext.onClickEvent.bind(currentContext,null) } key={this.getModalId() + "_Save"}>{this.getSaveButtonText()}</button>
           </div>
         </div>
       </div>
