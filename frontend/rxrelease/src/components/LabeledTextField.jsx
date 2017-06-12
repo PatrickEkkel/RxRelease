@@ -9,6 +9,9 @@ class LabeledTextField extends React.Component {
 
     return returnValue;
   }
+  getId() {
+    return this.props.id;
+  }
   getLabelCol() {
     var returnValue = this.props.labelcol || "col-md-4"
     returnValue += " control-label"
@@ -20,13 +23,17 @@ class LabeledTextField extends React.Component {
   getPlaceholder() {
     return this.props.placeholder;
   }
+  getOnchange() {
+    return this.props.onChange;
+  }
 
   render() {
+
     return  <fieldset>
 
-          <label className={this.getLabelCol()} for="textinput">{this.getLabel()}</label>
+          <label className={this.getLabelCol()} for={this.getId()}>{this.getLabel()}</label>
           <div className={this.getCol()}>
-            <input id="textinput" name="textinput" placeholder={this.getPlaceholder()} className="form-control input-md" type="text"/>
+            <input id={this.getId()} name={this.getId()} placeholder={this.getPlaceholder()} className="form-control input-md" type="text" onChange={this.getOnchange()}/>
           </div>
       </fieldset>
   }

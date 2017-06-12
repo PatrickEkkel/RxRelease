@@ -6,19 +6,24 @@ import Button from '../components/Button';
 class  ProfilePanel  extends React.Component {
   constructor() {
     super()
+    this.state = {
+      inputName: '',
+      inputType: ''
+    }
   }
-
+  changeAttr(e) {
+  this.setState({[e.target.name]: e.target.value});
+  }
   render() {
-
     var items = ['default'];
 
     return <div className="container">
       <form className="form-horizontal">
       <div className="form-group row">
-       <LabeledTextField placeholder="Profile name" label="Name" col="col-md-2" labelcol="col-md-1"/>
+       <LabeledTextField id="profile_name" placeholder="Profile name" label="Name" col="col-md-2" labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
       </div>
       <div className="form-group">
-       <LabeledDropdown items={items} label="Type" col="col-md-3" labelcol="col-md-1"/>
+       <LabeledDropdown id="profile_type" items={items} label="Type" col="col-md-3" labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
       </div>
       </form>
    </div>

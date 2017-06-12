@@ -28,6 +28,10 @@ var component2 = <Table headers={headers_2} data={data} />
 
 var profilePanel = <ProfilePanel/>
 var buttondropdown =     <Button modal_target="#myModal" data_toggle="modal"/>
+
+var onMenuLoad = function() {
+ // Do nothing
+}
 var test = function(id) {
   if(id == "Profiles") {
     currentComponent.setInnerComponent(profilePanel)
@@ -50,12 +54,12 @@ ReactDOM.render(
   <Modal modalId="myModal" closeButtonText="Cancel" title="New Profile"  saveButtonText="Create" vote={test} body={profilePanel}  onclick={saveprofile} />
     <div className="row">
     <div className="col-md-1 col-xs-offset-2">
-     <Menu menuitems={menuitems} onclick={test}/>
+     <Menu menuitems={menuitems} onclick={test} onLoad={onMenuLoad} selectedItem="Profiles"/>
     </div>
     </div>
     <div className="row">
     <div className="col-md-1 col-xs-offset-2">
-      <ComponentContainer ref={(container) => { currentComponent = container }}  innerComponent={buttondropdown}/>
+      <ComponentContainer ref={(container) => { currentComponent = container }}  innerComponent={profilePanel}/>
     </div>
     </div>
 

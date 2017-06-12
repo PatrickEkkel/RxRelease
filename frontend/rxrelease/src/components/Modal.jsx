@@ -19,7 +19,7 @@ class  Modal  extends React.Component {
   getTitle() {
     return this.props.title || "Empty"
   }
-  
+
   onClickEvent()  {
     if(this.props.onclick != null) {
       this.props.onclick();
