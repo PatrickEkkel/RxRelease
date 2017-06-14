@@ -5,8 +5,8 @@ import Table from './components/Table';
 import Button from './components/Button';
 import Modal from './components/Modal';
 import Menu from './components/Menu';
+import ProfilesPanel from './panels/ProfilesPanel';
 import ComponentContainer from './components/ComponentContainer';
-
 import ProfilePanel  from './panels/ProfilePanel';
 
 const headers_1 = ['#','Version 1','Date','Docker image','Version image','Jira ticket'];
@@ -28,16 +28,17 @@ var component2 = <Table headers={headers_2} data={data} />
 
 var profilePanel = <ProfilePanel/>
 var buttondropdown =     <Button modal_target="#myModal" data_toggle="modal"/>
+var profilesPanel = <ProfilesPanel/>
 
 var onMenuLoad = function() {
  // Do nothing
 }
 var test = function(id) {
   if(id == "Profiles") {
-    currentComponent.setInnerComponent(profilePanel)
+    currentComponent.setInnerComponent(profilesPanel)
   }
   else if (id == "Logging") {
-    currentComponent.setInnerComponent(buttondropdown)
+    currentComponent.setInnerComponent(profilesPanel)
   }
 }
 var saveprofile = function()  {
@@ -59,7 +60,7 @@ ReactDOM.render(
     </div>
     <div className="row">
     <div className="col-md-1 col-xs-offset-2">
-      <ComponentContainer ref={(container) => { currentComponent = container }}  innerComponent={profilePanel}/>
+      <ComponentContainer ref={(container) => { currentComponent = container }}  innerComponent={profilesPanel}/>
     </div>
     </div>
 
