@@ -3,29 +3,32 @@ import Button from '../components/Button';
 import ProfilePanel from '../panels/ProfilePanel';
 import Table from '../components/Table';
 
+
 class  ProfilesPanel  extends React.Component {
+
   constructor() {
     super()
+    var currentContext = this;
+
   }
-  saveprofile()  {
-    Axios.post('http://localhost:8080/rxbackend/profiles/',
-        {
-        name: 'Freds Profile',
-        type: 'Flintstone'
-      });
+  loadCreateProfile(e) {
+    var profilePanel  = <ProfilePanel ref={this.props.profileRef}/>
+    this.props.onModalLoad(profilePanel);
   }
   render() {
+  //  this.loadCreateProfile()
     const headers_1 = ['#','Profile','Profile type'];
     var data = [];
     data[0] = ['1','leeg','DEFAULT'];
     var items = ['default'];
-    var profilePanel = <ProfilePanel/>
+    var currentContext = this;
+
     return <div className="container">
-        <Modal modalId="myModal" closeButtonText="Cancel" title="New Profile"  saveButtonText="Create" vote={test} body={profilePanel}  onclick={saveprofile} />
+
         <Table headers = {headers_1} data={data}/>
         <form className="form-horizontal">
               <div className="form-group row">
-                <Button modal_target="#myModal" data_toggle="modal" title="New Profile"/>
+                <Button  title="New Profile" modal_target="#myModal" data_toggle="modal" onClickEvent={currentContext.loadCreateProfile.bind(currentContext)}/>
               </div>
         </form>
    </div>

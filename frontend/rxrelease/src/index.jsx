@@ -23,36 +23,38 @@ data[1] = ['2','test1','test2','test3','test4','test5'];
 menuitems  = ['Profiles','Logging','Reports','Configuration'];
 var componentContainer = "empty"
 var currentComponent =  "empty"
+var modalHandle = "";
+var modalContentHandle = "";
 var component1 = <Table headers={headers_1} data={data} />
 var component2 = <Table headers={headers_2} data={data} />
 
-var profilePanel = <ProfilePanel/>
-var buttondropdown =     <Button modal_target="#myModal" data_toggle="modal"/>
-var profilesPanel = <ProfilesPanel/>
+  var onMenuLoad = function() {
+   // Do nothing
+  }
+  var onModalLoad = function(element) {
+    modalHandle.setBody(element)
+  }
 
-var onMenuLoad = function() {
- // Do nothing
-}
+
+var buttondropdown = <Button modal_target="#myModal" data_toggle="modal"/>
+var profilesPanel = <ProfilesPanel onModalLoad={onModalLoad} profileRef={(container) => { modalContentHandle = container }} />
+
+
 var test = function(id) {
   if(id == "Profiles") {
     currentComponent.setInnerComponent(profilesPanel)
   }
   else if (id == "Logging") {
-    currentComponent.setInnerComponent(profilesPanel)
+    currentComponent.setInnerComponent(profilePanel)
   }
 }
-var saveprofile = function()  {
-  Axios.post('http://localhost:8080/rxbackend/profiles/',
-      {
-      name: 'Freds Profile',
-      type: 'Flintstone'
-    });
+var saveModal = function()  {
+  modalContentHandle.save()
 }
-
 
 ReactDOM.render(
   <div className="vertical-left">
-  <Modal modalId="myModal" closeButtonText="Cancel" title="New Profile"  saveButtonText="Create" vote={test} body={profilePanel}  onclick={saveprofile} />
+  <Modal ref={(container) => {modalHandle = container}} modalId="myModal" closeButtonText="Cancel" title="New Profile"  saveButtonText="Create" body=""  onclick={saveModal} />
     <div className="row">
     <div className="col-md-1 col-xs-offset-2">
      <Menu menuitems={menuitems} onclick={test} onLoad={onMenuLoad} selectedItem="Profiles"/>

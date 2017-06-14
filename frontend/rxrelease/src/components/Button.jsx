@@ -10,8 +10,11 @@
    getDataToggle() {
      return this.props.data_toggle || "empty"
    },
-
+   onClickEvent() {
+     this.props.onClickEvent();
+   },
    render: function() {
- return <button className="btn btn-primary" data-toggle={this.getDataToggle()} data-target={this.getModalTarget()}>{this.getTitle()}</button>
+     var currentContext = this;
+ return <button className="btn btn-primary" data-toggle={this.getDataToggle()} data-target={this.getModalTarget()} onClick={currentContext.onClickEvent.bind(currentContext)}>{this.getTitle()}</button>
    }
  });

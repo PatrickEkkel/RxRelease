@@ -2,6 +2,7 @@ import React from 'react';
 import LabeledTextField from '../components/LabeledTextField';
 import LabeledDropdown from '../components/LabeledDropdown';
 import Button from '../components/Button';
+import Axios from 'axios';
 
 class  ProfilePanel  extends React.Component {
   constructor() {
@@ -13,6 +14,13 @@ class  ProfilePanel  extends React.Component {
   }
   changeAttr(e) {
   this.setState({[e.target.name]: e.target.value});
+  }
+  save() {
+    Axios.post('http://localhost:8080/rxbackend/profiles/',
+        {
+        name: 'Freds Profile',
+        type: 'Flintstone'
+      });
   }
   render() {
     var items = ['default'];
