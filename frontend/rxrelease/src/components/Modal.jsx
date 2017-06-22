@@ -4,7 +4,7 @@ class  Modal  extends React.Component {
   constructor() {
     super()
     this.state = {
-      modalState: "modal",
+      modalState: "empty",
       body: "empty",
       refelement: "empty"
     }

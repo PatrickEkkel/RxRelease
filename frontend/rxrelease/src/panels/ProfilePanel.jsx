@@ -8,18 +8,19 @@ class  ProfilePanel  extends React.Component {
   constructor() {
     super()
     this.state = {
-      inputName: '',
-      inputType: ''
+      profile_name: '',
+      profile_type: ''
     }
   }
   changeAttr(e) {
-  this.setState({[e.target.name]: e.target.value});
+  this.setState({[e.target.id]: e.target.value});
   }
   save() {
+    var currentContext = this;
     Axios.post('http://localhost:8080/rxbackend/profiles/',
         {
-        name: 'Freds Profile',
-        type: 'Flintstone'
+        name: currentContext.state.profile_name,
+        type: currentContext.state.profile_type
       });
   }
   render() {
