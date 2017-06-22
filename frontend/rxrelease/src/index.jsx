@@ -45,11 +45,14 @@ var test = function(id) {
     currentComponent.setInnerComponent(profilesPanel)
   }
   else if (id == "Logging") {
-    currentComponent.setInnerComponent(profilePanel)
+    currentComponent.setInnerComponent(buttondropdown)
   }
 }
 var saveModal = function()  {
-  modalContentHandle.save()
+  var result =  modalContentHandle.save();
+  if(result) {
+    modalHandle.closeModal();
+  }
 }
 
 ReactDOM.render(

@@ -4,13 +4,14 @@ class  Modal  extends React.Component {
   constructor() {
     super()
     this.state = {
-      modalState: "empty",
       body: "empty",
       refelement: "empty"
     }
   }
   closeModal() {
-      this.setState({modalState: "modal"});
+    // Add in some hacky JQuery to get the job done
+    $('#myModal').modal('hide');
+      //this.setState({modalState: "modal"});
   }
   getModalState() {
     return this.state.modalState;
@@ -47,7 +48,6 @@ class  Modal  extends React.Component {
   }
   onClickEvent()  {
     if(this.props.onclick != null) {
-      this.closeModal();
       this.props.onclick();
     }
   }
@@ -65,7 +65,7 @@ class  Modal  extends React.Component {
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-default" data-dismiss="modal" key={this.getModalId() + "_Close"}>{this.getCloseButtonText()}</button>
-            <button type="button" className="btn btn-primary" data-dismiss={this.getModalState()} key={this.getModalId() + "_Save"} onClick={currentContext.onClickEvent.bind(currentContext) } key={this.getModalId() + "_Save"}>{this.getSaveButtonText()}</button>
+            <button type="button" className="btn btn-primary" key={this.getModalId() + "_Save"} onClick={currentContext.onClickEvent.bind(currentContext) } key={this.getModalId() + "_Save"}>{this.getSaveButtonText()}</button>
           </div>
         </div>
       </div>
