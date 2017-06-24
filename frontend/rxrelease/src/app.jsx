@@ -20,69 +20,61 @@ class  App  extends React.Component {
 
 
   render() {
-    const headers_1 = ['#','Version 1','Date','Docker image','Version image','Jira ticket'];
-    const headers_2 = ['#','Version 2','Date','Docker image','Version image','Jira ticket'];
 
-    var data = [];
     var menuitems = [];
-    var components = [];
-
-
-    data[0] = ['1','test1','test2','test3','test4','test5'];
-    data[1] = ['2','test1','test2','test3','test4','test5'];
 
     menuitems  = ['Profiles','Logging','Reports','Configuration'];
-    var componentContainer = "empty"
-    var currentComponent =  "empty"
-    var profilespanelRef = "empty"
-    var modalHandle = "";
-    var modalContentHandle = "";
-    var component1 = <Table headers={headers_1} data={data} />
-    var component2 = <Table headers={headers_2} data={data} />
+    var componentContainer = "empty";
+    var currentComponent =  "empty";
+    var innerComponentRef = "empty";
+    var bcPanelRef = "empty";
+    var modalHandle = "empty";
 
       var onMenuLoad = function() {
        // Do nothing
       }
       var onModalLoad = function(element) {
-        modalHandle.setBody(element)
+        modalHandle.setBody(element);
+        innerComponentRef.setModalHandle(modalHandle);
       }
 
-    var profilesPanel = <ProfilesPanel key="profilespanel" ref={(container) => { profilespanelRef = container }} onModalLoad={onModalLoad} profileRef={(container) => { modalContentHandle = container }} />
-    var buttondropdown = <Button key="profilespanel" modal_target="#myModal" data_toggle="modal"/>
-    var innerComponent =  profilesPanel;
+    var buttondropdown = <Button key="profilespanel"   modal_target="#myModal" data_toggle="modal"/>
+    var breadcrumbPanel = <ProfilesBreadCrumbPanel ref={(container) => { bcPanelRef = container }} onModalLoad={onModalLoad}/>
+    var innerComponent =  breadcrumbPanel;
 
 
-    var test = function(id) {
-      if(id == "Profiles") {
+    var menuClick = function(id) {
 
-       currentComponent.setInnerComponent(profilesPanel);
-           }
-      else if (id == "Logging") {
-
-        innerComponent = buttondropdown;
-        currentComponent.setInnerComponent(buttondropdown);
+      switch (id) {
+        case "Profiles":
+            currentComponent.setInnerComponent(breadcrumbPanel);
+           innerComponent = profilesPanel;
+          break;
+        case "Logging":
+           currentComponent.setInnerComponent(buttondropdown);
+           innerComponent = breadcrumbPanel;
+          break;
+        case "Reports":
+            currentComponent.setInnerComponent(breadcrumbPanel);
+            innerComponentRef = bcPanelRef;
+          break;
+        default:
 
       }
     }
     var saveModal = function()  {
-      var result =  modalContentHandle.save(function(){
-        if(result) {
-          modalHandle.closeModal();
-          profilespanelRef.reload();
-        }
-      });
-
+      bcPanelRef.save();
     }
 
       return  <div className="vertical-left">
       <Modal ref={(container) => {modalHandle = container}} modalId="myModal" closeButtonText="Cancel" title="New Profile"  saveButtonText="Create" body=""  onclick={saveModal} />
         <div className="row">
         <div className="col-md-1 col-xs-offset-2">
-         <Menu menuitems={menuitems} onclick={test} onLoad={onMenuLoad} selectedItem="Profiles"/>
+         <Menu menuitems={menuitems} onclick={menuClick} onLoad={onMenuLoad} selectedItem="Profiles"/>
         </div>
         </div>
         <div className="row">
-        <div className="col-md-1 col-xs-offset-2">
+        <div className="col-md-3 col-xs-offset-2">
           <ComponentContainer ref={(container) => { currentComponent = container }}>
             {innerComponent}
           </ComponentContainer>
