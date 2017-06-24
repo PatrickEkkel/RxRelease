@@ -1,13 +1,22 @@
 import React from 'react';
 
-export default React.createClass({
-  getHeaders: function() {
+class  Table  extends React.Component {
+  constructor() {
+    super()
+  }
+  getHeaders() {
     return this.props.headers || [];
-  },
-  getData: function() {
+  }
+  getData() {
     return this.props.data || [];
-  },
-  render: function() {
+  }
+  onRowClick() {
+      if(this.props.onRowClick != null) {
+        this.props.onRowClick();
+      }
+  }
+  render() {
+    var currentContext = this;
 return <div className="table-responsive" >
 <table className="table table-striped">
       <thead>
@@ -19,7 +28,7 @@ return <div className="table-responsive" >
       </thead>
       <tbody>
         { this.getData().map(entry =>
-        <tr>
+        <tr className="showpointer" key={entry[0]} onClick={currentContext.onRowClick.bind(currentContext)}>
           {entry.map(innerentry =>
             <td>{innerentry}</td>
           )}
@@ -33,4 +42,6 @@ return <div className="table-responsive" >
 
 </div>;
   }
-});
+}
+
+export default Table
