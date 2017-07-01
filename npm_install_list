@@ -13,6 +13,8 @@ npm install --save-dev jsdom
 npm install --save react react-dom
 npm install --save-dev react-hot-loader
 npm install axios
+npm install --save redux
+npm install reducers
 sudo pacman -S atom
 apm install react
 

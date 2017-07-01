@@ -9,6 +9,8 @@ import ProfilesPanel from './panels/ProfilesPanel';
 import ComponentContainer from './components/ComponentContainer';
 import ProfilePanel  from './panels/ProfilePanel';
 import ProfilesBreadCrumbPanel from './panels/ProfilesBreadCrumbPanel';
+import test from './redux/test'
+import { connect } from 'react-redux';
 
 
 
