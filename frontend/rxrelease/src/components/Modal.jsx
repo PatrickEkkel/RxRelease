@@ -53,7 +53,7 @@ class  Modal  extends React.Component {
   }
   render() {
     var currentContext = this
-  return  <div className="modal fade" id={this.getModalId()} tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  return  <div className="modal fade" id={this.getModalId()} tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">

@@ -9,8 +9,10 @@ import ProfilesPanel from './panels/ProfilesPanel';
 import ComponentContainer from './components/ComponentContainer';
 import ProfilePanel  from './panels/ProfilePanel';
 import ProfilesBreadCrumbPanel from './panels/ProfilesBreadCrumbPanel';
-import test from './redux/test'
-import { connect } from 'react-redux';
+import { Provider } from 'react-redux'
+
+//import test from './redux/actions'
+
 
 
 
@@ -68,7 +70,7 @@ class  App  extends React.Component {
       bcPanelRef.save();
     }
 
-      return  <div className="vertical-left">
+      return  <Provider store={this.props.store}><div className="vertical-left">
       <Modal ref={(container) => {modalHandle = container}} modalId="myModal" closeButtonText="Cancel" title="New Profile"  saveButtonText="Create" body=""  onclick={saveModal} />
         <div className="row">
         <div className="col-md-1 col-xs-offset-2">
@@ -83,7 +85,7 @@ class  App  extends React.Component {
         </div>
         </div>
 
-      </div>
+      </div></Provider>
 
   }
 

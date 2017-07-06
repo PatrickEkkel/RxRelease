@@ -36,7 +36,7 @@ return <div className="table-responsive" >
        }
       </tbody>
     </table>
-    <form class="form-horizontal">
+    <form className="form-horizontal">
 
 </form>
 
