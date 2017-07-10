@@ -106,3 +106,4 @@ body {
 .showpointer {
   cursor: pointer;
 }
+.modal{ display:block; }

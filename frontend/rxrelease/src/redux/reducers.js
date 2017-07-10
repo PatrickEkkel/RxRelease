@@ -1,37 +1,64 @@
-// Tutorial 11 - Provider-and-connect.js
 
-// This file holds the one and only reducer of our application. Its behavior is nothing new to you
-// except maybe its handling of three aspects of an action (GET_TIME) that become 3 dedicated actions...
-// This approach allows us to do some nice real time updates in our UI like this:
-// 1) When we receive GET_TIME_REQUEST action, we modify the state to say that some part of the
-//    UI should be frozen (because there is a pending operation)
-// 2) When we receive GET_TIME_SUCCESS (or GET_TIME_FAILURE) later on, we modify the state to
-//    unfreeze our application and to add the new data we received.
-
-var initialTimeState = {}
+var initialMenuState = { type: 'INITIAL_SELECTED_MENU', selectedMenu: 'Profiles'}
+var initialProfileState = { type: 'INITIAL_PROFILES_STATE', showModal: false}
 
 // The reducer is named with leading "_" to avoid having: state.time.time (time twice) when reading
 // from state. So it's just a personal preference here and you may not need this depending on
 // how your reducers are named and what properties they expose in Redux's store.
-export function _time(state = initialTimeState, action) {
-  console.log('_time reducer called with state ', state , ' and action ', action);
+export function _menu(state = initialMenuState, action) {
+  console.log('_menu reducer called with state ', state , ' and action ', action);
 
   switch (action.type) {
+    case 'CHANGE_SELECTED_MENU':
+      return {
+        type: 'CHANGE_SELECTED_MENU',
+        selectedMenu:  action.selectedMenu
+      }
     case 'GET_TIME_REQUEST':
       return {
         frozen: true
       }
-    case 'GET_TIME_SUCCESS':
-      return {
-        time: action.result.time,
-        frozen: false
-      }
-    case 'GET_TIME_FAILURE':
-      // we could add an error message here, to be printed somewhere in our application
-      return {
-        frozen: false
-      }
     default:
       return state
+  }
+}
+
+export function _profiles(state = initialProfileState,action) {
+    console.log('_menu reducer called with state ', state , ' and action ', action);
+    
+
+  switch (action.type) {
+    case 'OPEN_NEW_PROFILE':
+     return {
+       type: action.type,
+        showModal: true
+     }
+      break;
+    case 'SAVE_NEW_PROFILE':
+    return {
+      type: action.type,
+      showModal: false
+    }
+    case 'PROFILES_LOADED':
+    return {
+      type: action.type,
+      showModal: false
+
+    }
+    case 'CLOSE_MODAL':
+    return {
+      type: action.type,
+      showModal: false
+    }
+    case 'NEW_PROFILE_ENTRY':
+    return {
+        type: action.type,
+        profile_name: action.profile_name,
+        profile_type: action.profile_type,
+        showModal: true
+    }
+    default:
+      return state
+
   }
 }

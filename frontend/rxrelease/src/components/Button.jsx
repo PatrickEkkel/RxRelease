@@ -15,12 +15,12 @@ class Button extends React.Component {
    getDataToggle() {
      return this.props.data_toggle || "empty"
    }
-   onClickEvent() {
-     this.props.onClickEvent();
+   onClick() {
+     this.props.onClick();
    }
    render() {
      var currentContext = this;
- return <button className="btn btn-primary" data-toggle={this.getDataToggle()} data-target={this.getModalTarget()} onClick={currentContext.onClickEvent.bind(currentContext)}>{this.getTitle()}</button>
+ return <button className="btn btn-primary" onClick={currentContext.onClick.bind(currentContext)}>{this.getTitle()}</button>
    }
  }
 

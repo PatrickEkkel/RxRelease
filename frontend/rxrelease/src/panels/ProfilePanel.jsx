@@ -2,7 +2,9 @@ import React from 'react';
 import LabeledTextField from '../components/LabeledTextField';
 import LabeledDropdown from '../components/LabeledDropdown';
 import Button from '../components/Button';
+import  * as actionCreators from '../redux/actioncreators'
 import Axios from 'axios';
+import { connect } from 'react-redux'
 
 class  ProfilePanel  extends React.Component {
   constructor() {
@@ -13,21 +15,21 @@ class  ProfilePanel  extends React.Component {
     }
   }
   changeAttr(e) {
-  this.setState({[e.target.id]: e.target.value});
+  //this.props.dispatch(actionCreators.newProfileEntry(e.target.id,e.target.value))
+  this.props.changeAttr(e);
   }
   save(callback) {
-    var currentContext = this;
-    var result = false;
-    if (this.state.profile_name != '' && this.state.profile_type != '') {
+    //var currentContext = this;
+    //var result = false
+    /*if (this.state.profile_name != '' && this.state.profile_type != '') {
     Axios.post('http://localhost:8080/rxbackend/profiles/',
         {
         name: currentContext.state.profile_name,
         type: currentContext.state.profile_type
       }).then(callback);
-      result = true;
-
-  }
-  return result;
+      result = true;*/
+  //}
+  //return result;
   }
   render() {
     var items = ['default'];
@@ -44,4 +46,13 @@ class  ProfilePanel  extends React.Component {
    </div>
   }
 }
-export default ProfilePanel;
+
+const mapStateToProps = (state/*, props*/) => {
+  return {
+    type: state._profiles.type,
+    reduxState: state,
+  }
+}
+
+const ConnectedProfilePanel = connect(mapStateToProps)(ProfilePanel)
+export default ConnectedProfilePanel;
