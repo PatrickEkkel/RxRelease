@@ -3,7 +3,7 @@ import Button from '../components/Button';
 import ProfilePanel from '../panels/ProfilePanel';
 import Table from '../components/Table';
 import Axios from 'axios';
-import  * as actionCreators from '../redux/actioncreators'
+import  * as profileActionCreators from '../redux/profileactioncreators'
 import Modal from '../components/Modal';
 import { connect } from 'react-redux'
 
@@ -20,8 +20,8 @@ class  ProfilesPanel  extends React.Component {
     }
 
   }
-  createProfile() {
-    this.props.dispatch(actionCreators.openNewProfile())
+  createProfile(profiles_list) {
+    this.props.dispatch(profileActionCreators.openNewProfile(profiles_list))
   }
   loadConfigurationsPanel(e) {
 
@@ -30,27 +30,31 @@ class  ProfilesPanel  extends React.Component {
     this.setState({panelState: "reload"});
   }
   saveAndClose() {
-    this.props.dispatch(actionCreators.saveNewProfile(this.state.profile_name,this.state.profile_type));
+    this.props.dispatch(profileActionCreators.saveNewProfile(this.state.profile_name,this.state.profile_type));
+  }
+  close() {
+      this.props.dispatch(profileActionCreators.initialProfilesState())
   }
   changeAttr(e) {
     this.setState({[e.target.id]: e.target.value});
   }
+  onRowClick(entry) {
+    this.props.dispatch(profileActionCreators.loadConfigurationsPanel(entry))
+  }
   render() {
-    var { type } = this.props
+    var { type,showModal,profiles_list } = this.props
 
-    var retrievedData = [];
+
     var currentContext = this;
+    var showModal = false;
+    if(type == 'OPEN_NEW_PROFILE') {
+      showModal = true;
+    }
+
     if(type == 'SAVE_NEW_PROFILE' || type == 'INITIAL_PROFILES_STATE') {
+      this.props.dispatch(profileActionCreators.loadProfiles());
+    }
 
-    this.props.dispatch(actionCreators.profileIsLoaded());
-    Axios.get('http://localhost:8080/rxbackend/profiles/')
-    .then(function(response){
-      for(var i=0;i<response.data.length;i++) {
-      retrievedData[i] = [i,response.data[i].name,response.data[i].type];
-      }
-       currentContext.setState({data: retrievedData,panelState: "loaded"});
-
-    }); }
     const headers_1 = ['#','Profile','Profile type'];
     var items = ['default'];
     var currentContext = this;
@@ -58,11 +62,11 @@ class  ProfilesPanel  extends React.Component {
     var data = [];
     data[0]  = ['a','b','c'];
     return <div className="container">
-        <Modal saveAndClose={() => currentContext.saveAndClose()}>
+        <Modal saveAndClose={() => currentContext.saveAndClose()} close={() => currentContext.close()} showModal={showModal}>
           <ProfilePanel changeAttr={(e) => currentContext.changeAttr(e)}/>
         </Modal>
-        <Table headers = {headers_1} data={this.state.data} onRowClick={() => currentContext.onClickEvent(entry)}/>
-        <Button title="New Profile"  onClick={() => currentContext.createProfile()}/>
+        <Table headers = {headers_1} data={profiles_list} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
+        <Button title="New Profile"  onClick={() => currentContext.createProfile(profiles_list)}/>
    </div>
   }
 }
@@ -71,6 +75,7 @@ const mapStateToProps = (state/*, props*/) => {
     type: state._profiles.type,
     profile_name: state._profiles.profile_name,
     profile_type: state._profiles.profile_type,
+    profiles_list: state._profiles.profiles,
     reduxState: state,
   }
 }

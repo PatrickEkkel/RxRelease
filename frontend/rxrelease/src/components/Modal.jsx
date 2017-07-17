@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from 'react-bootstrap-modal';
-import  * as actionCreators from '../redux/actioncreators'
+import  * as modalActionCreators from '../redux/modalactioncreators'
 import { connect } from 'react-redux'
 
 class RxModal extends React.Component {
@@ -17,21 +17,18 @@ class RxModal extends React.Component {
     this.props.saveAndClose();
   }
   close() {
-    this.props.dispatch(actionCreators.closeModal())
+    this.props.close();
   }
   getBody() {
     return this.props.body;
   }
   render(){
     var currentContext = this;
-    var { type,showModal,panelToRender } = this.props
-    let closeModal = () => this.setState({ open: showModal })
 
     return (
       <div>
         <Modal
-          show={showModal}
-          onHide={closeModal}
+          show={this.props.showModal}
           role="document"
           aria-labelledby="ModalHeader">
           <Modal.Header closeButton>
@@ -47,14 +44,6 @@ class RxModal extends React.Component {
     )
   }
 }
-const mapStateToProps = (state/*, props*/) => {
-  return {
-    type: state._profiles.type,
-    showModal: state._profiles.showModal,
-    panelToRender: state._profiles.panel
-  }
-}
 
-const ConnectedModal = connect(mapStateToProps)(RxModal)
 
-export default ConnectedModal;
+export default RxModal;

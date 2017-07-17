@@ -8,3 +8,8 @@ Bij het  maken van een DeploymentConfiguration  moeten we hosts toevoegen aan  d
 Profile
 -Hosts
 -DeploymentConfiguration
+
+
+Deployment Configuration bestaat uit de volgende stappen
+
+Het profile bepaalt welke stappen je kan kiezen, in het geval van een default deployment maken we dus geen gebruik van plugins en kunnen we verschillende stappen toevoegen, deze stappen bevatten scripts die uitgevoerd kunnen worden op een omgeving, hierbij komt nog geen salt/docker of wat dan ook om de hoek kijken puur ssh

@@ -15,22 +15,9 @@ class  ProfilePanel  extends React.Component {
     }
   }
   changeAttr(e) {
-  //this.props.dispatch(actionCreators.newProfileEntry(e.target.id,e.target.value))
-  this.props.changeAttr(e);
+    this.props.changeAttr(e);
   }
-  save(callback) {
-    //var currentContext = this;
-    //var result = false
-    /*if (this.state.profile_name != '' && this.state.profile_type != '') {
-    Axios.post('http://localhost:8080/rxbackend/profiles/',
-        {
-        name: currentContext.state.profile_name,
-        type: currentContext.state.profile_type
-      }).then(callback);
-      result = true;*/
-  //}
-  //return result;
-  }
+
   render() {
     var items = ['default'];
 

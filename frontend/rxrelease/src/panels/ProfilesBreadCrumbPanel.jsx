@@ -1,45 +1,45 @@
 import React from 'react';
 import BreadCrumb from '../components/BreadCrumb'
 import ProfilesPanel from './ProfilesPanel';
+import ProfileConfigurationPanel from './ProfileConfigurationPanel';
+import Modal from '../components/Modal';
+import { connect } from 'react-redux'
 
 
 class  ProfilesBreadCrumbPanel  extends React.Component {
 
 constructor() {
  super();
- this.modalContentHandle = "empty";
- this.profilespanelRef = "empty"
 }
-setModalHandle(modalHandle) {
-  this.modalHandle = modalHandle;
-}
-save() {
-  var currentContext = this;
-  var result =  this.modalContentHandle.save(function(){
-    if(result) {
-      currentContext.modalHandle.closeModal();
-      currentContext.profilespanelRef.reload();
-    }
-  });
-}
+
 render() {
 
-var bc_items = ["Profiles","Configuration","Host"];
-var profilespanelRef = "empty";
-
-
+var bc_items = [];
 var currentContext = this;
 
-function onModalLoad(element) {
-  currentContext.props.onModalLoad(element);
+
+var { type } = this.props;
+var currentPanel = <ProfilesPanel key="profilespanel" ref={(container) => { currentContext.profilespanelRef = container }}/>
+
+switch(type) {
+  case 'LOAD_CONFIGURATION_FROM_PROFILES':
+  currentPanel = <ProfileConfigurationPanel/>
+  bc_items = ['Profiles','Configuration']
+  break;
+  default:
+  bc_items = ['Profiles']
 }
 
-
-var profilesPanel = <ProfilesPanel key="profilespanel" ref={(container) => { currentContext.profilespanelRef = container }} onModalLoad={onModalLoad} profileRef={(container) => { currentContext.modalContentHandle = container }} />
-
-return <div><BreadCrumb items={bc_items}/>{profilesPanel}</div>
+return <div><BreadCrumb items={bc_items}/>{currentPanel}</div>
 }
 
 }
+const mapStateToProps = (state/*, props*/) => {
+  return {
+    type: state._profiles.type,
+  }
+}
 
-export default ProfilesBreadCrumbPanel;
+const ConnectedProfilesBreadCrumbPanel = connect(mapStateToProps)(ProfilesBreadCrumbPanel)
+
+export default ConnectedProfilesBreadCrumbPanel;
