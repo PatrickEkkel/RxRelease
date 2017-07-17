@@ -17,15 +17,23 @@ getItems() {
   }
   return result;
 }
+setItems(items) {
+  this.setState({items: items});
+}
+onClick(clickedItem) {
+  this.props.onClick(clickedItem)
+}
 render() {
 
   var renderList = [];
+  var currentContext = this;
   for(var i=0;i<this.getItems().length;i++) {
     if(i == this.getItems().length-1) {
       renderList.push(<li className="breadcrumb-item active" key={this.getItems()[i]}>{this.getItems()[i]}</li>)
     }
     else {
-      renderList.push(<li className="breadcrumb-item" key={this.getItems()[i]}><a href="#">{this.getItems()[i]}</a></li>)
+      var item = this.getItems()[i];
+      renderList.push(<li  className="breadcrumb-item" key={item}><a href="#" onClick={() => currentContext.onClick(item)}>{item}</a></li>)
     }
 
   }

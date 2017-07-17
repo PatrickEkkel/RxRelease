@@ -34,7 +34,6 @@ class  App  extends React.Component {
       }
       var onModalLoad = function(element) {
         modalHandle.setBody(element);
-      //  innerComponentRef.setModalHandle(modalHandle);
       }
 
     var buttondropdown = <Button key="profilespanel"/>

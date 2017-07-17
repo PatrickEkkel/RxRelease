@@ -29,7 +29,6 @@ class ProfileConfigurationPanel extends React.Component {
     this.setState({[e.target.id]: e.target.value});
   }
   saveAndClose(selected_profile) {
-     console.log("selected_profile: " + selected_profile)
     this.props.dispatch(configurationActionCreators.saveNewConfiguration(this.state.configuration_name,selected_profile));
   }
   changeAttr(e) {
