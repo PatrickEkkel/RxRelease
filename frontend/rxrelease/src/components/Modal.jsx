@@ -19,6 +19,13 @@ class RxModal extends React.Component {
   close() {
     this.props.close();
   }
+  getTitle() {
+   var title = this.props.title;
+   if(title == null) {
+     return "No title"
+   }
+   return title;
+  }
   getBody() {
     return this.props.body;
   }
@@ -32,7 +39,7 @@ class RxModal extends React.Component {
           role="document"
           aria-labelledby="ModalHeader">
           <Modal.Header closeButton>
-            <Modal.Title id='ModalHeader'>A Title Goes here</Modal.Title>
+            <Modal.Title id='ModalHeader'>{this.getTitle()}</Modal.Title>
           </Modal.Header>
           <div className="modal-body">{this.props.children}</div>
           <div className="modal-footer">

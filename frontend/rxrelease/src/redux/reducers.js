@@ -2,7 +2,8 @@
 var initialMenuState = { type: 'INITIAL_SELECTED_MENU', selectedMenu: 'Profiles'}
 var initialProfileState = { type: 'INITIAL_PROFILES_STATE', showModal: false}
 var initialConfigurationState = { type: 'INITIAL_CONFIGURATION_STATE', showModal: false}
-var initalModalState = { type: 'CLOSE_MODAL',showModal: false}
+var initialRecipeState = { type: 'INITIAL_RECIPE_STATE',showModal: false}
+var initialHostState = { type: 'INITIAL_HOSTS_STATE', showModal: false }
 
 // The reducer is named with leading "_" to avoid having: state.time.time (time twice) when reading
 // from state. So it's just a personal preference here and you may not need this depending on
@@ -21,7 +22,33 @@ export function _menu(state = initialMenuState, action) {
   }
 }
 
+export function _host(state = initialHostState,action) {
+  console.log('_host reducer called with state ', state , ' and action ', action);
+  switch (action.type) {
+    case 'INITIAL_HOSTS_STATE':
+    return {
+      type: action.type,
+      showModal: false
+    }
+    case 'OPEN_NEW_HOST':
+    return {
+      type: action.type,
+      showModal: true
+    }
+
+    case 'SAVE_NEW_HOST':
+    return {
+      type: action.type,
+      showModal: false
+    }
+    default:
+    return state;
+
+  }
+}
+
 export function _configuration(state = initialConfigurationState,action) {
+  console.log('_configuration reducer called with state ', state , ' and action ', action);
   console.log('_configuration reducer called with state ', state , ' and action ', action);
   switch (action.type) {
 
@@ -67,6 +94,16 @@ export function _configuration(state = initialConfigurationState,action) {
     default:
     return state;
 
+  }
+}
+
+
+export function _recipe(state = initialRecipeState,action) {
+  console.log('_recipe reducer called with state ', state , ' and action ', action);
+
+  switch (action.type) {
+    default:
+    return state;
   }
 }
 
@@ -116,6 +153,10 @@ export function _profiles(state = initialProfileState,action) {
     return {
         type: action.type,
         selected_profile: action.selected_profile
+    }
+    case 'LOAD_RECIPE_FROM_CONFIGURATION':
+    return {
+      type: action.type
     }
     default:
       return state

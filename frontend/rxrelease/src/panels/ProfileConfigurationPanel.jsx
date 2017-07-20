@@ -4,6 +4,7 @@ import Modal from '../components/Modal';
 import Button from '../components/Button';
 import ConfigurationPanel from './ConfigurationPanel';
 import  * as configurationActionCreators from '../redux/configurationactioncreators'
+import * as recipeActionCreators from '../redux/recipeactioncreator'
 import { connect } from 'react-redux'
 
 
@@ -17,7 +18,7 @@ class ProfileConfigurationPanel extends React.Component {
   }
 
   onRowClick(entry) {
-    alert(entry)
+    this.props.dispatch(recipeActionCreators.loadRecipePanelFromConfiguration())
   }
   close() {
       this.props.dispatch(configurationActionCreators.initialConfigurationState())
@@ -34,32 +35,38 @@ class ProfileConfigurationPanel extends React.Component {
   changeAttr(e) {
     this.setState({[e.target.id]: e.target.value});
   }
+  componentWillMount() {
+    var {type,selected_profile} = this.props;
+    if(type == 'LOAD_CONFIGURATION_FROM_PROFILES' || type == 'INITIAL_CONFIGURATION_STATE') {
+      //this.props.dispatch(configurationActionCreators.configurationLoading())
+      this.props.dispatch(configurationActionCreators.loadConfigurations(selected_profile));
+      this.setState({selected_profile: selected_profile })
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    var currentContext = this;
+    var headers = ['name']
+
+    if(nextProps.type == 'CONFIGURATION_LOADED') {
+      this.props.dispatch(configurationActionCreators.configurationComplete())
+      this.setState({configurations: nextProps.configurations})
+    }
+
+    if(nextProps.type == 'SAVE_NEW_CONFIGURATION') {
+        this.props.dispatch(configurationActionCreators.loadConfigurations(currentContext.state.selected_profile));
+    }
+  }
   render() {
     var currentContext = this;
     var headers = ['name']
-    var data = []
-    var {showModal,selected_profile,type,configurations} = this.props;
-
-    if(type == 'CONFIGURATION_LOADED') {
-      this.props.dispatch(configurationActionCreators.configurationComplete())
-      this.setState({configurations: configurations})
-    }
-    if(type == 'SAVE_NEW_CONFIGURATION') {
-        this.props.dispatch(configurationActionCreators.configurationLoading())
-        this.props.dispatch(configurationActionCreators.loadConfigurations(currentContext.state.selected_profile));
-    }
-    if(type == 'LOAD_CONFIGURATION_FROM_PROFILES' || type == 'INITIAL_CONFIGURATION_STATE') {
-      this.props.dispatch(configurationActionCreators.configurationLoading())
-      this.setState({selected_profile: selected_profile })
-      this.props.dispatch(configurationActionCreators.loadConfigurations(selected_profile));
-    }
+    var {showModal} = this.props;
 
     return <div>
-      <Modal saveAndClose={() => currentContext.saveAndClose(currentContext.state.selected_profile)} close={() => currentContext.close()} showModal={showModal} >
+      <Modal title="New Configuration" saveAndClose={() => currentContext.saveAndClose(currentContext.state.selected_profile)} close={() => currentContext.close()} showModal={showModal} >
         <ConfigurationPanel changeAttr={(e) => currentContext.changeAttr(e)}/>
       </Modal>
       <Table headers = {headers} data={currentContext.state.configurations} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
-      <Button title="New Configuration"  onClick={() => currentContext.createConfiguration(selected_profile)}/>
+      <Button title="New Configuration"  onClick={() => currentContext.createConfiguration(currentContext.state.selected_profile)}/>
       </div>
   }
 

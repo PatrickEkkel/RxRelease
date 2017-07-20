@@ -12,3 +12,8 @@ class Configuration(models.Model):
     profile = models.ForeignKey(Profile)
     def __str__(self):
         return self.name
+
+class Host(models.Model):
+    hostname =  models.CharField(max_length=255)
+    ipaddress =  models.CharField(max_length=15)
+    description =  models.CharField(max_length=400)

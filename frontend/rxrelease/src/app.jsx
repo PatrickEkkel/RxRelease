@@ -4,7 +4,9 @@ import ReactDOM from 'react-dom';
 import Table from './components/Table';
 import Button from './components/Button';
 import Menu from './components/Menu';
+import Navbar from './components/Navbar';
 import ProfilesPanel from './panels/ProfilesPanel';
+import HostsPanel from './panels/HostsPanel';
 import ComponentContainer from './components/ComponentContainer';
 import ProfilesBreadCrumbPanel from './panels/ProfilesBreadCrumbPanel';
 import { Provider } from 'react-redux'
@@ -21,8 +23,10 @@ class  App  extends React.Component {
   render() {
 
     var menuitems = [];
+    var navbaritems = [];
+    menuitems  = ['Profiles','Hosts','Logging','Configuration'];
+    navbaritems = ['Overview','Settings','Help'];
 
-    menuitems  = ['Profiles','Logging','Reports','Configuration'];
     var componentContainer = "empty";
     var currentComponent =  "empty";
     var innerComponentRef = "empty";
@@ -37,23 +41,24 @@ class  App  extends React.Component {
       }
 
     var buttondropdown = <Button key="profilespanel"/>
-    var breadcrumbPanel = <ProfilesBreadCrumbPanel ref={(container) => { bcPanelRef = container }} onModalLoad={onModalLoad}/>
-    var innerComponent =  breadcrumbPanel;
+    var profiles = <ProfilesBreadCrumbPanel ref={(container) => { bcPanelRef = container }} onModalLoad={onModalLoad}/>
+    var hosts = <HostsPanel/>
+    var innerComponent =  profiles;
 
 
     var menuClick = function(id) {
 
       switch (id) {
         case "Profiles":
-            currentComponent.setInnerComponent(breadcrumbPanel);
+            currentComponent.setInnerComponent(profiles);
            innerComponent = profilesPanel;
           break;
-        case "Logging":
-           currentComponent.setInnerComponent(buttondropdown);
-           innerComponent = breadcrumbPanel;
+        case "Hosts":
+           currentComponent.setInnerComponent(hosts);
+           innerComponent = hosts;
           break;
-        case "Reports":
-            currentComponent.setInnerComponent(breadcrumbPanel);
+        case "Logging":
+            currentComponent.setInnerComponent(profiles);
             innerComponentRef = bcPanelRef;
           break;
         default:
@@ -65,7 +70,7 @@ class  App  extends React.Component {
     }
 
       return  <Provider store={this.props.store}><div className="vertical-left">
-
+        <Navbar menuitems={navbaritems} onclick={menuClick}/>
         <div className="row">
         <div className="col-md-1 col-xs-offset-2">
          <Menu menuitems={menuitems} onclick={menuClick} onLoad={onMenuLoad} selectedItem="Profiles"/>

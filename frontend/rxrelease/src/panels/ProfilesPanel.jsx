@@ -62,7 +62,7 @@ class  ProfilesPanel  extends React.Component {
     var data = [];
     data[0]  = ['a','b','c'];
     return <div className="container">
-        <Modal saveAndClose={() => currentContext.saveAndClose()} close={() => currentContext.close()} showModal={showModal}>
+        <Modal title="New Profile" saveAndClose={() => currentContext.saveAndClose()} close={() => currentContext.close()} showModal={showModal}>
           <ProfilePanel changeAttr={(e) => currentContext.changeAttr(e)}/>
         </Modal>
         <Table headers = {headers_1} data={profiles_list} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
