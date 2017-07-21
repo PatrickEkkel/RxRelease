@@ -1,5 +1,6 @@
 
 import Axios from 'axios';
+import Host from '../models/host'
 
 
 export function initialHostState() {
@@ -12,6 +13,32 @@ export function openNewHost() {
   return {
     type: 'OPEN_NEW_HOST'
     }
+}
+
+export function loadHosts() {
+  return function (dispatch) {
+      var retrievedData = [];
+      Axios.get('http://localhost:8080/rxbackend/hosts/')
+      .then(function(response){
+        for(var i=0;i<response.data.length;i++) {
+          var id = response.data[i].id;
+          var hostname = response.data[i].hostname;
+          var ipaddress = response.data[i].ipaddress;
+          var description = response.data[i].description;
+          var p = new Host(id,hostname,ipaddress,description)
+
+        retrievedData[i] = [id,hostname,ipaddress,description];
+        }
+          dispatch(hostsLoaded(retrievedData));
+      });
+  }
+}
+
+export function hostsLoaded(hosts) {
+  return {
+    type: 'HOSTS_LOADED',
+    hosts: hosts
+  }
 }
 
 export function saveNewHost(hostname,ipadress,description) {

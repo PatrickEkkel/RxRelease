@@ -5,5 +5,5 @@ from .views import testview
 
 
 urlpatterns = [
-    url(r'^/$', testview.index, name="create"),
+    url(r'^$', testview.index, name="create"),
 ]

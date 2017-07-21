@@ -11,6 +11,9 @@ class  HostsPanel  extends React.Component {
 
   constructor() {
     super()
+    this.state = {
+      hosts: []
+    }
   }
   createHost() {
     this.props.dispatch(hostActionCreators.openNewHost());
@@ -32,17 +35,36 @@ class  HostsPanel  extends React.Component {
   }
   onRowClick(entry) {
   }
+
+  componentWillMount() {
+
+    var {type} = this.props;
+
+    if(type == 'INITIAL_HOSTS_STATE') {
+      this.props.dispatch(hostActionCreators.loadHosts())
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+
+    if(nextProps.type == 'HOSTS_LOADED') {
+
+      this.setState({hosts: nextProps.hosts})
+      console.log("komt ie hier wel??")
+
+    }
+
+  }
+
   render() {
     var { type,showModal } = this.props
     var currentContext = this;
-    var data = []
     const headers = ['#','Hostname','IP Address','Description'];
 
     return <div className="container">
         <Modal title="New Host" saveAndClose={() => currentContext.saveAndClose()} close={() => currentContext.close()} showModal={showModal}>
           <HostPanel changeAttr={(e) => currentContext.changeAttr(e)}/>
         </Modal>
-        <Table headers = {headers} data={data} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
+        <Table headers = {headers} data={currentContext.state.hosts} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
         <Button title="New Host"  onClick={() => currentContext.createHost()}/>
    </div>
   }
@@ -50,7 +72,8 @@ class  HostsPanel  extends React.Component {
 const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._host.type,
-    showModal: state._host.showModal
+    showModal: state._host.showModal,
+    hosts: state._host.hosts
   }
 }
 
