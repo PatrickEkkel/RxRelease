@@ -2,6 +2,22 @@ from rest_framework import generics
 from ..serializers import DemoOnDemandSerializer
 from ..serializers import DemoOnDemandVMSerializer
 from ..models import DemoOnDemandUser
+import logging
+import sys
+sys.path.append("../../")
+from ...rxforeman.foremanapi import ForemanManager
+
+logger = logging.getLogger(__name__)
+
+logger.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+
 
 class CreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
@@ -19,8 +35,11 @@ class DetailsView(generics.RetrieveUpdateDestroyAPIView):
 
 class CreateHost(generics.CreateAPIView):
     serializer_class = DemoOnDemandVMSerializer
-    def post_queryset(self):
+    def perform_create(self,serializer):
+     manager = ForemanManager.ForemanManager()
+     manager.createNewVM()
      queryset = DemoOnDemandUser.objects.all()
+
 
 class DemoUserEnvironmentView(generics.RetrieveAPIView):
     serializer_class = DemoOnDemandSerializer

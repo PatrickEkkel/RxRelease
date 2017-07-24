@@ -12,7 +12,8 @@ class  HostsPanel  extends React.Component {
   constructor() {
     super()
     this.state = {
-      hosts: []
+      hosts: [],
+      test: false
     }
   }
   createHost() {
@@ -39,18 +40,21 @@ class  HostsPanel  extends React.Component {
   componentWillMount() {
 
     var {type} = this.props;
-
     if(type == 'INITIAL_HOSTS_STATE') {
       this.props.dispatch(hostActionCreators.loadHosts())
+      this.setState({test: true})
     }
   }
   componentWillReceiveProps(nextProps) {
-
+    console.log("nu komt hij er wel")
     if(nextProps.type == 'HOSTS_LOADED') {
-
       this.setState({hosts: nextProps.hosts})
-      console.log("komt ie hier wel??")
-
+    }
+    else if(nextProps.type == 'SAVE_NEW_HOST') {
+          this.props.dispatch(hostActionCreators.initialHostState());
+    }
+    else if(nextProps.type == 'INITIAL_HOSTS_STATE') {
+          this.props.dispatch(hostActionCreators.loadHosts())
     }
 
   }

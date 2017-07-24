@@ -38,7 +38,6 @@ class ProfileConfigurationPanel extends React.Component {
   componentWillMount() {
     var {type,selected_profile} = this.props;
     if(type == 'LOAD_CONFIGURATION_FROM_PROFILES' || type == 'INITIAL_CONFIGURATION_STATE') {
-      //this.props.dispatch(configurationActionCreators.configurationLoading())
       this.props.dispatch(configurationActionCreators.loadConfigurations(selected_profile));
       this.setState({selected_profile: selected_profile })
     }

@@ -41,6 +41,12 @@ export function _host(state = initialHostState,action) {
       type: action.type,
       showModal: false
     }
+    case 'HOSTS_LOADED':
+    return {
+      type: action.type,
+      showModal: false,
+      hosts: action.hosts
+    }
     default:
     return state;
 

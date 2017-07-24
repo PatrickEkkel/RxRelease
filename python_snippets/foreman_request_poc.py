@@ -58,7 +58,7 @@ class Host:
  
 class ForemanSettings:
  def __init__(self):
-  self.foreman_url = "https://foreman.topicusoverheid.local"
+  self.foreman_url = "https://172.27.0.11"
   self.foreman_user = "admin"
   self.foreman_passwd = "ktfewHRZCx4MomrV"
  def getUrl(self):
@@ -98,16 +98,7 @@ class ForemanManager:
 settings = ForemanSettings()
 fm = ForemanApi(settings)
 
-existingHost81 = Host(81,settings)
-status =  existingHost81.getStatus()
-print(status)
-#existingHost81.powerOff()
-
-existingHost83 = Host(83,settings)
-status = existingHost83.getStatus()
-print(status)
-
-#newHost = fm.createHost()
+newHost = fm.createHost()
 #newHost.powerOn()
 
 
