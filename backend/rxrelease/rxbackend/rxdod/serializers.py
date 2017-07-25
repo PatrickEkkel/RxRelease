@@ -1,17 +1,24 @@
 from rest_framework import serializers
 from .models import DemoOnDemandUser
 from .models import DemoOnDemandVM
-from ..serializers import HostSerializer
+from ..rxforeman.serializers import ForemanHostSerializer
 
-class DemoOnDemandVMSerializer(serializers.ModelSerializer):
+class DemoOnDemandEmtpyResponseVMSerializer(serializers.ModelSerializer):
     class Meta:
         model = DemoOnDemandVM
         fields = ()
-        host = HostSerializer(required=False)
+
+
+class DemoOnDemandVMSerializer(serializers.ModelSerializer):
+    host = ForemanHostSerializer(required=False)
+    class Meta:
+        model = DemoOnDemandVM
+        fields = ('id','url','host')
+
 
 class DemoOnDemandSerializer(serializers.ModelSerializer):
+    dodenv = DemoOnDemandVMSerializer(required=False)
 
     class Meta:
         model = DemoOnDemandUser
         fields = ('username','email','dodenv')
-        dodenv = DemoOnDemandVMSerializer(required=False)

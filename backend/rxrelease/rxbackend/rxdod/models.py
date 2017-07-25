@@ -1,12 +1,10 @@
 from django.db import models
-from ..models import Host
+from ..rxforeman.models import ForemanHost
 
 
 class DemoOnDemandVM(models.Model):
- host = models.ForeignKey(Host,null=True)
- status = models.CharField(max_length=50)
+ host = models.ForeignKey(ForemanHost,null=True)
  url = models.CharField(max_length=255)
-
 
 class DemoOnDemandUser(models.Model):
  username = models.CharField(max_length=255)

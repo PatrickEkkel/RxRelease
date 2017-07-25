@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^users/(?P<pk>[0-9]+)/$', demonondemanduserviews.DetailsView.as_view(), name="details"),
     url(r'^users/vminfo/(?P<pk>[0-9]+)/$', demonondemanduserviews.DemoUserEnvironmentView.as_view(), name="vminfo"),
     url(r'^users/vmstatus/(?P<pk>[0-9]+)/$', demonondemanduserviews.DemoUserEnvironmentView.as_view(), name="vmstatus"),
+    url(r'^users/vmreset/(?P<pk>[0-9]+)/$', demonondemanduserviews.PowerCycleVM.as_view(), name="vmreset"),
     url(r'^users/createdemovm/(?P<pk>[0-9]+)/$', demonondemanduserviews.CreateHost.as_view(), name="createdemovm"),
 
 ]
