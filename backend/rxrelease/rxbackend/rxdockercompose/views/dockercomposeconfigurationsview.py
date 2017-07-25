@@ -1,11 +1,16 @@
 from rest_framework import generics
 from ..serializers import DockerComposeConfigurationSerialiser
+from ..serializers import DockerComposeEmptySerializer
 from ..models import DockerComposeConfiguration
+from ...ssh.ssh import SSHClient
 
 
 class TestSSHLib(generics.CreateAPIView):
+    serializer_class = DockerComposeEmptySerializer
     def perform_create(self, serializer):
-     pass
+     client = SSHClient('192.168.178.77','rxrelease')
+     client.sendCommand('mkdir bierdrinker_henk')
+     client.close()
 
 class CreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""

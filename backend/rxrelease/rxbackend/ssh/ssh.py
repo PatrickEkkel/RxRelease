@@ -1,46 +1,46 @@
 import paramiko
+import logging
+import sys
+import threading
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+
 class SSHClient:
     shell = None
     client = None
     transport = None
 
     def __init__(self, address, username):
-        print("Connecting to server on ip", str(address) + ".")
+        logger.info("Connecting to server on ip", str(address) + ".")
         self.client = paramiko.client.SSHClient()
         self.client.set_missing_host_key_policy(paramiko.client.AutoAddPolicy())
         self.client.connect(address, username=username, password=None, look_for_keys=True)
-        self.transport = paramiko.Transport((address, 22))
-        self.transport.connect(username=username, password=None)
+        #self.transport = paramiko.Transport((address, 22))
+        #self.client.connect(username=username, password=None)
 
-        #thread = threading.Thread(target=self.process)
-        #thread.daemon = True
-        #thread.start()
-
-    def closeConnection(self):
+    def close(self):
         if(self.client != None):
             self.client.close()
-            self.transport.close()
+            #self.transport.close()
 
-    def openShell(self):
-        self.shell = self.client.invoke_shell()
+    #def openShell(self):
+    #    self.shell = self.client.invoke_shell()
 
-    def sendShell(self, command):
-        if(self.shell):
-            self.shell.send(command + "\n")
-        else:
-            print("Shell not opened.")
-
-    def process(self):
-        print("even teston")
-        global connection
-        while True:
-            # Print data when available
-            if self.shell != None and self.shell.recv_ready():
-                alldata = self.shell.recv(1024)
-                while self.shell.recv_ready():
-                    alldata += self.shell.recv(1024)
-                strdata = str(alldata, "utf8")
-                strdata.replace('\r', '')
-                print(strdata, end = "")
-                if(strdata.endswith("$ ")):
-                    print("\n$ ", end = "")
+    def sendCommand(self, command):
+        logger.info("command sent to shell: " + command)
+        stdin, stdout,stderr = self.client.exec_command(command)
+        while not stdout.channel.exit_status_ready():
+            if stdout.channel.recv_ready():
+                rl, wl, xl = select.select([ stdout.channel ], [ ], [ ], 0.0)
+                if len(rl) > 0:
+                    tmp = stdout.channel.recv(1024)
+                    output = tmp.decode()
+                    print output
