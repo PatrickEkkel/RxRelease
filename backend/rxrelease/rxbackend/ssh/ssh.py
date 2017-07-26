@@ -26,6 +26,9 @@ class SSHClient:
         #self.transport = paramiko.Transport((address, 22))
         #self.client.connect(username=username, password=None)
 
+    def sendFile(self,sourcefile,destfile):
+        sftp  = self.client.open_sftp()
+        sftp.put(sourcefile,destfile)
     def close(self):
         if(self.client != None):
             self.client.close()

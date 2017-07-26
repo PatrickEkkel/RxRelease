@@ -9,7 +9,9 @@ class TestSSHLib(generics.CreateAPIView):
     serializer_class = DockerComposeEmptySerializer
     def perform_create(self, serializer):
      client = SSHClient('192.168.178.77','rxrelease')
-     client.sendCommand('mkdir bierdrinker_henk')
+     client.sendFile()
+     #client.sendCommand('touch testfile')
+     #client.sendCommand('echo "even testen of dit wel gaat werken" >> testfile')
      client.close()
 
 class CreateView(generics.ListCreateAPIView):

@@ -12,7 +12,7 @@ class  RecipePanel  extends React.Component {
       <div className="container">
       <div className="row">
         <div class="col-sm-9">
-          <textarea class="form-control" rows="15"></textarea>
+          <textarea className="form-control" rows="15"></textarea>
       </div>
       </div>
       <div className="row">
