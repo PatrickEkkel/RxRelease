@@ -1,5 +1,5 @@
 import React from 'react'
-import Button from '../components/Button'
+import DockerComposeConfiguration from '../plugins/docker_compose/DockerComposeConfiguration'
 
 class  RecipePanel  extends React.Component {
   constructor() {
@@ -7,22 +7,7 @@ class  RecipePanel  extends React.Component {
   }
 
   render() {
-
-    return <div>
-      <div className="container">
-      <div className="row">
-        <div class="col-sm-9">
-          <textarea className="form-control" rows="15"></textarea>
-      </div>
-      </div>
-      <div className="row">
-        <Button title="RAW"/>
-        <Button title="Managed"/>
-      </div>
-      </div>
-
-
-    </div>
+    return <div><DockerComposeConfiguration/></div>
   }
 }
 
