@@ -4,11 +4,24 @@ from .models import Host
 from .models import Configuration
 
 
-class ConfigurationSerializer(serializers.ModelSerializer):
+class HostTestSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
 
     class Meta:
+        model = Host
+        fields = ('id','hostname','ipaddress','description')
+
+
+class HostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Host
+        fields = ('id','hostname','ipaddress','description')
+
+class ConfigurationSerializer(serializers.ModelSerializer):
+    hosts = HostTestSerializer(many=True,queryset=Host.objects.all())
+    class Meta:
         model = Configuration
-        fields = ('name','profile')
+        fields = ('id','name','profile','hosts')
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -16,9 +29,3 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('name','type','id')
-
-class HostSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Host
-        fields = ('hostname','ipaddress','description')

@@ -5,6 +5,7 @@ import RecipePanel from './RecipePanel';
 import ProfileConfigurationPanel from './ProfileConfigurationPanel';
 import Modal from '../components/Modal';
 import  * as profileActionCreators from '../redux/profileactioncreators'
+import * as configurationActionCreators from '../redux/configurationactioncreators'
 import { connect } from 'react-redux'
 
 
@@ -20,8 +21,6 @@ constructor() {
 componentWillReceiveProps(nextProps) {
 
   var { type } = this.props;
-  console.log("hier komt ie dus wel elke keer langs")
-  console.log(nextProps.type)
   var bc_items = [];
   switch(nextProps.type) {
     case 'LOAD_CONFIGURATION_FROM_PROFILES':
@@ -45,13 +44,15 @@ breadCrumbOnClick(clickedItem) {
     case "Profiles":
     this.props.dispatch(profileActionCreators.initialProfilesState());
     break;
+    case "Configuration":
+    this.props.dispatch(configurationActionCreators.initialConfigurationState())
+    break;
     default:
 
   }
 
 }
 componentWillMount() {
-console.log("hier komt ie dus maar 1 keer langs")
 var { type } = this.props;
 var bc_items = [];
 switch(type) {

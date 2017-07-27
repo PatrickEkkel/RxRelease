@@ -39,6 +39,7 @@ class  ProfilesPanel  extends React.Component {
     this.setState({[e.target.id]: e.target.value});
   }
   onRowClick(entry) {
+    console.log("entry voor profiles: " + entry)
     this.props.dispatch(profileActionCreators.loadConfigurationsPanel(entry))
   }
   render() {

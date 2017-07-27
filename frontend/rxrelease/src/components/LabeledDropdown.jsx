@@ -50,7 +50,7 @@ class LabeledDropdown extends React.Component {
 
     return <fieldset>
 
-      <label className={this.getLabelCol()} for={this.getInternalId()}>{this.getLabel()}</label>
+      <label className={this.getLabelCol()} >{this.getLabel()}</label>
       <div className={this.getCol()}>
         <select id={this.getId()} name={this.getId()} className="form-control" onChange={this.getOnchange()}>
          {rows}

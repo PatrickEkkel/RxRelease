@@ -13,7 +13,11 @@ class TestSSHLib(generics.CreateAPIView):
      #client.sendCommand('touch testfile')
      #client.sendCommand('echo "even testen of dit wel gaat werken" >> testfile')
      client.close()
-
+class DeployConfiguration(generics.CreateAPIView):
+    def perform_create(self, serializer):
+        serializer_class = DockerComposeEmptySerializer
+        client = SSHClient('192.168.178.77','rxrelease')
+        client.sendFile()
 class CreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
     queryset = DockerComposeConfiguration.objects.all()
