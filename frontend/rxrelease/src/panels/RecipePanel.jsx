@@ -49,7 +49,9 @@ class  RecipePanel  extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if(nextProps.type == 'LOAD_HOSTS_FOR_RECIPE') {
-      this.setState({hosts: nextProps.hosts})
+      console.log("loaded hosts")
+      console.log(nextProps.hosts)
+      this.setState({addedHosts: nextProps.hosts})
     }
   }
   saveChanges() {

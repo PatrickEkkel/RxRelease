@@ -36,7 +36,6 @@ class DockerComposeConfiguration extends React.Component {
     if(nextProps.type == 'SAVE_ALL_RECIPE_CHILDREN') {
       this.saveChanges()
     }
-
   }
   render() {
     var currentContext = this

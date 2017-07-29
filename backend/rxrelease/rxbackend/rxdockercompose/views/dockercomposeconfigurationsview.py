@@ -26,6 +26,14 @@ class CreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         """Save the post data when creating a new bucketlist."""
         serializer.save()
+# TODO: maak er een list api view van
+class ByRootIdDetailsView(generics.ListAPIView):
+    """This class handles the http GET,requests."""
+    queryset = DockerComposeConfiguration.objects.all()
+    serializer_class = DockerComposeConfigurationSerialiser
+    def get_queryset(self):
+        configuration_id = self.kwargs['configuration_id']
+        return DockerComposeConfiguration.objects.filter(configuration = configuration_id )
 class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
     queryset = DockerComposeConfiguration.objects.all()

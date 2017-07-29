@@ -5,5 +5,6 @@ from .views import dockercomposeconfigurationsview
 urlpatterns = [
     url(r'^configurations/$', dockercomposeconfigurationsview.CreateView.as_view(), name="create"),
     url(r'^configurations/(?P<pk>[0-9]+)$', dockercomposeconfigurationsview.DetailsView.as_view(), name="details"),
+    url(r'^configurations/byrootid/(?P<configuration_id>.+)/$', dockercomposeconfigurationsview.ByRootIdDetailsView.as_view(), name="detailsbyrootid"),
     url(r'^configurations/test$', dockercomposeconfigurationsview.TestSSHLib.as_view(), name="TestSSHLib"),
 ]

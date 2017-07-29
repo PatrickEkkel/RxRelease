@@ -48,7 +48,8 @@ export function saveNewConfiguration(configuration_name,selected_profile) {
       Axios.post('http://localhost:8080/rxbackend/configurations/',
           {
           name: configuration_name,
-          profile: selected_profile[0]
+          profile: selected_profile[0],
+          hosts: []
         }).then(function() {
           dispatch( {
               type: 'SAVE_NEW_CONFIGURATION',
