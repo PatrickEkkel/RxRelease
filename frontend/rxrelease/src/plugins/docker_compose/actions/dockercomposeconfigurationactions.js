@@ -6,10 +6,7 @@ export function loadDockercomposeConfiguration(selected_configuration) {
       if (selected_configuration != null) {
       Axios.get('http://localhost:8080/rxbackend/rxdockercompose/configurations/byrootid/' + selected_configuration).then(function(response){
         var data = response.data
-          console.log("wat is de waarde van die shit als het leeg is")
           if(data.length > 0) {
-            console.log("komt hij hier wel dan")
-            console.log(data[0].dockercomposeyaml)
             dispatch(configurationLoaded(data[0].dockercomposeyaml));
           }
           else {

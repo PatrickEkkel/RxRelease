@@ -14,7 +14,8 @@ export default function _recipe(state = initialRecipeState,action) {
     case 'LOAD_HOSTS_FOR_RECIPE':
     return {
       type: action.type,
-      hosts: action.hosts
+      hosts: action.hosts,
+      addedHost: action.addedHost
     }
     case 'SAVE_ALL_RECIPE_CHILDREN':
     return {

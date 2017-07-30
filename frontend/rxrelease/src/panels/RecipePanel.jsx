@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import DockerComposeConfiguration from '../plugins/docker_compose/DockerComposeConfiguration'
 import Button from '../components/Button'
 import Table from '../components/Table'
+import HostFactory from '../factories/hostFactory'
 import * as recipeActionCreators from '../redux/recipeactioncreator'
 
 class  RecipePanel  extends React.Component {
@@ -20,7 +21,7 @@ class  RecipePanel  extends React.Component {
   componentWillMount() {
     var {type,selected_configuration} = this.props;
     if(type == 'LOAD_RECIPE_FROM_CONFIGURATION') {
-      this.props.dispatch(recipeActionCreators.loadHostsForRecipe())
+      this.props.dispatch(recipeActionCreators.loadHostsForRecipe(selected_configuration[0]))
       this.setState({selected_configuration: selected_configuration})
 
     }
@@ -31,13 +32,14 @@ class  RecipePanel  extends React.Component {
     this.setState({selectedHostValue: e.target.value})
   }
   addHost() {
+
     if(this.state.selectedHostValue != null) {
 
       var addedHosts = this.state.addedHosts;
       var availableHosts = this.state.hosts;
 
       for(var i=0;i<availableHosts.length;i++) {
-        if(this.state.hosts[i][0] == this.state.selectedHostValue) {
+        if(this.state.hosts[i].getId() == this.state.selectedHostValue) {
           var newAvailableHost = this.state.hosts[i];
           addedHosts.push(newAvailableHost)
           break;
@@ -49,9 +51,11 @@ class  RecipePanel  extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if(nextProps.type == 'LOAD_HOSTS_FOR_RECIPE') {
-      console.log("loaded hosts")
-      console.log(nextProps.hosts)
-      this.setState({addedHosts: nextProps.hosts})
+      var addedHosts =  this.state.addedHosts
+      console.log("addedHosts in componentWillReceiveProps")
+      addedHosts.push(nextProps.addedHost)
+      console.log(addedHosts)
+      this.setState({hosts: nextProps.hosts,addedHosts: addedHosts})
     }
   }
   saveChanges() {
@@ -64,10 +68,12 @@ class  RecipePanel  extends React.Component {
     var headers = ['id','hostname','ipaddress','description'];
     var currentContext = this;
     var hostElements = []
+    console.log("hosts ding ziet er slecht uit")
+    console.log(this.state.hosts)
     for(var i=0;i<this.state.hosts.length;i++) {
 
-      var id = this.state.hosts[i][0];
-      var hostname = this.state.hosts[i][1];
+      var id = this.state.hosts[i].getId();
+      var hostname = this.state.hosts[i].getHostname();
       hostElements.push(<option value={id}>{hostname}</option>)
     }
 
@@ -90,7 +96,7 @@ class  RecipePanel  extends React.Component {
         </fieldset>
       </div>
       <div className="row">
-        <Table headers={headers} data={this.state.addedHosts}/>
+        <Table headers={headers} data={HostFactory.convertHostListToMap(this.state.addedHosts)}/>
       </div>
       <div className="row">&nbsp;</div>
       <div className="row">&nbsp;</div>
@@ -107,7 +113,8 @@ class  RecipePanel  extends React.Component {
     return {
       type: state._recipe.type,
       selected_configuration: state._recipe.selected_configuration,
-      hosts: state._recipe.hosts
+      hosts: state._recipe.hosts,
+      addedHost: state._recipe.addedHost
     }
   }
 

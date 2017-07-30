@@ -1,5 +1,6 @@
 import Axios from 'axios';
-
+import Host from '../models/host';
+import HostFactory from '../factories/hostFactory';
 
 export function loadRecipePanelFromConfiguration(selected_configuration) {
   return {
@@ -11,14 +12,10 @@ export function loadRecipePanelFromConfiguration(selected_configuration) {
 export function saveAllRecipeChildren(addedHosts,selected_configuration,selected_profile,configuration_name) {
   return function (dispatch) {
     if (selected_configuration != null && addedHosts != null && configuration_name != null && selected_profile != null) {
-      // reduce dataset to bare minimum
-      var newAddedHosts = []
-      for(var i=0;i<addedHosts.length;i++) {
-        newAddedHosts.push(addedHosts[i][0])
-      }
+
     Axios.put('http://localhost:8080/rxbackend/configurations/' + selected_configuration + "/",
         {
-        hosts: newAddedHosts,
+        hosts: HostFactory.convertHostListToPk(addedHosts),
         name: configuration_name,
         profile: selected_profile
       }).then(function() {
@@ -30,25 +27,47 @@ export function saveAllRecipeChildren(addedHosts,selected_configuration,selected
     }
   }
 }
-export function loadHostsForRecipe() {
+export function loadHostsForRecipe(selected_configuration) {
+
+    var factory = new HostFactory();
     return function (dispatch) {
-      var retrievedData = [];
+      var availableHosts = null;
       Axios.get('http://localhost:8080/rxbackend/hosts/').then(function(response){
+
+        availableHosts = factory.convertJsonList(response.data);
+
         for(var i=0;i<response.data.length;i++) {
-          var id = response.data[i].id;
-          var hostname  = response.data[i].hostname;
-          var ipaddress = response.data[i].ipaddress;
-          var description = response.data[i].description;
-        retrievedData[i] = [id,hostname,ipaddress,description];
         }
-          dispatch(hostsLoaded(retrievedData));
+        Axios.get('http://localhost:8080/rxbackend/configurations/' + selected_configuration).then(function(response) {
+          var hostids = response.data.hosts
+
+          for(var i=0;i<hostids.length;i++) {
+
+          Axios.get('http://localhost:8080/rxbackend/hosts/' + hostids[i]).then(function(response) {
+              var newHost = factory.createHostFromJson(response.data)
+              console.log("beschikbare hosts lijkt leeg te zijn!!")
+              console.log(availableHosts)
+              dispatch(hostsLoaded(availableHosts,newHost));
+
+          })
+
+
+          }
+
+
+      //    var hostsList = factory.convertJsonList(addedHosts)
+
+
+        });
       });
 
     }
   }
- export function hostsLoaded(hosts) {
+ export function hostsLoaded(availableHosts,addedHost) {
+
    return {
      type: 'LOAD_HOSTS_FOR_RECIPE',
-     hosts: hosts
+     hosts: availableHosts,
+     addedHost: addedHost
    }
  }
