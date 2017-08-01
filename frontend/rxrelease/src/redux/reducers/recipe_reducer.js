@@ -8,7 +8,8 @@ export default function _recipe(state = initialRecipeState,action) {
     case 'LOAD_RECIPE_FROM_CONFIGURATION':
     return {
       type: action.type,
-      selected_configuration: action.selected_configuration
+      selected_configuration: action.selected_configuration,
+      selected_profile: action.selected_profile
     }
 
     case 'LOAD_HOSTS_FOR_RECIPE':

@@ -14,15 +14,16 @@ class  RecipePanel  extends React.Component {
       hosts: [],
       selectedHostValue: null,
       selected_configuration: null,
+      selected_profile: null,
       addedHosts: []
     }
   }
 
   componentWillMount() {
-    var {type,selected_configuration} = this.props;
+    var {type,selected_configuration,selected_profile} = this.props;
     if(type == 'LOAD_RECIPE_FROM_CONFIGURATION') {
       this.props.dispatch(recipeActionCreators.loadHostsForRecipe(selected_configuration[0]))
-      this.setState({selected_configuration: selected_configuration})
+      this.setState({selected_configuration: selected_configuration,selected_profile: selected_profile})
 
     }
 
@@ -52,9 +53,7 @@ class  RecipePanel  extends React.Component {
   componentWillReceiveProps(nextProps) {
     if(nextProps.type == 'LOAD_HOSTS_FOR_RECIPE') {
       var addedHosts =  this.state.addedHosts
-      console.log("addedHosts in componentWillReceiveProps")
       addedHosts.push(nextProps.addedHost)
-      console.log(addedHosts)
       this.setState({hosts: nextProps.hosts,addedHosts: addedHosts})
     }
   }
@@ -68,8 +67,6 @@ class  RecipePanel  extends React.Component {
     var headers = ['id','hostname','ipaddress','description'];
     var currentContext = this;
     var hostElements = []
-    console.log("hosts ding ziet er slecht uit")
-    console.log(this.state.hosts)
     for(var i=0;i<this.state.hosts.length;i++) {
 
       var id = this.state.hosts[i].getId();
@@ -113,6 +110,7 @@ class  RecipePanel  extends React.Component {
     return {
       type: state._recipe.type,
       selected_configuration: state._recipe.selected_configuration,
+      selected_profile: state._recipe.selected_profile,
       hosts: state._recipe.hosts,
       addedHost: state._recipe.addedHost
     }

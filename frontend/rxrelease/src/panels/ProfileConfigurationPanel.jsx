@@ -18,7 +18,7 @@ class ProfileConfigurationPanel extends React.Component {
   }
 
   onRowClick(entry) {
-    this.props.dispatch(recipeActionCreators.loadRecipePanelFromConfiguration(entry))
+    this.props.dispatch(recipeActionCreators.loadRecipePanelFromConfiguration(entry,this.state.selected_profile))
   }
   close() {
       this.props.dispatch(configurationActionCreators.initialConfigurationState())
@@ -45,9 +45,7 @@ class ProfileConfigurationPanel extends React.Component {
   componentWillReceiveProps(nextProps) {
     var currentContext = this;
     var headers = ['name']
-
     if(nextProps.type == 'CONFIGURATION_LOADED') {
-      this.props.dispatch(configurationActionCreators.configurationComplete())
       this.setState({configurations: nextProps.configurations})
     }
 

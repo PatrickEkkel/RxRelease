@@ -7,7 +7,8 @@ export default function _configuration(state = initialConfigurationState,action)
 
     case 'INITIAL_CONFIGURATION_STATE':
       return {
-        type: action.type
+        type: action.type,
+        selected_profile: action.selected_profile
       }
     case 'OPEN_NEW_CONFIGURATION':
     return {

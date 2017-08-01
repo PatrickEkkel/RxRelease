@@ -5,14 +5,15 @@ export function openNewConfiguration() {
       type: 'OPEN_NEW_CONFIGURATION',
   }
 }
-export function configurationComplete() {
+/*export function configurationComplete() {
   return {
     type: 'CONFIGURATION_COMPLETE'
   }
-}
-export function initialConfigurationState() {
+}*/
+export function initialConfigurationState(selected_profile) {
   return {
     type: 'INITIAL_CONFIGURATION_STATE',
+    selected_profile: selected_profile,
     showModal: false
   }
 }
@@ -34,15 +35,15 @@ export function loadConfigurations(selected_profile) {
       type: 'CONFIGURATION_LOADING'
     }
   }
-  export function configurationLoaded(configurations) {
+  export function configurationLoaded(configurations,selected_profile) {
     return {
       type: 'CONFIGURATION_LOADED',
       configurations: configurations,
+      selected_profile: selected_profile
     }
   }
 export function saveNewConfiguration(configuration_name,selected_profile) {
 
-    console.log("geef mij de selected_profile: " + selected_profile)
     return function (dispatch) {
       if (configuration_name != '' && selected_profile != null) {
       Axios.post('http://localhost:8080/rxbackend/configurations/',

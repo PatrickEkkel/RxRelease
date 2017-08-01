@@ -14,16 +14,19 @@ class  ProfilesBreadCrumbPanel  extends React.Component {
 constructor() {
  super();
  this.state = {
-   breadcrumbItems: []
+   breadcrumbItems: [],
+   selected_profile: null
  }
 }
 
 componentWillReceiveProps(nextProps) {
 
-  var { type } = this.props;
   var bc_items = [];
+
   switch(nextProps.type) {
+    case 'INITIAL_CONFIGURATION_STATE':
     case 'LOAD_CONFIGURATION_FROM_PROFILES':
+      this.setState({selected_profile: nextProps.selected_profile})
       bc_items = ['Profiles','Configuration']
     break;
     case 'LOAD_RECIPE_FROM_CONFIGURATION':
@@ -39,13 +42,12 @@ componentWillReceiveProps(nextProps) {
   }
 }
 breadCrumbOnClick(clickedItem) {
-
   switch (clickedItem) {
     case "Profiles":
     this.props.dispatch(profileActionCreators.initialProfilesState());
     break;
     case "Configuration":
-    this.props.dispatch(configurationActionCreators.initialConfigurationState())
+    this.props.dispatch(configurationActionCreators.initialConfigurationState(this.state.selected_profile))
     break;
     default:
 
@@ -71,12 +73,12 @@ var { type } = this.props;
 var currentPanel = <ProfilesPanel key="profilespanel"/>
 
 switch(type) {
+  case 'INITIAL_CONFIGURATION_STATE':
   case 'LOAD_CONFIGURATION_FROM_PROFILES':
     currentPanel = <ProfileConfigurationPanel/>
   break;
   case 'LOAD_RECIPE_FROM_CONFIGURATION':
     currentPanel = <RecipePanel/>
-
 }
 return <div><BreadCrumb items={this.state.breadcrumbItems} onClick={(clickedItem) => currentContext.breadCrumbOnClick(clickedItem) } ref={(container) => {currentContext.breadcrumbHandle = container}}/>{currentPanel}</div>
 }
@@ -84,7 +86,8 @@ return <div><BreadCrumb items={this.state.breadcrumbItems} onClick={(clickedItem
 }
 const mapStateToProps = (state/*, props*/) => {
   return {
-    type: state._profiles.type,
+    type: state._profilebreadcrumb.type,
+    selected_profile: state._profilebreadcrumb.selected_profile
   }
 }
 

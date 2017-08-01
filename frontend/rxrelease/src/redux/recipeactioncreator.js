@@ -2,10 +2,11 @@ import Axios from 'axios';
 import Host from '../models/host';
 import HostFactory from '../factories/hostFactory';
 
-export function loadRecipePanelFromConfiguration(selected_configuration) {
+export function loadRecipePanelFromConfiguration(selected_configuration,selected_profile) {
   return {
     type: 'LOAD_RECIPE_FROM_CONFIGURATION',
-    selected_configuration: selected_configuration
+    selected_configuration: selected_configuration,
+    selected_profile: selected_profile
   }
 }
 
@@ -45,8 +46,6 @@ export function loadHostsForRecipe(selected_configuration) {
 
           Axios.get('http://localhost:8080/rxbackend/hosts/' + hostids[i]).then(function(response) {
               var newHost = factory.createHostFromJson(response.data)
-              console.log("beschikbare hosts lijkt leeg te zijn!!")
-              console.log(availableHosts)
               dispatch(hostsLoaded(availableHosts,newHost));
 
           })

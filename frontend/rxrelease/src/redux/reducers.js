@@ -3,6 +3,7 @@ import hostReducer from './reducers/host_reducer'
 import profilesReducer from './reducers/profile_reducer'
 import configurationReducer from './reducers/configuration_reducer'
 import recipeReducer from './reducers/recipe_reducer'
+import profilebreadCrumbReducer from './reducers/profilebreadcrumb_reducer'
 import dockercomposeRecipeReducer from '../plugins/docker_compose/reducers/docker_compose_recipe_reducer'
 
 export function _menu(state, action) {
@@ -23,4 +24,7 @@ export function _recipe(state,action) {
 }
 export function _dockercompose_recipe(state,action) {
   return dockercomposeRecipeReducer(state,action)
+}
+export function _profilebreadcrumb(state,action) {
+  return profilebreadCrumbReducer(state,action)
 }

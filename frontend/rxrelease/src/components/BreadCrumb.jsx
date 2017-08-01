@@ -5,7 +5,7 @@ class BreadCrumb extends React.Component {
 constructor() {
  super();
  this.state = {
-   items: null,
+   items: null
  }
  }
 getItems() {
@@ -23,22 +23,31 @@ setItems(items) {
 onClick(clickedItem) {
   this.props.onClick(clickedItem)
 }
+
+componentWillMount() {
+
+
+
+}
+
+componentWillReceiveProps(nextProps) {
+
+}
 render() {
 
   var renderList = [];
   var currentContext = this;
-  for(var i=0;i<this.getItems().length;i++) {
-    if(i == this.getItems().length-1) {
-      renderList.push(<li className="breadcrumb-item active" key={this.getItems()[i]}>{this.getItems()[i]}</li>)
-    }
-    else {
-      var item = this.getItems()[i];
-      renderList.push(<li  className="breadcrumb-item" key={item}><a href="#" onClick={() => currentContext.onClick(item)}>{item}</a></li>)
-    }
-
-  }
-
-
+  var liElement = null;
+  this.getItems().map(entry =>
+    //if(i == this.getItems().length-1) {
+    //  liElement = <li className="breadcrumb-item active" key={item}>{item}</li>
+      //renderList.push(liElement)
+    //}
+    //else {
+    //  liElement = <li  className="breadcrumb-item" key={entry}><a href="#" onClick={() => currentContext.onClick(i)}>{item}</a></li>
+  //  }
+    renderList.push(<li  className="breadcrumb-item" key={entry}><a href="#" onClick={() => currentContext.onClick(entry)}>{entry}</a></li>)
+  );
   return <div>
 <ol className="breadcrumb">
   {renderList}
