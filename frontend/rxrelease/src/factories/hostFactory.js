@@ -25,6 +25,8 @@ static convertHostListToPk(list) {
 
 static convertHostListToMap(list) {
   var result = [];
+  console.log("list lenght = " + list.length)
+  console.log(list)
   for(var i=0;i<list.length;i++) {
 
     var map = [list[i].getId(),list[i].getHostname(),list[i].getIpaddress(),list[i].getDescription()];

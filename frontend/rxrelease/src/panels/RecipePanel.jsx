@@ -52,23 +52,32 @@ class  RecipePanel  extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if(nextProps.type == 'LOAD_HOSTS_FOR_RECIPE') {
-      var addedHosts =  this.state.addedHosts
-      addedHosts.push(nextProps.addedHost)
-      this.setState({hosts: nextProps.hosts,addedHosts: addedHosts})
+
+      if(nextProps.addedHost != null) {
+        var addedHosts =  this.state.addedHosts
+        addedHosts.push(nextProps.addedHost)
+        this.setState({hosts: nextProps.hosts,addedHosts: addedHosts})
+      }
+      else {
+        this.setState({hosts: nextProps.hosts})
+      }
+
     }
   }
   saveChanges() {
+    console.log("the current selected configuration")
+    console.log(this.state.selected_configuration)
     this.props.dispatch(
       recipeActionCreators
-      .saveAllRecipeChildren(this.state.addedHosts,this.state.selected_configuration[0],1,this.state.selected_configuration[1]));
+      .saveAllRecipeChildren(this.state.addedHosts,this.state.selected_configuration[0],this.state.selected_profile[0],this.state.selected_configuration[1]));
   }
   render() {
 
     var headers = ['id','hostname','ipaddress','description'];
     var currentContext = this;
     var hostElements = []
-    for(var i=0;i<this.state.hosts.length;i++) {
 
+    for(var i=0;i<this.state.hosts.length;i++) {
       var id = this.state.hosts[i].getId();
       var hostname = this.state.hosts[i].getHostname();
       hostElements.push(<option value={id}>{hostname}</option>)

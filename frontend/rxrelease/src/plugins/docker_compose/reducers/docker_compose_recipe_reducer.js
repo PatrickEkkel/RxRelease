@@ -14,7 +14,7 @@ export default function _dockercompose_recipe(state = initialDCRecipestate,actio
     case 'DC_CONFIGURATION_LOADED':
     return {
       type: action.type,
-      docker_compose_yaml: action.docker_compose_yaml
+      dcConfiguration: action.dcConfiguration
     }
     case 'SAVE_ALL_RECIPE_CHILDREN':
     return {

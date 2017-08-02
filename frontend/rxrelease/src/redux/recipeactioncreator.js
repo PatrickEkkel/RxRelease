@@ -33,33 +33,23 @@ export function loadHostsForRecipe(selected_configuration) {
     var factory = new HostFactory();
     return function (dispatch) {
       var availableHosts = null;
-      Axios.get('http://localhost:8080/rxbackend/hosts/').then(function(response){
-
+      Axios.get('http://localhost:8080/rxbackend/hosts/').then(function(response) {
         availableHosts = factory.convertJsonList(response.data);
-
-        for(var i=0;i<response.data.length;i++) {
-        }
         Axios.get('http://localhost:8080/rxbackend/configurations/' + selected_configuration).then(function(response) {
           var hostids = response.data.hosts
-
-          for(var i=0;i<hostids.length;i++) {
-
-          Axios.get('http://localhost:8080/rxbackend/hosts/' + hostids[i]).then(function(response) {
-              var newHost = factory.createHostFromJson(response.data)
-              dispatch(hostsLoaded(availableHosts,newHost));
-
-          })
-
-
+           if(hostids.length > 0)  {
+            for(var i=0;i<hostids.length;i++) {
+            Axios.get('http://localhost:8080/rxbackend/hosts/' + hostids[i]).then(function(response) {
+                var newHost = factory.createHostFromJson(response.data)
+                dispatch(hostsLoaded(availableHosts,newHost));
+            })
           }
-
-
-      //    var hostsList = factory.convertJsonList(addedHosts)
-
-
+        }
+          else {
+            dispatch(hostsLoaded(availableHosts,null));
+          }
         });
       });
-
     }
   }
  export function hostsLoaded(availableHosts,addedHost) {
