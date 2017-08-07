@@ -16,6 +16,7 @@ export function loadHostManagement(hostentry) {
   }
 }
 
+
 export function openNewHost(hostentry) {
 
   return {

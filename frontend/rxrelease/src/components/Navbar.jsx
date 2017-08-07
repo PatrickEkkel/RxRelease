@@ -13,11 +13,13 @@ class Navbar extends React.Component {
     return this.props.menuitems || [];
   }
   onClickEvent(id) {
+
+    this.props.onClick(id)
   }
 
 
   render() {
-
+    var currentContext = this;
 return     <nav className="navbar navbar-inverse navbar-fixed-top">
       <div className="container-fluid">
         <div className="navbar-header">
@@ -31,9 +33,9 @@ return     <nav className="navbar navbar-inverse navbar-fixed-top">
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul className="nav navbar-nav navbar-right">
-            <li><a href="#">Overview</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Help</a></li>
+            { this.getMenuItems().map(entry =>
+              <li><a href="#" onClick={() => currentContext.onClickEvent(entry) }>{entry}</a></li>
+            )}
           </ul>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import  * as hostActionCreators from '../redux/hostactioncreators'
+import Button from '../components/Button'
 import { connect } from 'react-redux'
 
 
@@ -13,9 +14,7 @@ class  HostManagementPanel  extends React.Component {
   changeAttr(e) {
     this.setState({[e.target.id]: e.target.value});
   }
-  changeAttr(e) {
-    this.setState({[e.target.id]: e.target.value});
-  }
+
   onRowClick(entry) {
   }
 
@@ -29,7 +28,7 @@ class  HostManagementPanel  extends React.Component {
   render() {
     var { type } = this.props
 
-    return <div>test</div>
+    return <div><Button title="Install Host"/></div>
   }
 }
 const mapStateToProps = (state/*, props*/) => {

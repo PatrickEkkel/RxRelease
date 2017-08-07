@@ -7,6 +7,7 @@ import profilebreadCrumbReducer from './reducers/profilebreadcrumb_reducer'
 import dockercomposeRecipeReducer from '../plugins/docker_compose/reducers/docker_compose_recipe_reducer'
 import hostManagementReducer from './reducers/hostmanagement_reducer'
 import hostBreadcrumbReducer from './reducers/hostbreadcrumb_reducer'
+import settingsReducer from './reducers/settings_reducer'
 
 export function _menu(state, action) {
 return menuReducer(state,action)
@@ -35,4 +36,7 @@ export function _hostmanagement(state,action) {
 }
 export function _hostbreadcrumb(state,action) {
   return hostBreadcrumbReducer(state,action)
+}
+export function _settings(state,action) {
+  return settingsReducer(state,action)
 }

@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import Profile
 from .models import Host
 from .models import Configuration
+from .models import Capability
+from .models import State
 
 
 class HostTestSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
@@ -30,6 +32,15 @@ class ConfigurationSerializer(serializers.ModelSerializer):
     #        print('eventesten')
     #        host.save()
     #    return instance
+class StateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = State
+        fields = ('id','name','installed')
+class CapabilitySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Capability
+        fields = ('id','name','module')
 
 class ProfileSerializer(serializers.ModelSerializer):
 

@@ -3,6 +3,8 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 from .views import profileviews
 from .views import hostviews
+from .views import capabilityviews
+from .views import statesviews
 from .views import configurationviews
 from .views import testview
 
@@ -20,4 +22,10 @@ urlpatterns = [
 
     url(r'^hosts/$', hostviews.CreateView.as_view(), name="create"),
     url(r'^hosts/(?P<pk>[0-9]+)/$', hostviews.DetailsView.as_view(), name="details"),
+
+    url(r'^capabilities/$', capabilityviews.CreateView.as_view(), name="create"),
+    url(r'^capabilities/(?P<pk>[0-9]+)/$', capabilityviews.DetailsView.as_view(), name="details"),
+
+    url(r'^states/$', statesviews.CreateView.as_view(), name="create"),
+    url(r'^states/(?P<pk>[0-9]+)/$', statesviews.DetailsView.as_view(), name="details"),
 ]

@@ -10,6 +10,7 @@ import HostsPanel from './panels/HostsPanel';
 import ComponentContainer from './components/ComponentContainer';
 import ProfilesBreadCrumbPanel from './panels/ProfilesBreadCrumbPanel';
 import HostsBreadCrumbPanel from './panels/HostsBreadCrumbPanel';
+import SettingsPanel from './panels/SettingsPanel';
 import { Provider } from 'react-redux'
 
 
@@ -44,9 +45,17 @@ class  App  extends React.Component {
     var buttondropdown = <Button key="profilespanel"/>
     var profiles = <ProfilesBreadCrumbPanel onModalLoad={onModalLoad}/>
     var hosts = <HostsBreadCrumbPanel/>
+    var settings = <SettingsPanel/>
     var innerComponent =  profiles;
 
-
+    var navbarClick = function(id) {
+      switch(id) {
+        case "Settings":
+          currentComponent.setInnerComponent(settings);
+          innerComponent = settings
+        break;
+      }
+    }
     var menuClick = function(id) {
 
       switch (id) {
@@ -68,7 +77,7 @@ class  App  extends React.Component {
 
 
       return  <Provider store={this.props.store}><div className="vertical-left">
-        <Navbar menuitems={navbaritems} onclick={menuClick}/>
+        <Navbar menuitems={navbaritems} onClick={navbarClick}/>
         <div className="row">
         <div className="col-md-1 col-xs-offset-2">
          <Menu menuitems={menuitems} onclick={menuClick} onLoad={onMenuLoad} selectedItem="Profiles"/>

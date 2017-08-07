@@ -7,6 +7,10 @@ export default function _hostbreadcrumb(state = initialHostBreadcrumbSate,action
     return {
       type: action.type,
     }
+    case 'LOAD_HOST_MANAGEMENT_FROM_HOSTS':
+    return {
+      type: action.type 
+    }
     default:
     return state;
 

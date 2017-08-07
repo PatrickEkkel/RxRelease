@@ -1,6 +1,7 @@
 import React from 'react';
 import BreadCrumb from '../components/BreadCrumb'
 import HostsPanel from '../panels/HostsPanel'
+import HostManagementPanel from '../panels/HostManagementPanel'
 import hostsActionCreators from '../redux/hostactioncreators'
 import { connect } from 'react-redux'
 
@@ -21,8 +22,9 @@ componentWillReceiveProps(nextProps) {
   switch(nextProps.type) {
     case 'INITIAL_HOST_BREADCRUMB_STATE':
         bc_items = ['Hosts']
+    case 'LOAD_HOST_MANAGEMENT_FROM_HOSTS':
+        bc_items = ['Hosts','Host Details']
      break;
-
   }
   if(bc_items.length > 0) {
          this.breadcrumbHandle.setItems(bc_items)
@@ -31,7 +33,7 @@ componentWillReceiveProps(nextProps) {
 breadCrumbOnClick(clickedItem) {
   switch (clickedItem) {
     case "Hosts":
-    //this.props.dispatch(profileActionCreators.initialProfilesState());
+      this.props.dispatch(hostsActionCreators.initialHostState());
     break;
     default:
 
@@ -47,17 +49,22 @@ switch(type) {
 }
 this.setState({breadcrumbItems: bc_items})
 }
-render() {
 
+render() {
 
 var currentContext = this;
 var { type } = this.props;
 var currentPanel = <HostsPanel key="profilespanel"/>
 
-switch(type) {
-  default:
-    console.log("doe lekker niks")
-}
+  switch (type) {
+    case 'LOAD_HOST_MANAGEMENT_FROM_HOSTS':
+      currentPanel = <HostManagementPanel/>
+    break;
+    default:
+
+  }
+
+
 return <div><BreadCrumb items={this.state.breadcrumbItems} onClick={(clickedItem) => currentContext.breadCrumbOnClick(clickedItem) } ref={(container) => {currentContext.breadcrumbHandle = container}}/>{currentPanel}</div>
 }
 
