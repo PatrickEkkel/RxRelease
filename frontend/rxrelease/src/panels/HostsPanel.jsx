@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '../components/Button';
-import Table from '../components/Table';
+import LabeledTable from '../components/LabeledTable';
+import HostFactory from '../factories/hostFactory'
 import HostPanel from './HostPanel'
 import  * as hostActionCreators from '../redux/hostactioncreators'
 import Modal from '../components/Modal';
@@ -13,7 +14,7 @@ class  HostsPanel  extends React.Component {
     super()
     this.state = {
       hosts: [],
-      test: false
+      test: false,
     }
   }
   createHost() {
@@ -35,6 +36,7 @@ class  HostsPanel  extends React.Component {
     this.setState({[e.target.id]: e.target.value});
   }
   onRowClick(entry) {
+    this.props.dispatch(hostActionCreators.loadHostManagement(entry));
   }
 
   componentWillMount() {
@@ -46,7 +48,6 @@ class  HostsPanel  extends React.Component {
     }
   }
   componentWillReceiveProps(nextProps) {
-    console.log("nu komt hij er wel")
     if(nextProps.type == 'HOSTS_LOADED') {
       this.setState({hosts: nextProps.hosts})
     }
@@ -68,7 +69,7 @@ class  HostsPanel  extends React.Component {
         <Modal title="New Host" saveAndClose={() => currentContext.saveAndClose()} close={() => currentContext.close()} showModal={showModal}>
           <HostPanel changeAttr={(e) => currentContext.changeAttr(e)}/>
         </Modal>
-        <Table headers = {headers} data={currentContext.state.hosts} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
+        <LabeledTable labelText="Minion Status" headers = {headers} data={HostFactory.convertHostListToMap(currentContext.state.hosts)} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
         <Button title="New Host"  onClick={() => currentContext.createHost()}/>
    </div>
   }

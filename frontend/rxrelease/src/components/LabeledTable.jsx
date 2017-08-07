@@ -1,6 +1,6 @@
 import React from 'react';
 
-class  Table  extends React.Component {
+class  LabeledTable  extends React.Component {
   constructor() {
     super()
   }
@@ -10,20 +10,29 @@ class  Table  extends React.Component {
   getData() {
     return this.props.data || [];
   }
+  getLabelStatus(entry) {
+    return "label ";
+  }
+  getLabelStatusText(entry) {
+    return entry[entry.length-1];
+  }
+  getLabelText()  {
+    return this.props.labelText;
+  }
   onRowClick(entry) {
       if(this.props.onRowClick != null) {
         this.props.onRowClick(entry);
       }
   }
-  renderColumn(i,innerentry,headerlength) {
+  renderColumn(entry,innerentry,i) {
+     var currentContext = this;
+     var result =  <td>{innerentry}</td>;
+        console.log("i has funky values: " + i )
+     if(entry.length-1 == i) {
 
-    if(headerlength < i) {
-      alert(i)
-      return ""
-    }
-    else {
-     return <td>{innerentry}</td>
-    }
+       result = <td><span className={currentContext.getLabelStatus(entry)}>{currentContext.getLabelStatusText(entry)}</span></td>
+     }
+    return result;
   }
   render() {
     var currentContext = this;
@@ -34,13 +43,15 @@ return <div className="table-responsive" >
           { this.getHeaders().map(entry =>
             <th>{entry}</th>)
           }
+          <th>{currentContext.getLabelText()}</th>
         </tr>
       </thead>
       <tbody>
         { this.getData().map(entry =>
+
         <tr className="showpointer" key={entry[0]} onClick={() => currentContext.onRowClick(entry)} >
           {entry.map((innerentry,i) =>
-              currentContext.renderColumn(i,innerentry,currentContext.getHeaders().length)
+            currentContext.renderColumn(entry,innerentry,i)
           )}
         </tr>)
        }
@@ -54,4 +65,4 @@ return <div className="table-responsive" >
   }
 }
 
-export default Table
+export default LabeledTable

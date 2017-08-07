@@ -6,5 +6,6 @@ urlpatterns = [
     url(r'^rxbackend/rxdockercompose/', include('rxbackend.rxdockercompose.urls')),
     url(r'^rxbackend/rxforeman/', include('rxbackend.rxforeman.urls')),
     url(r'^rxbackend/rxdod/', include('rxbackend.rxdod.urls')),
+    url(r'^rxbackend/rxsalt/', include('rxbackend.rxsalt.urls')),
     url(r'^admin/', admin.site.urls),
 ]

@@ -1,7 +1,7 @@
 
 import Axios from 'axios';
 import Host from '../models/host'
-
+import HostFactory from '../factories/hostFactory'
 
 export function initialHostState() {
   return {
@@ -9,7 +9,15 @@ export function initialHostState() {
   }
 }
 
-export function openNewHost() {
+export function loadHostManagement(hostentry) {
+  return {
+    type: 'LOAD_HOST_MANAGEMENT_FROM_HOSTS',
+    selected_host: HostFactory.convertMapToHost(hostentry)
+  }
+}
+
+export function openNewHost(hostentry) {
+
   return {
     type: 'OPEN_NEW_HOST'
     }
@@ -17,19 +25,14 @@ export function openNewHost() {
 
 export function loadHosts() {
   return function (dispatch) {
-      var retrievedData = [];
+
       Axios.get('http://localhost:8080/rxbackend/hosts/')
       .then(function(response){
-        for(var i=0;i<response.data.length;i++) {
-          var id = response.data[i].id;
-          var hostname = response.data[i].hostname;
-          var ipaddress = response.data[i].ipaddress;
-          var description = response.data[i].description;
-          var p = new Host(id,hostname,ipaddress,description)
 
-        retrievedData[i] = [id,hostname,ipaddress,description];
-        }
-          dispatch(hostsLoaded(retrievedData));
+        var factory = new HostFactory();
+        var hostList = factory.convertJsonList(response.data)
+
+          dispatch(hostsLoaded(hostList));
       });
   }
 }

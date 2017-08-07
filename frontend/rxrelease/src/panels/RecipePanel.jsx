@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import DockerComposeConfiguration from '../plugins/docker_compose/DockerComposeConfiguration'
 import Button from '../components/Button'
-import Table from '../components/Table'
+import LabeledTable from '../components/LabeledTable'
 import HostFactory from '../factories/hostFactory'
 import * as recipeActionCreators from '../redux/recipeactioncreator'
 
@@ -102,7 +102,7 @@ class  RecipePanel  extends React.Component {
         </fieldset>
       </div>
       <div className="row">
-        <Table headers={headers} data={HostFactory.convertHostListToMap(this.state.addedHosts)}/>
+        <LabeledTable headers={headers} data={HostFactory.convertHostListToMap(this.state.addedHosts)}/>
       </div>
       <div className="row">&nbsp;</div>
       <div className="row">&nbsp;</div>

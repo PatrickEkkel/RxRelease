@@ -23,13 +23,20 @@ static convertHostListToPk(list) {
 
 }
 
+static convertMapToHost(list) {
+
+var result = new Host(list[0],list[1],list[2],list[3],list[4]);
+
+
+return result;
+
+}
 static convertHostListToMap(list) {
   var result = [];
-  console.log("list lenght = " + list.length)
-  console.log(list)
+
   for(var i=0;i<list.length;i++) {
 
-    var map = [list[i].getId(),list[i].getHostname(),list[i].getIpaddress(),list[i].getDescription()];
+    var map = [list[i].getId(),list[i].getHostname(),list[i].getIpaddress(),list[i].getDescription(),list[i].getStatus()];
     result.push(map)
   }
   return result;
@@ -38,7 +45,7 @@ static convertHostListToDictionary(list) {
  var result = [];
  for(var i=0;i<list.length;i++) {
 
-   var map = {"id": list[i].getId(),"hostname": list[i].getHostname(),"ipaddress": list[i].getIpaddress(),"description": list[i].getDescription()};
+   var map = {"id": list[i].getId(),"hostname": list[i].getHostname(),"ipaddress": list[i].getIpaddress(),"description": list[i].getDescription(),"status": list[i].getStatus()};
    result.push(map)
  }
  return result;
@@ -46,7 +53,7 @@ static convertHostListToDictionary(list) {
 
 createHostFromJson(json) {
 
-var result = new Host(json.id,json.hostname,json.ipaddress,json.description)
+var result = new Host(json.id,json.hostname,json.ipaddress,json.description,json.status)
 return result;
 
 }

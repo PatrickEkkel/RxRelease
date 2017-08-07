@@ -30,7 +30,6 @@ class DockerComposeConfiguration extends React.Component {
   var factory = new ConfigurationFactory()
   var configuration = factory.createConfigurationFromArray(selected_configuration)
   if(type ==  'LOAD_RECIPE_FROM_CONFIGURATION') {
-    alert('komt hij hier wel?')
    this.props.dispatch(dcConfigurationActions.loadDockercomposeConfiguration(configuration))
    this.setState({selected_configuration: configuration})
   }

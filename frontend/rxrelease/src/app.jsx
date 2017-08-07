@@ -9,6 +9,7 @@ import ProfilesPanel from './panels/ProfilesPanel';
 import HostsPanel from './panels/HostsPanel';
 import ComponentContainer from './components/ComponentContainer';
 import ProfilesBreadCrumbPanel from './panels/ProfilesBreadCrumbPanel';
+import HostsBreadCrumbPanel from './panels/HostsBreadCrumbPanel';
 import { Provider } from 'react-redux'
 
 
@@ -41,8 +42,8 @@ class  App  extends React.Component {
       }
 
     var buttondropdown = <Button key="profilespanel"/>
-    var profiles = <ProfilesBreadCrumbPanel ref={(container) => { bcPanelRef = container }} onModalLoad={onModalLoad}/>
-    var hosts = <HostsPanel/>
+    var profiles = <ProfilesBreadCrumbPanel onModalLoad={onModalLoad}/>
+    var hosts = <HostsBreadCrumbPanel/>
     var innerComponent =  profiles;
 
 
@@ -59,15 +60,12 @@ class  App  extends React.Component {
           break;
         case "Logging":
             currentComponent.setInnerComponent(profiles);
-            innerComponentRef = bcPanelRef;
           break;
         default:
 
       }
     }
-    var saveModal = function()  {
-      bcPanelRef.save();
-    }
+
 
       return  <Provider store={this.props.store}><div className="vertical-left">
         <Navbar menuitems={navbaritems} onclick={menuClick}/>

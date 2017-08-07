@@ -55,7 +55,7 @@ class ProfileConfigurationPanel extends React.Component {
   }
   render() {
     var currentContext = this;
-    var headers = ['name']
+    var headers = ['id','name']
     var {showModal} = this.props;
 
     return <div>
