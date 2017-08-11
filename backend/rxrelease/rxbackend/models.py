@@ -1,8 +1,17 @@
 from django.db import models
 
+class Capability(models.Model):
+    name = models.CharField(max_length=255)
+    module = models.CharField(max_length=255)
+
+
+class ProfileType(models.Model):
+    name = models.CharField(max_length=255)
+    capabilities = models.ManyToManyField(Capability)
+
 class Profile(models.Model):
     name = models.CharField(max_length=200)
-    type = models.CharField(max_length=50)
+    profiletype = models.ForeignKey(ProfileType,null=True)
     def __str__(self):
         return self.name
 
@@ -11,10 +20,6 @@ class Host(models.Model):
     ipaddress =  models.CharField(max_length=15)
     description =  models.CharField(max_length=400)
     status      = models.CharField(max_length=255,default="UNMANAGED")
-
-class Capability(models.Model):
-    name = models.CharField(max_length=255)
-    module = models.CharField(max_length=255)
 
 class State(models.Model):
     name = models.CharField(max_length=255)

@@ -2,6 +2,7 @@ from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from .views import profileviews
+from .views import profiletypeviews
 from .views import hostviews
 from .views import capabilityviews
 from .views import statesviews
@@ -28,4 +29,8 @@ urlpatterns = [
 
     url(r'^states/$', statesviews.CreateView.as_view(), name="create"),
     url(r'^states/(?P<pk>[0-9]+)/$', statesviews.DetailsView.as_view(), name="details"),
+
+    url(r'^profiletypes/$', profiletypeviews.CreateView.as_view(), name="create"),
+    url(r'^profiletypes/(?P<pk>[0-9]+)/$', profiletypeviews.DetailsView.as_view(), name="details"),
+
 ]

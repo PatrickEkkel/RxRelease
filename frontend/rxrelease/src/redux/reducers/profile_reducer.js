@@ -27,14 +27,17 @@ export default function _profiles(state = initialProfileState,action) {
      return {
        type: action.type,
         showModal: true,
-        profiles: action.profiles
      }
      case 'SAVE_NEW_PROFILE':
      return {
        type: action.type,
        showModal: false
      }
-
+    case 'PROFILE_TYPES_LOADED':
+    return {
+      type: action.type,
+      profiletypes: action.profiletypes
+    }
     case 'NEW_PROFILE_ENTRY':
     return {
         type: action.type,

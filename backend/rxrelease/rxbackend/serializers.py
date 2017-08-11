@@ -4,7 +4,12 @@ from .models import Host
 from .models import Configuration
 from .models import Capability
 from .models import State
+from .models import ProfileType
 
+class CapabilityMTMSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
+    class Meta:
+        model = Capability
+        fields = ('id','name','module')
 
 class HostTestSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
 
@@ -12,6 +17,12 @@ class HostTestSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSer
         model = Host
         fields = ('id','hostname','ipaddress','description')
 
+
+class ProfileTypeSerializer(serializers.ModelSerializer):
+    capabilities = CapabilityMTMSerializer(many=True,queryset=Capability.objects.all())
+    class Meta:
+        model = ProfileType
+        fields  = ('id','name','capabilities')
 
 class HostSerializer(serializers.ModelSerializer):
 
@@ -36,6 +47,8 @@ class StateSerializer(serializers.ModelSerializer):
     class Meta:
         model = State
         fields = ('id','name','installed')
+
+
 class CapabilitySerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -46,4 +59,4 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('name','type','id')
+        fields = ('name','profiletype','id')

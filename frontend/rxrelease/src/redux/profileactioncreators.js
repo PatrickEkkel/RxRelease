@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import Profile from '../models/profile'
+import ProfileType from '../models/profiletype'
 
 export function newProfileEntry(key,value) {
   return {
@@ -7,12 +8,33 @@ export function newProfileEntry(key,value) {
     [key]: value
   }
 }
-export function openNewProfile(profiles_list) {
+export function openNewProfile() {
   return {
       type: 'OPEN_NEW_PROFILE',
-      profiles: profiles_list
   }
 }
+
+export function loadProfiletypes() {
+  return function (dispatch) {
+      var profiletypes = [];
+      Axios.get('http://localhost:8080/rxbackend/profiletypes/')
+      .then(function(response){
+        for(var i=0;i<response.data.length;i++) {
+
+        profiletypes[i] = new ProfileType(response.data[i].id,response.data[i].name)
+        }
+          dispatch(profileTypesLoaded(profiletypes));
+      });
+  }
+}
+
+export function profileTypesLoaded(profiletypes) {
+  return {
+    type: 'PROFILE_TYPES_LOADED',
+    profiletypes: profiletypes
+  }
+}
+
 export function loadProfiles() {
   return function (dispatch) {
       var retrievedData = [];
@@ -54,7 +76,7 @@ export function saveNewProfile(profile_name,profile_type) {
     Axios.post('http://localhost:8080/rxbackend/profiles/',
         {
         name: profile_name,
-        type: profile_type
+        profiletype: profile_type
       }).then(function() {
         dispatch( {
             type: 'SAVE_NEW_PROFILE',

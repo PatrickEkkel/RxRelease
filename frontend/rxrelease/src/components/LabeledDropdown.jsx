@@ -43,7 +43,7 @@ class LabeledDropdown extends React.Component {
     rows.push(noneoption)
 
     this.getItems().forEach(function(item) {
-      var link = <option value={item}>{item}</option>
+      var link = <option value={item['id']}>{item['name']}</option>
       rows.push(link)
     });
 
