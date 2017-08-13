@@ -1,0 +1,6 @@
+[Profile]1-1..*[ProfileType]
+[ProfileType]1-1..*[Capability]
+
+[Host]1-1..*[State]
+[StateType]1-0..*[State]
+[Capability]1-0..*[StateType]

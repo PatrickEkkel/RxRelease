@@ -36,7 +36,7 @@ export default function _profiles(state = initialProfileState,action) {
     case 'PROFILE_TYPES_LOADED':
     return {
       type: action.type,
-      profiletypes: action.profiletypes
+      profiletypes: action.profiletypes,
     }
     case 'NEW_PROFILE_ENTRY':
     return {

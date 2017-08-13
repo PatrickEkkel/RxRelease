@@ -1,6 +1,7 @@
 import React from 'react';
 import  * as hostActionCreators from '../redux/hostactioncreators'
 import Button from '../components/Button'
+import LabeledTable from '../components/LabeledTable'
 import { connect } from 'react-redux'
 
 
@@ -28,7 +29,15 @@ class  HostManagementPanel  extends React.Component {
   render() {
     var { type } = this.props
 
-    return <div><Button title="Install Host"/></div>
+    var headers = ['#','name','installed'];
+    var data = [];
+    return <div>
+      <LabeledTable labelText="Status" headers = {headers} data={data} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
+
+      <Button title="Install Host"/>
+
+
+      </div>
   }
 }
 const mapStateToProps = (state/*, props*/) => {

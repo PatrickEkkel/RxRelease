@@ -5,6 +5,8 @@ from .models import Configuration
 from .models import Capability
 from .models import State
 from .models import ProfileType
+from .models import StateType
+
 
 class CapabilityMTMSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
     class Meta:
@@ -43,17 +45,37 @@ class ConfigurationSerializer(serializers.ModelSerializer):
     #        print('eventesten')
     #        host.save()
     #    return instance
-class StateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = State
-        fields = ('id','name','installed')
 
+
+class StateTypeMTMSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
+
+    class Meta:
+        model = StateType
+        fiels = ('id','name')
+
+class StateTypeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StateType
+        fields = ('id','name')
 
 class CapabilitySerializer(serializers.ModelSerializer):
-
+    statetypes = StateTypeMTMSerializer(many=True,queryset=StateType.objects.all())
     class Meta:
         model = Capability
-        fields = ('id','name','module')
+        fields = ('id','name','module','statetypes')
+
+
+class StateSerializer(serializers.ModelSerializer):
+
+    #capabilities = CapabilityMTMSerializer(many=True,queryset=Capability.objects.all())
+    class Meta:
+
+        model = State
+        fields = ('id','name','installed','capability','host')
+
+
+
 
 class ProfileSerializer(serializers.ModelSerializer):
 

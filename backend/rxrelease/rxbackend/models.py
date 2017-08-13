@@ -1,9 +1,12 @@
 from django.db import models
 
+class StateType(models.Model):
+    name = models.CharField(max_length=255)
+
 class Capability(models.Model):
     name = models.CharField(max_length=255)
     module = models.CharField(max_length=255)
-
+    statetypes = models.ManyToManyField(StateType)
 
 class ProfileType(models.Model):
     name = models.CharField(max_length=255)
@@ -25,7 +28,7 @@ class State(models.Model):
     name = models.CharField(max_length=255)
     host = models.ForeignKey(Host)
     installed = models.BooleanField()
-    capability = models.ForeignKey(Capability)
+    statetype = models.ForeignKey(StateType)
 
 class Configuration(models.Model):
     name = models.CharField(max_length=200)
