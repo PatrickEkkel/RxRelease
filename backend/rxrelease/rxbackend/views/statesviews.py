@@ -14,3 +14,9 @@ class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
     queryset = State.objects.all()
     serializer_class = StateSerializer
+
+class HostView(generics.ListAPIView):
+    serializer_class = StateSerializer
+    def get_queryset(self):
+        host_id = self.kwargs['host_id']
+        return State.objects.filter(host_id=host_id)

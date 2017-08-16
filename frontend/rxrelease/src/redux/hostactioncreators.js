@@ -2,6 +2,7 @@
 import Axios from 'axios';
 import Host from '../models/host'
 import HostFactory from '../factories/hostFactory'
+import StateFactory from '../factories/stateFactory'
 
 export function initialHostState() {
   return {
@@ -10,12 +11,24 @@ export function initialHostState() {
 }
 
 export function loadHostManagement(hostentry) {
-  return {
-    type: 'LOAD_HOST_MANAGEMENT_FROM_HOSTS',
-    selected_host: HostFactory.convertMapToHost(hostentry)
+  var host = HostFactory.convertMapToHost(hostentry)
+  return function (dispatch) {
+
+      Axios.get('http://localhost:8080/rxbackend/states/host/' + host.getId())
+      .then(function(response){
+        var factory = new StateFactory()
+        var states = factory.convertJsonList(response.data)
+        host.setStates(states)
+          dispatch(hostManagementLoaded(host));
+      });
   }
 }
-
+export function hostManagementLoaded(host) {
+  return {
+     type: 'LOAD_HOST_MANAGEMENT_FROM_HOSTS',
+     selected_host: host
+  }
+}
 
 export function openNewHost(hostentry) {
 

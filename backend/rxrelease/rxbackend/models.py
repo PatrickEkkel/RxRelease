@@ -2,6 +2,7 @@ from django.db import models
 
 class StateType(models.Model):
     name = models.CharField(max_length=255)
+    handler = models.CharField(max_length=255,null=True)
 
 class Capability(models.Model):
     name = models.CharField(max_length=255)
@@ -36,3 +37,11 @@ class Configuration(models.Model):
     profile = models.ForeignKey(Profile)
     def __str__(self):
         return self.name
+
+class SettingsCategory(models.Model):
+    name = models.CharField(max_length=255)
+    
+class KVSetting(models.Model):
+    key = models.CharField(max_length=255)
+    value = models.CharField(max_length=255)
+    category = models.ForeignKey(SettingsCategory)

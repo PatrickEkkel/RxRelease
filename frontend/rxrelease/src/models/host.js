@@ -7,8 +7,18 @@ this.hostname = hostname;
 this.ipaddress = ipaddress;
 this.description = description;
 this.status = status;
+this.states = [];
  }
 
+setStates(states) {
+  this.states = states;
+}
+addState(state) {
+  this.states.push(state)
+}
+getStates() {
+  return this.states;
+}
 
 getId() {
   return this.id;

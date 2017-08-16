@@ -11,7 +11,16 @@ class  LabeledTable  extends React.Component {
     return this.props.data || [];
   }
   getLabelStatus(entry) {
-    return "label ";
+
+    if(this.props.onLabelLoad == null) {
+      return  "label"
+    }
+    else {
+      return this.props.onLabelLoad(entry)
+
+    }
+
+
   }
   getLabelStatusText(entry) {
     return entry[entry.length-1];

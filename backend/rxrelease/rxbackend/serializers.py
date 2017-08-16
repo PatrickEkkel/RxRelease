@@ -6,6 +6,9 @@ from .models import Capability
 from .models import State
 from .models import ProfileType
 from .models import StateType
+from .models import KVSetting
+from .models import SettingsCategory
+from .viewmodels import StateTypeHandler
 
 
 class CapabilityMTMSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
@@ -46,12 +49,18 @@ class ConfigurationSerializer(serializers.ModelSerializer):
     #        host.save()
     #    return instance
 
+class HostStateHandlerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StateTypeHandler
+        fields = ("host_id","keyvalList","handlerType","handlerCommand")
+
 
 class StateTypeMTMSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
 
     class Meta:
         model = StateType
-        fiels = ('id','name')
+        fields = ('id','name')
 
 class StateTypeSerializer(serializers.ModelSerializer):
 
@@ -72,9 +81,18 @@ class StateSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = State
-        fields = ('id','name','installed','capability','host')
+        fields = ('id','name','installed','host')
 
+class SettingsCategorySerializer(serializers.ModelSerializer):
+    class Meta:
 
+        model = SettingsCategory
+        fields = ('id','name')
+class KVSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        category = SettingsCategorySerializer
+        model = KVSetting
+        fields = ('id','key','value','category')
 
 
 class ProfileSerializer(serializers.ModelSerializer):
