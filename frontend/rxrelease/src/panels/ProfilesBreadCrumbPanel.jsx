@@ -32,6 +32,7 @@ componentWillReceiveProps(nextProps) {
     case 'LOAD_RECIPE_FROM_CONFIGURATION':
       bc_items = ['Profiles','Configuration','Recipe'];
     break;
+    case 'INITIAL_PROFILE_BREADCRUMBSTATE':
     case 'INITIAL_PROFILES_STATE':
         bc_items = ['Profiles']
      break;
@@ -44,7 +45,7 @@ componentWillReceiveProps(nextProps) {
 breadCrumbOnClick(clickedItem) {
   switch (clickedItem) {
     case "Profiles":
-    this.props.dispatch(profileActionCreators.initialProfilesState());
+    this.props.dispatch(profileActionCreators.initialProfilesBreadcrumbstate());
     break;
     case "Configuration":
     this.props.dispatch(configurationActionCreators.initialConfigurationState(this.state.selected_profile))
@@ -65,14 +66,16 @@ this.setState({breadcrumbItems: bc_items})
 }
 render() {
 
-
 var currentContext = this;
 
-
 var { type } = this.props;
-var currentPanel = <ProfilesPanel key="profilespanel"/>
 
+var currentPanel = null; // <ProfilesPanel key="profilespanel"/>
 switch(type) {
+  case 'INITIAL_PROFILE_BREADCRUMBSTATE':
+    currentPanel = <ProfilesPanel key="profilespanel"/>
+    this.props.dispatch(profileActionCreators.loadProfiles());
+  break;
   case 'INITIAL_CONFIGURATION_STATE':
   case 'LOAD_CONFIGURATION_FROM_PROFILES':
     currentPanel = <ProfileConfigurationPanel/>

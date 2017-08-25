@@ -52,6 +52,11 @@ export function loadProfiles() {
       });
   }
 }
+export function initialProfilesBreadcrumbstate() {
+  return {
+    type: 'INITIAL_PROFILE_BREADCRUMBSTATE'
+  }
+}
 export function initialProfilesState() {
   return {
     type: 'INITIAL_PROFILES_STATE',

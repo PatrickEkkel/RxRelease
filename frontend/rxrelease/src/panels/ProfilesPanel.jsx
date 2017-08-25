@@ -42,10 +42,11 @@ class  ProfilesPanel  extends React.Component {
     this.props.dispatch(profileActionCreators.loadConfigurationsPanel(entry))
   }
   componentWillMount() {
+
     var  {type,profiles} = this.props
+
     if(type == 'SAVE_NEW_PROFILE' || type == 'INITIAL_PROFILES_STATE') {
       this.props.dispatch(profileActionCreators.loadProfiles());
-
     }
   }
   componentWillReceiveProps(nextProps) {

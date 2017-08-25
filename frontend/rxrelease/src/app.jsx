@@ -9,6 +9,8 @@ import ProfilesPanel from './panels/ProfilesPanel';
 import HostsPanel from './panels/HostsPanel';
 import ComponentContainer from './components/ComponentContainer';
 import ProfilesBreadCrumbPanel from './panels/ProfilesBreadCrumbPanel';
+import  * as profileActionCreators from './redux/profileactioncreators'
+import  * as hostActionCreators from './redux/hostactioncreators';
 import HostsBreadCrumbPanel from './panels/HostsBreadCrumbPanel';
 import SettingsPanel from './panels/SettingsPanel';
 import { Provider } from 'react-redux'
@@ -34,6 +36,7 @@ class  App  extends React.Component {
     var innerComponentRef = "empty";
     var bcPanelRef = "empty";
     var modalHandle = "empty";
+    var store = this.props.store;
 
       var onMenuLoad = function() {
        // Do nothing
@@ -61,10 +64,13 @@ class  App  extends React.Component {
       switch (id) {
         case "Profiles":
             currentComponent.setInnerComponent(profiles);
-           innerComponent = profilesPanel;
+            innerComponent = profiles;
+            store.dispatch(profileActionCreators.initialProfilesBreadcrumbstate());
+            store.dispatch(profileActionCreators.loadProfiles());
           break;
         case "Hosts":
            currentComponent.setInnerComponent(hosts);
+           store.dispatch(hostActionCreators.loadHosts());
            innerComponent = hosts;
           break;
         case "Logging":

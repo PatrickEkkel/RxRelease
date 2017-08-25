@@ -36,7 +36,7 @@ class  LabeledTable  extends React.Component {
   renderColumn(entry,innerentry,i) {
      var currentContext = this;
      var result =  <td>{innerentry}</td>;
-        console.log("i has funky values: " + i )
+      
      if(entry.length-1 == i) {
 
        result = <td><span className={currentContext.getLabelStatus(entry)}>{currentContext.getLabelStatusText(entry)}</span></td>

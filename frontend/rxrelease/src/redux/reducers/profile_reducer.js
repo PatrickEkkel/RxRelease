@@ -2,9 +2,9 @@ var initialProfileState = { type: 'INITIAL_PROFILES_STATE', showModal: false}
 
 export default function _profiles(state = initialProfileState,action) {
     console.log('_profiles reducer called with state ', state , ' and action ', action);
-
-
   switch (action.type) {
+
+
     case 'INITIAL_PROFILES_STATE':
     return {
       type: action.type,

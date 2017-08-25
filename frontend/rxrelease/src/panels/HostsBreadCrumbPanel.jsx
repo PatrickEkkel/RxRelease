@@ -2,7 +2,7 @@ import React from 'react';
 import BreadCrumb from '../components/BreadCrumb'
 import HostsPanel from '../panels/HostsPanel'
 import HostManagementPanel from '../panels/HostManagementPanel'
-import hostsActionCreators from '../redux/hostactioncreators'
+import *  as hostsActionCreators from '../redux/hostactioncreators'
 import { connect } from 'react-redux'
 
 
@@ -18,10 +18,11 @@ constructor() {
 componentWillReceiveProps(nextProps) {
 
   var bc_items = [];
-
   switch(nextProps.type) {
+    case 'INITIAL_HOSTS_STATE':
     case 'INITIAL_HOST_BREADCRUMB_STATE':
         bc_items = ['Hosts']
+    break;
     case 'LOAD_HOST_MANAGEMENT_FROM_HOSTS':
         bc_items = ['Hosts','Host Details']
      break;
