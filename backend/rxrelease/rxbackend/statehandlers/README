@@ -1,0 +1,6 @@
+
+
+to run passwordlesslogin call it with the following arguments
+
+./passwordless_sshlogin.py 172.27.0.151 '{"username": "youruser","password": "yourpassword","dryrun": "True"}'
+

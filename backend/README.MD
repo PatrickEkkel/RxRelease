@@ -1,4 +1,4 @@
-
+	
 
 # backend webserver starten 
 
@@ -13,4 +13,5 @@ python manage.py dumpdata
 
 
 # fixture laden 
-python manage.py loaddata initial_fixture
+# fixtures moeten .json extensie hebben 
+python manage.py loaddata initial_fixture.json

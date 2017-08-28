@@ -4,6 +4,9 @@ class StateType(models.Model):
     name = models.CharField(max_length=255)
     handler = models.CharField(max_length=255,null=True)
 
+    def __str__(self):
+        return self.name
+
 class Capability(models.Model):
     name = models.CharField(max_length=255)
     module = models.CharField(max_length=255)
@@ -40,7 +43,7 @@ class Configuration(models.Model):
 
 class SettingsCategory(models.Model):
     name = models.CharField(max_length=255)
-    
+
 class KVSetting(models.Model):
     key = models.CharField(max_length=255)
     value = models.CharField(max_length=255)

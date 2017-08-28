@@ -17,15 +17,25 @@ class SSHClient:
     shell = None
     client = None
     transport = None
+    @classmethod
+    def withPassword(self,address,username,password):
+       client = SSHClient(address)
+       client.loginWithPassword(username,password)
+       return client
+       
+    def __init__(self,address):
+        self.address = address
+	
+    def loginWithPassword(self,username,password):
+       self.client = paramiko.client.SSHClient()
+       self.client.set_missing_host_key_policy(paramiko.client.AutoAddPolicy())
+       self.client.connect(self.address, username=username, password=password, look_for_keys=False,allow_agent=False)
 
-    def __init__(self, address, username):
-        #logger.info("Connecting to server on ip", str(address) + ".")
+    def loginWithKeys(self,username):
         self.client = paramiko.client.SSHClient()
         self.client.set_missing_host_key_policy(paramiko.client.AutoAddPolicy())
         self.client.connect(address, username=username, password=None, look_for_keys=True)
-        #self.transport = paramiko.Transport((address, 22))
-        #self.client.connect(username=username, password=None)
-
+        
     def sendFile(self,sourcefile,destfile):
         sftp  = self.client.open_sftp()
         sftp.put(sourcefile,destfile)
@@ -40,10 +50,5 @@ class SSHClient:
     def sendCommand(self, command):
         logger.info("command sent to shell: " + command)
         stdin, stdout,stderr = self.client.exec_command(command)
-        while not stdout.channel.exit_status_ready():
-            if stdout.channel.recv_ready():
-                rl, wl, xl = select.select([ stdout.channel ], [ ], [ ], 0.0)
-                if len(rl) > 0:
-                    tmp = stdout.channel.recv(1024)
-                    output = tmp.decode()
-                    print output
+        exitcode = stdout.channel.recv_exit_status()
+        return exitcode
