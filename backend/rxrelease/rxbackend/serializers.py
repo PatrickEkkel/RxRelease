@@ -53,7 +53,7 @@ class HostStateHandlerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StateTypeHandler
-        fields = ("host_id","keyvalList","handlerType","handlerCommand")
+        fields = ("host_id","statetype_id","keyvalList","handlerType","handlerCommand")
 
 
 class StateTypeMTMSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
