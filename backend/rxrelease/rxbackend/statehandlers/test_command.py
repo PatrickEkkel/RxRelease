@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import sys
 import json
+import sh
 
 ipaddress = sys.argv[1]
 keyvallist = sys.argv[2]

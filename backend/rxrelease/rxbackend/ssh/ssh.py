@@ -1,6 +1,7 @@
 import paramiko
 import logging
 import sys
+import select
 import threading
 
 logger = logging.getLogger(__name__)
@@ -34,7 +35,7 @@ class SSHClient:
     def loginWithKeys(self,username):
         self.client = paramiko.client.SSHClient()
         self.client.set_missing_host_key_policy(paramiko.client.AutoAddPolicy())
-        self.client.connect(address, username=username, password=None, look_for_keys=True)
+        self.client.connect(self.address, username=username, password=None, look_for_keys=True)
         
     def sendFile(self,sourcefile,destfile):
         sftp  = self.client.open_sftp()
@@ -43,10 +44,21 @@ class SSHClient:
         if(self.client != None):
             self.client.close()
             #self.transport.close()
-
     #def openShell(self):
     #    self.shell = self.client.invoke_shell()
-
+    def sendBlockingCommand(self,command):
+        logger.info("command sent to shell: " + command)
+        transport = self.client.get_transport()
+        channel = transport.open_session()
+        channel.exec_command(command)
+        while True:
+         rl, wl, xl = select.select([channel],[],[],0.0)
+         if channel.exit_status_ready():
+          break
+         else:
+          if len(rl) > 0:
+           # Must be stdout
+           print(channel.recv(1024))
     def sendCommand(self, command):
         logger.info("command sent to shell: " + command)
         stdin, stdout,stderr = self.client.exec_command(command)

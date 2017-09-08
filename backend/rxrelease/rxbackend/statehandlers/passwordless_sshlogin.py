@@ -44,9 +44,9 @@ filestore = RxFileStore('/home/' + localuser + '/.rxrelease')
 if str2bool(dryrun):
  logger.info("running script in dryrun with the following parameters")
  logger.info(keyvallist)
- filestore.createDir('nogmeertest')
- filestore.setContext('/nogmeertest')
- filestore.copyFile('/tmp/test')
+ #filestore.createDir('nogmeertest')
+ #filestore.setContext('/nogmeertest')
+ #filestore.copyFile('/tmp/test')
  sys.exit()
 
 logger.info("connecting with ipaddress: " + ipaddress)
@@ -64,6 +64,8 @@ try:
 
  # Run ssh-keygen on the local machine
  rxfilestore = '/home/' + localuser + '/.rxrelease'
+ installed_id_rsa = '/home/' + localuser + '/.ssh/id_rsa'
+ installed_id_rsa_pub = '/home/' + localuser + '/.ssh/id_rsa.pub'
  id_rsa = rxfilestore + '/id_rsa'
  id_rsa_pub = rxfilestore + '/id_rsa.pub'
 
@@ -79,15 +81,16 @@ try:
  if not Path(local_ssh_dir).exists(): 
   os.makedirs('/home/' + localuser + '/.ssh')
 
- if not Path(id_rsa).exists():
+ if not Path(installed_id_rsa).exists():
   sh.cp(id_rsa,'/home/' + localuser + '/.ssh/')
- if not Path(id_rsa_pub).exists():
+ if not Path(installed_id_rsa_pub).exists():
   sh.cp(id_rsa_pub,'/home/' + localuser + '/.ssh/')
 
  # we need to transfer the public key to the host 
  client.sendCommand('mkdir -p /home/' + remoteuser + '/.ssh')
  # TODO: misschien moeten we dit nog wat vriendelijker maken.. nu pleurt hij er gewoon een nieuw bestand neer, niet zo cool als er al keys geconfigureerd waren
  client.sendFile(id_rsa_pub,'/home/' + remoteuser + '/.ssh/authorized_keys')
+ client.sendCommand("echo '" + remoteuser +  " ALL=(ALL) NOPASSWD:ALL' | sudo EDITOR='tee -a' visudo")
 
  # on my ubuntu i need to call ssh-add to get the authentication working.. 
  sh.ssh_add()

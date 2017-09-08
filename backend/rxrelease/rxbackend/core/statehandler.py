@@ -15,9 +15,9 @@ class StateHandler:
         self.rootdir = rootdir
         pass
     def handlePythonState(self,handlerCommand,ipaddress,keyvalList):
-        shell_command_logging = "python " + handlerCommand + " " + ipaddress + " " + keyvalList + " > /tmp/python_logging.txt"
+        shell_command_logging = "./" + handlerCommand + " " + ipaddress + " " + keyvalList
         logger.debug("statehandler context: " + self.rootdir)
-        logger.info("executing statehandler: " + shell_command_logging)
+        logger.debug("executing statehandler: " + shell_command_logging)
         print(self.rootdir + handlerCommand)
-        shell_command = "python " + self.rootdir  +  handlerCommand + " " + ipaddress + " " + keyvalList + " > /tmp/python_logging.txt"
+        shell_command = "./" + self.rootdir  +  handlerCommand + " " + ipaddress + " " + keyvalList + " > /tmp/python_logging.txt"
         os.system(shell_command)
