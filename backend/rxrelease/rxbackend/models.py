@@ -3,6 +3,7 @@ from django.db import models
 class StateType(models.Model):
     name = models.CharField(max_length=255)
     handler = models.CharField(max_length=255,null=True)
+    dependentOn = models.ForeignKey('self',null=True,default=None)
 
     def __str__(self):
         return self.name

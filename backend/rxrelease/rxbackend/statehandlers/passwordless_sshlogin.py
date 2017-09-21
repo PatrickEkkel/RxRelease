@@ -18,7 +18,7 @@ ch.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
-
+# TODO: dit is natuurlijk niet handig, we moeten de localuser ophalen via een methode of ergens global definieren
 localuser="patrick"
 remoteuser="rxrelease"
 # TODO dit plaatsen in een soort van utils implementatie
@@ -78,7 +78,7 @@ try:
 
  # install public and private keys on current user
  local_ssh_dir = '/home/' + localuser + '/.ssh'
- if not Path(local_ssh_dir).exists(): 
+ if not Path(local_ssh_dir).exists():
   os.makedirs('/home/' + localuser + '/.ssh')
 
  if not Path(installed_id_rsa).exists():
@@ -86,17 +86,14 @@ try:
  if not Path(installed_id_rsa_pub).exists():
   sh.cp(id_rsa_pub,'/home/' + localuser + '/.ssh/')
 
- # we need to transfer the public key to the host 
+ # we need to transfer the public key to the host
  client.sendCommand('mkdir -p /home/' + remoteuser + '/.ssh')
  # TODO: misschien moeten we dit nog wat vriendelijker maken.. nu pleurt hij er gewoon een nieuw bestand neer, niet zo cool als er al keys geconfigureerd waren
  client.sendFile(id_rsa_pub,'/home/' + remoteuser + '/.ssh/authorized_keys')
  client.sendCommand("echo '" + remoteuser +  " ALL=(ALL) NOPASSWD:ALL' | sudo EDITOR='tee -a' visudo")
 
- # on my ubuntu i need to call ssh-add to get the authentication working.. 
+ # on my ubuntu i need to call ssh-add to get the authentication working..
  sh.ssh_add()
 except paramiko.AuthenticationException:
  print("oops")
  raise
- 
- 
-

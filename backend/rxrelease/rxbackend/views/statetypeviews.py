@@ -8,6 +8,7 @@ from ..models import Host
 from ..models import Capability
 from ..core import statehandler
 
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 

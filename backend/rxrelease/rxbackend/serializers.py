@@ -9,7 +9,7 @@ from .models import StateType
 from .models import KVSetting
 from .models import SettingsCategory
 from .viewmodels import StateTypeHandler
-
+from .viewmodels import InstallHost
 
 class CapabilityMTMSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
     class Meta:
@@ -66,7 +66,7 @@ class StateTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StateType
-        fields = ('id','name')
+        fields = ('id','name','handler','dependentOn')
 
 class CapabilitySerializer(serializers.ModelSerializer):
     statetypes = StateTypeMTMSerializer(many=True,queryset=StateType.objects.all())
@@ -74,14 +74,16 @@ class CapabilitySerializer(serializers.ModelSerializer):
         model = Capability
         fields = ('id','name','module','statetypes')
 
-
+class InstallHostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InstallHost
+        fields = ('id','host_id')
 class StateSerializer(serializers.ModelSerializer):
-
     #capabilities = CapabilityMTMSerializer(many=True,queryset=Capability.objects.all())
     class Meta:
 
         model = State
-        fields = ('id','name','installed','host')
+        fields = ('id','name','installed','host','statetype')
 
 class SettingsCategorySerializer(serializers.ModelSerializer):
     class Meta:
