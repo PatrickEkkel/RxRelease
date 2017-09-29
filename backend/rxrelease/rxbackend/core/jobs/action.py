@@ -4,6 +4,12 @@ class Action:
 
     def __init__(self):
      pass
+    def setActionType(self,actionType):
+     self.actionType = actionType
+    def setPayload(self,payload):
+     self.payload = payload
+    def getPayload(self):
+     return self.payload
     def setJob(self,job):
      self.job = job
     def getJob(self):

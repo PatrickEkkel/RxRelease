@@ -47,10 +47,11 @@ class InstallHostView(generics.UpdateAPIView):
         # TODO: dit is nog niet af natuurlijk... verder mee gaan als de tijd er weer naar is
         for state in stateobject_queryset.all():
             if state.installed == False:
-                print(state.name)
-                payload = str(state.host)
-                action = actionFactory.createAction('INSTALL',state.name,payload)
-                jobfeed.newJobTask(action)
+                if state.statetype.handler is not None:
+                 payload =  "hostid=" + str(state.host.id) + "," + "ipaddress=" + str(state.host.ipaddress) + "," + "statetypeid=" + str(state.statetype.id) + "," + "handlerCommand=" + state.statetype.handler
+                 action = actionFactory.createAction('INSTALL',state.name,payload)
+                 jobfeed.newJobTask(action)
+        jobfeed.triggerJob(newJob)
         # call jobfeed, with the correct parameters
         return  stateobject_queryset
 

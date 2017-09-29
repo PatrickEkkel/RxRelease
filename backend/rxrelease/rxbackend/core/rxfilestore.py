@@ -1,5 +1,5 @@
 import os.path
-from textfile import TextFile
+from .textfile import TextFile
 
 class RxFileStore:
  def __init__(self,location):

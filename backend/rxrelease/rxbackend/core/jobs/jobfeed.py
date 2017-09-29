@@ -1,4 +1,5 @@
 import logging,sys,os
+from datetime import datetime
 from job import Job
 from action import Action
 from ..rxfilestore import RxFileStore
@@ -21,8 +22,17 @@ class JobFeed:
      self.filestore.createDir('jobfeed/')
      self.filestore.setContext('/jobfeed')
 
+
+    def triggerJob(self,job):
+     filename =  job.getName()
+     filename = "trigger" "_" + filename
+     textfile = self.filestore.openTextFile(filename)
+     textfile.writeLine("RUNJOB")
+     
+     pass
     def newJobTask(self,action):
      filename = action.getJob().getName()
+     filename = datetime.now().strftime("%Y%m%d%H%M%S") + "_" + filename
      # write the jobaction to specific commandfile with the timestamp from the current datetime
      textfile =  self.filestore.openTextFile(filename)
      textfile.writeLine(str(action))
