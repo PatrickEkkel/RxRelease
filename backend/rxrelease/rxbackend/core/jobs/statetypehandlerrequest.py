@@ -10,6 +10,8 @@ class StateTypeHandlerRequest:
         return self.statetype_id
     def setIpAddress(self,ipaddress):
         self.ipaddress = ipaddress
+    def getIpAddress(self):
+        return self.ipaddress
     def setKeyValList(self,keyvalList):
      self.keyvalList = keyvalList
     def setHandlerType(self,handlerType):
@@ -20,5 +22,8 @@ class StateTypeHandlerRequest:
      self.handlerCommand = handlerCommand
     def getHandlerCommand(self):
         return self.handlerCommand
+    def getAsPayload():
+         payload =  "hostid=" + str(self.getHostId()) + "," + "ipaddress=" + str(self.getIpAddress()) + "," + "statetypeid=" + str(self.getStateTypeId()) + "," + "handlerCommand=" + self.getHandlerCommand()
+         return payload
     def __str__(self):
         return '{ "host_id": "' + self.getHostId() + '", "statetype_id": "' + self.getStateTypeId() + '", "keyvalList": "\'{\\"username\\": \\"test\\",\\"password\\": \\"biertje\\",\\"dryrun\\": \\"true\\"}\'", "handlerType": "python","handlerCommand": "' + self.getHandlerCommand() + '"  }'

@@ -8,6 +8,8 @@ from ..viewmodels import StateTypeHandler
 from ..core.jobs.jobfeed import JobFeed
 from ..core.jobs.job import Job
 from ..core.jobs import jobActionFactory
+from ..core.jobs.statetypehandlerrequest import StateTypeHandlerRequest
+from ..core.jobs.statetyperequestbuilder import StateTypeRequestBuilder
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -48,8 +50,14 @@ class InstallHostView(generics.UpdateAPIView):
         for state in stateobject_queryset.all():
             if state.installed == False:
                 if state.statetype.handler is not None:
-                 payload =  "hostid=" + str(state.host.id) + "," + "ipaddress=" + str(state.host.ipaddress) + "," + "statetypeid=" + str(state.statetype.id) + "," + "handlerCommand=" + state.statetype.handler
-                 action = actionFactory.createAction('INSTALL',state.name,payload)
+                 #payload =  "hostid=" + str(state.host.id) + "," + "ipaddress=" + str(state.host.ipaddress) + "," + "statetypeid=" + str(state.statetype.id) + "," + "handlerCommand=" + state.statetype.handler
+                 #handlerRequest = StateTypeHandlerRequest()
+                 #handlerRequest.setIpAddress(state.host.ipaddress)
+                 #handlerRequest.setHostId(state.host_id)
+                 #handlerRequest.setStateTypeId(state.statetype_id)
+                 #handlerRequest.setHandlerCommand(state.statetype.handler)
+                 handlerRequest = StateTypeRequestBuilder().buildRequest(state)
+                 action = actionFactory.createAction('INSTALL',state.name,handlerRequest.getAsPayload())
                  jobfeed.newJobTask(action)
         jobfeed.triggerJob(newJob)
         # call jobfeed, with the correct parameters
