@@ -1,13 +1,15 @@
 import pyinotify
 import ntpath
 import os
+import time
 import logging,sys
 from dateutil.parser import parse
 from jobfeed.jobdefinition import JobDefinition
 from backend.rxrelease.rxbackend.core.rxfilestore import RxFileStore
-from backend.rxrelease.rxbackend.core.jobs.jobActionFactory import JobActionFactory
-from backend.rxrelease.rxbackend.core.jobs.statetypehandlerfactory import StateTypeHandlerFactory
-from backend.rxrelease.rxbackend.core.jobs.requestsender import RequestSender
+from backend.rxrelease.rxbackend.core.jobs.api.jobActionFactory import JobActionFactory
+from backend.rxrelease.rxbackend.core.jobs.statetypes.handlerfactory import HandlerFactory
+from backend.rxrelease.rxbackend.core.restapi.REST_statetypes import REST_statetypes
+from backend.rxrelease.rxbackend.core.restapi.REST_states import REST_states
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -18,14 +20,14 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 actionFactory = JobActionFactory(None)
-requestFactory = StateTypeHandlerFactory()
-
-requestSender = RequestSender()
-
+requestFactory = HandlerFactory()
 
 localuser='patrick'
 filestorelocation = '/home/' + localuser + '/.rxrelease/'
 jobfeedRunnerDir = filestorelocation + '/jobfeed'
+
+statetypesApi = REST_statetypes()
+statesApi = REST_states()
 
 filestore = RxFileStore(filestorelocation)
 filestore.setContext('jobfeed')
@@ -59,15 +61,33 @@ class JobStateHandler(pyinotify.ProcessEvent):
             runnableAction = actions[0]
             payload =  runnableAction.getPayload()
 
-            stateTypeHandlerRequest =  requestFactory.createStateTypeHandlerRequest(payload)
+            statetypeRequest =  requestFactory.createRequest(payload)
             # at this point we are getting work done at the client and we need to start polling if the process is done
-            requestSender.sendHandleHoststateRequest(stateTypeHandlerRequest)
 
+            statetypesApi.postHandleHostState(statetypeRequest)
+            pollingState = True
 
+            polling_frequenty = 5
+            max_pollingtime  = 4
+            polling_counter = 0
+            job_failed = False
 
-
-
-
+            while pollingState:
+                time.sleep(polling_frequenty)
+                logger.info("checking task  " + latestFilename + " for completion")
+                # query the rest interface for the status of the current action
+                state =   statesApi.getStateByHostAndStateTypeId(statetypeRequest.getHostId(),statetypeRequest.getStateTypeId())
+                print(state)
+                if state[0]['installed'] == True:
+                 print("task " + latestFilename + " succesfully installed")
+                 break
+                if polling_counter == max_pollingtime:
+                 job_failed = True
+                 break
+                polling_counter += 1
+            # when job is failed, we need to setup a plan to recover from this failed state,
+            if job_failed:
+             pass
 
 # TODO: localuser van een andere plek dan deze halen
 jobname="StateHandlerJob"

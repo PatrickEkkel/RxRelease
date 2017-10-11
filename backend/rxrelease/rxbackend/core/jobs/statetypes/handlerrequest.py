@@ -1,4 +1,4 @@
-class StateTypeHandlerRequest:
+class HandlerRequest:
 
     def setHostId(self,host_id):
      self.host_id = host_id
@@ -26,6 +26,4 @@ class StateTypeHandlerRequest:
          payload =  "hostid=" + str(self.getHostId()) + "," + "ipaddress=" + str(self.getIpAddress()) + "," + "statetypeid=" + str(self.getStateTypeId()) + "," + "handlerCommand=" + self.getHandlerCommand()
          return payload
     def __str__(self):
-        print("ToString from request")
-        print(self.getHandlerCommand())
         return '{ "host_id": "' + self.getHostId() + '", "statetype_id": "' + self.getStateTypeId() + '", "keyvalList": "\'{\\"username\\": \\"test\\",\\"password\\": \\"biertje\\",\\"dryrun\\": \\"true\\"}\'", "handlerType": "python","handlerCommand": "' + self.getHandlerCommand() + '"  }'

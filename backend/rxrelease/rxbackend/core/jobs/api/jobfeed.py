@@ -2,7 +2,7 @@ import logging,sys,os
 from datetime import datetime
 from .job import Job
 from .action import Action
-from ..rxfilestore import RxFileStore
+from ...rxfilestore import RxFileStore
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

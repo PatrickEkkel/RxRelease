@@ -1,9 +1,9 @@
-from .statetypehandlerrequest import StateTypeHandlerRequest
+from .handlerrequest import HandlerRequest
 
-class StateTypeHandlerFactory:
+class HandlerFactory:
     def __init__(self):
         pass
-    def createStateTypeHandlerRequest(self,payload):
+    def createRequest(self,payload):
         print(payload)
         payloadElements =  payload.split(',')
         host_id = payloadElements[0].split('=')[1]
@@ -11,7 +11,7 @@ class StateTypeHandlerFactory:
         ipaddress = payloadElements[1]
         handlerCommand = payloadElements[3].split('=')[1]
 
-        request = StateTypeHandlerRequest()
+        request = HandlerRequest()
 
         request.setHostId(host_id)
         request.setStateTypeId(statetype_id)

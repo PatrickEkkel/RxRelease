@@ -5,11 +5,11 @@ from ..serializers import InstallHostSerializer
 from ..serializers import HostStateHandlerSerializer
 from ..models import State
 from ..viewmodels import StateTypeHandler
-from ..core.jobs.jobfeed import JobFeed
-from ..core.jobs.job import Job
-from ..core.jobs import jobActionFactory
-from ..core.jobs.statetypehandlerrequest import StateTypeHandlerRequest
-from ..core.jobs.statetyperequestbuilder import StateTypeRequestBuilder
+from ..core.jobs.api.jobfeed import JobFeed
+from ..core.jobs.api.job import Job
+from ..core.jobs.api import jobActionFactory
+from ..core.jobs.statetypes.handlerrequest import HandlerRequest
+from ..core.jobs.statetypes.requestbuilder import RequestBuilder
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -40,7 +40,6 @@ class InstallHostView(generics.UpdateAPIView):
         host_id = self.kwargs['pk']
         #host_id = 1
         stateobject_queryset = State.objects.filter(host_id=host_id)
-
         # TODO: nog een JobFactory maken voor nu even dat ding gewoon instancieren
         newJob = Job("StateHandlerJob")
 
@@ -50,13 +49,7 @@ class InstallHostView(generics.UpdateAPIView):
         for state in stateobject_queryset.all():
             if state.installed == False:
                 if state.statetype.handler is not None:
-                 #payload =  "hostid=" + str(state.host.id) + "," + "ipaddress=" + str(state.host.ipaddress) + "," + "statetypeid=" + str(state.statetype.id) + "," + "handlerCommand=" + state.statetype.handler
-                 #handlerRequest = StateTypeHandlerRequest()
-                 #handlerRequest.setIpAddress(state.host.ipaddress)
-                 #handlerRequest.setHostId(state.host_id)
-                 #handlerRequest.setStateTypeId(state.statetype_id)
-                 #handlerRequest.setHandlerCommand(state.statetype.handler)
-                 handlerRequest = StateTypeRequestBuilder().buildRequest(state)
+                 handlerRequest = RequestBuilder().buildRequest(state)
                  action = actionFactory.createAction('INSTALL',state.name,handlerRequest.getAsPayload())
                  jobfeed.newJobTask(action)
         jobfeed.triggerJob(newJob)
@@ -66,5 +59,16 @@ class InstallHostView(generics.UpdateAPIView):
 class HostView(generics.ListAPIView):
     serializer_class = StateSerializer
     def get_queryset(self):
-        host_id = self.kwargs['host_id']
-        return State.objects.filter(host_id=host_id)
+        host_id =  self.request.query_params.get('host_id', None)
+        state_id = self.request.query_params.get('state_id', None)
+        statetype_id = self.request.query_params.get('statetype_id',None)
+
+        result_queryset = None
+
+        if state_id is not None and host_id is not None:
+         result_queryset = State.objects.filter(id=state_id).filter(host_id=host_id)
+
+        if statetype_id is not None and host_id is not None:
+         result_queryset = State.objects.filter(statetype_id=statetype_id).filter(host_id=host_id)
+
+        return result_queryset

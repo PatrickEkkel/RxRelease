@@ -1,11 +1,11 @@
-from statetypehandlerrequest import StateTypeHandlerRequest
+from handlerrequest import HandlerRequest
 
 
-class StateTypeRequestBuilder:
+class RequestBuilder:
     pass
 
     def buildRequest(self,state):
-     handlerRequest = StateTypeHandlerRequest()
+     handlerRequest = HandlerRequest()
      handlerRequest.setIpAddress(state.host.ipaddress)
      handlerRequest.setHostId(state.host_id)
      handlerRequest.setStateTypeId(state.statetype_id)

@@ -34,7 +34,7 @@ urlpatterns = [
     url(r'^states/$', statesviews.CreateView.as_view(), name="create"),
     url(r'^states/(?P<pk>[0-9]+)/$', statesviews.DetailsView.as_view(), name="details"),
     url(r'^states/host/install/(?P<pk>[0-9]+)/$', statesviews.InstallHostView.as_view(), name="byhost"),
-    url(r'^states/host/(?P<host_id>.+)/$', statesviews.HostView.as_view(), name="byhost"),
+    url(r'^states/search/$', statesviews.HostView.as_view(), name="byhost"),
 
 
     url(r'^profiletypes/$', profiletypeviews.CreateView.as_view(), name="create"),

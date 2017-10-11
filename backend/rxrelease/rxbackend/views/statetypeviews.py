@@ -43,7 +43,6 @@ class HandleHostState(generics.CreateAPIView):
         stateHandler = statehandler.StateHandler(programroot)
         stateHandler.handlePythonState(selected_state,handlerCommand,selected_host.ipaddress,keyval_list)
         # todo add some kind of json parsing to the keyval_list
-
         logger.info("Handling State for host " +  selected_host.ipaddress)
 
 class CreateView(generics.ListCreateAPIView):
