@@ -1,7 +1,7 @@
 import logging,sys,os
 from datetime import datetime
-from job import Job
-from action import Action
+from .job import Job
+from .action import Action
 from ..rxfilestore import RxFileStore
 
 logger = logging.getLogger(__name__)
@@ -28,7 +28,7 @@ class JobFeed:
      filename = "trigger" "_" + filename
      textfile = self.filestore.openTextFile(filename)
      textfile.writeLine("RUNJOB")
-     
+
      pass
     def newJobTask(self,action):
      filename = action.getJob().getName()

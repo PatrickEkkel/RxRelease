@@ -9,7 +9,7 @@ class StateTypeHandlerFactory:
         host_id = payloadElements[0].split('=')[1]
         statetype_id = payloadElements[2].split('=')[1]
         ipaddress = payloadElements[1]
-        handlerCommand = payloadElements[3]
+        handlerCommand = payloadElements[3].split('=')[1]
 
         request = StateTypeHandlerRequest()
 

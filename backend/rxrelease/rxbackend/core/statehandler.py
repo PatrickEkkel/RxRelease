@@ -14,10 +14,10 @@ class StateHandler:
     def __init__(self,rootdir):
         self.rootdir = rootdir
         pass
-    def handlePythonState(self,handlerCommand,ipaddress,keyvalList):
-        shell_command_logging = "./" + handlerCommand + " " + ipaddress + " " + keyvalList
+    def handlePythonState(self,state,handlerCommand,ipaddress,keyvalList):
+        handlerPackage  = handlerCommand.replace('.py','')
+        shell_command = "python3 -m " + self.rootdir + "." + handlerPackage + "." + handlerPackage + " " + ipaddress +  " " +  str(state.id) +  " " + keyvalList + " > /tmp/python_logging.txt"
+
         logger.debug("statehandler context: " + self.rootdir)
-        logger.debug("executing statehandler: " + shell_command_logging)
-        print(self.rootdir + handlerCommand)
-        shell_command = "./" + self.rootdir  +  handlerCommand + " " + ipaddress + " " + keyvalList + " > /tmp/python_logging.txt"
+        logger.debug("executing statehandler: " + shell_command)
         os.system(shell_command)

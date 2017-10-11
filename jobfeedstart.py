@@ -61,7 +61,7 @@ class JobStateHandler(pyinotify.ProcessEvent):
 
             stateTypeHandlerRequest =  requestFactory.createStateTypeHandlerRequest(payload)
             # at this point we are getting work done at the client and we need to start polling if the process is done
-            requestSender.sendRequest(stateTypeHandlerRequest)
+            requestSender.sendHandleHoststateRequest(stateTypeHandlerRequest)
 
 
 

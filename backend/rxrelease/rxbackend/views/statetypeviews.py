@@ -4,6 +4,7 @@ from rest_framework import generics
 from ..serializers import StateTypeSerializer
 from ..serializers import HostStateHandlerSerializer
 from ..models import StateType
+from ..models import State
 from ..models import Host
 from ..models import Capability
 from ..core import statehandler
@@ -25,20 +26,22 @@ class HandleHostState(generics.CreateAPIView):
         validated_data = serializer.validated_data
 
         #validated_data['handlerType']
-        selected_host = Host.objects.filter(id = validated_data['host_id']).get()
+        host_queryset = Host.objects.filter(id = validated_data['host_id'])
         statetype_queryset = StateType.objects.filter(id = validated_data['statetype_id'])
         selected_capability = Capability.objects.filter(statetypes = statetype_queryset).get()
+        selected_state = State.objects.filter(host =host_queryset,statetype = statetype_queryset).get()
         logger.info(selected_capability.module)
+        selected_host = host_queryset.get()
         keyval_list = validated_data['keyvalList']
         handlerCommand = validated_data['handlerCommand']
         # default capabilities are handles from the root of the rxbackend project, the rest is channeled to the various plugin folders
         programroot = ''
         if selected_capability.module == 'default':
-            programroot = 'rxbackend/statehandlers/'
+            programroot = 'rxbackend.statehandlers'
         else:
-            programroot = 'rxbackend/' + selected_capability.module + '/statehandlers/'
+            programroot = 'rxbackend.' + selected_capability.module + 'pgstatehandlers.'
         stateHandler = statehandler.StateHandler(programroot)
-        stateHandler.handlePythonState(handlerCommand,selected_host.ipaddress,keyval_list)
+        stateHandler.handlePythonState(selected_state,handlerCommand,selected_host.ipaddress,keyval_list)
         # todo add some kind of json parsing to the keyval_list
 
         logger.info("Handling State for host " +  selected_host.ipaddress)

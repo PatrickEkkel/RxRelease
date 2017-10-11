@@ -1,0 +1,1 @@
+ python3 -m rxbackend.statehandlers.testcommand.testcommand 172.27.0.151 '{"username": "youruser","password": "yourpassword","dryrun": "True"}'
