@@ -64,10 +64,13 @@ class HostView(generics.ListAPIView):
         statetype_id = self.request.query_params.get('statetype_id',None)
 
         result_queryset = None
-
+        # alleen host id
+        if host_id is not None and state_id is None and statetype_id is None:
+         result_queryset = State.objects.filter(host_id=host_id)
+        # state_id,host_id
         if state_id is not None and host_id is not None:
          result_queryset = State.objects.filter(id=state_id).filter(host_id=host_id)
-
+        # statetype_id,host_id
         if statetype_id is not None and host_id is not None:
          result_queryset = State.objects.filter(statetype_id=statetype_id).filter(host_id=host_id)
 

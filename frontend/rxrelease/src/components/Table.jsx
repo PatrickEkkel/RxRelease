@@ -18,7 +18,6 @@ class  Table  extends React.Component {
   renderColumn(i,innerentry,headerlength) {
 
     if(headerlength < i) {
-      alert(i)
       return ""
     }
     else {
@@ -47,9 +46,7 @@ return <div className="table-responsive" >
       </tbody>
     </table>
     <form className="form-horizontal">
-
 </form>
-
 </div>;
   }
 }

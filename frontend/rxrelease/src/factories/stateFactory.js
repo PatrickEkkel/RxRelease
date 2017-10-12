@@ -21,9 +21,10 @@ static convertStateListToMap(list) {
   for(var i=0;i<list.length;i++) {
 
     var installed = list[i].getInstalled()
+
     var installedDisplayString = "NOT INSTALLED"
     if(installed) {
-      "INSTALLED"
+      installedDisplayString =  "INSTALLED"
     }
 
 

@@ -14,7 +14,7 @@ export function loadHostManagement(hostentry) {
   var host = HostFactory.convertMapToHost(hostentry)
   return function (dispatch) {
 
-      Axios.get('http://localhost:8080/rxbackend/states/host/' + host.getId())
+      Axios.get('http://localhost:8080/rxbackend/states/search/?host_id=' + host.getId())
       .then(function(response){
         var factory = new StateFactory()
         var states = factory.convertJsonList(response.data)
