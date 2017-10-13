@@ -26,7 +26,9 @@ getId() {
 getStatus() {
   return this.status;
 }
-
+setHostname(value) {
+  this.hostname = value;
+}
 getHostname() {
   return this.hostname;
 }

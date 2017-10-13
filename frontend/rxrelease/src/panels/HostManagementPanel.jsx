@@ -1,7 +1,9 @@
 import React from 'react';
 import  * as hostActionCreators from '../redux/hostactioncreators'
 import Button from '../components/Button'
+import Utils from '../lib/react/utils'
 import LabeledTable from '../components/LabeledTable'
+import LabeledTextField from '../components/LabeledTextField'
 import StateFactory from '../factories/stateFactory'
 import { connect } from 'react-redux'
 
@@ -11,13 +13,20 @@ class  HostManagementPanel  extends React.Component {
   constructor() {
     super()
     this.state = {
-      states: []
+      selected_host: null
     }
 
   }
-
+  test(val) {
+    console.log(val)
+  }
   changeAttr(e) {
-    this.setState({[e.target.id]: e.target.value});
+    //var methodName = e.target.id.charAt(0).toUpperCase() + e.target.id.slice(1);
+    //this.state.selected_host["set" + methodName ](e.target.value)
+    var host = this.state.selected_host;
+    Utils.bindAttr(host,e.target.id,e.target.value)
+
+    this.setState({selected_host: host})
   }
 
   onRowClick(entry) {
@@ -27,15 +36,19 @@ class  HostManagementPanel  extends React.Component {
     var {type,selected_host} = this.props;
     if(type == 'LOAD_HOST_MANAGEMENT_FROM_HOSTS') {
 
-      this.setState({states: selected_host.getStates()})
+      this.setState({selected_host: selected_host})
 
     }
   }
   componentWillReceiveProps(nextProps) {
 
   }
+  saveHostDetails() {
+    this.props.dispatch(hostActionCreators.updateHost(this.state.selected_host))
+  }
 
   render() {
+    var currentContext = this;
     var { type } = this.props
 
     function handleLabelLoad(entry) {
@@ -46,15 +59,43 @@ class  HostManagementPanel  extends React.Component {
         }
 
     }
-
     var headers = ['#','name'];
     var data = [];
-    return <div>
-      <LabeledTable onLabelLoad={handleLabelLoad} labelText="Status" headers = {headers} data={StateFactory.convertStateListToMap(this.state.states)} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
+    return <div className="container">
+      <div className="row">
+        <div className="col-md-8">
+          <h3><b>Host information</b></h3>
+        </div>
+      </div>
+      <div className="row">
+       &nbsp;
+      </div>
 
+      <div  className="row">
+        <div className="col-md-8">
+        <LabeledTextField col="col-md-4" labelcol="col-md-2" id="hostname" label="Hostname:" inputValue={this.state.selected_host.getHostname()} onChange={e => this.changeAttr(e)}/>
+        </div>
+      </div>
+      <div className="row">
+        &nbsp;
+      </div>
+      <div  className="row">
+        <div className="col-md-8">
+        <LabeledTextField col="col-md-3" labelcol="col-md-2" id="ipaddress" label="IP Address:" inputValue={this.state.selected_host.getIpaddress()} onChange={e => this.changeAttr(e)} />
+        </div>
+      </div>
+      <Button title="Opslaan" onClick={() => currentContext.saveHostDetails()} />
+      <hr/>
+        <div className="row">
+          <div className="col-md-8">
+            <h3><b>Host States</b></h3>
+          </div>
+        </div>
+        <div className="row">
+          &nbsp;
+        </div>
+      <LabeledTable onLabelLoad={handleLabelLoad} labelText="Status" headers = {headers} data={StateFactory.convertStateListToMap(this.state.selected_host.getStates())} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
       <Button title="Install Host"/>
-
-
       </div>
   }
 }

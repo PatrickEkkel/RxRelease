@@ -26,6 +26,9 @@ class LabeledTextField extends React.Component {
   getOnchange() {
     return this.props.onChange;
   }
+  getInputValue() {
+    return this.props.inputValue;
+  }
 
   render() {
 
@@ -33,7 +36,7 @@ class LabeledTextField extends React.Component {
 
           <label className={this.getLabelCol()} for={this.getId()}>{this.getLabel()}</label>
           <div className={this.getCol()}>
-            <input id={this.getId()} name={this.getId()} placeholder={this.getPlaceholder()} className="form-control input-md" type="text" onChange={this.getOnchange()}/>
+            <input id={this.getId()} name={this.getId()} placeholder={this.getPlaceholder()} className="form-control input-md" type="text" value={this.getInputValue()} onChange={this.getOnchange()}/>
           </div>
       </fieldset>
   }

@@ -58,6 +58,24 @@ export function hostsLoaded(hosts) {
   }
 }
 
+export function updateHost(host) {
+  return function (dispatch) {
+    if(host.getHostname() != '' && host.getIpaddress() != '') {
+      Axios.put('http://localhost:8080/rxbackend/hosts/' + host.getId() + "/",
+     {
+       hostname: host.getHostname(),
+       ipaddress: host.getIpaddress(),
+       description: host.getDescription()
+     }).then(function() {
+       dispatch({
+           type: 'UPDATE_EXISTING_HOST',
+           host: host
+       })
+     });
+    }
+  }
+}
+
 export function saveNewHost(hostname,ipadress,description) {
   return function (dispatch) {
     if (hostname != '' && ipadress != '') {
