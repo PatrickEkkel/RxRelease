@@ -7,6 +7,7 @@ from .models import State
 from .models import ProfileType
 from .models import StateType
 from .models import KVSetting
+from .models import CredentialsSetting
 from .models import SettingsCategory
 from .viewmodels import StateTypeHandler
 from .viewmodels import InstallHost
@@ -33,7 +34,7 @@ class HostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Host
-        fields = ('id','hostname','ipaddress','description','status')
+        fields = ('id','hostname','ipaddress','description','status','connectioncredentials')
 
 class ConfigurationSerializer(serializers.ModelSerializer):
     hosts = HostTestSerializer(many=True,queryset=Host.objects.all())
@@ -96,6 +97,11 @@ class KVSettingsSerializer(serializers.ModelSerializer):
         model = KVSetting
         fields = ('id','key','value','category')
 
+class CredentialsSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        category = SettingsCategorySerializer
+        model = CredentialsSetting
+        fields = ('id','username','password','category')
 
 class ProfileSerializer(serializers.ModelSerializer):
 

@@ -10,6 +10,7 @@ from .views import configurationviews
 from .views import statetypeviews
 from .views import settingscategoryview
 from .views import kvsettingsview
+from .views import credentialssettingsview
 from .views import testview
 
 
@@ -40,11 +41,15 @@ urlpatterns = [
     url(r'^profiletypes/$', profiletypeviews.CreateView.as_view(), name="create"),
     url(r'^profiletypes/(?P<pk>[0-9]+)/$', profiletypeviews.DetailsView.as_view(), name="details"),
 
-    url(r'^settings/$', kvsettingsview.CreateView.as_view(), name="create"),
-    url(r'^settings/(?P<pk>[0-9]+)/$', kvsettingsview.DetailsView.as_view(), name="details"),
+    url(r'^settings/kvsettings$', kvsettingsview.CreateView.as_view(), name="create"),
+    url(r'^settings/kvsettings(?P<pk>[0-9]+)/$', kvsettingsview.DetailsView.as_view(), name="details"),
+
+    url(r'^settings/credentials$', credentialssettingsview.CreateView.as_view(), name="create"),
+    url(r'^settings/credentials/(?P<pk>[0-9]+)/$', credentialssettingsview.DetailsView.as_view(), name="details"),
 
     url(r'^settingscategory/$', settingscategoryview.CreateView.as_view(), name="create"),
     url(r'^settingscategory/(?P<pk>[0-9]+)/$', settingscategoryview.DetailsView.as_view(), name="details"),
+    url(r'^settingscategory/search/$', settingscategoryview.SearchView.as_view(), name="byhost"),
 
     url(r'^statetypes/$', statetypeviews.CreateView.as_view(), name="create"),
     url(r'^statetypes/(?P<pk>[0-9]+)/$', statetypeviews

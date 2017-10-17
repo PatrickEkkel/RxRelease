@@ -26,8 +26,17 @@ getId() {
 getStatus() {
   return this.status;
 }
+setConnectionCredentials(connectioncredentials) {
+  this.connectioncredentials = connectioncredentials;
+}
+getConnectionCredentials() {
+  return this.connectioncredentials;
+}
 setHostname(value) {
   this.hostname = value;
+}
+setIpAddress(value) {
+  this.ipaddress  = value;
 }
 getHostname() {
   return this.hostname;

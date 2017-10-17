@@ -51,13 +51,13 @@ static convertHostListToDictionary(list) {
  return result;
 }
 
-createHostFromJson(json) {
-
-var result = new Host(json.id,json.hostname,json.ipaddress,json.description,json.status)
-return result;
-
+createHost(hostname,ipaddress,description) {
+  return new Host(null,hostname,ipaddress,description,'UNMANAGED')
 }
-
+createHostFromJson(json) {
+ var result = new Host(json.id,json.hostname,json.ipaddress,json.description,json.status)
+ return result;
+ }
 }
 
 export default HostFactory;

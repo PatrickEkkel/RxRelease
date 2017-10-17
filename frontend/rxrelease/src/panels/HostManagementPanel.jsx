@@ -64,7 +64,7 @@ class  HostManagementPanel  extends React.Component {
     return <div className="container">
       <div className="row">
         <div className="col-md-8">
-          <h3><b>Host information</b></h3>
+          <h4><b>Connection details</b></h4>
         </div>
       </div>
       <div className="row">
@@ -81,11 +81,40 @@ class  HostManagementPanel  extends React.Component {
       </div>
       <div  className="row">
         <div className="col-md-8">
-        <LabeledTextField col="col-md-3" labelcol="col-md-2" id="ipaddress" label="IP Address:" inputValue={this.state.selected_host.getIpaddress()} onChange={e => this.changeAttr(e)} />
+        <LabeledTextField col="col-md-3" labelcol="col-md-2" id="ipAddress" label="IP Address:" inputValue={this.state.selected_host.getIpaddress()} onChange={e => this.changeAttr(e)} />
         </div>
       </div>
-      <Button title="Opslaan" onClick={() => currentContext.saveHostDetails()} />
       <hr/>
+      <div className="row">
+       &nbsp;
+      </div>
+        <div className="row">
+          <div className="col-md-8">
+            <h4><b>Credentials</b></h4>
+          </div>
+        </div>
+        <div className="row">
+         &nbsp;
+        </div>
+
+        <div  className="row">
+          <div className="col-md-8">
+          <LabeledTextField col="col-md-4" labelcol="col-md-2" id="username" label="Username:" inputValue={this.state.selected_host.getHostname()} onChange={e => this.changeAttr(e)}/>
+          </div>
+        </div>
+        <div className="row">
+          &nbsp;
+        </div>
+        <div  className="row">
+          <div className="col-md-8">
+          <LabeledTextField col="col-md-3" labelcol="col-md-2" id="Password" label="IP Address:" inputValue={this.state.selected_host.getIpaddress()} onChange={e => this.changeAttr(e)} />
+          </div>
+        </div>
+        <div className="row">
+         &nbsp;
+        </div>
+        <Button title="Save All" onClick={() => currentContext.saveHostDetails()} />
+        <hr/>
         <div className="row">
           <div className="col-md-8">
             <h3><b>Host States</b></h3>
