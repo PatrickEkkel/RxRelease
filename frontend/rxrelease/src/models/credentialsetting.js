@@ -21,7 +21,7 @@ setUsername(username) {
 }
 getUsername() {
   return this.username;
-}
+ }
 }
 
 export default CredentialsSetting

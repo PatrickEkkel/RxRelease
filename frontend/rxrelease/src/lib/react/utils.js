@@ -6,9 +6,8 @@ class Utils {
 
 
   static bindAttr(attrobject,attribute,value) {
-
     // if it contains a dot, it means we are dealing with a nested property
-    if(attribute.contains(".")) {
+    if(attribute.includes(".")) {
       // unwind the property into an arraylist
        var properties =  attribute.split(".")
 
@@ -20,18 +19,16 @@ class Utils {
          if(currentObject == null) {
            currentObject = attrobject['get' + currentProp]();
          }
-         else {
+         /*else {
+           console.log("kom hij nou niet hier!!!!")
+           console.log(currentObject)
            currentObject = currentObject['get' + currentProp]();
-         }
+         }*/
          // determine if we are at the end of the array
          // if current position plus one will end the loop, than call the set on that object
          if(!((i + 1) < properties.length)) {
-
-           var methodName = currentProp.charAt(0).toUpperCase() + currentProp.slice(1);
-           attrobject["set" + methodName](value)
+           currentObject["set" + currentProp](value)
          }
-
-
        }
     }
     else {

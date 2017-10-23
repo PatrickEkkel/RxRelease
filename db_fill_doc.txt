@@ -1,0 +1,32 @@
+
+StateType
+
+HTTP 200 OK
+Allow: GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+{
+    "id": 1,
+    "name": "Teststate",
+    "handler": "testcommand.py",
+    "dependentOn": null
+}
+
+Capability
+
+HTTP 200 OK
+Allow: GET, POST, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+[
+    {
+        "id": 1,
+        "name": "Test",
+        "module": "default",
+        "statetypes": [
+            1
+        ]
+    }
+]
