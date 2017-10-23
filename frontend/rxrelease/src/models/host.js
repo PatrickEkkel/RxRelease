@@ -26,6 +26,7 @@ getId() {
 getStatus() {
   return this.status;
 }
+
 setConnectionCredentials(connectioncredentials) {
   this.connectioncredentials = connectioncredentials;
 }

@@ -99,7 +99,7 @@ class  HostManagementPanel  extends React.Component {
 
         <div  className="row">
           <div className="col-md-8">
-          <LabeledTextField col="col-md-4" labelcol="col-md-2" id="username" label="Username:" inputValue={this.state.selected_host.getHostname()} onChange={e => this.changeAttr(e)}/>
+          <LabeledTextField col="col-md-4" labelcol="col-md-2" id="username" label="Username:" inputValue={this.state.selected_host.getConnectionCredentials().getUsername()} onChange={e => this.changeAttr(e)}/>
           </div>
         </div>
         <div className="row">
@@ -107,7 +107,7 @@ class  HostManagementPanel  extends React.Component {
         </div>
         <div  className="row">
           <div className="col-md-8">
-          <LabeledTextField col="col-md-3" labelcol="col-md-2" id="Password" label="IP Address:" inputValue={this.state.selected_host.getIpaddress()} onChange={e => this.changeAttr(e)} />
+          <LabeledTextField col="col-md-3" labelcol="col-md-2" id="Password" label="IP Address:" inputValue={this.state.selected_host.getConnectionCredentials().getPassword()} onChange={e => this.changeAttr(e)} />
           </div>
         </div>
         <div className="row">

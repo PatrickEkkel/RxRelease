@@ -30,7 +30,7 @@ createSettingsCategoryFromJson(json) {
 createCredentialSettingFromJson(json) {
   var result = null;
   if(json != null) {
-   var result = new CredentialsSetting(json.id,json.username,json.passwords)
+   var result = new CredentialsSetting(json.id,json.username,json.password)
   }
   return result;
 }

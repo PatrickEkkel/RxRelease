@@ -7,6 +7,7 @@ import SettingsFactory from '../factories/settingsFactory'
 import GlobalSettings from '../config/global'
 import  * as settingsRequests from '../rest/requests/settingsrequests'
 import  * as hostsRequests from '../rest/requests/hostrequests'
+import  * as statesRequests from '../rest/requests/statesrequests'
 import  * as settingsPromises from '../rest/promises/settingspromises'
 import  * as jsonUtils from '../lib/json/utils'
 
@@ -20,50 +21,35 @@ export function initialHostState() {
 }
 
 export function loadHostManagement(hostentry) {
-  console.log("what is the value of hostentry");
-  console.log(hostentry)
   var host = HostFactory.convertMapToHost(hostentry)
-  return function (dispatch) {
+  var settingsfactory = new SettingsFactory()
+  var factory = new StateFactory()
 
-      Axios.get('http://localhost:8080/rxbackend/states/search/?host_id=' + host.getId())
+  return function (dispatch) {
+      statesRequests.getStatesByHost(host)
       .then(function(response) {
-        var factory = new StateFactory()
-        var settingsfactory = new SettingsFactory()
         var states = factory.convertJsonList(response.data)
         host.setStates(states);
-        // we need to make a call to the backend to get the connectioncredentials id,
-        Axios.get('http://localhost:8080/rxbackend/hosts/' + host.getId()).then(function(response) {
 
-            var connectioncredentials_id  = response.data['connectioncredentials'];
-            if(connectioncredentials_id == null) {
+      }).then(function(response) {
+        // we don't have the credentials id available so we need to do a call to the backend to retrieve it
+          return hostsRequests.getHostById(host.getId())
+        // load the credentials
+      }).then(function(response) {
 
-              var settings = settingsfactory.newEmpyCredentials();
-              Axios.post('http://localhost:8080/rxbackend/settings/credentials',{
-                password: settings.getPassword(),
-                username: settings.getUsername(),
-                category: 0
-              }).then(function(response) {
-                    var connection_credentials = settingsfactory.createCredentialSettingFromJson(response.data)
-                    host.setConnectionCredentials(connection_credentials);
-                    console.log("hij bestaat nog niet daarom toon ik hem nu hier")
-                    console.log(connection_credentials)
-              });
-             // create a new credentials setting and post it directly to the backend
-            }
-            // if credentials do already exist, then we just nee to fetch them from the backends
-            else {
-              Axios.get('http://localhost:8080/rxbackend/settings/credentials/' + connectioncredentials_id)
-              .then(function(response) {
-                 var connection_credentials = settingsfactory.createCredentialSettingFromJson(response.data)
-                 host.setConnectionCredentials(connection_credentials);
-                 console.log("hij bestaat al en daarom toon ik hem hier")
-                 console.log(connection_credentials)
-              });
-            }
-            dispatch(hostManagementLoaded(host));
-        });
-        //host.setConnectionCredentials(null);
-      })
+        var data = jsonUtils.normalizeJson(response.data);
+        var connectioncredentials_id =  data.connectioncredentials
+        return settingsRequests.getCredentialSettingsByHostById(connectioncredentials_id);
+      }).then(function(response) {
+
+        var data = jsonUtils.normalizeJson(response.data);
+
+        var connectioncredentials =  settingsfactory.createCredentialSettingFromJson(data);
+        console.log("connectioncredentials zien er nu als volgt uit")
+        console.log(connectioncredentials)
+        host.setConnectionCredentials(connectioncredentials)
+        dispatch(hostManagementLoaded(host));
+      });
   }
 }
 export function hostManagementLoaded(host) {
