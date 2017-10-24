@@ -7,6 +7,13 @@ constructor(id,username,password) {
   this.password = password;
 }
 
+getSettingCategory() {
+  return this.settingCategory;
+}
+setSettingCategory(settingCategory) {
+  this.settingCategory = settingCategory;
+}
+
 getId() {
   return this.id;
 }

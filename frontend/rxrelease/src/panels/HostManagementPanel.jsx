@@ -107,7 +107,7 @@ class  HostManagementPanel  extends React.Component {
         </div>
         <div  className="row">
           <div className="col-md-8">
-          <LabeledTextField col="col-md-3" labelcol="col-md-2" id="Password" label="IP Address:" inputValue={this.state.selected_host.getConnectionCredentials().getPassword()} onChange={e => this.changeAttr(e)} />
+          <LabeledTextField col="col-md-3" labelcol="col-md-2" id="ConnectionCredentials.Password" label="Password:" inputValue={this.state.selected_host.getConnectionCredentials().getPassword()} onChange={e => this.changeAttr(e)} />
           </div>
         </div>
         <div className="row">

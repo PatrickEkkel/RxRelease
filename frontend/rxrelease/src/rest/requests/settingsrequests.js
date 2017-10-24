@@ -21,6 +21,18 @@ export function postSettings(username,password,settingscategory) {
   return Axios.get(backend_url + '/rxbackend/')
 }*/
 
+export function putCredentialSettings(settings) {
+  console.log("voordat we de settings opslaan eerst even een kijkje nemen")
+  console.log(settings)
+  var backend_url = GlobalSettings.getBackendUrl();
+  return Axios.put(backend_url + '/rxbackend/settings/credentials/' + settings.getId() + '/',
+  {
+    username: settings.getUsername(),
+    password: settings.getPassword(),
+    category: settings.getSettingCategory().getId()
+  })
+}
+
 export function getCredentialSettingsByHostById(id) {
 
   var backend_url = GlobalSettings.getBackendUrl();

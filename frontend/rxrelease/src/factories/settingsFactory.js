@@ -22,7 +22,7 @@ newHostSettingsCategory() {
 createSettingsCategoryFromJson(json) {
   var result = null;
   if(json != null) {
-    result = new SettingsCategory(json.id,json.username)
+    result = new SettingsCategory(json.id,json.name)
   }
   return result;
 }
@@ -30,6 +30,8 @@ createSettingsCategoryFromJson(json) {
 createCredentialSettingFromJson(json) {
   var result = null;
   if(json != null) {
+    console.log("hier is waar de credential setting geboren wordt")
+    console.log(json)
    var result = new CredentialsSetting(json.id,json.username,json.password)
   }
   return result;

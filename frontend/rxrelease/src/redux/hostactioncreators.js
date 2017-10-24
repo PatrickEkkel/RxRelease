@@ -48,7 +48,15 @@ export function loadHostManagement(hostentry) {
         console.log("connectioncredentials zien er nu als volgt uit")
         console.log(connectioncredentials)
         host.setConnectionCredentials(connectioncredentials)
+        return settingsRequests.getCredentialSettingsByHostById(data.category);
+      }).then(function(response) {
+        // TODO: dit testen, hier waren we dus gebleven
+        var data = jsonUtils.normalizeJson(response.data);
+        var settingsFactory = new SettingsFactory();
+        var settingscategory = settingsFactory.createSettingsCategoryFromJson(data);
+        host.getConnectionCredentials().setSettingCategory(settingscategory)
         dispatch(hostManagementLoaded(host));
+
       });
   }
 }
@@ -90,11 +98,8 @@ export function hostsLoaded(hosts) {
 export function updateHost(host) {
   return function (dispatch) {
     if(host.getHostname() != '' && host.getIpaddress() != '') {
-      Axios.put('http://localhost:8080/rxbackend/hosts/' + host.getId() + "/",
-     {
-       hostname: host.getHostname(),
-       ipaddress: host.getIpaddress(),
-       description: host.getDescription()
+      hostsRequests.putHost(host).then(function() {
+       return settingsRequests.putCredentialSettings(host.getConnectionCredentials())
      }).then(function() {
        dispatch({
            type: 'UPDATE_EXISTING_HOST',
