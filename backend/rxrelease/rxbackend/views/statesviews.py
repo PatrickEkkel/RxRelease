@@ -10,6 +10,7 @@ from ..core.jobs.api.job import Job
 from ..core.jobs.api import jobActionFactory
 from ..core.jobs.statetypes.handlerrequest import HandlerRequest
 from ..core.jobs.statetypes.requestbuilder import RequestBuilder
+from ..core.jobs.api.utils import Utils
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -49,7 +50,12 @@ class InstallHostView(generics.UpdateAPIView):
         for state in stateobject_queryset.all():
             if state.installed == False:
                 if state.statetype.handler is not None:
+
                  handlerRequest = RequestBuilder().buildRequest(state)
+                 logger.info(str(handlerRequest))
+                 logger.info("dit is het request in string formaat")
+                 # encode the request for transport
+                 handlerRequest.setKeyValList(Utils.escapeJsonForTransport(handlerRequest.getKeyValList()))
                  action = actionFactory.createAction('INSTALL',state.name,handlerRequest.getAsPayload())
                  jobfeed.newJobTask(action)
         jobfeed.triggerJob(newJob)

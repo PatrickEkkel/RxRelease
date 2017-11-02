@@ -12,6 +12,8 @@ class HandlerRequest:
         self.ipaddress = ipaddress
     def getIpAddress(self):
         return self.ipaddress
+    def getKeyValList(self):
+        return self.keyvalList
     def setKeyValList(self,keyvalList):
      self.keyvalList = keyvalList
     def setHandlerType(self,handlerType):
@@ -23,7 +25,8 @@ class HandlerRequest:
     def getHandlerCommand(self):
         return self.handlerCommand
     def getAsPayload(self):
-         payload =  "hostid=" + str(self.getHostId()) + "," + "ipaddress=" + str(self.getIpAddress()) + "," + "statetypeid=" + str(self.getStateTypeId()) + "," + "handlerCommand=" + self.getHandlerCommand()
+         payload =  "hostid=" + str(self.getHostId()) + "," + "ipaddress=" + str(self.getIpAddress()) + "," + "statetypeid=" + str(self.getStateTypeId()) + "," + "handlerCommand=" + self.getHandlerCommand() + "," + "keyvalList=" + self.getKeyValList()
          return payload
     def __str__(self):
-        return '{ "host_id": "' + self.getHostId() + '", "statetype_id": "' + self.getStateTypeId() + '", "keyvalList": "\'{\\"username\\": \\"test\\",\\"password\\": \\"biertje\\",\\"dryrun\\": \\"true\\"}\'", "handlerType": "python","handlerCommand": "' + self.getHandlerCommand() + '"  }'
+        return '{ "host_id": "' + str(self.getHostId()) + '", "statetype_id": "' + str(self.getStateTypeId()) + '", "keyvalList": "' + self.getKeyValList() + '",  "handlerType": "python","handlerCommand": "' + self.getHandlerCommand() + '"  }'
+        #return '{ "host_id": "' + self.getHostId() + '", "statetype_id": "' + self.getStateTypeId() + '", "keyvalList": "\'{\\"username\\": \\"test\\",\\"password\\": \\"biertje\\",\\"dryrun\\": \\"true\\"}\'", "handlerType": "python","handlerCommand": "' + self.getHandlerCommand() + '"  }'

@@ -13,10 +13,11 @@ state_id = sys.argv[2]
 keyvallist = sys.argv[3]
 
 reststates_api = REST_states()
-state = reststates_api.getStateByHostAndStateId('1',state_id)
+state = reststates_api.getStateByHostAndStateId('2',state_id)
 #update state to ready
 
 print("current state object has the following value")
+print(state)
 state  =  state[0]
 state['installed'] = True
 reststates_api.putState(state)

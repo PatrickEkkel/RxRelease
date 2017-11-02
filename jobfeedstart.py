@@ -53,7 +53,7 @@ class JobStateHandler(pyinotify.ProcessEvent):
             logger.info("processing: " + latestFilename)
 
             actions = []
-
+            print("show me where the first prize is")
             for actionline in textfile.getLines():
                 newAction = actionFactory.createActionFromString(actionline)
                 actions.append(newAction)
