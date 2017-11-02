@@ -7,6 +7,7 @@ from ..models import State
 from ..viewmodels import StateTypeHandler
 from ..core.jobs.api.jobfeed import JobFeed
 from ..core.jobs.api.job import Job
+from ..core.jobs.api.jobfactory import JobFactory
 from ..core.jobs.api import jobActionFactory
 from ..core.jobs.statetypes.handlerrequest import HandlerRequest
 from ..core.jobs.statetypes.requestbuilder import RequestBuilder
@@ -39,14 +40,12 @@ class InstallHostView(generics.UpdateAPIView):
     serializer_class = InstallHostSerializer
     def get_queryset(self):
         host_id = self.kwargs['pk']
-        #host_id = 1
         stateobject_queryset = State.objects.filter(host_id=host_id)
-        # TODO: nog een JobFactory maken voor nu even dat ding gewoon instancieren
-        newJob = Job("StateHandlerJob")
+        jobfactory = JobFactory()
+        newJob = jobfactory.createNewJob("StateHandlerJob")
 
         actionFactory = jobActionFactory.JobActionFactory(newJob)
         jobfeed = JobFeed()
-        # TODO: dit is nog niet af natuurlijk... verder mee gaan als de tijd er weer naar is
         for state in stateobject_queryset.all():
             if state.installed == False:
                 if state.statetype.handler is not None:

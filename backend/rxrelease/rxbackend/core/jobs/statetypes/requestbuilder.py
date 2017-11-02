@@ -24,6 +24,7 @@ class RequestBuilder:
 
      kvbuilder.addKeyValPair("username",credentials.username)
      kvbuilder.addKeyValPair("password",credentials.password)
+     kvbuilder.addKeyValPair("dryrun","True")
      handlerRequest.setKeyValList(kvbuilder.build())
 
      handlerRequest.setKeyValList(kvbuilder.build())

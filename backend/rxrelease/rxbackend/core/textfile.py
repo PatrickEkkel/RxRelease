@@ -1,4 +1,4 @@
-import logging,sys,os.path
+import logging,sys,os.path,ntpath
 
 class TextFile:
     def __init__(self,location):
@@ -11,6 +11,8 @@ class TextFile:
          self.filehandle = open(self.location,'a+')
         else:
          self.filehandle = open(self.location,'w+')
+    def getFilename(self):
+        return ntpath.basename(self.location)
     def close(self):
         self.filehandle.close()
     def getLines(self):
