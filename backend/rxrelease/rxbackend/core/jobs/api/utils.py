@@ -9,3 +9,6 @@ class Utils:
     def escapeJsonForTransport(json):
         # because or own system can't deal with  comma's in the payload we need to escape them, therefore we will transform them to ; which is a valid text character in the payload
         return json.replace(',',';').replace(':','#')
+    @staticmethod
+    def str2bool(v):
+      return v.lower() in ("yes", "true", "t", "1")

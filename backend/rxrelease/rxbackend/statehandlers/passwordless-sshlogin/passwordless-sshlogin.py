@@ -1,14 +1,16 @@
 #!/usr/bin/python3
-# TODO: voordat we dit af mogen noemen met ik de package malaise oplossen. Dit werkt nu alleen omdat ik een symlink gelegd hebben tussen ../ssh naar ./ssh
 import logging
 import sh
 import json
 import os.path, sys
 import paramiko
-#sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 from pathlib import Path
-from ssh import SSHClient
-from rxfilestore import RxFileStore
+from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
+from rxbackend.configuration.globalsettings import LocalSettings,RemoteSettings
+from rxbackend.core.jobs.api.utils import Utils
+from rxbackend.core.restapi.REST_states import REST_states
+from rxbackend.ssh.ssh import SSHClient
+from rxbackend.core.rxfilestore import RxFileStore
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -18,46 +20,39 @@ ch.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
-# TODO: dit is natuurlijk niet handig, we moeten de localuser ophalen via een methode of ergens global definieren
-localuser="patrick"
-remoteuser="rxrelease"
-# TODO dit plaatsen in een soort van utils implementatie
-def str2bool(v):
-  return v.lower() in ("yes", "true", "t", "1")
-# script parameters
 
-# sys.argv parameters
-# 1 - ip address
-# 2 - location of the keyvalue listfile
+localuser=LocalSettings.localuser
+remoteuser=RemoteSettings.remoteuser
 
-# TODO: keyval list hiervoor gebruiken. voor nu even hardcoded vars gebruiken
+inputmapping = InputMapper().getInputFromCLI()
 
-ipaddress = sys.argv[1]
 keyvallist = sys.argv[2]
 
-data = json.loads(keyvallist)
+data = json.loads(inputmapping.getKeyvalList())
 
 dryrun = data["dryrun"]
 
 filestore = RxFileStore('/home/' + localuser + '/.rxrelease')
 
-if str2bool(dryrun):
+if Utils.str2bool(dryrun):
  logger.info("running script in dryrun with the following parameters")
- logger.info(keyvallist)
- #filestore.createDir('nogmeertest')
- #filestore.setContext('/nogmeertest')
- #filestore.copyFile('/tmp/test')
+ logger.info(inputmapping.getKeyvalList())
+ reststates_api = REST_states()
+ state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),inputmapping.getStateId())
+ state =  state[0]
+ state['installed'] = True
+ reststates_api.putState(state)
  sys.exit()
 
-logger.info("connecting with ipaddress: " + ipaddress)
+logger.info("connecting with : " + inputmapping.getIpAddress())
  # TODO: code toevoegen die connectieproblemen afvangt
 try:
- client = SSHClient.withPassword(ipaddress,data["username"],data["password"])
+ client = SSHClient.withPassword(inputmapping.getIpAddress(),data["username"],data["password"])
 
  # user creation on remote machine
  if client.sendCommand('id -u ' + remoteuser) == 1:
   #user does not exist, lets make it
-  logger.info("user " + remoteuser +  " does not exist on " + ipaddress)
+  logger.info("user " + remoteuser +  " does not exist on " + inputmapping.getIpAddress())
   client.sendCommand('adduser ' + remoteuser )
 
   # after user creation we want to be able to transfer the public key to the remote server. But first we need to generate a private/public key pair on this server

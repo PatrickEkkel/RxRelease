@@ -15,19 +15,16 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-# TODO: dit is natuurlijk niet handig, we moeten de localuser ophalen via een methode of ergens global definieren
-localuser="patrick"
-
 class JobFeed:
     def __init__(self):
-     self.filestore = RxFileStore('/home/' + localuser + '/.rxrelease')
+     self.localuser=LocalSettings.localuser
+     self.filestore = RxFileStore('/home/' + self.localuser + '/.rxrelease')
      self.filestore.createDir('jobfeed/')
      self.filestore.setContext('/jobfeed')
      self.backendlocation = NetworkSettings.protocol + "://" + NetworkSettings.servername + ":" + NetworkSettings.port
 
     def pollJobCompleted(self,textfile,statetypeRequest):
      statesApi = REST_states()
-
      pollingState = True
 
      polling_frequenty = 5
@@ -36,26 +33,28 @@ class JobFeed:
      job_failed = False
      latestFilename = textfile.getFilename()
      while pollingState:
-      time.sleep(polling_frequenty)
-      logger.info("checking task  " + latestFilename + " for completion")
-      # query the rest interface for the status of the current action
-      state =   statesApi.getStateByHostAndStateTypeId(statetypeRequest.getHostId(),statetypeRequest.getStateTypeId())
-      print(state)
-      if state[0]['installed'] == True:
-       print("task " + latestFilename + " succesfully installed")
-       break
-      if polling_counter == max_pollingtime:
-       job_failed = True
-       break
-      polling_counter += 1
-      # when job is failed, we need to setup a plan to recover from this failed state,
-      if job_failed:
-       pass
+         time.sleep(polling_frequenty)
+         logger.info("checking task  " + latestFilename + " for completion")
+         # query the rest interface for the status of the current action
+         state =   statesApi.getStateByHostAndStateTypeId(statetypeRequest.getHostId(),statetypeRequest.getStateTypeId())
+         print(state)
+         if state[0]['installed'] == True:
+             print("task " + latestFilename + " succesfully installed")
+             break
+         if polling_counter == max_pollingtime:
+             job_failed = True
+             break
+         polling_counter += 1
+         # when job is failed, we need to setup a plan to recover from this failed state,
+         if job_failed:
+             pass
+
+     return not job_failed
 
 
     def getLatestJobTask(self,job):
      # get all the files that are associated with this job
-     filestorelocation = '/home/' + localuser + '/.rxrelease/'
+     filestorelocation = '/home/' + self.localuser + '/.rxrelease/'
      jobfeedRunnerDir = filestorelocation + '/jobfeed'
 
      dirlist =   os.listdir(jobfeedRunnerDir)

@@ -29,7 +29,7 @@ class HandleHostState(generics.CreateAPIView):
         host_queryset = Host.objects.filter(id = validated_data['host_id'])
         statetype_queryset = StateType.objects.filter(id = validated_data['statetype_id'])
         selected_capability = Capability.objects.filter(statetypes = statetype_queryset).get()
-        selected_state = State.objects.filter(host =host_queryset,statetype = statetype_queryset).get()
+        selected_state = State.objects.filter(host=host_queryset,statetype = statetype_queryset).get()
         logger.info(selected_capability.module)
         selected_host = host_queryset.get()
         keyval_list = validated_data['keyvalList']
@@ -41,7 +41,7 @@ class HandleHostState(generics.CreateAPIView):
         else:
             programroot = 'rxbackend.' + selected_capability.module + 'pgstatehandlers.'
         stateHandler = statehandler.StateHandler(programroot)
-        stateHandler.handlePythonState(selected_state,handlerCommand,selected_host.ipaddress,keyval_list)
+        stateHandler.handlePythonState(selected_state,selected_host,handlerCommand,keyval_list)
         # todo add some kind of json parsing to the keyval_list
         logger.info("Handling State for host " +  selected_host.ipaddress)
 

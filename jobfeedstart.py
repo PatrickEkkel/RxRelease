@@ -51,16 +51,22 @@ class JobStateHandler(pyinotify.ProcessEvent):
             for actionline in textfile.getLines():
                 newAction = actionFactory.createActionFromString(actionline)
                 actions.append(newAction)
-            # for test try to run passwordless login
-            runnableAction = actions[0]
-            payload =  runnableAction.getPayload()
 
-            statetypeRequest =  requestFactory.createRequest(payload)
-            # at this point we are getting work done at the client and we need to start polling if the process is done
-            statetypesApi.postHandleHostState(statetypeRequest)
-            jobfeed.pollJobCompleted(textfile,statetypeRequest)
+            logger.info("amount of actions queued: " + str(len(actions)))
 
-# TODO: localuser van een andere plek dan deze halen
+            for action in actions:
+                runnableAction = action
+                payload =  runnableAction.getPayload()
+
+                statetypeRequest =  requestFactory.createRequest(payload)
+                # at this point we are getting work done at the client and we need to start polling if the process is done
+                statetypesApi.postHandleHostState(statetypeRequest)
+                if jobfeed.pollJobCompleted(textfile,statetypeRequest) is False:
+                    # call of all jobs currently handled by this trigger
+                    logger.error("job: " + action.getCommand() + " has failed, check the logs for details")
+                    break
+
+
 jobname="StateHandlerJob"
 
 jobList = []
@@ -68,7 +74,7 @@ jobList.append(JobDefinition(JobStateHandler(),jobname))
 
 
 for jobDef in jobList:
- print("Registering notifier for " + jobDef.getJobName())
+ logger.info("Registering notifier for " + jobDef.getJobName())
  wm = pyinotify.WatchManager()
  notifier = pyinotify.Notifier(wm, jobDef.getHandler())
  # Dit wellicht ook uit de filestore halen

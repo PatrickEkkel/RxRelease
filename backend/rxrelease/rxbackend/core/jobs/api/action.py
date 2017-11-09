@@ -14,6 +14,8 @@ class Action:
      self.job = job
     def getJob(self):
      return self.job
+    def getCommand(self):
+     return self.command
     def setCommand(self,command):
      self.command = command
     def __str__(self):

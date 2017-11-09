@@ -14,9 +14,9 @@ class StateHandler:
     def __init__(self,rootdir):
         self.rootdir = rootdir
         pass
-    def handlePythonState(self,state,handlerCommand,ipaddress,keyvalList):
+    def handlePythonState(self,state,host,handlerCommand,keyvalList):
         handlerPackage  = handlerCommand.replace('.py','')
-        shell_command = "python3 -m " + self.rootdir + "." + handlerPackage + "." + handlerPackage + " " + ipaddress +  " " +  str(state.id) +  " " + keyvalList + " > /tmp/python_logging.txt"
+        shell_command = "python3 -m " + self.rootdir + "." + handlerPackage + "." + handlerPackage + " " + str(host.id) + " " + str(host.ipaddress) +  " " +  str(state.id) +  " " + keyvalList + " > /tmp/python_logging.txt"
 
         logger.debug("statehandler context: " + self.rootdir)
         logger.debug("executing statehandler: " + shell_command)
