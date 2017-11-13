@@ -47,6 +47,9 @@ class State(models.Model):
     installed = models.BooleanField()
     statetype = models.ForeignKey(StateType)
 
+    def __str__(self):
+        return self.name
+
 class Configuration(models.Model):
     name = models.CharField(max_length=200)
     hosts = models.ManyToManyField(Host)

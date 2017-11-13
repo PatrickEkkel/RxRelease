@@ -10,7 +10,7 @@ class RequestBuilder:
      settingsDao = SettingsDao()
 
      host = hostDao.getHostById(state.host_id)
-     credentials = settingsDao.getCredentialSettingsById(host.id)
+     credentials = settingsDao.getCredentialSettingsById(host.connectioncredentials_id)
 
 
      handlerRequest = HandlerRequest()
@@ -19,12 +19,11 @@ class RequestBuilder:
      handlerRequest.setStateTypeId(state.statetype_id)
      handlerRequest.setHandlerCommand(state.statetype.handler)
 
-
      kvbuilder  = KeyValListBuilder()
-
+    
      kvbuilder.addKeyValPair("username",credentials.username)
      kvbuilder.addKeyValPair("password",credentials.password)
-     kvbuilder.addKeyValPair("dryrun","True")
+     kvbuilder.addKeyValPair("dryrun","False")
      handlerRequest.setKeyValList(kvbuilder.build())
 
      handlerRequest.setKeyValList(kvbuilder.build())

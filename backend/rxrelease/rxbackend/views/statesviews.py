@@ -12,6 +12,7 @@ from ..core.jobs.api import jobActionFactory
 from ..core.jobs.statetypes.handlerrequest import HandlerRequest
 from ..core.jobs.statetypes.requestbuilder import RequestBuilder
 from ..core.jobs.api.utils import Utils
+from ..core.datastructures.tree.dependencytreemap import DependencyTreeMap
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -45,11 +46,52 @@ class InstallHostView(generics.UpdateAPIView):
         newJob = jobfactory.createNewJob("StateHandlerJob")
 
         actionFactory = jobActionFactory.JobActionFactory(newJob)
+        states =  stateobject_queryset.all()
+
+
+        treemap = DependencyTreeMap()
+
+        for state in states:
+            parent = state.statetype.dependentOn
+            parent_id = None
+            if parent == None:
+                parent_id  = -1
+            else:
+                parent_id = parent.id
+
+            treemap.addItem(state.statetype.id,state,parent_id)
+        treemap.merge()
+        treemap.printTree()
+
+        # sort the states based on dependencies
+        #stateslist = []
+
+        # we need to put the statetype_ids togehther in a dictionary
+        #for state in states:
+        #    dependent_statetype =  state.statetype.dependentOn
+        #    if dependent_statetype is None:
+        #        dependent_statetype = -1
+        #    else:
+        #        print(dependent_statetype.id)
+
+        #    stateslist.append(tuple([dependent_statetype,state]))
+
+        #def getKey(item):
+        # return item[0]
+
+
+
+        #stateslist = sorted(stateslist,key=getKey)
+        #for t in stateslist:
+        #    print("t1: " + str(t[0]) + " t2: " + str(t[1]))
+
+
+
+
         jobfeed = JobFeed()
         for state in stateobject_queryset.all():
             if state.installed == False:
                 if state.statetype.handler is not None:
-
                  handlerRequest = RequestBuilder().buildRequest(state)
                  logger.info(str(handlerRequest))
                  logger.info("dit is het request in string formaat")
