@@ -61,35 +61,12 @@ class InstallHostView(generics.UpdateAPIView):
 
             treemap.addItem(state.statetype.id,state,parent_id)
         treemap.merge()
-        treemap.printTree()
-
-        # sort the states based on dependencies
-        #stateslist = []
-
-        # we need to put the statetype_ids togehther in a dictionary
-        #for state in states:
-        #    dependent_statetype =  state.statetype.dependentOn
-        #    if dependent_statetype is None:
-        #        dependent_statetype = -1
-        #    else:
-        #        print(dependent_statetype.id)
-
-        #    stateslist.append(tuple([dependent_statetype,state]))
-
-        #def getKey(item):
-        # return item[0]
-
-
-
-        #stateslist = sorted(stateslist,key=getKey)
-        #for t in stateslist:
-        #    print("t1: " + str(t[0]) + " t2: " + str(t[1]))
-
-
-
+        statesList =  treemap.toList()
 
         jobfeed = JobFeed()
-        for state in stateobject_queryset.all():
+        for kv in statesList:
+            state = kv[1]
+        #for state in stateobject_queryset.all():
             if state.installed == False:
                 if state.statetype.handler is not None:
                  handlerRequest = RequestBuilder().buildRequest(state)

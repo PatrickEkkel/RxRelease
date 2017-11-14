@@ -23,6 +23,11 @@ class Node(object):
         return self.key
     def getValue(self):
         return self.value
+    def toList(self,listref):
+        for child in self.children:
+            child.toList(listref)
+        listref.append(tuple([self.key,self.value]))
+        return listref
     def printNode(self):
         for child in self.children:
             child.printNode()

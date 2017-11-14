@@ -20,9 +20,17 @@ class DependencyTreeMap:
         for tree in self.treeList:
           print("printing new treelist")
           tree.printTree()
+    def toList(self):
+        # assuming merge has been called and there is only one tree left
+        if len(self.treeList) < 2 and len(self.treeList) > 0:
+            return self.treeList[0].toList()
+        else:
+            logger.debug("calling toList without calling merge is not supported")
+            return []
 
     def merge(self):
         trees_to_remove = []
+        logger.debug("merging " + str(len(self.treeList)) + " to one tree")
         for tree_x in self.treeList:
             for tree_y in self.treeList:
                 # don't merge ourselves, that is no what we want
@@ -36,8 +44,9 @@ class DependencyTreeMap:
 
                      # after adding stop searching and return to tree_x loop
                      break
-            for tree in trees_to_remove:
-                self.treeList.remove(tree)
+
+        for tree in trees_to_remove:
+            self.treeList.remove(tree)
 
     def addItem(self,key,value,parentkey):
 
