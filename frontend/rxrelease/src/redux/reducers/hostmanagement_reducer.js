@@ -8,6 +8,21 @@ export default function _hostmanagement(state = initialHostManagementState,actio
       type: action.type,
       selected_host: action.selected_host
     }
+    case 'UPDATE_EXISTING_HOST':
+    return {
+      type: action.type,
+      selected_host: action.selected_host
+    }
+    case 'EXISTING_HOST_UPDATED':
+    return {
+      type: action.type,
+      selected_host: action.selected_host
+    }
+    case 'UPDATE_EXISTING_HOST_FAILED':
+    return {
+      type: action.type,
+      selected_host: action.selected_host
+    }
     default:
     return state;
 

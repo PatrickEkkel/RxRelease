@@ -95,6 +95,12 @@ export function hostsLoaded(hosts) {
   }
 }
 
+export function hostupdated(host) {
+  return {
+    type: 'EXISTING_HOST_UPDATED',
+    selected_host: host
+  }
+}
 export function updateHost(host) {
   return function (dispatch) {
     if(host.getHostname() != '' && host.getIpaddress() != '') {
@@ -103,7 +109,13 @@ export function updateHost(host) {
      }).then(function() {
        dispatch({
            type: 'UPDATE_EXISTING_HOST',
-           host: host
+           selected_host: host,
+
+       })
+     }).catch(function(error) {
+       dispatch({
+         type: 'UPDATE_EXISTING_HOST_FAILED',
+         selected_host: host
        })
      });
     }

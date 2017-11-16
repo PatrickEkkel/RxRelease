@@ -5,6 +5,7 @@ import Utils from '../lib/react/utils'
 import LabeledTable from '../components/LabeledTable'
 import LabeledTextField from '../components/LabeledTextField'
 import StateFactory from '../factories/stateFactory'
+import InfoBox from '../components/InfoBox'
 import { connect } from 'react-redux'
 
 
@@ -13,7 +14,8 @@ class  HostManagementPanel  extends React.Component {
   constructor() {
     super()
     this.state = {
-      selected_host: null
+      selected_host: null,
+      save_success: null
     }
 
   }
@@ -41,7 +43,14 @@ class  HostManagementPanel  extends React.Component {
     }
   }
   componentWillReceiveProps(nextProps) {
+    if(nextProps.type == "UPDATE_EXISTING_HOST") {
+      this.props.dispatch(hostActionCreators.hostupdated(this.state.selected_host))
+      this.setState({save_success: true})
 
+    }
+    else if(nextProps.type == "UPDATE_EXISTING_HOST_FAILED") {
+      this.setState({save_success: false})
+    }
   }
   saveHostDetails() {
     this.props.dispatch(hostActionCreators.updateHost(this.state.selected_host))
@@ -62,6 +71,7 @@ class  HostManagementPanel  extends React.Component {
     var headers = ['#','name'];
     var data = [];
     return <div className="container">
+      <InfoBox success={this.state.save_success} success_message="Changes saved successfully" fail_message="Something went wrong while saving"></InfoBox>
       <div className="row">
         <div className="col-md-8">
           <h4><b>Connection details</b></h4>
@@ -107,7 +117,7 @@ class  HostManagementPanel  extends React.Component {
         </div>
         <div  className="row">
           <div className="col-md-8">
-          <LabeledTextField col="col-md-3" labelcol="col-md-2" id="ConnectionCredentials.Password" label="Password:" inputValue={this.state.selected_host.getConnectionCredentials().getPassword()} onChange={e => this.changeAttr(e)} />
+          <LabeledTextField col="col-md-3" mode="password" labelcol="col-md-2" id="ConnectionCredentials.Password" label="Password:" inputValue={this.state.selected_host.getConnectionCredentials().getPassword()} onChange={e => this.changeAttr(e)} />
           </div>
         </div>
         <div className="row">
