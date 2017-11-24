@@ -1,3 +1,4 @@
+import logging,sys,socket
 from rest_framework import serializers
 from .models import Profile
 from .models import Host
@@ -11,6 +12,15 @@ from .models import CredentialsSetting
 from .models import SettingsCategory
 from .viewmodels import StateTypeHandler
 from .viewmodels import InstallHost
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
 
 class CapabilityMTMSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
     class Meta:
@@ -31,6 +41,14 @@ class ProfileTypeSerializer(serializers.ModelSerializer):
         fields  = ('id','name','capabilities')
 
 class HostSerializer(serializers.ModelSerializer):
+    def validate_ipaddress(self,value):
+        try:
+            socket.inet_aton(value)
+        except socket.error:
+            raise serializers.ValidationError("Not a valid IP Address")
+
+        logger.debug("value of the ipaddress field = " + value)
+        return value
 
     class Meta:
         model = Host

@@ -21,12 +21,34 @@ class LabeledTextField extends React.Component {
     return result
   }
   getLabelCol() {
-    var returnValue = this.props.labelcol || "col-md-4"
+    var returnValue = this.props.labelcol || "col-md-4 "
     returnValue += " control-label"
     return returnValue;
   }
   getLabel() {
     return this.props.label || "Empty"
+  }
+  getError() {
+    if(this.props.error != null) {
+      return this.props.error
+    }
+    else {
+      return false;
+    }
+  }
+  getErrorLabel() {
+    if(this.props.error) {
+      return "has-error"
+    }
+    else if(this.props.error == null) {
+      return " "
+    }
+    else {
+      return "has-success"
+    }
+  }
+  getErrorText() {
+    return this.props.errortext
   }
   getPlaceholder() {
     return this.props.placeholder;
@@ -43,8 +65,9 @@ class LabeledTextField extends React.Component {
     return  <fieldset>
 
           <label className={this.getLabelCol()} for={this.getId()}>{this.getLabel()}</label>
-          <div className={this.getCol()}>
-            <input id={this.getId()} name={this.getId()} placeholder={this.getPlaceholder()} className="form-control input-md" type={this.getMode()} value={this.getInputValue()} onChange={this.getOnchange()}/>
+          <div className={this.getCol() + " " + this.getErrorLabel()}>
+            <input id={this.getId()} name={this.getId()} placeholder={this.getPlaceholder()} className="form-control input-md has-error" type={this.getMode()} value={this.getInputValue()} onChange={this.getOnchange()}/>
+            { this.getError() ? <span class="help-block">{this.getErrorText()}</span> : null}
           </div>
       </fieldset>
   }

@@ -14,12 +14,12 @@ constructor() {
 componentWillReceiveProps(nextProps) {
   var currentContext = this;
 
-  this.setState({show_infobox: nextProps.success})
-  if(this.state.show_infobox) {
+  this.setState({show_infobox: true})
+
     setTimeout(function() {
       currentContext.setState({show_infobox: false})
     }.bind(this),3500)
-  }
+
 }
 componentDidMount() {
 var currentContext = this

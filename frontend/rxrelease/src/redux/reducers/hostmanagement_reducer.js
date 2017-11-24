@@ -21,7 +21,7 @@ export default function _hostmanagement(state = initialHostManagementState,actio
     case 'UPDATE_EXISTING_HOST_FAILED':
     return {
       type: action.type,
-      selected_host: action.selected_host
+      error_fields: action.error_fields
     }
     default:
     return state;

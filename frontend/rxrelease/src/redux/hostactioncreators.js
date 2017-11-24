@@ -5,6 +5,7 @@ import HostFactory from '../factories/hostFactory'
 import StateFactory from '../factories/stateFactory'
 import SettingsFactory from '../factories/settingsFactory'
 import GlobalSettings from '../config/global'
+import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
 import  * as settingsRequests from '../rest/requests/settingsrequests'
 import  * as hostsRequests from '../rest/requests/hostrequests'
 import  * as statesRequests from '../rest/requests/statesrequests'
@@ -45,12 +46,9 @@ export function loadHostManagement(hostentry) {
         var data = jsonUtils.normalizeJson(response.data);
 
         var connectioncredentials =  settingsfactory.createCredentialSettingFromJson(data);
-        console.log("connectioncredentials zien er nu als volgt uit")
-        console.log(connectioncredentials)
         host.setConnectionCredentials(connectioncredentials)
         return settingsRequests.getCredentialSettingsByHostById(data.category);
       }).then(function(response) {
-        // TODO: dit testen, hier waren we dus gebleven
         var data = jsonUtils.normalizeJson(response.data);
         var settingsFactory = new SettingsFactory();
         var settingscategory = settingsFactory.createSettingsCategoryFromJson(data);
@@ -102,23 +100,26 @@ export function hostupdated(host) {
   }
 }
 export function updateHost(host) {
+  var errorHandler = new AggregatedFieldsErrorHandler();
+
   return function (dispatch) {
-    if(host.getHostname() != '' && host.getIpaddress() != '') {
-      hostsRequests.putHost(host).then(function() {
-       return settingsRequests.putCredentialSettings(host.getConnectionCredentials())
+//    if(host.getHostname() != '' && host.getIpaddress() != '') {
+      hostsRequests.putHost(host).catch(function(error) {
+        errorHandler.addErrorResponse(error)
+      }).then(function() {
+       return settingsRequests.putCredentialSettings(host.getConnectionCredentials());
      }).then(function() {
+       if(!errorHandler.handleErrors('UPDATE_EXISTING_HOST_FAILED',dispatch)) {
        dispatch({
            type: 'UPDATE_EXISTING_HOST',
            selected_host: host,
-
        })
+     }
      }).catch(function(error) {
-       dispatch({
-         type: 'UPDATE_EXISTING_HOST_FAILED',
-         selected_host: host
-       })
+        errorHandler.addErrorResponse(error)
+        errorHandler.handleErrors('UPDATE_EXISTING_HOST_FAILED')
      });
-    }
+    //}
   }
 }
 
@@ -152,8 +153,6 @@ export function saveNewHost(hostname,ipaddress,description) {
 
       var connectioncredentials = settingsfactory.createCredentialSettingFromJson(jsonUtils.normalizeJson(response.data))
       var host =  hostfactory.createHost(hostname,ipaddress,description)
-      console.log("connectioncredentials bestaat uit de volgende bullshit")
-      console.log(connectioncredentials.getId())
       host.setConnectionCredentials(connectioncredentials)
       return hostsRequests.postHost(host);
     }).then(function(response) {

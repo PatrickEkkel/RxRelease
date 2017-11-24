@@ -15,7 +15,8 @@ class  HostManagementPanel  extends React.Component {
     super()
     this.state = {
       selected_host: null,
-      save_success: null
+      save_success: null,
+      errortext_ipaddress: ""
     }
 
   }
@@ -49,7 +50,13 @@ class  HostManagementPanel  extends React.Component {
 
     }
     else if(nextProps.type == "UPDATE_EXISTING_HOST_FAILED") {
-      this.setState({save_success: false})
+      console.log("so, we finally recieve the errortext from the server")
+      console.log(nextProps.error_fields[0].ipaddress)
+      this.setState({
+        save_success: false,
+        errortext_ipaddress: nextProps.error_fields[0].ipaddress,
+        errortext_hostname: nextProps.error_fields[0].hostname
+      })
     }
   }
   saveHostDetails() {
@@ -83,7 +90,7 @@ class  HostManagementPanel  extends React.Component {
 
       <div  className="row">
         <div className="col-md-8">
-        <LabeledTextField col="col-md-4" labelcol="col-md-2" id="hostname" label="Hostname:" inputValue={this.state.selected_host.getHostname()} onChange={e => this.changeAttr(e)}/>
+        <LabeledTextField col="col-md-4" labelcol="col-md-2" id="hostname" errortext={this.state.errortext_hostname} error={this.state.save_success == null ? false : !this.state.save_success}  label="Hostname:" inputValue={this.state.selected_host.getHostname()} onChange={e => this.changeAttr(e)}/>
         </div>
       </div>
       <div className="row">
@@ -91,7 +98,7 @@ class  HostManagementPanel  extends React.Component {
       </div>
       <div  className="row">
         <div className="col-md-8">
-        <LabeledTextField col="col-md-3" labelcol="col-md-2" id="ipAddress" label="IP Address:" inputValue={this.state.selected_host.getIpaddress()} onChange={e => this.changeAttr(e)} />
+        <LabeledTextField col="col-md-3" labelcol="col-md-2" id="ipAddress" errortext={this.state.errortext_ipaddress} error={this.state.save_success == null ? false : !this.state.save_success} label="IP Address:" inputValue={this.state.selected_host.getIpaddress()} onChange={e => this.changeAttr(e)} />
         </div>
       </div>
       <hr/>
@@ -141,7 +148,8 @@ class  HostManagementPanel  extends React.Component {
 const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._hostmanagement.type,
-    selected_host: state._hostmanagement.selected_host
+    selected_host: state._hostmanagement.selected_host,
+    error_fields: state._hostmanagement.error_fields
   }
 }
 
