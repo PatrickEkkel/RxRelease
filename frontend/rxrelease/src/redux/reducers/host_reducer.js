@@ -19,6 +19,12 @@ export default function _host(state = initialHostState,action) {
       type: action.type,
       showModal: false
     }
+    case 'SAVE_NEW_HOST_FAILED':
+    return {
+      type: action.type,
+      showModal: true,
+      error_fields: action.error_fields
+    }
     case 'HOSTS_LOADED':
     return {
       type: action.type,

@@ -37,14 +37,17 @@ class LabeledTextField extends React.Component {
     }
   }
   getErrorLabel() {
+    // TODO: at the moment we have no way of filtering out individual errors, therefore we disable this for the time being
     if(this.props.error) {
-      return "has-error"
+      //return "has-error"
+      return " "
     }
     else if(this.props.error == null) {
       return " "
     }
     else {
-      return "has-success"
+      //return "has-success"
+      return " "
     }
   }
   getErrorText() {

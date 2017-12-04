@@ -29,7 +29,10 @@ class  HostManagementPanel  extends React.Component {
     var host = this.state.selected_host;
     Utils.bindAttr(host,e.target.id,e.target.value)
 
-    this.setState({selected_host: host})
+    this.setState({
+      selected_host: host,
+      save_success: null
+    })
   }
 
   onRowClick(entry) {
@@ -50,8 +53,6 @@ class  HostManagementPanel  extends React.Component {
 
     }
     else if(nextProps.type == "UPDATE_EXISTING_HOST_FAILED") {
-      console.log("so, we finally recieve the errortext from the server")
-      console.log(nextProps.error_fields[0].ipaddress)
       this.setState({
         save_success: false,
         errortext_ipaddress: nextProps.error_fields[0].ipaddress,
@@ -90,7 +91,7 @@ class  HostManagementPanel  extends React.Component {
 
       <div  className="row">
         <div className="col-md-8">
-        <LabeledTextField col="col-md-4" labelcol="col-md-2" id="hostname" errortext={this.state.errortext_hostname} error={this.state.save_success == null ? false : !this.state.save_success}  label="Hostname:" inputValue={this.state.selected_host.getHostname()} onChange={e => this.changeAttr(e)}/>
+        <LabeledTextField col="col-md-4" labelcol="col-md-2" id="hostname" errortext={this.state.errortext_hostname} error={this.state.save_success == null ? null : !this.state.save_success}  label="Hostname:" inputValue={this.state.selected_host.getHostname()} onChange={e => this.changeAttr(e)}/>
         </div>
       </div>
       <div className="row">
@@ -98,7 +99,7 @@ class  HostManagementPanel  extends React.Component {
       </div>
       <div  className="row">
         <div className="col-md-8">
-        <LabeledTextField col="col-md-3" labelcol="col-md-2" id="ipAddress" errortext={this.state.errortext_ipaddress} error={this.state.save_success == null ? false : !this.state.save_success} label="IP Address:" inputValue={this.state.selected_host.getIpaddress()} onChange={e => this.changeAttr(e)} />
+        <LabeledTextField col="col-md-3" labelcol="col-md-2" id="ipAddress" errortext={this.state.errortext_ipaddress} error={this.state.save_success == null ? null : !this.state.save_success} label="IP Address:" inputValue={this.state.selected_host.getIpaddress()} onChange={e => this.changeAttr(e)} />
         </div>
       </div>
       <hr/>

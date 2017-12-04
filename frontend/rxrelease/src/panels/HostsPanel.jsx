@@ -15,6 +15,7 @@ class  HostsPanel  extends React.Component {
     this.state = {
       hosts: [],
       test: false,
+      save_success: null
     }
   }
   createHost() {
@@ -57,7 +58,6 @@ class  HostsPanel  extends React.Component {
     else if(nextProps.type == 'INITIAL_HOSTS_STATE') {
           this.props.dispatch(hostActionCreators.loadHosts())
     }
-
   }
 
   render() {

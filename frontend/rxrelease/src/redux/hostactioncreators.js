@@ -124,12 +124,11 @@ export function updateHost(host) {
 }
 
 export function saveNewHost(hostname,ipaddress,description) {
-
   var settingsfactory = new SettingsFactory()
   var hostfactory = new HostFactory()
+  var errorHandler = new AggregatedFieldsErrorHandler();
 
   return function (dispatch) {
-    if (hostname != '' && ipaddress != '') {
     // before we save the host we want to initialize the new SettingsCategory
     // check if it already exists
     var search_string =  encodeURI(settings.SETTING_CATEGORY_HOSTNAME)
@@ -159,7 +158,9 @@ export function saveNewHost(hostname,ipaddress,description) {
       dispatch({
         type: 'SAVE_NEW_HOST'
       })
+    }).catch(function(error) {
+        errorHandler.addErrorResponse(error)
+        errorHandler.handleErrors('SAVE_NEW_HOST_FAILED',dispatch)
     });
-    }
   }
 }

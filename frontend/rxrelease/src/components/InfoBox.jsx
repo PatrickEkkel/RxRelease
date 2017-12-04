@@ -18,7 +18,7 @@ componentWillReceiveProps(nextProps) {
 
     setTimeout(function() {
       currentContext.setState({show_infobox: false})
-    }.bind(this),3500)
+    }.bind(this),6000)
 
 }
 componentDidMount() {
