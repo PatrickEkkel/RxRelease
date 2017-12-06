@@ -103,7 +103,6 @@ export function updateHost(host) {
   var errorHandler = new AggregatedFieldsErrorHandler();
 
   return function (dispatch) {
-//    if(host.getHostname() != '' && host.getIpaddress() != '') {
       hostsRequests.putHost(host).catch(function(error) {
         errorHandler.addErrorResponse(error)
       }).then(function() {
@@ -119,7 +118,6 @@ export function updateHost(host) {
         errorHandler.addErrorResponse(error)
         errorHandler.handleErrors('UPDATE_EXISTING_HOST_FAILED')
      });
-    //}
   }
 }
 

@@ -39,7 +39,7 @@ class HandleHostState(generics.CreateAPIView):
         if selected_capability.module == 'default':
             programroot = 'rxbackend.statehandlers'
         else:
-            programroot = 'rxbackend.' + selected_capability.module + 'pgstatehandlers.'
+            programroot = 'rxbackend.' + selected_capability.module + '.statehandlers'
         stateHandler = statehandler.StateHandler(programroot)
         stateHandler.handlePythonState(selected_state,selected_host,handlerCommand,keyval_list)
         # todo add some kind of json parsing to the keyval_list

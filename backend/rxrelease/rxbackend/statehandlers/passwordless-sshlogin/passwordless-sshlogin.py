@@ -26,11 +26,8 @@ remoteuser=RemoteSettings.remoteuser
 
 inputmapping = InputMapper().getInputFromCLI()
 
-keyvallist = sys.argv[2]
-
 data = json.loads(inputmapping.getKeyvalList())
-
-dryrun = data["dryrun"]
+dryrun = False #data["dryrun"]
 
 filestore = RxFileStore('/home/' + localuser + '/.rxrelease')
 
@@ -89,6 +86,13 @@ try:
 
  # on my ubuntu i need to call ssh-add to get the authentication working..
  sh.ssh_add()
+
+ reststates_api = REST_states()
+ state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),inputmapping.getStateId())
+ state =  state[0]
+ state['installed'] = True
+ reststates_api.putState(state)
+
 except paramiko.AuthenticationException:
  print("oops")
  raise

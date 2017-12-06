@@ -1,10 +1,7 @@
 #!/usr/bin/python3
-from ssh import SSHClient
-import logging
-import paramiko
-import sh
-import sys
-import json
+from rxbackend.ssh.ssh import SSHClient
+from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
+import logging,paramiko,sh,sys,json
 # we gaan er even vanuit dat passwordless_sshlogin vanaf deze locatie nu geregeld is
 
 logger = logging.getLogger(__name__)
@@ -16,19 +13,16 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-
-ipaddress = sys.argv[1]
-keyvallist = sys.argv[2]
-
-data = json.loads(keyvallist)
+inputmapping = InputMapper().getInputFromCLI()
+data = json.loads(inputmapping.getKeyvalList())
 
 logger.info("Installing Salt minion for " + data['os'] + " under useraccount " + data['username'])
 currenthost = data['saltmaster']
-client = SSHClient(ipaddress)
+client = SSHClient(inputmapping.getIpAddress())
 
-try: 
+try:
  client.loginWithKeys(data['username'])
- 
+
  if data['os'] == "CentOS":
   # first remove salt, if it was already installed
   client.sendBlockingCommand('sudo yum remove -y salt-minion')
@@ -39,10 +33,3 @@ try:
 except paramiko.AuthenticationException:
  print("oops")
  raise
-
-
-
-
-
-
-
