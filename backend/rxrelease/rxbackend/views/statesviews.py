@@ -66,7 +66,6 @@ class InstallHostView(generics.UpdateAPIView):
         jobfeed = JobFeed()
         for kv in statesList:
             state = kv[1]
-        #for state in stateobject_queryset.all():
             if state.installed == False:
                 if state.statetype.handler is not None:
                  handlerRequest = RequestBuilder().buildRequest(state)

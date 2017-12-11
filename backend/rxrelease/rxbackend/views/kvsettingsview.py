@@ -14,3 +14,13 @@ class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
     queryset = KVSetting.objects.all()
     serializer_class = KVSettingsSerializer
+
+class SearchView(generics.ListAPIView):
+    serializer_class = KVSettingsSerializer
+    def get_queryset(self):
+        category_id =  self.request.query_params.get('category_id', None)
+        if category_id is not None:
+         result_queryset = KVSetting.objects.filter(category_id=category_id)
+         return result_queryset
+        else:
+         return KVSetting.objects.all()

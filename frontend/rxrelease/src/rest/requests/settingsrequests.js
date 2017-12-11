@@ -39,6 +39,16 @@ export function getCredentialSettingsByHostById(id) {
   return Axios.get(backend_url + '/rxbackend/settings/credentials/' + id)
 }
 
+export function getSettingsCategories() {
+  var backend_url = GlobalSettings.getBackendUrl();
+  return Axios.get(backend_url + '/rxbackend/settingscategory')
+}
+
+export function getSettingsByCategoryId(id) {
+  var backend_url = GlobalSettings.getBackendUrl();
+  return Axios.get(backend_url + '/rxbackend/settings/search/?category_id=' + id)
+}
+
 export function getSettingCategoryByName(name) {
 var backend_url = GlobalSettings.getBackendUrl();
 

@@ -7,6 +7,11 @@ export default function _settings(state = initialSettingsState,action) {
     return {
       type: action.type,
     }
+    case 'LOAD_CATEGORIES':
+    return {
+      type: action.type,
+      categories: action.categories 
+    }
     default:
     return state;
 
