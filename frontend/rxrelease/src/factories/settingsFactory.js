@@ -24,9 +24,7 @@ convertSettingsCategoryFromJsonList(list) {
 convertSettingsCategoryFromJsonDict(list) {
   var result = {}
   for(var i=0;i<list.length;i++) {
-    console.log("nou eem kieken wat hier gebeurt")
     var newObject = this.createSettingsCategoryFromJson(list[i]);
-    console.log(newObject.getId())
     result[newObject.getId()] = newObject;
   }
   return result;
@@ -71,11 +69,19 @@ return new CredentialsSetting('','','')
 static convertListToMap(list) {
     var result = [];
     for(var i=0;i<list.length;i++) {
-      var map = [list[i].getId(),list[i].getName()];
+      var map = [list[i].getId(),list[i].getKey(),list[i].getValue()];
       result.push(map)
     }
     return result;
   }
+static convertDictToList(dict) {
+  var result = [];
+  Object.keys(dict).forEach(function(key) {
+          result.push(dict[key]);
+    });
+
+  return result;
+}
 
 }
 

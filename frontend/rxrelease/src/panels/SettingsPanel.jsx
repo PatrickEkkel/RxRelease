@@ -4,8 +4,6 @@ import Button from '../components/Button'
 import SettingsCategoryPanel from './SettingsCategoryPanel'
 import * as settingsActionCreator from '../redux/settingsactioncreators'
 import SettingsFactory from '../factories/settingsFactory'
-
-
 import { connect } from 'react-redux'
 
 class SettingsPanel extends React.Component {
@@ -32,18 +30,17 @@ class SettingsPanel extends React.Component {
     this.props.dispatch(settingsActionCreator.loadAllSettingsCategories())
   }
   render() {
+    var categories = SettingsFactory.convertDictToList(this.state.categories);
 
-    //var factory = new SettingsFactory()
+    var listItems = categories.map(function(category) {
 
-    var headers_1 = ['type','key','value']
-    var currentContext = this;
-return  <div className="container">
-        <Button title="New Category"/>
-        <hr></hr>
-         <h1><b>Category text</b></h1>
-         <Table headers = {headers_1} data={SettingsFactory.convertListToMap(this.state.categories)} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
-         <Button title="New Setting"/>
-        </div>
+        return (
+          <SettingsCategoryPanel key={category.getName()} name={category.getName()} settings={category.getSettings()}/>
+        );
+      });
+    return <div>
+      {listItems}
+    </div>
   }
 }
 const mapStateToProps = (state/*, props*/) => {

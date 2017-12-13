@@ -13,7 +13,6 @@ class SettingsCategoryPanel extends React.Component {
     var currentContext = this;
     this.state = {
       selectedItem: "empty",
-      settings: []
     }
   }
   componentWillReceiveProps(nextProps) {
@@ -25,15 +24,22 @@ class SettingsCategoryPanel extends React.Component {
   getCategoryName() {
     return this.props.name;
   }
+  getSettings() {
+    return this.props.settings;
+  }
   componentWillMount() {
 
-      this.props.dispatch(settingsActionCreator.loadAllSettingsByName(this.getCategoryName()))
+      this.props.dispatch(settingsActionCreator.loadAllSettingsCategories())
   }
 
   render() {
+    var headers = ["#","key","value"]
+    var settings = SettingsFactory.convertListToMap(this.getSettings());
+    console.log("de settings alstublieft")
+    console.log(settings)
     return <div>
-      <h1><b>Category text</b></h1>
-      <Table headers = {headers_1} data={SettingsFactory.convertListToMap(this.state.settings)} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
+      <h1><b>{this.getCategoryName()}</b></h1>
+      <Table headers = {headers} data={settings} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
       <Button title="New Setting"/>
     </div>
   }
@@ -41,7 +47,6 @@ class SettingsCategoryPanel extends React.Component {
 const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._settings.type,
-    settings: state._settings.settings
   }
 }
 const ConnectedSettingsCategoryPanel = connect(mapStateToProps)(SettingsCategoryPanel)
