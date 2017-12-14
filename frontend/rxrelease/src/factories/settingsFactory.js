@@ -53,6 +53,9 @@ convertSettingsFromJsonList(list) {
   }
   return result;
 }
+newKeyValueSetting(key,value,category_id) {
+  return new KeyValueSetting(0,key,value,category_id)
+}
 // CredentialsSetings
 createCredentialSettingFromJson(json) {
   var result = null;

@@ -7,15 +7,18 @@ export function loadAllSettings() {
   return [];
 }
 
-/*export function loadAllSettingsByName(name) {
 
-  return function(dispatch) {
+export function saveNewSetting(setting) {
 
+  return function (dispatch) {
+    settingsRequests.postSetting(setting).then(function(response) {
+      dispatch({
+        type: 'SAVE_NEW_SETTING'
+      })
+    });
   }
-}*/
-/*
- TODO: modify this method to load the whole settings structure, this will make it easier to load the rest
-*/
+}
+
 export function loadAllSettingsCategories() {
   var categoriesDict = {};
   var settingsFactory = new SettingsFactory();
@@ -47,7 +50,17 @@ export function loadAllSettingsCategories() {
   }
 }
 
+export function initialSettingsState() {
+  return {
+    type: 'INITIAL_SETTINGS_STATE'
+  }
+}
 
+export function newSetting() {
+  return {
+    type: 'OPEN_NEW_SETTING'
+  }
+}
 export function settingsCategoriesLoaded(categories) {
   return {
      type: 'LOAD_CATEGORIES',

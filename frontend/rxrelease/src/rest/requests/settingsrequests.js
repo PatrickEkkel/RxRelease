@@ -21,6 +21,17 @@ export function postSettings(username,password,settingscategory) {
   return Axios.get(backend_url + '/rxbackend/')
 }*/
 
+export function postSetting(setting) {
+var backend_url = GlobalSettings.getBackendUrl();
+
+return Axios.post(backend_url + '/rxbackend/settings/kvsettings',{
+  key: setting.getKey(),
+  value: setting.getValue() ,
+  category: setting.getCategoryId()
+})
+
+}
+
 export function putCredentialSettings(settings) {
   console.log("voordat we de settings opslaan eerst even een kijkje nemen")
   console.log(settings)
