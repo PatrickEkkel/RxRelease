@@ -56,14 +56,15 @@ export function initialSettingsState() {
   }
 }
 
-export function newSetting() {
+export function newSetting(categories) {
   return {
-    type: 'OPEN_NEW_SETTING'
+    type: 'OPEN_NEW_SETTING',
+    categories: categories
   }
 }
 export function settingsCategoriesLoaded(categories) {
   return {
-     type: 'LOAD_CATEGORIES',
+     type: 'CATEGORIES_LOADED',
      categories: categories
   }
 }

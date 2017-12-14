@@ -68,6 +68,8 @@ newEmpyCredentials() {
 
 return new CredentialsSetting('','','')
 }
+
+
 // TODO: dit is een generieke methode, er is geen enkele reden deze telkens te dupliceren voor elke factory
 static convertListToMap(list) {
     var result = [];
@@ -83,6 +85,14 @@ static convertDictToList(dict) {
           result.push(dict[key]);
     });
 
+  return result;
+}
+static convertSettingsListToDictionary(list) {
+  var result = [];
+  for(var i=0;i<list.length;i++) {
+    var map = {"id": list[i].getId(),"name": list[i].getName()};
+    result.push(map)
+  }
   return result;
 }
 

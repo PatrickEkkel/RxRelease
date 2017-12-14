@@ -27,6 +27,7 @@ static convertProfiletypeListToNamedList(list) {
   }
   return result;
 }
+// TODO: naam van deze methode is misleidend
 static convertProfiletypeListToDictionary(list) {
   var result = [];
   for(var i=0;i<list.length;i++) {

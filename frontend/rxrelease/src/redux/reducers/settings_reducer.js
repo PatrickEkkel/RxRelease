@@ -7,7 +7,7 @@ export default function _settings(state = initialSettingsState,action) {
     return {
       type: action.type,
     }
-    case 'LOAD_CATEGORIES':
+    case 'CATEGORIES_LOADED':
     return {
       type: action.type,
       categories: action.categories,
@@ -16,7 +16,8 @@ export default function _settings(state = initialSettingsState,action) {
     case 'OPEN_NEW_SETTING':
     return {
       type: action.type,
-      showModal: true
+      showModal: true,
+      categories: action.categories
     }
     case 'SAVE_NEW_SETTING':
     return {
