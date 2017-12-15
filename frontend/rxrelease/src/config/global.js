@@ -8,6 +8,7 @@ constructor() {
   this.BACKEND_PORT = '8080'
   this.BACKEND_PROTOCOL = 'http'
   this.SETTING_CATEGORY_HOSTNAME = "Host Settings"
+  this.LOGLEVEL = "DEBUG"
 
 }
 
@@ -15,7 +16,10 @@ static getBackendUrl() {
   var settings = new GlobalSettings();
   return settings.BACKEND_PROTOCOL + '://' + settings.BACKEND_LOCATION + ':' + settings.BACKEND_PORT;
 }
-
+static getLogLevel() {
+  var settings = new GlobalSettings();
+  return settings.LOGLEVEL;
+}
 // helpers that make the use of the configuration easier
 
 }

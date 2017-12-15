@@ -1,8 +1,6 @@
 import Configuration from '../models/configuration'
 
-
 class ConfigurationFactory {
-
 
 createConfigurationFromArray(array) {
  // 0 is Id, 1 is name
