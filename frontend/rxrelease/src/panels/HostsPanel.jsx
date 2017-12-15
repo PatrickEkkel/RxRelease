@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '../components/Button';
 import LabeledTable from '../components/LabeledTable';
 import HostFactory from '../factories/hostFactory'
+import StandardListConverters from '../converters/StandardListConverters'
 import HostPanel from './HostPanel'
 import  * as hostActionCreators from '../redux/hostactioncreators'
 import Modal from '../components/Modal';
@@ -65,11 +66,15 @@ class  HostsPanel  extends React.Component {
     var currentContext = this;
     const headers = ['#','Hostname','IP Address','Description'];
 
+    var hosts = StandardListConverters.convertListToMap(this.state.hosts,function(item) {
+      return [item.getId(),item.getHostname(),item.getIpaddress(),item.getDescription(),item.getStatus()]
+    });
+
     return <div className="container">
         <Modal title="New Host" saveAndClose={() => currentContext.saveAndClose()} close={() => currentContext.close()} showModal={showModal}>
           <HostPanel changeAttr={(e) => currentContext.changeAttr(e)}/>
         </Modal>
-        <LabeledTable labelText="Minion Status" headers = {headers} data={HostFactory.convertHostListToMap(currentContext.state.hosts)} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
+        <LabeledTable labelText="Minion Status" headers = {headers} data={hosts} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
         <Button title="New Host"  onClick={() => currentContext.createHost()}/>
    </div>
   }

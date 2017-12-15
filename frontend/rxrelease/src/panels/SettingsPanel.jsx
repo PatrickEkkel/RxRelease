@@ -2,13 +2,15 @@ import React from 'react';
 import Table from '../components/Table'
 import Button from '../components/Button'
 import Modal from '../components/Modal';
+import BasicRxPanel from '../components/panels/BasicRxPanel';
 import SettingsCategoryPanel from './SettingsCategoryPanel'
 import SettingPanel from '../panels/SettingPanel';
 import * as settingsActionCreator from '../redux/settingsactioncreators'
 import SettingsFactory from '../factories/settingsFactory'
+import StandardListConverters from '../converters/StandardListConverters';
 import { connect } from 'react-redux'
 
-class SettingsPanel extends React.Component {
+class SettingsPanel extends BasicRxPanel {
   constructor() {
     super()
     var currentContext = this;
@@ -39,21 +41,17 @@ class SettingsPanel extends React.Component {
   close() {
     this.props.dispatch(settingsActionCreator.initialSettingsState());
   }
-  changeAttr(e) {
-    this.setState({[e.target.id]: e.target.value});
-  }
   saveAndClose() {
     var factory = new SettingsFactory()
     var kvSetting = factory.newKeyValueSetting(this.state.setting_key,this.state.setting_value,this.state.setting_category);
     this.props.dispatch(settingsActionCreator.saveNewSetting(kvSetting))
   }
   createSetting() {
-    //console.log("category_id: " + this.state.category_id)
     this.props.dispatch(settingsActionCreator.newSetting(this.state.categories))
   }
   render() {
     var { type,showModal } = this.props
-    var categories = SettingsFactory.convertDictToList(this.state.categories);
+    var categories = StandardListConverters.convertDictToList(this.state.categories);
     var currentContext = this;
     var listItems = categories.map(function(category) {
         return (

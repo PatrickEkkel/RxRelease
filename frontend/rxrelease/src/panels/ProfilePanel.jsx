@@ -4,6 +4,7 @@ import LabeledDropdown from '../components/LabeledDropdown';
 import Button from '../components/Button';
 import * as profileActionCreators from '../redux/profileactioncreators';
 import ProfileTypeFactory from '../factories/profiletypeFactory'
+import StandardListConverters from '../converters/StandardListConverters'
 import Axios from 'axios';
 import { connect } from 'react-redux'
 
@@ -49,7 +50,7 @@ class  ProfilePanel  extends React.Component {
        <LabeledTextField id="profile_name" placeholder="Profile name" label="Name" col="col-md-2" labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
       </div>
       <div className="form-group">
-       <LabeledDropdown id="profile_type" items={ProfileTypeFactory.convertProfiletypeListToDictionary(this.state.profiletypes)} label="Type" col="col-md-3" labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
+       <LabeledDropdown id="profile_type" items={StandardListConverters.convertObjectListToDDS(this.state.profiletypes)} label="Type" col="col-md-3" labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
       </div>
       </form>
    </div>

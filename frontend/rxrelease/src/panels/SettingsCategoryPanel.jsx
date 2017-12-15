@@ -3,6 +3,7 @@ import Table from '../components/Table'
 import Button from '../components/Button'
 import * as settingsActionCreator from '../redux/settingsactioncreators'
 import SettingsFactory from '../factories/settingsFactory'
+import StandardListConverters from '../converters/StandardListConverters'
 
 
 import { connect } from 'react-redux'
@@ -26,14 +27,13 @@ class SettingsCategoryPanel extends React.Component {
   getSettings() {
     return this.props.settings;
   }
-  componentWillMount() {
-    //  this.props.dispatch(settingsActionCreator.loadAllSettingsCategories())
-  //    var currentContext = this;
-  }
+
 
   render() {
     var headers = ["#","key","value"]
-    var settings = SettingsFactory.convertListToMap(this.getSettings());
+    var settings = StandardListConverters.convertListToMap(this.getSettings(),function(item) {
+       return [item.getId(),item.getKey(),item.getValue()];
+    });
     var currentContext = this;
     return <div className="container">
 

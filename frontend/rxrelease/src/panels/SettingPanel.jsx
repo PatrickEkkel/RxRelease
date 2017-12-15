@@ -3,7 +3,9 @@ import { connect } from 'react-redux'
 import LabeledTextField from '../components/LabeledTextField';
 import LabeledDropdown from '../components/LabeledDropdown';
 import SettingsFactory from '../factories/settingsFactory'
+import StandardListConverters from '../converters/StandardListConverters'
 import * as settingsActionCreator from '../redux/settingsactioncreators'
+
 
 class SettingPanel extends React.Component {
 
@@ -16,8 +18,8 @@ class SettingPanel extends React.Component {
 
   componentWillMount() {
     var  {type,categories} = this.props
-    categories = SettingsFactory.convertDictToList(categories)
-    categories = SettingsFactory.convertSettingsListToDictionary(categories);
+    categories = StandardListConverters.convertDictToList(categories)
+    categories = StandardListConverters.convertObjectListToDDS(categories);
     this.setState({categories: categories})
   }
 

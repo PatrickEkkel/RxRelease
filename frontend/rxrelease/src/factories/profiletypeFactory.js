@@ -26,18 +26,7 @@ static convertProfiletypeListToNamedList(list) {
     result.push(list[i].getName())
   }
   return result;
-}
-// TODO: naam van deze methode is misleidend
-static convertProfiletypeListToDictionary(list) {
-  var result = [];
-  for(var i=0;i<list.length;i++) {
-
-    var map = {"id": list[i].getId(),"name": list[i].getName()};
-    result.push(map)
-  }
-  return result;
-}
-
+} 
 }
 
 export default ProfileTypeFactory;

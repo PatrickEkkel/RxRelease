@@ -5,6 +5,7 @@ import Utils from '../lib/react/utils'
 import LabeledTable from '../components/LabeledTable'
 import LabeledTextField from '../components/LabeledTextField'
 import StateFactory from '../factories/stateFactory'
+import StandardListConverters from '../converters/StandardListConverters'
 import InfoBox from '../components/InfoBox'
 import { connect } from 'react-redux'
 
@@ -67,6 +68,19 @@ class  HostManagementPanel  extends React.Component {
   render() {
     var currentContext = this;
     var { type } = this.props
+
+
+    var states = StandardListConverters.convertListToMap(this.state.selected_host.getStates(),function(item) {
+      var installed = item.getInstalled()
+
+      var installedDisplayString = "NOT INSTALLED"
+      if(installed) {
+        installedDisplayString =  "INSTALLED"
+      }
+      var result = [item.getId(),item.getName(),installedDisplayString];
+      return result;
+
+    });
 
     function handleLabelLoad(entry) {
         if(entry[2] == "NOT INSTALLED") {
@@ -141,7 +155,7 @@ class  HostManagementPanel  extends React.Component {
         <div className="row">
           &nbsp;
         </div>
-      <LabeledTable onLabelLoad={handleLabelLoad} labelText="Status" headers = {headers} data={StateFactory.convertStateListToMap(this.state.selected_host.getStates())} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
+      <LabeledTable onLabelLoad={handleLabelLoad} labelText="Status" headers = {headers} data={states} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
       <Button title="Install Host"/>
       </div>
   }

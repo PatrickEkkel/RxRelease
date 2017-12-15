@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import Host from '../models/host';
 import HostFactory from '../factories/hostFactory';
+import StandardListConverters from '../converters/StandardListConverters';
 
 export function loadRecipePanelFromConfiguration(selected_configuration,selected_profile) {
   return {
@@ -16,7 +17,7 @@ export function saveAllRecipeChildren(addedHosts,selected_configuration,selected
 
     Axios.put('http://localhost:8080/rxbackend/configurations/' + selected_configuration + "/",
         {
-        hosts: HostFactory.convertHostListToPk(addedHosts),
+        hosts: StandardListConverters.convertObjectListToPk(addedHosts),
         name: configuration_name,
         profile: selected_profile
       }).then(function() {
