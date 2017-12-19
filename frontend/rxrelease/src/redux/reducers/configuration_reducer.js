@@ -1,12 +1,10 @@
-import LogFactory from '../../logging/LogFactory'
+import ReducerLogFactory from '../../logging/ReducerLogFactory'
 
 var initialConfigurationState = { type: 'INITIAL_CONFIGURATION_STATE', showModal: false}
 
 export default function _configuration(state = initialConfigurationState,action) {
-  // TODO: hier waren we gebleven, logger aan het bouwen zodat we de logstream in de javascript console wat beter onder controle krijgen
-  var lf = new LogFactory();
-  lf.createLogger("REDUCER");
-  console.log('_configuration reducer called with state ', state , ' and action ', action);
+  var lf = new ReducerLogFactory();
+  lf.writeReducerAction('CONFIGURATION',state,action)
   switch (action.type) {
 
     case 'INITIAL_CONFIGURATION_STATE':

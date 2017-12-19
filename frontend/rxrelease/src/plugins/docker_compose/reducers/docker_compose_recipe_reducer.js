@@ -1,7 +1,10 @@
+import ReducerLogFactory from '../../../logging/ReducerLogFactory'
 var initialDCRecipestate = { type: 'INITIAL_DC_RECIPE_STATE',showModal: false}
 
 export default function _dockercompose_recipe(state = initialDCRecipestate,action) {
-  console.log('_dockercompose_recipe reducer called with state ', state , ' and action ', action);
+  //console.log('_dockercompose_recipe reducer called with state ', state , ' and action ', action);
+  var lf = new ReducerLogFactory();
+  lf.writeReducerAction('DOCKERCOMPOSE_RECIPE',state,action)
 
   switch (action.type) {
 

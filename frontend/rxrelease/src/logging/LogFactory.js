@@ -6,7 +6,7 @@ class LogFactory {
   constructor() {
   }
   createLogger(component,subcomponent) {
-    return Logger(GlobalSettings.getLogLevel(),component,subcomponent);
+    return new Logger(GlobalSettings.getLogLevel(),component,subcomponent);
   }
 }
 

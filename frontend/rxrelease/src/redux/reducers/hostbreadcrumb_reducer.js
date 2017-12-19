@@ -1,7 +1,10 @@
+import ReducerLogFactory from '../../logging/ReducerLogFactory'
+
 var initialHostBreadcrumbSate = { type: 'INITIAL_HOST_BREADCRUMB_STATE', showModal: false }
 
 export default function _hostbreadcrumb(state = initialHostBreadcrumbSate,action) {
-  console.log('_hostmanagement reducer called with state ', state , ' and action ', action);
+  var lf = new ReducerLogFactory();
+  lf.writeReducerAction('HOSTBREADCRUMB',state,action);
   switch (action.type) {
     case 'INITIAL_HOST_BREADCRUMB_STATE':
     return {

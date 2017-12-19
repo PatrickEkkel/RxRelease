@@ -1,7 +1,10 @@
+import ReducerLogFactory from '../../logging/ReducerLogFactory';
+
 var initialHostManagementState = { type: 'INITIAL_HOST_MANAGEMENT_STATE', showModal: false }
 
 export default function _hostmanagement(state = initialHostManagementState,action) {
-  console.log('_hostmanagement reducer called with state ', state , ' and action ', action);
+  var lf = new ReducerLogFactory();
+  lf.writeReducerAction('HOSTMANAGEMENT',state,action);
   switch (action.type) {
     case 'LOAD_HOST_MANAGEMENT_FROM_HOSTS':
     return {

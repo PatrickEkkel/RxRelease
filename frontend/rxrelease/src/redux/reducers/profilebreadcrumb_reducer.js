@@ -1,7 +1,9 @@
+import ReducerLogFactory from '../../logging/ReducerLogFactory';
 var initialProfileBreadcrumbState = { type: 'INITIAL_PROFILE_BREADCRUMBSTATE', showModal: false }
 
 export default function _host(state = initialProfileBreadcrumbState,action) {
-  console.log('_profilebreadcrumb reducer called with state ', state , ' and action ', action);
+  var lf = new ReducerLogFactory();
+  lf.writeReducerAction('PROFILEBREADCRUMB',state,action);
   switch (action.type) {
     case 'INITIAL_PROFILE_BREADCRUMBSTATE':
     return {

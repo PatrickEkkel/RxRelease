@@ -9,12 +9,24 @@ constructor() {
   this.BACKEND_PROTOCOL = 'http'
   this.SETTING_CATEGORY_HOSTNAME = "Host Settings"
   this.LOGLEVEL = "DEBUG"
+  // if this contins NONE, deny any loggging, if it contains ALL, ALLOW everything to get trought, if it contains LIST, log only the components/subcomponents that are listed
+  this.LOGMODULES = "LIST"
+  // Will only be used if we LOGMODULES contains te value list
+  this.ENABLED_LOGGING = ['REDUCER.HOST']
 
 }
 
 static getBackendUrl() {
   var settings = new GlobalSettings();
   return settings.BACKEND_PROTOCOL + '://' + settings.BACKEND_LOCATION + ':' + settings.BACKEND_PORT;
+}
+static getEnabledLogging() {
+  var settings = new GlobalSettings();
+  return settings.ENABLED_LOGGING;
+}
+static getLogModules() {
+  var settings = new GlobalSettings();
+  return settings.LOGMODULES;
 }
 static getLogLevel() {
   var settings = new GlobalSettings();

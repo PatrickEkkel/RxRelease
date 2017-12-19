@@ -1,7 +1,9 @@
+import ReducerLogFactory from '../../logging/ReducerLogFactory';
 var initialProfileState = { type: 'INITIAL_PROFILES_STATE', showModal: false}
 
 export default function _profiles(state = initialProfileState,action) {
-    console.log('_profiles reducer called with state ', state , ' and action ', action);
+  var lf = new ReducerLogFactory();
+  lf.writeReducerAction('PROFILES',state,action);
   switch (action.type) {
 
 
