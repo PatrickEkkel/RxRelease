@@ -21,7 +21,7 @@ class  Table  extends React.Component {
       return ""
     }
     else {
-     return <td>{innerentry}</td>
+     return <td key={innerentry + i}>{innerentry}</td>
     }
   }
   render() {
@@ -31,7 +31,7 @@ return <div className="table-responsive" >
       <thead>
         <tr>
           { this.getHeaders().map(entry =>
-            <th>{entry}</th>)
+            <th key={entry} >{entry}</th>)
           }
         </tr>
       </thead>

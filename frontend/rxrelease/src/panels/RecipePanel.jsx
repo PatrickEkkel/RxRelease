@@ -81,7 +81,7 @@ class  RecipePanel  extends React.Component {
     for(var i=0;i<this.state.hosts.length;i++) {
       var id = this.state.hosts[i].getId();
       var hostname = this.state.hosts[i].getHostname();
-      hostElements.push(<option value={id}>{hostname}</option>)
+      hostElements.push(<option key={id} value={id}>{hostname}</option>)
     }
 
 

@@ -31,10 +31,10 @@ return     <nav className="navbar navbar-inverse navbar-fixed-top">
           </button>
           <a className="navbar-brand" href="#">RxRelease</a>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
+        <div id="navbar" className="navbar-collapse collapse">
           <ul className="nav navbar-nav navbar-right">
             { this.getMenuItems().map(entry =>
-              <li><a href="#" onClick={() => currentContext.onClickEvent(entry) }>{entry}</a></li>
+              <li key={entry}><a href="#" onClick={() => currentContext.onClickEvent(entry) }>{entry}</a></li>
             )}
           </ul>
         </div>

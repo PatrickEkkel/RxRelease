@@ -35,11 +35,11 @@ class  LabeledTable  extends React.Component {
   }
   renderColumn(entry,innerentry,i) {
      var currentContext = this;
-     var result =  <td>{innerentry}</td>;
-      
+     var result =  <td key={innerentry}>{innerentry}</td>;
+
      if(entry.length-1 == i) {
 
-       result = <td><span className={currentContext.getLabelStatus(entry)}>{currentContext.getLabelStatusText(entry)}</span></td>
+       result = <td key={entry}><span className={currentContext.getLabelStatus(entry)}>{currentContext.getLabelStatusText(entry)}</span></td>
      }
     return result;
   }
@@ -50,7 +50,7 @@ return <div className="table-responsive" >
       <thead>
         <tr>
           { this.getHeaders().map(entry =>
-            <th>{entry}</th>)
+            <th key={entry}>{entry}</th>)
           }
           <th>{currentContext.getLabelText()}</th>
         </tr>

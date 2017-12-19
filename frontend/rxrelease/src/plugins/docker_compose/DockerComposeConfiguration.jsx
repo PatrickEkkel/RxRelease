@@ -46,7 +46,7 @@ class DockerComposeConfiguration extends React.Component {
     var currentContext = this
     return  <div className="container">
           <div className="row">
-            <div class="col-sm-9">
+            <div className="col-sm-9">
               <textarea tabIndex="-1" className="form-control" rows="15" value={this.state.docker_compose_yaml} onChange={(e) => currentContext.changeAttr(e)}/>
           </div>
           </div>
