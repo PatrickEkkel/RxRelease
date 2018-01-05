@@ -10,6 +10,8 @@ super()
 this.component = component;
 this.subcomponent = subcomponent;
 
+this.state = { success: null }
+
 var logfactory = new LogFactory();
 this.logger = logfactory.createLogger(this.component,this.subcomponent);
 }
@@ -18,6 +20,9 @@ getLogger() {
   return this.logger;
 }
 changeAttr(e) {
+  this.getLogger().debug("changeAttr called with the following parameters")
+  this.getLogger().debug("e.target.id: " + e.target.id + " " + "e.target.value: " + e.target.value)
+
   this.setState({[e.target.id]: e.target.value});
 }
 
@@ -25,17 +30,19 @@ handleError(component_id,callee) {
 
 var formSaveState = this.state.success;
 
+
+this.getLogger().debug("Current form save state: " + formSaveState)
 if(formSaveState != null && formSaveState == false) {
 
 // TODO: time to handle those damn errors, otherwise continue on doing nothing
 this.getLogger().debug("render form error state");
 this.getLogger().traceObject(this.state.error_fields)
 // fetch the component id
-var errorMessage = this.state.error_fields[0][component_id][0];
+var errorMessage = "";
 
-//for(var i=0;i<this.state.error_fields.length;i++) {
-//  this.getLogger().traceObject(this.state.error_fields[i])
-//}
+if(typeof this.state.error_fields[0][component_id] !== 'undefined') {
+  errorMessage = this.state.error_fields[0][component_id][0];
+}
 
 if(typeof errorMessage !== 'undefined' || !errorMessage) {
 
@@ -45,10 +52,8 @@ if(typeof errorMessage !== 'undefined' || !errorMessage) {
   callee.setErrorText(errorMessage)
 }
 
-
 return errorMessage;
 }
-
 }
 
 }

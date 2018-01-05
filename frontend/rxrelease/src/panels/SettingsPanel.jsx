@@ -12,11 +12,11 @@ import { connect } from 'react-redux'
 
 class SettingsPanel extends BasicRxPanel {
   constructor() {
-    super()
+    super("SETTINGS","SETTINGSPANEL")
     var currentContext = this;
     this.state = {
       selectedItem: "empty",
-      categories: []
+      categories: [],
     }
   }
   componentWillReceiveProps(nextProps) {
@@ -25,9 +25,9 @@ class SettingsPanel extends BasicRxPanel {
       this.setState({categories: nextProps.categories})
     }
     if(nextProps.type == 'SAVE_NEW_SETTING') {
+      this.clearState();
       this.props.dispatch(settingsActionCreator.loadAllSettingsCategories())
     }
-
   }
 
   componentWillMount() {
@@ -43,12 +43,13 @@ class SettingsPanel extends BasicRxPanel {
   }
   saveAndClose() {
     var factory = new SettingsFactory()
-    var kvSetting = factory.newKeyValueSetting(this.state.setting_key,this.state.setting_value,this.state.setting_category);
+    this.getLogger().debug("current content of the state object: ")
+    this.getLogger().traceObject(this.state)
+    var kvSetting = factory.newKeyValueSetting(this.state.key,this.state.value,this.state.category);
     this.props.dispatch(settingsActionCreator.saveNewSetting(kvSetting))
-    this.clearState();
   }
   clearState() {
-    this.setState({setting_key: null,setting_value: null,setting_category: null})
+    this.setState({key: null,value: null,category: null})
   }
   createSetting() {
     this.props.dispatch(settingsActionCreator.newSetting(this.state.categories))
@@ -76,7 +77,8 @@ const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._settings.type,
     categories: state._settings.categories,
-    showModal: state._settings.showModal
+    showModal: state._settings.showModal,
+    settings_save_success: state._settings.settings_save_success
   }
 }
 const ConnectedSettingsPanel = connect(mapStateToProps)(SettingsPanel)

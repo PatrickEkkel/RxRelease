@@ -1,7 +1,8 @@
 import React from 'react';
 import ErrorObject from './models/errorhandling/ErrorObject';
+import BasicRxComponentPanel from './panels/BasicRxComponentPanel';
 
-class LabeledTextField extends React.Component {
+class LabeledTextField extends BasicRxComponentPanel {
   constructor() {
     super()
   }
@@ -37,26 +38,11 @@ class LabeledTextField extends React.Component {
       return false;
     }
   }
-  getErrorLabel() {
-    // TODO: at the moment we have no way of filtering out individual errors, therefore we disable this for the time being
-    if(this.props.error) {
-      //return "has-error"
-      return " "
-    }
-    else if(this.props.error == null) {
-      return " "
-    }
-    else {
-      //return "has-success"
-      return " "
-    }
-  }
+
   getId() {
     return this.props.id;
   }
-  getErrorText() {
-    return this.props.errortext
-  }
+
   getPlaceholder() {
     return this.props.placeholder;
   }
@@ -65,16 +51,6 @@ class LabeledTextField extends React.Component {
   }
   getInputValue() {
     return this.props.inputValue;
-  }
-
-  getErrorHandler() {
-    return this.props.errorHandler;
-  }
-  setErrorText(errortext) {
-    this.errorText = errortext;
-  }
-  getErrorText() {
-    return this.errorText;
   }
 
   render() {
@@ -95,6 +71,8 @@ class LabeledTextField extends React.Component {
       // TODO: de oude methoden moeten wel verwijderd worden zodra deze methode volledige geimplementeerd is
       error = this.getError();
       errorText = this.getErrorText();
+      console.log("wat is de errortext")
+      console.log(errorText)
     }
 
     return  <fieldset>

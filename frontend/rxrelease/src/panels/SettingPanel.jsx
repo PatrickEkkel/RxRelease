@@ -12,8 +12,7 @@ class SettingPanel extends BasicRxPanel {
   constructor() {
     super('SETTINGS','SETTINGPANEL');
     this.setState({
-      error_fields: null,
-      success: null
+      error_fields: null
     })
   }
   changeAttr(e) {
@@ -53,7 +52,7 @@ class SettingPanel extends BasicRxPanel {
           <LabeledTextField id="value" label="Value" col="col-md-2" labelcol="col-md-2" errorHandler={(id,callee) => this.handleError(id,callee)}  placeholder="Value" onChange={e => this.changeAttr(e)}/>
         </div>
         <div className="form-group row">
-          <LabeledDropdown id="setting_category" items={this.state.categories} label="Category" col="col-md-2" errorHandler={(id,callee) => this.handleError(id,callee)} labelcol="col-md-2" placeholder="Value" onChange={e => this.changeAttr(e)}/>
+          <LabeledDropdown id="category" items={this.state.categories} label="Category" col="col-md-2" errorHandler={(id,callee) => this.handleError(id,callee)} labelcol="col-md-2" placeholder="Value" onChange={e => this.changeAttr(e)}/>
         </div>
       </form>
       </div>
