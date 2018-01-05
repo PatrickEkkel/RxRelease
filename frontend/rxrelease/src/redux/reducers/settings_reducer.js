@@ -26,6 +26,12 @@ export default function _settings(state = initialSettingsState,action) {
       type: action.type,
       showModal: false
     }
+    case 'SAVE_NEW_SETTING_FAILED':
+    return {
+      type: action.type,
+      error_fields: action.error_fields,
+      showModal: true
+    }
     default:
     return state;
 

@@ -8,11 +8,11 @@ constructor() {
   this.BACKEND_PORT = '8080'
   this.BACKEND_PROTOCOL = 'http'
   this.SETTING_CATEGORY_HOSTNAME = "Host Settings"
-  this.LOGLEVEL = "DEBUG"
+  this.LOGLEVEL = "TRACE"
   // if this contins NONE, deny any loggging, if it contains ALL, ALLOW everything to get trought, if it contains LIST, log only the components/subcomponents that are listed
   this.LOGMODULES = "LIST"
   // Will only be used if we LOGMODULES contains te value list
-  this.ENABLED_LOGGING = ['REDUCER.HOST']
+  this.ENABLED_LOGGING = ['SETTINGS.SETTINGPANEL']
 
 }
 

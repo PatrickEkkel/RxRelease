@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import SettingsFactory from '../factories/settingsFactory'
+import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
 import  * as settingsRequests from '../rest/requests/settingsrequests'
 import  * as settingsPromises from '../rest/promises/settingspromises'
 
@@ -9,12 +10,15 @@ export function loadAllSettings() {
 
 
 export function saveNewSetting(setting) {
-
+  var errorHandler = new AggregatedFieldsErrorHandler();
   return function (dispatch) {
     settingsRequests.postSetting(setting).then(function(response) {
       dispatch({
         type: 'SAVE_NEW_SETTING'
       })
+    }).catch(function(error) {
+      errorHandler.addErrorResponse(error);
+      errorHandler.handleErrors('SAVE_NEW_SETTING_FAILED',dispatch);
     });
   }
 }

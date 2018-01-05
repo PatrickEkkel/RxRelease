@@ -1,4 +1,5 @@
 import React from 'react';
+import ErrorObject from './models/errorhandling/ErrorObject';
 
 class LabeledTextField extends React.Component {
   constructor() {
@@ -50,6 +51,9 @@ class LabeledTextField extends React.Component {
       return " "
     }
   }
+  getId() {
+    return this.props.id;
+  }
   getErrorText() {
     return this.props.errortext
   }
@@ -63,14 +67,42 @@ class LabeledTextField extends React.Component {
     return this.props.inputValue;
   }
 
+  getErrorHandler() {
+    return this.props.errorHandler;
+  }
+  setErrorText(errortext) {
+    this.errorText = errortext;
+  }
+  getErrorText() {
+    return this.errorText;
+  }
+
   render() {
+    var errorHandler = this.getErrorHandler();
+    var errorText = ""
+    var error = false;
+
+    if(errorHandler != null) {
+      errorHandler(this.getId(),this);
+      errorText = this.getErrorText();
+      error = false
+      if(errorText != "") {
+        error = true
+      }
+    }
+    // do legacy error handling
+    else {
+      // TODO: de oude methoden moeten wel verwijderd worden zodra deze methode volledige geimplementeerd is
+      error = this.getError();
+      errorText = this.getErrorText();
+    }
 
     return  <fieldset>
 
           <label className={this.getLabelCol()} for={this.getId()}>{this.getLabel()}</label>
           <div className={this.getCol() + " " + this.getErrorLabel()}>
             <input id={this.getId()} name={this.getId()} placeholder={this.getPlaceholder()} className="form-control input-md has-error" type={this.getMode()} value={this.getInputValue()} onChange={this.getOnchange()}/>
-            { this.getError() ? <span class="help-block">{this.getErrorText()}</span> : null}
+            { error ? <span class="help-block">{this.getErrorText()}</span> : null}
           </div>
       </fieldset>
   }

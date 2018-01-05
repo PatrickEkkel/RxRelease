@@ -45,6 +45,10 @@ class SettingsPanel extends BasicRxPanel {
     var factory = new SettingsFactory()
     var kvSetting = factory.newKeyValueSetting(this.state.setting_key,this.state.setting_value,this.state.setting_category);
     this.props.dispatch(settingsActionCreator.saveNewSetting(kvSetting))
+    this.clearState();
+  }
+  clearState() {
+    this.setState({setting_key: null,setting_value: null,setting_category: null})
   }
   createSetting() {
     this.props.dispatch(settingsActionCreator.newSetting(this.state.categories))
