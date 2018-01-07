@@ -71,8 +71,6 @@ class LabeledTextField extends BasicRxComponentPanel {
       // TODO: de oude methoden moeten wel verwijderd worden zodra deze methode volledige geimplementeerd is
       error = this.getError();
       errorText = this.getErrorText();
-      console.log("wat is de errortext")
-      console.log(errorText)
     }
 
     return  <fieldset>

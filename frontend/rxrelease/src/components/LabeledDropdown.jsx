@@ -1,7 +1,9 @@
 import React from 'react';
 import Random from '../lib/random/random.js';
+import BasicRxComponentPanel from './panels/BasicRxComponentPanel';
 
-class LabeledDropdown extends React.Component {
+
+class LabeledDropdown extends BasicRxComponentPanel {
 
   constructor() {
 
@@ -37,6 +39,26 @@ class LabeledDropdown extends React.Component {
   }
 
   render() {
+
+    var errorHandler = this.getErrorHandler();
+    var errorText = ""
+    var error = false;
+
+    if(errorHandler != null) {
+      errorHandler(this.getId(),this);
+      errorText = this.getErrorText();
+      error = false
+      if(errorText != "") {
+        error = true
+      }
+    }
+    // do legacy error handling
+    else {
+      // TODO: de oude methoden moeten wel verwijderd worden zodra deze methode volledige geimplementeerd is
+      error = this.getError();
+      errorText = this.getErrorText();
+    }
+
     var noneoption = <option key="None" value='None'>None</option>
     var rows = [];
 
@@ -55,6 +77,7 @@ class LabeledDropdown extends React.Component {
         <select id={this.getId()} name={this.getId()} className="form-control" onChange={this.getOnchange()}>
          {rows}
         </select>
+        { error ? <span class="help-block">{this.getErrorText()}</span> : null}
       </div>
     </fieldset>
   }

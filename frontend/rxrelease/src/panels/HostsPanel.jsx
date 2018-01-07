@@ -3,16 +3,17 @@ import Button from '../components/Button';
 import LabeledTable from '../components/LabeledTable';
 import HostFactory from '../factories/hostFactory'
 import StandardListConverters from '../converters/StandardListConverters'
+import BasicRxPanel from '../components/panels/BasicRxPanel';
 import HostPanel from './HostPanel'
 import  * as hostActionCreators from '../redux/hostactioncreators'
 import Modal from '../components/Modal';
 import { connect } from 'react-redux'
 
 
-class  HostsPanel  extends React.Component {
+class  HostsPanel  extends BasicRxPanel {
 
   constructor() {
-    super()
+    super('HOSTS','HOSTSPANEL')
     this.state = {
       hosts: [],
       test: false,
@@ -23,7 +24,7 @@ class  HostsPanel  extends React.Component {
     this.props.dispatch(hostActionCreators.openNewHost());
   }
   saveAndClose() {
-    this.props.dispatch(hostActionCreators.saveNewHost(this.state.host_hostname,this.state.host_ipaddress,this.state.host_description));
+    this.props.dispatch(hostActionCreators.saveNewHost(this.state.hostname,this.state.ipaddress,this.state.description));
 
   }
 
@@ -41,6 +42,9 @@ class  HostsPanel  extends React.Component {
     this.props.dispatch(hostActionCreators.loadHostManagement(entry));
   }
 
+  clearState() {
+    this.setState({hostname: null,ipaddress: null,description: null})
+  }
   componentWillMount() {
 
     var {type} = this.props;
@@ -49,12 +53,15 @@ class  HostsPanel  extends React.Component {
       this.setState({test: true})
     }
   }
+
+
   componentWillReceiveProps(nextProps) {
     if(nextProps.type == 'HOSTS_LOADED') {
       this.setState({hosts: nextProps.hosts})
     }
     else if(nextProps.type == 'SAVE_NEW_HOST') {
           this.props.dispatch(hostActionCreators.initialHostState());
+          this.clearState();
     }
     else if(nextProps.type == 'INITIAL_HOSTS_STATE') {
           this.props.dispatch(hostActionCreators.loadHosts())

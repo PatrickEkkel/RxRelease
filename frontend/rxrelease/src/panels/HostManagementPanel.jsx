@@ -1,5 +1,6 @@
 import React from 'react';
 import  * as hostActionCreators from '../redux/hostactioncreators'
+import BasicRxPanel from '../components/panels/BasicRxPanel';
 import Button from '../components/Button'
 import Utils from '../lib/react/utils'
 import LabeledTable from '../components/LabeledTable'
@@ -10,30 +11,22 @@ import InfoBox from '../components/InfoBox'
 import { connect } from 'react-redux'
 
 
-class  HostManagementPanel  extends React.Component {
+class  HostManagementPanel  extends BasicRxPanel {
 
   constructor() {
-    super()
+    super('HOSTS','HOSTMANAGEMENTPANEL')
     this.state = {
-      selected_host: null,
-      save_success: null,
-      errortext_ipaddress: ""
+      selected_host: null
     }
+  }
 
-  }
-  test(val) {
-    console.log(val)
-  }
   changeAttr(e) {
     //var methodName = e.target.id.charAt(0).toUpperCase() + e.target.id.slice(1);
     //this.state.selected_host["set" + methodName ](e.target.value)
     var host = this.state.selected_host;
     Utils.bindAttr(host,e.target.id,e.target.value)
 
-    this.setState({
-      selected_host: host,
-      save_success: null
-    })
+    this.setState({  selected_host: host,success: null})
   }
 
   onRowClick(entry) {
@@ -42,24 +35,21 @@ class  HostManagementPanel  extends React.Component {
   componentWillMount() {
     var {type,selected_host} = this.props;
     if(type == 'LOAD_HOST_MANAGEMENT_FROM_HOSTS') {
-
       this.setState({selected_host: selected_host})
-
     }
   }
   componentWillReceiveProps(nextProps) {
-    if(nextProps.type == "UPDATE_EXISTING_HOST") {
-      this.props.dispatch(hostActionCreators.hostupdated(this.state.selected_host))
-      this.setState({save_success: true})
 
+    var type = nextProps.type;
+    var error_fields = nextProps.error_fields;
+
+    if(type == "UPDATE_EXISTING_HOST") {
+      this.props.dispatch(hostActionCreators.hostupdated(this.state.selected_host))
+      this.setState({success: true})
     }
-    else if(nextProps.type == "UPDATE_EXISTING_HOST_FAILED") {
-      this.setState({
-        save_success: false,
-        errortext_ipaddress: nextProps.error_fields[0].ipaddress,
-        errortext_hostname: nextProps.error_fields[0].hostname
-      })
-    }
+    else if(type == "UPDATE_EXISTING_HOST_FAILED") {
+      this.setState({error_fields: error_fields, success: false})
+   }
   }
   saveHostDetails() {
     this.props.dispatch(hostActionCreators.updateHost(this.state.selected_host))
@@ -93,7 +83,7 @@ class  HostManagementPanel  extends React.Component {
     var headers = ['#','name'];
     var data = [];
     return <div className="container">
-      <InfoBox success={this.state.save_success} success_message="Changes saved successfully" fail_message="Something went wrong while saving"></InfoBox>
+      <InfoBox success={this.state.success} success_message="Changes saved successfully" fail_message="Something went wrong while saving"></InfoBox>
       <div className="row">
         <div className="col-md-8">
           <h4><b>Connection details</b></h4>
@@ -105,7 +95,7 @@ class  HostManagementPanel  extends React.Component {
 
       <div  className="row">
         <div className="col-md-8">
-        <LabeledTextField col="col-md-4" labelcol="col-md-2" id="hostname" errortext={this.state.errortext_hostname} error={this.state.save_success == null ? null : !this.state.save_success}  label="Hostname:" inputValue={this.state.selected_host.getHostname()} onChange={e => this.changeAttr(e)}/>
+        <LabeledTextField col="col-md-4" labelcol="col-md-2" id="hostname" errorHandler={(id,callee) => this.handleError(id,callee)} label="Hostname:" inputValue={this.state.selected_host.getHostname()} onChange={e => this.changeAttr(e)}/>
         </div>
       </div>
       <div className="row">
@@ -113,7 +103,7 @@ class  HostManagementPanel  extends React.Component {
       </div>
       <div  className="row">
         <div className="col-md-8">
-        <LabeledTextField col="col-md-3" labelcol="col-md-2" id="ipAddress" errortext={this.state.errortext_ipaddress} error={this.state.save_success == null ? null : !this.state.save_success} label="IP Address:" inputValue={this.state.selected_host.getIpaddress()} onChange={e => this.changeAttr(e)} />
+        <LabeledTextField col="col-md-3" labelcol="col-md-2" id="ipAddress" errorHandler={(id,callee) => this.handleError(id,callee)} label="IP Address:" inputValue={this.state.selected_host.getIpaddress()} onChange={e => this.changeAttr(e)} />
         </div>
       </div>
       <hr/>

@@ -12,7 +12,7 @@ constructor() {
   // if this contins NONE, deny any loggging, if it contains ALL, ALLOW everything to get trought, if it contains LIST, log only the components/subcomponents that are listed
   this.LOGMODULES = "LIST"
   // Will only be used if we LOGMODULES contains te value list
-  this.ENABLED_LOGGING = ['SETTINGS.SETTINGPANEL','SETTINGS.SETTINGSPANEL']
+  this.ENABLED_LOGGING = ['HOSTS.HOSTMANAGEMENTPANEL']
 
 }
 

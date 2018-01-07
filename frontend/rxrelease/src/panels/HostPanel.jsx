@@ -1,19 +1,14 @@
 import React from 'react';
 import LabeledTextField from '../components/LabeledTextField';
 import Button from '../components/Button';
+import BasicRxPanel from '../components/panels/BasicRxPanel';
 import  * as actionCreators from '../redux/actioncreators'
 import Axios from 'axios';
 import { connect } from 'react-redux'
 
-class  HostPanel  extends React.Component {
+class  HostPanel  extends BasicRxPanel {
   constructor() {
-    super()
-    this.state = {
-      host_hostname: '',
-      host_ipaddress: '',
-      host_description: '',
-      save_success: null
-    }
+    super('HOSTS','HOSTPANEL');
   }
   changeAttr(e) {
     this.props.changeAttr(e);
@@ -21,14 +16,12 @@ class  HostPanel  extends React.Component {
 
   componentWillReceiveProps(nextProps) {
 
-    if(nextProps.type == 'SAVE_NEW_HOST_FAILED') {
+    var type = nextProps.type;
+    var error_fields = nextProps.error_fields;
 
-      this.setState({
-        errortext_ipaddress: nextProps.error_fields[0].ipaddress,
-        errortext_hostname: nextProps.error_fields[0].hostname,
-        errortext_description: nextProps.error_fields[0].description,
-        save_success: false
-      })
+
+    if(type == 'SAVE_NEW_HOST_FAILED') {
+      this.setState({error_fields: error_fields,success: false});
     }
   }
 
@@ -38,13 +31,13 @@ class  HostPanel  extends React.Component {
     return <div className="container">
       <form className="form-horizontal">
       <div className="form-group row">
-       <LabeledTextField id="host_hostname" errortext={this.state.errortext_hostname} error={this.state.save_success == null ? null : !this.state.save_success} placeholder="Hostname" label="Hostname" col="col-md-2" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
+       <LabeledTextField id="hostname" errorHandler={(id,callee) => this.handleError(id,callee)} placeholder="Hostname" label="Hostname" col="col-md-2" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
       </div>
       <div className="form-group">
-       <LabeledTextField id="host_ipaddress" errortext={this.state.errortext_ipaddress} error={this.state.save_success == null ? null : !this.state.save_success}  placeholder="IP Address" label="IP Address" col="col-md-2" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
+       <LabeledTextField id="ipaddress" errorHandler={(id,callee) => this.handleError(id,callee)}  placeholder="IP Address" label="IP Address" col="col-md-2" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
       </div>
       <div className="form-group">
-       <LabeledTextField id="host_description" errortext={this.state.errortext_description} error={this.state.save_success == null ? null : !this.state.save_success} placeholder="Description" label="Description" col="col-md-4" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
+       <LabeledTextField id="description" errorHandler={(id,callee) => this.handleError(id,callee)} placeholder="Description" label="Description" col="col-md-4" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
       </div>
 
       </form>

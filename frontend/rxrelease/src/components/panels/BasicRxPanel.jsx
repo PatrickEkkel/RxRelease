@@ -10,7 +10,7 @@ super()
 this.component = component;
 this.subcomponent = subcomponent;
 
-this.state = { success: null }
+this.state = { success: null,error_fields: [] }
 
 var logfactory = new LogFactory();
 this.logger = logfactory.createLogger(this.component,this.subcomponent);
@@ -39,15 +39,15 @@ this.getLogger().debug("render form error state");
 this.getLogger().traceObject(this.state.error_fields)
 // fetch the component id
 var errorMessage = "";
-
-if(typeof this.state.error_fields[0][component_id] !== 'undefined') {
-  errorMessage = this.state.error_fields[0][component_id][0];
+var cid = component_id.toLowerCase();
+if(typeof this.state.error_fields[0][cid] !== 'undefined') {
+  errorMessage = this.state.error_fields[0][cid][0];
 }
 
 if(typeof errorMessage !== 'undefined' || !errorMessage) {
 
   this.getLogger().debug("Error message to render")
-  this.getLogger().debug("Component ID: " + component_id)
+  this.getLogger().debug("Component ID: " + cid)
   this.getLogger().debug("Errormessage: " + errorMessage)
   callee.setErrorText(errorMessage)
 }
