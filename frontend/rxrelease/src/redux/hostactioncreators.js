@@ -42,18 +42,20 @@ export function loadHostManagement(hostentry) {
         var connectioncredentials_id =  data.connectioncredentials
         return settingsRequests.getCredentialSettingsByHostById(connectioncredentials_id);
       }).then(function(response) {
-
+        console.log("ik begrijp dat het moeilijk is")
+        console.log(response.data)
         var data = jsonUtils.normalizeJson(response.data);
 
         var connectioncredentials =  settingsfactory.createCredentialSettingFromJson(data);
+        console.log("hoe zie die shit eruit")
+        console.log(connectioncredentials)
         host.setConnectionCredentials(connectioncredentials)
-        return settingsRequests.getCredentialSettingsByHostById(data.category);
+        return settingsRequests.getSettingsCategoryById(data.category);
       }).then(function(response) {
         var data = jsonUtils.normalizeJson(response.data);
-        var settingsFactory = new SettingsFactory();
-        var settingscategory = settingsFactory.createSettingsCategoryFromJson(data);
-        host.getConnectionCredentials().setSettingCategory(settingscategory)
-        dispatch(hostManagementLoaded(host));
+        var settingscategory = settingsfactory.createSettingsCategoryFromJson(data);
+       host.getConnectionCredentials().setSettingCategory(settingscategory)
+       dispatch(hostManagementLoaded(host));
 
       });
   }
@@ -105,6 +107,8 @@ export function updateHost(host) {
   return function (dispatch) {
       hostsRequests.putHost(host).catch(function(error) {
         errorHandler.addErrorResponse(error)
+        console.log("volgens mij is hij null")
+        console.log(host.getConnectionCredentials())
       }).then(function() {
        return settingsRequests.putCredentialSettings(host.getConnectionCredentials());
      }).then(function() {

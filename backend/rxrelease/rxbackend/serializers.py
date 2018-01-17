@@ -85,7 +85,7 @@ class StateTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StateType
-        fields = ('id','name','handler','dependentOn')
+        fields = ('id','name','handler','dependentOn','SettingsCategory')
 
 class CapabilitySerializer(serializers.ModelSerializer):
     statetypes = StateTypeMTMSerializer(many=True,queryset=StateType.objects.all())

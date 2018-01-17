@@ -1,7 +1,14 @@
 from django.db import models
 
+class SettingsCategory(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
 class StateType(models.Model):
     name = models.CharField(max_length=255)
+    SettingsCategory = models.ForeignKey(SettingsCategory,default=None,null=True)
     handler = models.CharField(max_length=255,null=True)
     dependentOn = models.ForeignKey('self',null=True,default=None)
 
@@ -22,8 +29,6 @@ class Profile(models.Model):
     profiletype = models.ForeignKey(ProfileType,null=True)
     def __str__(self):
         return self.name
-class SettingsCategory(models.Model):
-    name = models.CharField(max_length=255)
 
 class CredentialsSetting(models.Model):
     username = models.CharField(max_length=255)
@@ -40,6 +45,7 @@ class Host(models.Model):
     description =  models.CharField(max_length=400)
     status      = models.CharField(max_length=255,default="UNMANAGED")
     connectioncredentials = models.ForeignKey(CredentialsSetting,default=None,null=True)
+    hostSettings = models.ForeignKey(SettingsCategory,default=None,null=True)
 
 class State(models.Model):
     name = models.CharField(max_length=255)

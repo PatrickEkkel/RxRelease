@@ -27,7 +27,7 @@ remoteuser=RemoteSettings.remoteuser
 inputmapping = InputMapper().getInputFromCLI()
 
 data = json.loads(inputmapping.getKeyvalList())
-dryrun = False #data["dryrun"]
+dryrun = data["dryrun"]
 
 filestore = RxFileStore('/home/' + localuser + '/.rxrelease')
 
