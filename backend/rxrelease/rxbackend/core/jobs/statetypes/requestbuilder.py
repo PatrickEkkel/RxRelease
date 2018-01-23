@@ -3,6 +3,7 @@ from handlerrequest import HandlerRequest
 from ...dao.hostdao import HostDao
 from ...dao.settingsdao import SettingsDao
 from ..api.keyvallistbuilder import KeyValListBuilder
+from ....configuration.globalsettings import RemoteSettings
 from ...settings.settingsservice import SettingsService
 
 logger = logging.getLogger(__name__)
@@ -59,11 +60,11 @@ class RequestBuilder:
      # TODO: new type definen voor variabelen van state
      # Dit is specefiek aan de statetype
      kvbuilder  = KeyValListBuilder()
-
+     kvbuilder.addKeyValPair("remoteuser",RemoteSettings.remoteuser)
      kvbuilder.addKeyValPair("username",credentials.username)
      kvbuilder.addKeyValPair("password",credentials.password)
      kvbuilder.addKeyValPair("dryrun","False")
- 
+
      for key, value in selectedSettings.items():
       kvbuilder.addKeyValPair(key,value)
 
