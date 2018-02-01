@@ -42,13 +42,10 @@ export function loadHostManagement(hostentry) {
         var connectioncredentials_id =  data.connectioncredentials
         return settingsRequests.getCredentialSettingsByHostById(connectioncredentials_id);
       }).then(function(response) {
-        console.log("ik begrijp dat het moeilijk is")
-        console.log(response.data)
+
         var data = jsonUtils.normalizeJson(response.data);
 
         var connectioncredentials =  settingsfactory.createCredentialSettingFromJson(data);
-        console.log("hoe zie die shit eruit")
-        console.log(connectioncredentials)
         host.setConnectionCredentials(connectioncredentials)
         return settingsRequests.getSettingsCategoryById(data.category);
       }).then(function(response) {

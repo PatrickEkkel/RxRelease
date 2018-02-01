@@ -52,12 +52,6 @@ class LabeledDropdown extends BasicRxComponentPanel {
         error = true
       }
     }
-    // do legacy error handling
-    else {
-      // TODO: de oude methoden moeten wel verwijderd worden zodra deze methode volledige geimplementeerd is
-      error = this.getError();
-      errorText = this.getErrorText();
-    }
 
     var noneoption = <option key="None" value='None'>None</option>
     var rows = [];

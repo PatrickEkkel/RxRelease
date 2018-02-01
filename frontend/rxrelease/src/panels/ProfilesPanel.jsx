@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '../components/Button';
 import ProfilePanel from '../panels/ProfilePanel';
+import BasicRxPanel from '../components/panels/BasicRxPanel';
 import Table from '../components/Table';
 import Axios from 'axios';
 import  * as profileActionCreators from '../redux/profileactioncreators'
@@ -8,7 +9,7 @@ import Modal from '../components/Modal';
 import { connect } from 'react-redux'
 
 
-class  ProfilesPanel  extends React.Component {
+class  ProfilesPanel  extends BasicRxPanel {
 
   constructor() {
     super()
@@ -30,7 +31,7 @@ class  ProfilesPanel  extends React.Component {
     this.setState({panelState: "reload"});
   }
   saveAndClose() {
-    this.props.dispatch(profileActionCreators.saveNewProfile(this.state.profile_name,this.state.profile_type));
+    this.props.dispatch(profileActionCreators.saveNewProfile(this.state.name,this.state.profiletype));
   }
   close() {
       this.props.dispatch(profileActionCreators.initialProfilesState())
@@ -80,8 +81,8 @@ class  ProfilesPanel  extends React.Component {
 const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._profiles.type,
-    profile_name: state._profiles.profile_name,
-    profile_type: state._profiles.profile_type,
+    name: state._profiles.name,
+    profiletype: state._profiles.profiletype,
     profiles: state._profiles.profiles,
     reduxState: state,
   }

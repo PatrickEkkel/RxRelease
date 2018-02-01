@@ -18,6 +18,12 @@ export default function _profiles(state = initialProfileState,action) {
       type: action.type,
       showModal: false
     }
+    case 'SAVE_NEW_PROFILE_FAILED':
+    return {
+      type: action.type,
+      showModal: true,
+      error_fields: action.error_fields
+    }
     case 'PROFILES_LOADED':
     return {
       type: action.type,
@@ -43,8 +49,8 @@ export default function _profiles(state = initialProfileState,action) {
     case 'NEW_PROFILE_ENTRY':
     return {
         type: action.type,
-        profile_name: action.profile_name,
-        profile_type: action.profile_type,
+        name: action.name,
+        profiletype: action.profiletype,
         showModal: true
     }
     case 'LOAD_CONFIGURATION_FROM_PROFILES':

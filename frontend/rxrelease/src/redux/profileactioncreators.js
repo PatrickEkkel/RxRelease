@@ -1,6 +1,9 @@
 import Axios from 'axios';
 import Profile from '../models/profile'
 import ProfileType from '../models/profiletype'
+import ProfileFactory from '../factories/profileFactory'
+import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
+import  * as profileRequests from '../rest/requests/profilerequests'
 
 export function newProfileEntry(key,value) {
   return {
@@ -77,16 +80,18 @@ export function loadConfigurationsPanel(selected_profile) {
 }
 export function saveNewProfile(profile_name,profile_type) {
   return function (dispatch) {
-    if (profile_name != '' && profile_type != '') {
-    Axios.post('http://localhost:8080/rxbackend/profiles/',
-        {
-        name: profile_name,
-        profiletype: profile_type
-      }).then(function() {
+
+    var errorHandler = new AggregatedFieldsErrorHandler();
+    var profileFactory = new ProfileFactory();
+    var profile =  profileFactory.createProfile(profile_name,profile_type);
+    profileRequests.postProfile(profile).then(function() {
         dispatch( {
             type: 'SAVE_NEW_PROFILE',
         })
+      }).catch(function(error) {
+        errorHandler.addErrorResponse(error)
+        errorHandler.handleErrors('SAVE_NEW_PROFILE_FAILED',dispatch)
       });
-    }
+
   }
 }
