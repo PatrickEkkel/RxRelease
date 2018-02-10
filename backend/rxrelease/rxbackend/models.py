@@ -1,5 +1,11 @@
 from django.db import models
 
+# dbStatus verteld ons meer over of de filler al gedraaid is
+# Tevens slaan we de huidige versie van de filler ook op in de db, kan later handig zijn als we een versie ergens hebben draaien en we moeten upgraden naar een nieuwere versie
+class SystemConfig(models.Model):
+    buildversion = models.CharField(max_length=150)
+    dbStatus = models.CharField(max_length=255)
+
 class SettingsCategory(models.Model):
     name = models.CharField(max_length=255)
 
@@ -20,16 +26,19 @@ class Capability(models.Model):
     module = models.CharField(max_length=255)
     statetypes = models.ManyToManyField(StateType)
 
+    def __str__(self):
+        return self.name
+
 class ProfileType(models.Model):
     name = models.CharField(max_length=255)
     capabilities = models.ManyToManyField(Capability)
+    system = models.BooleanField(default=True)
 
 class Profile(models.Model):
     name = models.CharField(max_length=200)
     profiletype = models.ForeignKey(ProfileType,null=True)
     def __str__(self):
         return self.name
-
 class CredentialsSetting(models.Model):
     username = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
@@ -38,7 +47,6 @@ class KVSetting(models.Model):
     key = models.CharField(max_length=255)
     value = models.CharField(max_length=255)
     category = models.ForeignKey(SettingsCategory)
-
 class Host(models.Model):
     hostname =  models.CharField(max_length=255)
     ipaddress =  models.CharField(max_length=15)
@@ -46,13 +54,13 @@ class Host(models.Model):
     status      = models.CharField(max_length=255,default="UNMANAGED")
     connectioncredentials = models.ForeignKey(CredentialsSetting,default=None,null=True)
     hostSettings = models.ForeignKey(SettingsCategory,default=None,null=True)
+    profileType = models.ForeignKey(ProfileType,default=None,null=True)
 
 class State(models.Model):
     name = models.CharField(max_length=255)
     host = models.ForeignKey(Host)
     installed = models.BooleanField()
     statetype = models.ForeignKey(StateType)
-
     def __str__(self):
         return self.name
 

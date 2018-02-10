@@ -38,7 +38,7 @@ class ProfileTypeSerializer(serializers.ModelSerializer):
     capabilities = CapabilityMTMSerializer(many=True,queryset=Capability.objects.all())
     class Meta:
         model = ProfileType
-        fields  = ('id','name','capabilities')
+        fields  = ('id','name','system','capabilities')
 
 class HostSerializer(serializers.ModelSerializer):
     def validate_ipaddress(self,value):
@@ -52,7 +52,7 @@ class HostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Host
-        fields = ('id','hostname','ipaddress','description','status','connectioncredentials')
+        fields = ('id','hostname','ipaddress','description','status','profileType','connectioncredentials')
 
 class ConfigurationSerializer(serializers.ModelSerializer):
     hosts = HostTestSerializer(many=True,queryset=Host.objects.all())
