@@ -3,6 +3,7 @@ import Button from '../components/Button';
 import LabeledTable from '../components/LabeledTable';
 import HostFactory from '../factories/hostFactory'
 import StandardListConverters from '../converters/StandardListConverters'
+
 import BasicRxPanel from '../components/panels/BasicRxPanel';
 import HostPanel from './HostPanel'
 import  * as hostActionCreators from '../redux/hostactioncreators'
@@ -24,19 +25,11 @@ class  HostsPanel  extends BasicRxPanel {
     this.props.dispatch(hostActionCreators.openNewHost());
   }
   saveAndClose() {
-    this.props.dispatch(hostActionCreators.saveNewHost(this.state.hostname,this.state.ipaddress,this.state.description));
-
-  }
-
-  changeAttr(e) {
-    this.setState({[e.target.id]: e.target.value});
+    this.props.dispatch(hostActionCreators.saveNewHost(this.state.hostname,this.state.ipaddress,this.state.description,this.state.profiletype));
   }
   close() {
 
     this.props.dispatch(hostActionCreators.initialHostState());
-  }
-  changeAttr(e) {
-    this.setState({[e.target.id]: e.target.value});
   }
   onRowClick(entry) {
     this.props.dispatch(hostActionCreators.loadHostManagement(entry));
@@ -56,6 +49,8 @@ class  HostsPanel  extends BasicRxPanel {
 
 
   componentWillReceiveProps(nextProps) {
+
+
     if(nextProps.type == 'HOSTS_LOADED') {
       this.setState({hosts: nextProps.hosts})
     }

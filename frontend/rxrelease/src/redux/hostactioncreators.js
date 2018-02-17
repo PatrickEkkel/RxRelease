@@ -1,9 +1,11 @@
 
 import Axios from 'axios';
 import Host from '../models/host'
+import LogFactory from '../logging/LogFactory'
 import HostFactory from '../factories/hostFactory'
 import StateFactory from '../factories/stateFactory'
 import SettingsFactory from '../factories/settingsFactory'
+import ProfileTypeFactory from '../factories/profiletypeFactory'
 import GlobalSettings from '../config/global'
 import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
 import  * as settingsRequests from '../rest/requests/settingsrequests'
@@ -14,6 +16,8 @@ import  * as jsonUtils from '../lib/json/utils'
 
 
 var settings = new GlobalSettings();
+var haLogger = new LogFactory().createLogger("HOSTS","ACTIONCREATOR")
+
 
 export function initialHostState() {
   return {
@@ -104,8 +108,6 @@ export function updateHost(host) {
   return function (dispatch) {
       hostsRequests.putHost(host).catch(function(error) {
         errorHandler.addErrorResponse(error)
-        console.log("volgens mij is hij null")
-        console.log(host.getConnectionCredentials())
       }).then(function() {
        return settingsRequests.putCredentialSettings(host.getConnectionCredentials());
      }).then(function() {
@@ -122,9 +124,10 @@ export function updateHost(host) {
   }
 }
 
-export function saveNewHost(hostname,ipaddress,description) {
-  var settingsfactory = new SettingsFactory()
-  var hostfactory = new HostFactory()
+export function saveNewHost(hostname,ipaddress,description,profiletype) {
+  var settingsfactory = new SettingsFactory();
+  var hostfactory = new HostFactory();
+  //var profiletypefactory = new ProfileTypeFactory();
   var errorHandler = new AggregatedFieldsErrorHandler();
 
   return function (dispatch) {
@@ -150,7 +153,11 @@ export function saveNewHost(hostname,ipaddress,description) {
     }).then(function(response) {
 
       var connectioncredentials = settingsfactory.createCredentialSettingFromJson(jsonUtils.normalizeJson(response.data))
-      var host =  hostfactory.createHost(hostname,ipaddress,description)
+
+      var host =  hostfactory.createHost(hostname,ipaddress,description,profiletype)
+      haLogger.trace("post new Host")
+      haLogger.traceObject(host)
+
       host.setConnectionCredentials(connectioncredentials)
       return hostsRequests.postHost(host);
     }).then(function(response) {

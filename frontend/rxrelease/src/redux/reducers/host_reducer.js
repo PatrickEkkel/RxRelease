@@ -28,6 +28,12 @@ export default function _host(state = initialHostState,action) {
       showModal: true,
       error_fields: action.error_fields
     }
+    case 'PROFILE_TYPES_LOADED':
+    return {
+      type: action.type,
+      showModal: true,
+      profiletypes: action.profiletypes,
+    }
     case 'HOSTS_LOADED':
     return {
       type: action.type,

@@ -15,6 +15,9 @@ convertJsonList(list) {
 
   return result;
 }
+createProfileType(id,name) {
+  return new ProfileType(id,name)
+}
 createProfiletypeFromJson(json) {
   var result = new ProfileType(json.id,json.name)
 
@@ -26,7 +29,7 @@ static convertProfiletypeListToNamedList(list) {
     result.push(list[i].getName())
   }
   return result;
-} 
+}
 }
 
 export default ProfileTypeFactory;

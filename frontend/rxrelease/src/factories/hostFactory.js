@@ -20,8 +20,8 @@ var result = new Host(list[0],list[1],list[2],list[3],list[4]);
 return result;
 }
 
-createHost(hostname,ipaddress,description) {
-  return new Host(null,hostname,ipaddress,description,'UNMANAGED')
+createHost(hostname,ipaddress,description,profiletype) {
+  return new Host(null,hostname,ipaddress,description,'UNMANAGED',profiletype)
 }
 createHostFromJson(json) {
  var result = new Host(json.id,json.hostname,json.ipaddress,json.description,json.status)

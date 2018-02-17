@@ -27,6 +27,7 @@ return Axios.post(backend_url + '/rxbackend/hosts/',{
   hostname: host.getHostname(),
   ipaddress: host.getIpaddress(),
   description: host.getDescription(),
+  profileType: host.getProfileType(),
   connectioncredentials: host.getConnectionCredentials().getId()
 })
 
