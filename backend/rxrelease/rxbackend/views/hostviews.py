@@ -25,10 +25,13 @@ class CreateView(generics.ListCreateAPIView):
 
         # instead of taking all the statetypes, get the profiletype from the host,
         # and than get its capebilities which contains all relevant stateypes
+        # TODO: this change will cause problems to the dependency resolver,
+        # fix this by adding dependendOn to capabilities and
        statetype_set = StateType.objects.all()
        host = serializer.save()
        capabilities = host.profileType.capabilities
        for capability in capabilities.iterator():
+           logger.info("how many times is this one being called?")
            for statetype in capability.statetypes.iterator():
             #for statetype in statetype_set.iterator():
             state = State()

@@ -5,8 +5,11 @@ from ...models import Capability
 from ...models import ProfileType
 from ...models import Profile
 from ...models import Configuration
+from ...models import KVSetting
 class BaseFiller:
     def createBaseFillForSalt(self):
+
+
 
 
         # Built in profiletypes
@@ -20,13 +23,21 @@ class BaseFiller:
 
         # Settings category maken
         global_category = SettingsCategory.objects.create(name="Global Settings")
+        global_category.save()
+
+        kvsetting_os = KVSetting.objects.create(key="os",value="CentOS",category=global_category)
+        kvsetting_os.save()
+        # Standard settings applyen
+        kvsetting_saltmaster = KVSetting.objects.create(key="saltmaster",value="",category=global_category)
+        kvsetting_saltmaster.category = global_category
+        kvsetting_saltmaster.save()
 
         # De verschillende basis states maken
         passwordless_login_state = StateType.objects.create(name="SSH passwordless login",handler="passwordless-sshlogin.py",SettingsCategory=global_category)
         salt_minion_state = StateType.objects.create(name="Salt minion",handler="install-salt.py",SettingsCategory=global_category,dependentOn=passwordless_login_state)
         salt_master_state = StateType.objects.create(name="salt-master",handler="intstall-salt-master.py",dependentOn=passwordless_login_state,SettingsCategory=global_category)
 
-        global_category.save()
+
         passwordless_login_state.save()
         salt_minion_state.save()
         salt_master_state.save()
@@ -37,17 +48,16 @@ class BaseFiller:
 
 
         standard_capability.statetypes.add(passwordless_login_state)
-
-        salt_minion_capability.statetypes.add(passwordless_login_state)
         salt_minion_capability.statetypes.add(salt_minion_state)
-
-        salt_master_capability.statetypes.add(passwordless_login_state)
-        salt_master_capability.statetypes.add(salt_minion_state)
+        salt_minion_capability.dependentOn = standard_capability
         salt_master_capability.statetypes.add(salt_master_state)
-        buildin_saltmaster_profiletype.capabilities.add(salt_master_capability)
+        salt_master_capability.dependentOn = standard_capability
 
-        #salt_minion_state.statetypes.append(salt_minion_state)
-        #salt_master_state.statetypes.append(salt_master_state)
+
+        #buildin_saltmaster_profiletype.capabilities.add(salt_master_capability)
+        buildin_saltmaster_profiletype.capabilities.add(salt_minion_capability)
+        buildin_saltmaster_profiletype.capabilities.add(standard_capability)
+
 
         standard_capability.save()
         salt_minion_capability.save()

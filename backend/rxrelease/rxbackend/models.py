@@ -23,9 +23,9 @@ class StateType(models.Model):
 
 class Capability(models.Model):
     name = models.CharField(max_length=255)
+    dependentOn = models.ForeignKey('self',null=True,default=None)
     module = models.CharField(max_length=255)
     statetypes = models.ManyToManyField(StateType)
-
     def __str__(self):
         return self.name
 
