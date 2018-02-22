@@ -1,11 +1,13 @@
 import logging,sys
 from rest_framework import generics
+from django.contrib.auth.decorators import login_required
 from ..serializers import HostSerializer
 from ..models import Host
 from ..models import StateType
 from ..models import State
 from ..models import Capability
 from ..models import ProfileType
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

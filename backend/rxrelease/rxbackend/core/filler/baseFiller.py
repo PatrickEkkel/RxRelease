@@ -9,9 +9,6 @@ from ...models import KVSetting
 class BaseFiller:
     def createBaseFillForSalt(self):
 
-
-
-
         # Built in profiletypes
 
         buildin_saltmaster_profiletype = ProfileType.objects.create(name="Salt Master")
