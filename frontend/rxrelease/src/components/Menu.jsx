@@ -9,7 +9,7 @@ class Menu extends BasicRxPanel {
     var currentContext = this;
     this.state = {
       selectedItem: "empty",
-      mode: "LOGGED_IN"
+      mode: "LOGGED_OUT"
     }
   }
   getMenuItems() {
@@ -35,6 +35,9 @@ class Menu extends BasicRxPanel {
 
     if(type == 'AUTHENTICATION_ERROR') {
       this.setState({mode: "LOGGED_OUT"});
+    }
+    else {
+      this.setState({mode: "LOGGED_IN"})
     }
   }
 
