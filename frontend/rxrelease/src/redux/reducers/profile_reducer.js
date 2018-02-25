@@ -13,6 +13,11 @@ export default function _profiles(state = initialProfileState,action) {
       showModal: false,
       profiles: action.profiles
     }
+    case 'AUTHENTICATION_ERROR':
+    return {
+      type: action.type,
+      showModal: false,
+    }
     case 'SAVE_NEW_PROFILE':
     return {
       type: action.type,

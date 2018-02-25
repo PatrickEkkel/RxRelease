@@ -11,6 +11,7 @@ import ComponentContainer from './components/ComponentContainer';
 import ProfilesBreadCrumbPanel from './panels/ProfilesBreadCrumbPanel';
 import  * as profileActionCreators from './redux/profileactioncreators'
 import  * as hostActionCreators from './redux/hostactioncreators';
+import  * as toplevelActionCreators from './redux/toplevelactioncreators';
 import HostsBreadCrumbPanel from './panels/HostsBreadCrumbPanel';
 import SettingsPanel from './panels/SettingsPanel';
 import { Provider } from 'react-redux'
@@ -63,15 +64,14 @@ class  App  extends React.Component {
 
       switch (id) {
         case "Profiles":
-            currentComponent.setInnerComponent(profiles);
-            innerComponent = profiles;
-            store.dispatch(profileActionCreators.initialProfilesBreadcrumbstate());
-            store.dispatch(profileActionCreators.loadProfiles());
+            //currentComponent.setInnerComponent(profiles);
+            //innerComponent = profiles;
+            store.dispatch(toplevelActionCreators.loadProfilesPanel())
           break;
         case "Hosts":
-           currentComponent.setInnerComponent(hosts);
-           store.dispatch(hostActionCreators.loadHosts());
-           innerComponent = hosts;
+           //currentComponent.setInnerComponent(hosts);
+           store.dispatch(toplevelActionCreators.loadHostsPanel())
+          //innerComponent = hosts;
           break;
         case "Logging":
             currentComponent.setInnerComponent(profiles);
@@ -91,9 +91,7 @@ class  App  extends React.Component {
         </div>
         <div className="row">
         <div className="col-md-3 col-xs-offset-2">
-          <ComponentContainer ref={(container) => { currentComponent = container }}>
-            {innerComponent}
-          </ComponentContainer>
+          <ComponentContainer ref={(container) => { currentComponent = container }}/>
         </div>
         </div>
 

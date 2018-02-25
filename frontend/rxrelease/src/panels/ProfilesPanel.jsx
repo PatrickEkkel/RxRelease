@@ -63,6 +63,10 @@ class  ProfilesPanel  extends BasicRxPanel {
       //this.props.dispatch(profileActionCreators.loadProfiles());
       this.setState({showModal:  true});
     }
+    /*
+    if(nextProps.type == 'AUTHENTICATION_ERROR') {
+      alert('redirect please')
+    }*/
   }
 
   render() {

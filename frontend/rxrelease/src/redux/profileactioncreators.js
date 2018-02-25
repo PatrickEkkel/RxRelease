@@ -2,8 +2,15 @@ import Axios from 'axios';
 import Profile from '../models/profile'
 import ProfileType from '../models/profiletype'
 import ProfileFactory from '../factories/profileFactory'
+import LogFactory from '../logging/LogFactory'
+import GlobalSettings from '../config/global'
 import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
 import  * as profileRequests from '../rest/requests/profilerequests'
+
+
+var settings = new GlobalSettings();
+var paLogger = new LogFactory().createLogger("PROFILES","ACTIONCREATOR")
+
 
 export function newProfileEntry(key,value) {
   return {
@@ -41,8 +48,8 @@ export function profileTypesLoaded(profiletypes) {
 export function loadProfiles() {
   return function (dispatch) {
       var retrievedData = [];
-      Axios.get('http://localhost:8080/rxbackend/profiles/')
-      .then(function(response){
+      profileRequests.getProfiles().then(function(response){
+
         for(var i=0;i<response.data.length;i++) {
           var id = response.data[i].id;
           var name = response.data[i].name;
@@ -52,6 +59,14 @@ export function loadProfiles() {
         retrievedData[i] = [id,name,type];
         }
           dispatch(profilesLoaded(retrievedData));
+      }).catch(function(error) {
+
+        if(error.response.status == 403) {
+          paLogger.debug("Profile Retrieve failed, Resource Forbidden")
+          paLogger.trace(error)
+          dispatch(authenticationError())
+
+        }
       });
   }
 }
@@ -63,6 +78,11 @@ export function initialProfilesBreadcrumbstate() {
 export function initialProfilesState() {
   return {
     type: 'INITIAL_PROFILES_STATE',
+  }
+}
+export function authenticationError() {
+  return {
+    type: 'AUTHENTICATION_ERROR'
   }
 }
 export function profilesLoaded(profiles) {

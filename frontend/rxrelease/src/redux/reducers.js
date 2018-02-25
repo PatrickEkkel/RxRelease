@@ -6,6 +6,7 @@ import recipeReducer from './reducers/recipe_reducer'
 import profilebreadCrumbReducer from './reducers/profilebreadcrumb_reducer'
 import dockercomposeRecipeReducer from '../plugins/docker_compose/reducers/docker_compose_recipe_reducer'
 import hostManagementReducer from './reducers/hostmanagement_reducer'
+import toplevelReducer from './reducers/toplevel_reducer'
 import hostBreadcrumbReducer from './reducers/hostbreadcrumb_reducer'
 import settingsReducer from './reducers/settings_reducer'
 
@@ -24,6 +25,9 @@ export function _configuration(state,action) {
 }
 export function _recipe(state,action) {
   return recipeReducer(state,action)
+}
+export function _toplevel(state,action) {
+  return toplevelReducer(state,action)
 }
 export function _dockercompose_recipe(state,action) {
   return dockercomposeRecipeReducer(state,action)

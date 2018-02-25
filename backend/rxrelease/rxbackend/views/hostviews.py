@@ -1,6 +1,6 @@
 import logging,sys
 from rest_framework import generics
-from django.contrib.auth.decorators import login_required
+#from rest_framework.permissions import IsAuthenticated
 from ..serializers import HostSerializer
 from ..models import Host
 from ..models import StateType
@@ -21,6 +21,7 @@ logger.addHandler(ch)
 class CreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
     queryset = Host.objects.all()
+
     #profiletypes_queryset = ProfileType.objects.all()
     serializer_class = HostSerializer
     def perform_create(self, serializer):

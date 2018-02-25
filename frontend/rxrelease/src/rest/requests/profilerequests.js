@@ -9,3 +9,7 @@ export function postProfile(profile) {
       profiletype: profile.getProfileType()
     })
 }
+
+export function getProfiles() {
+  return Axios.get( GlobalSettings.getBackendUrl() + '/rxbackend/profiles/');
+}
