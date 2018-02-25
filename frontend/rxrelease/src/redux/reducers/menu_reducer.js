@@ -14,6 +14,11 @@ export default function _menu(state = initialMenuState, action) {
         type: 'CHANGE_SELECTED_MENU',
         selectedMenu:  action.selectedMenu
       }
+
+    case 'AUTHENTICATION_ERROR':
+    return {
+      type: 'AUTHENTICATION_ERROR'
+    }
     default:
       return state
   }

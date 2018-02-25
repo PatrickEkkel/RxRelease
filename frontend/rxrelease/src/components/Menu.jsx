@@ -1,13 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux'
+import BasicRxPanel from '../components/panels/BasicRxPanel';
 import  * as actionCreators from '../redux/actioncreators'
 
-class Menu extends React.Component {
+class Menu extends BasicRxPanel {
   constructor() {
-    super()
+    super("MENU","MENUPANEL")
     var currentContext = this;
     this.state = {
-      selectedItem: "empty"
+      selectedItem: "empty",
+      mode: "LOGGED_IN"
     }
   }
   getMenuItems() {
@@ -17,10 +19,26 @@ class Menu extends React.Component {
     this.props.dispatch(actionCreators.changeSelectedMenu(id));
     this.props.onclick(id);
   }
+  componentWillMount() {
+    var {type} = this.props;
 
+    if(type == 'AUTHENTICATION_ERROR') {
+      this.getLogger().debug("not authenticated, hide menu")
+      this.getLogger().traceObject(type)
+      this.setState({mode: "LOGGED_OUT"});
+    }
+
+  }
+  componentWillReceiveProps(nextProps) {
+
+    var type = nextProps.type;
+
+    if(type == 'AUTHENTICATION_ERROR') {
+      this.setState({mode: "LOGGED_OUT"});
+    }
+  }
 
   render() {
-
     var { selectedMenu,type,reduxState } = this.props
 
     var currentContext = this;
@@ -29,16 +47,22 @@ class Menu extends React.Component {
 
     var link = "";
     var menuitem = "";
-    this.getMenuItems().forEach(function(entry) {
+    this.getLogger().debug("not authenticated, hide menu")
+    this.getLogger().traceObject(this.state.mode)
+
+    if(this.state.mode != "LOGGED_OUT") {
+
+      this.getMenuItems().forEach(function(entry) {
       //entry =>
-      link =  <a href="#"  onClick={() => currentContext.onClickEvent(entry)}>{entry}</a>
-     if(entry ==  selectedMenu) {
-          rows.push(<li className="active" key={entry}>{link}</li>)
-      }
-      else {
-       rows.push(<li key={entry}>{link}</li>)
-      }
-    });
+        link =  <a href="#"  onClick={() => currentContext.onClickEvent(entry)}>{entry}</a>
+        if(entry ==  selectedMenu) {
+            rows.push(<li className="active" key={entry}>{link}</li>)
+          }
+        else {
+          rows.push(<li key={entry}>{link}</li>)
+        }
+      });
+    }
 
 
 return <div className="container-fluid">
