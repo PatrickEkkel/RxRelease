@@ -5,6 +5,8 @@ import BasicRxPanel from './panels/BasicRxPanel';
 import ProfilesPanel from '../panels/ProfilesPanel';
 import HostsPanel from '../panels/HostsPanel';
 import HostsBreadCrumbPanel from '../panels/HostsBreadCrumbPanel';
+import SettingsPanel from '../panels/SettingsPanel';
+import LoginPanel from '../panels/LoginPanel'
 
 import ProfilesBreadCrumbPanel from '../panels/ProfilesBreadCrumbPanel';
 import  * as profileActionCreators from '../redux/profileactioncreators'
@@ -38,7 +40,7 @@ class  ComponentContainer  extends BasicRxPanel {
     switch (nextProps.type) {
       case 'AUTHENTICATION_ERROR':
         this.getLogger().debug("access not granted...   redirecting")
-        this.setState({ innerComponent: "no access"})
+        this.setState({ innerComponent: <LoginPanel/>})
         break;
       case 'LOAD_PROFILES_PANEL':
         this.props.dispatch(profileActionCreators.initialProfilesBreadcrumbstate());
@@ -48,9 +50,12 @@ class  ComponentContainer  extends BasicRxPanel {
       case 'LOAD_HOSTS_PANEL':
         this.setState({innerComponent: <HostsBreadCrumbPanel/>})
         this.props.dispatch(hostActionCreators.loadHosts());
+        break;
+      case  'LOAD_SETTINGS_PANEL':
+        this.setState({innerComponent: <SettingsPanel/>})
+        this.props.dispatch()
+        break;
     }
-
-
   }
   render() {
     return <div>{this.getInnerComponent()}</div>

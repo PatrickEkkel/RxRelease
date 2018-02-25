@@ -6,6 +6,7 @@ import LogFactory from '../logging/LogFactory'
 import GlobalSettings from '../config/global'
 import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
 import  * as profileRequests from '../rest/requests/profilerequests'
+import  * as commonActions from './commonactions'
 
 
 var settings = new GlobalSettings();
@@ -60,16 +61,11 @@ export function loadProfiles() {
         }
           dispatch(profilesLoaded(retrievedData));
       }).catch(function(error) {
-
-        if(error.response.status == 403) {
-          paLogger.debug("Profile Retrieve failed, Resource Forbidden")
-          paLogger.trace(error)
-          dispatch(authenticationError())
-
-        }
+         commonActions.notAuthorized(error.response.status,error,dispatch)
       });
   }
 }
+
 export function initialProfilesBreadcrumbstate() {
   return {
     type: 'INITIAL_PROFILE_BREADCRUMBSTATE'
@@ -80,11 +76,7 @@ export function initialProfilesState() {
     type: 'INITIAL_PROFILES_STATE',
   }
 }
-export function authenticationError() {
-  return {
-    type: 'AUTHENTICATION_ERROR'
-  }
-}
+
 export function profilesLoaded(profiles) {
   return {
     type: 'PROFILES_LOADED',

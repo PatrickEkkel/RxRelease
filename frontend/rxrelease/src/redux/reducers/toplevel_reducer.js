@@ -19,6 +19,10 @@ export default function _toplevel(state = initialConfigurationState,action) {
       return {
         type: action.type
       }
+    case 'LOAD_SETTINGS_PANEL':
+     return {
+       type: action.type
+     }
     case 'AUTHENTICATION_ERROR':
       return {
         type: action.type

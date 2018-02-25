@@ -5,6 +5,7 @@ import Table from './components/Table';
 import Button from './components/Button';
 import Menu from './components/Menu';
 import Navbar from './components/Navbar';
+import BasicRxPanel from './components/panels/BasicRxPanel';
 import ProfilesPanel from './panels/ProfilesPanel';
 import HostsPanel from './panels/HostsPanel';
 import ComponentContainer from './components/ComponentContainer';
@@ -16,9 +17,7 @@ import HostsBreadCrumbPanel from './panels/HostsBreadCrumbPanel';
 import SettingsPanel from './panels/SettingsPanel';
 import { Provider } from 'react-redux'
 
-
-
-class  App  extends React.Component {
+class  App  extends  BasicRxPanel {
 
   constructor() {
     super();
@@ -40,23 +39,22 @@ class  App  extends React.Component {
     var store = this.props.store;
 
       var onMenuLoad = function() {
-       // Do nothing
+      //  Do nothing
       }
       var onModalLoad = function(element) {
         modalHandle.setBody(element);
       }
 
-    var buttondropdown = <Button key="profilespanel"/>
-    var profiles = <ProfilesBreadCrumbPanel onModalLoad={onModalLoad}/>
-    var hosts = <HostsBreadCrumbPanel/>
+    //var buttondropdown = <Button key="profilespanel"/>
+    //var profiles = <ProfilesBreadCrumbPanel onModalLoad={onModalLoad}/>
+    //var hosts = <HostsBreadCrumbPanel/>
     var settings = <SettingsPanel/>
-    var innerComponent =  profiles;
+  //  var innerComponent =  profiles;
 
     var navbarClick = function(id) {
       switch(id) {
         case "Settings":
-          currentComponent.setInnerComponent(settings);
-          innerComponent = settings
+          store.dispatch(toplevelActionCreators.loadSettingsPanel())
         break;
       }
     }
@@ -64,23 +62,18 @@ class  App  extends React.Component {
 
       switch (id) {
         case "Profiles":
-            //currentComponent.setInnerComponent(profiles);
-            //innerComponent = profiles;
             store.dispatch(toplevelActionCreators.loadProfilesPanel())
           break;
         case "Hosts":
-           //currentComponent.setInnerComponent(hosts);
            store.dispatch(toplevelActionCreators.loadHostsPanel())
-          //innerComponent = hosts;
           break;
         case "Logging":
-            currentComponent.setInnerComponent(profiles);
+            //currentComponent.setInnerComponent(profiles);
           break;
         default:
 
       }
     }
-
 
       return  <Provider store={this.props.store}><div className="vertical-left">
         <Navbar menuitems={navbaritems} onClick={navbarClick}/>

@@ -11,6 +11,12 @@ export function loadProfilesPanel() {
     type: 'LOAD_PROFILES_PANEL'
   }
 }
+
+export function loadSettingsPanel() {
+  return {
+    type: 'LOAD_SETTINGS_PANEL'
+  }
+}
 export function loadHostsPanel() {
   return {
     type: 'LOAD_HOSTS_PANEL'

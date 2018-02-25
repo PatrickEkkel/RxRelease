@@ -8,6 +8,7 @@ import SettingsFactory from '../factories/settingsFactory'
 import ProfileTypeFactory from '../factories/profiletypeFactory'
 import GlobalSettings from '../config/global'
 import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
+import  * as commonActions from './commonactions'
 import  * as settingsRequests from '../rest/requests/settingsrequests'
 import  * as hostsRequests from '../rest/requests/hostrequests'
 import  * as statesRequests from '../rest/requests/statesrequests'
@@ -85,7 +86,9 @@ export function loadHosts() {
         var hostList = factory.convertJsonList(response.data)
 
           dispatch(hostsLoaded(hostList));
-      });
+      }).catch(function(error) {
+        commonActions.notAuthorized(error.response.status,error,dispatch)
+      })
   }
 }
 

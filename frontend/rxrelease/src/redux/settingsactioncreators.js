@@ -3,6 +3,8 @@ import SettingsFactory from '../factories/settingsFactory'
 import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
 import  * as settingsRequests from '../rest/requests/settingsrequests'
 import  * as settingsPromises from '../rest/promises/settingspromises'
+import  * as commonActions from './commonactions'
+
 
 export function loadAllSettings() {
   return [];
@@ -50,6 +52,8 @@ export function loadAllSettingsCategories() {
         }
       }
       dispatch(settingsCategoriesLoaded(categoriesDict));
+    }).catch(function(error) {
+        commonActions.notAuthorized(error.response.status,error,dispatch)
     })
   }
 }
