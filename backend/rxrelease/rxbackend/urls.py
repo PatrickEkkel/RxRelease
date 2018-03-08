@@ -8,6 +8,7 @@ from .views import capabilityviews
 from .views import statesviews
 from .views import configurationviews
 from .views import statetypeviews
+from .views import userviews
 from .views import settingscategoryview
 from .views import kvsettingsview
 from .views import credentialssettingsview
@@ -39,7 +40,8 @@ urlpatterns = [
     url(r'^states/host/install/(?P<pk>[0-9]+)/$', statesviews.InstallHostView.as_view(), name="byhost"),
     url(r'^states/search/$', statesviews.HostView.as_view(), name="byhost"),
 
-
+    url(r'^users/$',userviews.CreateUserView.as_view(),name="create"),
+    url(r'^users/(?P<pk>[0-9]+)/$', userviews.DetailsView.as_view(), name="details"),
     url(r'^profiletypes/$', profiletypeviews.CreateView.as_view(), name="create"),
     url(r'^profiletypes/(?P<pk>[0-9]+)/$', profiletypeviews.DetailsView.as_view(), name="details"),
 

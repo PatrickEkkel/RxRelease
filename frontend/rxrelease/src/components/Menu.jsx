@@ -36,7 +36,9 @@ class Menu extends BasicRxPanel {
     if(type == 'AUTHENTICATION_ERROR') {
       this.setState({mode: "LOGGED_OUT"});
     }
-    else {
+    else if(type == 'AUTHENTICATION_SUCCESS') {
+      // TODO: centrale plek maken waar we de landing page kunnen configureren
+      this.props.dispatch(actionCreators.changeSelectedMenu("Profiles"));
       this.setState({mode: "LOGGED_IN"})
     }
   }

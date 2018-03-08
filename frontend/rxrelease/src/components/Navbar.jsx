@@ -1,20 +1,77 @@
 import React from 'react';
 import { connect } from 'react-redux'
+import BasicRxPanel from '../components/panels/BasicRxPanel';
+import  * as loginActionCreators from '../redux/loginactioncreators'
 
-class Navbar extends React.Component {
+
+class Navbar extends BasicRxPanel {
   constructor() {
-    super()
+    super('NAVBAR','NAVBARPANEL')
     var currentContext = this;
+    this.getLogger().debug("Mode before rendering: " + this.state.type)
     this.state = {
-      selectedItem: "empty"
+      selectedItem: "empty",
+      mode: "LOGGED_OUT"
     }
   }
+/*  getCurrentAuthState() {
+    this.getLogger().debug("current state: " + localStorage.getItem("LOGGED_IN_STATE"))
+    return localStorage.getItem("LOGGED_IN_STATE");
+  }
+  updateCurrentAuthState() {
+     localStorage.setItem("LOGGED_IN_STATE",this.state.mode)
+  }*/
   getMenuItems() {
-    return this.props.menuitems || [];
+    var result = [];
+    if(this.state.mode == "LOGGED_OUT") {
+      this.getLogger().debug("not authenticated, hide navbar")
+    }
+    else if(this.state.mode == "LOGGED_IN") {
+      result = this.props.menuitems || []
+    }
+    return result;
   }
   onClickEvent(id) {
 
     this.props.onClick(id)
+  }
+  componentWillMount() {
+
+    var {type} = this.props;
+
+    this.getLogger().debug("current mode: " + this.state.mode)
+    this.getLogger().debug("curent recieved type: " + type)
+    this.props.dispatch(loginActionCreators.checkIfLoggedIn())
+
+  /*  switch (type) {
+      case 'INITIAL_APP_STATE':
+        this.getLogger().debug("INITIAL_APP_STATE called")
+        this.props.dispatch(loginActionCreators.checkIfLoggedIn())
+        break;
+
+      default:
+
+    }
+    */
+  }
+  componentWillReceiveProps(nextProps) {
+    this.getLogger().debug("Recieved nextProps.type: " + nextProps.type)
+    this.getLogger().debug("Current mode: " + this.state.mode)
+    switch(nextProps.type) {
+      case 'INITIAL_APP_STATE':
+        this.getLogger().debug("current mode: " + this.state.mode)
+        this.props.dispatch(loginActionCreators.checkIfLoggedIn())
+
+      case 'AUTHENTICATION_ERROR':
+        this.getLogger().debug("Authenticaton error")
+        this.setState({mode: 'LOGGED_OUT'})
+        //this.updateCurrentAuthState()
+      break;
+      case 'AUTHENTICATION_SUCCESS':
+      this.getLogger().debug("Authenticaton successfull")
+        this.setState({mode: 'LOGGED_IN'})
+      break;
+    }
   }
 
 
@@ -43,8 +100,12 @@ return     <nav className="navbar navbar-inverse navbar-fixed-top">
   }
 }
 
+const mapStateToProps = (state/*, props*/) => {
+  return {
+    type: state._toplevel.type,
+  }
+}
 
+const ConnectedNavbar = connect(mapStateToProps)(Navbar)
 
-//const ConnectedNavbar = connect(mapStateToProps)(Navbar)
-
-export default Navbar;
+export default ConnectedNavbar;

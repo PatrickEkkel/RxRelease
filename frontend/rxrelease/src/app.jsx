@@ -29,7 +29,7 @@ class  App  extends  BasicRxPanel {
     var menuitems = [];
     var navbaritems = [];
     menuitems  = ['Profiles','Hosts','Logging','Configuration'];
-    navbaritems = ['Overview','Settings','Help'];
+    navbaritems = ['Overview','Settings','Help','Logout'];
 
     var componentContainer = "empty";
     var currentComponent =  "empty";

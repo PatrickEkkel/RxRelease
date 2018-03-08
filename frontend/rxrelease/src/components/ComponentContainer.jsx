@@ -11,6 +11,7 @@ import LoginPanel from '../panels/LoginPanel'
 import ProfilesBreadCrumbPanel from '../panels/ProfilesBreadCrumbPanel';
 import  * as profileActionCreators from '../redux/profileactioncreators'
 import  * as hostActionCreators from '../redux/hostactioncreators'
+import  * as loginActionCreators from '../redux/loginactioncreators'
 
 
 class  ComponentContainer  extends BasicRxPanel {
@@ -41,6 +42,9 @@ class  ComponentContainer  extends BasicRxPanel {
       case 'AUTHENTICATION_ERROR':
         this.getLogger().debug("access not granted...   redirecting")
         this.setState({ innerComponent: <LoginPanel/>})
+        break;
+      case 'AUTHENTICATION_SUCCESS':
+         this.props.dispatch(loginActionCreators.goToLandingPage());
         break;
       case 'LOAD_PROFILES_PANEL':
         this.props.dispatch(profileActionCreators.initialProfilesBreadcrumbstate());

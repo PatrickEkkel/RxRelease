@@ -19,6 +19,10 @@ export default function _menu(state = initialMenuState, action) {
     return {
       type: 'AUTHENTICATION_ERROR'
     }
+    case 'AUTHENTICATION_SUCCESS':
+    return {
+      type: 'AUTHENTICATION_SUCCESS'
+    }
     default:
       return state
   }

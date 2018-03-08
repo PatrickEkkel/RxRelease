@@ -29,6 +29,11 @@ module.exports = {
       target: 'http://localhost:8000/',
       secure: false,
       changeOrigin: true
+    },
+    '/accounts/*': {
+      target: 'http://localhost:8000/',
+      secure: false,
+      changeOrigin: true
     }
   }
   },
