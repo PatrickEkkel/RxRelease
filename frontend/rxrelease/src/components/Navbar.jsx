@@ -71,6 +71,10 @@ class Navbar extends BasicRxPanel {
       this.getLogger().debug("Authenticaton successfull")
         this.setState({mode: 'LOGGED_IN'})
       break;
+      case 'LOGOUT':
+       this.getLogger().debug("current mode: " + this.state.mode)
+       this.props.dispatch(loginActionCreators.checkIfLoggedIn())
+
     }
   }
 

@@ -122,7 +122,7 @@ export function updateHost(host) {
      }
      }).catch(function(error) {
         errorHandler.addErrorResponse(error)
-        errorHandler.handleErrors('UPDATE_EXISTING_HOST_FAILED')
+        errorHandler.handleErrors('UPDATE_EXISTING_HOST_FAILED',dispatch)
      });
   }
 }

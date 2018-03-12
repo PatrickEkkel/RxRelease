@@ -7,6 +7,10 @@ export function getUsers() {
   return Axios.get(backend_url);
 }
 
+export function getLogout() {
+ var backend_url = GlobalSettings.getBackendUrl() + '/accounts/logout/'
+ return Axios.get(backend_url)
+}
 export function postLogin(username,password) {
 
  var bodyFormData = new FormData()

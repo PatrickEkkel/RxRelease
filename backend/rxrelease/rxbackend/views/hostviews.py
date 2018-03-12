@@ -1,6 +1,8 @@
 import logging,sys
 from rest_framework import generics
 #from rest_framework.permissions import IsAuthenticated
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from ..serializers import HostSerializer
 from ..models import Host
 from ..models import StateType
@@ -17,7 +19,7 @@ ch.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
-
+@method_decorator(csrf_exempt, name='dispatch')
 class CreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
     queryset = Host.objects.all()
@@ -43,6 +45,7 @@ class CreateView(generics.ListCreateAPIView):
             state.installed = False
             state.host = host
             state.save()
+@method_decorator(csrf_exempt, name='dispatch')
 class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
     queryset = Host.objects.all()

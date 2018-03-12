@@ -31,6 +31,10 @@ export default function _toplevel(state = initialConfigurationState,action) {
       return {
         type: action.type
       }
+    case 'LOGOUT':
+     return {
+       type: action.type
+     }
     default:
     return state;
 

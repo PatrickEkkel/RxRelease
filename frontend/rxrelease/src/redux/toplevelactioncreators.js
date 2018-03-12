@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import GlobalSettings from '../config/global'
 import LogFactory from '../logging/LogFactory'
+import  * as loginRequests from '../rest/requests/loginrequests'
 
 
 var settings = new GlobalSettings();
@@ -11,7 +12,20 @@ export function loadProfilesPanel() {
     type: 'LOAD_PROFILES_PANEL'
   }
 }
+export function logout() {
 
+  return function (dispatch) {
+      loginRequests.getLogout().then(function(response) {
+        dispatch(logoutMessage())
+     });
+  }
+}
+
+export function logoutMessage() {
+  return {
+    type: 'LOGOUT'
+  }
+}
 export function loadSettingsPanel() {
   return {
     type: 'LOAD_SETTINGS_PANEL'

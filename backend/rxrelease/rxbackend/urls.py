@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
+from django.views.decorators.csrf import csrf_exempt
 
 from .views import profileviews
 from .views import profiletypeviews

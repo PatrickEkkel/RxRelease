@@ -56,6 +56,8 @@ class  App  extends  BasicRxPanel {
         case "Settings":
           store.dispatch(toplevelActionCreators.loadSettingsPanel())
         break;
+        case "Logout":
+          store.dispatch(toplevelActionCreators.logout())
       }
     }
     var menuClick = function(id) {
