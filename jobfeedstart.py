@@ -8,11 +8,11 @@ from jobfeed.jobdefinition import JobDefinition
 from backend.rxrelease.rxbackend.core.rxfilestore import RxFileStore
 from backend.rxrelease.rxbackend.core.jobs.api.jobfeed import JobFeed
 from backend.rxrelease.rxbackend.core.jobs.api.jobfactory import JobFactory
-from backend.rxrelease.rxbackend.configuration.globalsettings import NetworkSettings,LocalSettings
+from backend.rxrelease.rxbackend.configuration.globalsettings import NetworkSettings,LocalSettings,ApiUserSettings
 from backend.rxrelease.rxbackend.core.jobs.api.jobActionFactory import JobActionFactory
 from backend.rxrelease.rxbackend.core.jobs.statetypes.handlerfactory import HandlerFactory
 from backend.rxrelease.rxbackend.core.restapi.REST_statetypes import REST_statetypes
-#from backend.rxrelease.rxbackend.core.restapi.REST_states import REST_states
+from backend.rxrelease.rxbackend.core.restapi.REST_authentication import REST_authentication
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -25,12 +25,17 @@ logger.addHandler(ch)
 actionFactory = JobActionFactory(None)
 requestFactory = HandlerFactory()
 
+
+
 localuser=LocalSettings.localuser
 
 filestorelocation = '/home/' + localuser + '/.rxrelease/'
 jobfeedRunnerDir = filestorelocation + '/jobfeed'
+authenticationApi = REST_authentication()
 
-statetypesApi = REST_statetypes()
+token_result = authenticationApi.postCredentials(ApiUserSettings.username,ApiUserSettings.password)
+auth_token = token_result['token']
+statetypesApi = REST_statetypes(auth_token)
 
 filestore = RxFileStore(filestorelocation)
 filestore.setContext('jobfeed')

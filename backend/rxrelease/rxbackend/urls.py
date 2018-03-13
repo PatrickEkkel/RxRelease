@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 from django.views.decorators.csrf import csrf_exempt
-
+from rest_framework.authtoken import views
 from .views import profileviews
 from .views import profiletypeviews
 from .views import hostviews
@@ -18,6 +18,8 @@ from .views import fillerview
 
 
 urlpatterns = [
+
+    url(r'^api-token-auth/', views.obtain_auth_token),
     url(r'^$', testview.index, name='index'),
     url(r'^(?P<profile_id>[0-9]+)/test/$', testview.test, name='results'),
     url(r'^profiles/$', profileviews.CreateView.as_view(), name="create"),

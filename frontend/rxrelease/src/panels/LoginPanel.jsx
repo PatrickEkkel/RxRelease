@@ -25,10 +25,10 @@ class  LoginPanel  extends BasicRxPanel {
     var items = [];
     return <div className="container">
           <div className="form-group row">
-           <LabeledTextField id="username" errorHandler={(id,callee) => this.handleError(id,callee)} placeholder="Username" label="Username" col="col-md-8" labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
+           <LabeledTextField id="username" errorHandler={(id,callee) => this.handleError(id,callee)} placeholder="Username" label="Username"  labelcol="col-md-1" col="col-md-8" onChange={e => this.changeAttr(e)}/>
           </div>
-          <div className="form-group">
-           <LabeledTextField id="password" mode="password" errorHandler={(id,callee) => this.handleError(id,callee)}  placeholder="*******" label="Password" col="col-md-8" labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
+          <div className="form-group row">
+           <LabeledTextField id="password" mode="password" errorHandler={(id,callee) => this.handleError(id,callee)}  placeholder="*******" label="Password"  labelcol="col-md-1" col="col-md-8" onChange={e => this.changeAttr(e)}/>
           </div>
           <div className="col">
             <Button title="Login" onClick={() => this.onLogin() }/>

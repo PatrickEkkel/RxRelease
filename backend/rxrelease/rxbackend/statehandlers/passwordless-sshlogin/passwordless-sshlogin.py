@@ -6,9 +6,10 @@ import os.path, sys
 import paramiko
 from pathlib import Path
 from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
-from rxbackend.configuration.globalsettings import LocalSettings,RemoteSettings
+from rxbackend.configuration.globalsettings import LocalSettings,RemoteSettings,ApiUserSettings
 from rxbackend.core.jobs.api.utils import Utils
 from rxbackend.core.restapi.REST_states import REST_states
+from rxbackend.core.restapi.REST_authentication import REST_authentication
 from rxbackend.ssh.ssh import SSHClient
 from rxbackend.core.rxfilestore import RxFileStore
 
@@ -26,6 +27,9 @@ remoteuser=RemoteSettings.remoteuser
 
 inputmapping = InputMapper().getInputFromCLI()
 
+# retrieve the authentication token
+token_result = REST_authentication().postCredentials(ApiUserSettings.username,ApiUserSettings.password)
+auth_token = token_result['token']
 data = json.loads(inputmapping.getKeyvalList())
 dryrun = data["dryrun"]
 
@@ -87,7 +91,7 @@ try:
  # on my ubuntu i need to call ssh-add to get the authentication working..
  sh.ssh_add()
 
- reststates_api = REST_states()
+ reststates_api = REST_states(auth_token)
  state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),inputmapping.getStateId())
  state =  state[0]
  state['installed'] = True

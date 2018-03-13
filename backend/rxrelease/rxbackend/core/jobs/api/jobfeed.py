@@ -2,7 +2,8 @@ import logging,sys,os,time
 from datetime import datetime
 from .job import Job
 from ...restapi.REST_states import REST_states
-from ....configuration.globalsettings import NetworkSettings,LocalSettings
+from ...restapi.REST_authentication import REST_authentication
+from ....configuration.globalsettings import NetworkSettings,LocalSettings,ApiUserSettings
 from .action import Action
 from ...rxfilestore import RxFileStore
 
@@ -18,13 +19,15 @@ logger.addHandler(ch)
 class JobFeed:
     def __init__(self):
      self.localuser=LocalSettings.localuser
+     token_result = REST_authentication().postCredentials(ApiUserSettings.username,ApiUserSettings.password)
+     self.auth_token = token_result['token']
      self.filestore = RxFileStore('/home/' + self.localuser + '/.rxrelease')
      self.filestore.createDir('jobfeed/')
      self.filestore.setContext('/jobfeed')
      self.backendlocation = NetworkSettings.protocol + "://" + NetworkSettings.servername + ":" + NetworkSettings.port
 
     def pollJobCompleted(self,textfile,statetypeRequest):
-     statesApi = REST_states()
+     statesApi = REST_states(self.auth_token)
      pollingState = True
 
      polling_frequenty = 5

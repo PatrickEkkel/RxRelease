@@ -2,6 +2,8 @@
 from rxbackend.ssh.ssh import SSHClient
 from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
 from rxbackend.core.restapi.REST_states import REST_states
+from rxbackend.configuration.globalsettings import ApiUserSettings
+from rxbackend.core.restapi.REST_authentication import REST_authentication
 import logging,paramiko,sh,sys,json
 # we gaan er even vanuit dat passwordless_sshlogin vanaf deze locatie nu geregeld is
 
@@ -14,6 +16,10 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
+# before we start lets do some authentication
+
+token_result = REST_authentication().postCredentials(ApiUserSettings.username,ApiUserSettings.password)
+auth_token = token_result['token']
 inputmapping = InputMapper().getInputFromCLI()
 data = json.loads(inputmapping.getKeyvalList())
 
@@ -32,9 +38,7 @@ try:
   client.sendCommand('sudo sed -i "s|#master: salt|master:\ "' + currenthost + '"|g" /etc/salt/minion')
   client.sendBlockingCommand('sudo systemctl start salt-minion')
 
-
-
-  reststates_api = REST_states()
+  reststates_api = REST_states(auth_token)
   state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),inputmapping.getStateId())
   state =  state[0]
   state['installed'] = True

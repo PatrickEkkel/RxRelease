@@ -8,6 +8,8 @@ from ...models import Configuration
 from ...models import KVSetting
 class BaseFiller:
     def createBaseFillForSalt(self):
+        # Dit is hoe token authentication werkt voor als we willen weten hoe we een nieuwe user willen maken of willen weten hoe het zaakje geconfigureerd
+        # http://cheng.logdown.com/posts/2015/10/27/how-to-use-django-rest-frameworks-token-based-authentication
 
         # Built in profiletypes
 

@@ -1,4 +1,7 @@
 
+class ApiUserSettings:
+     username = "api_user"
+     password = "TESTAPIPASSWORD"
 class LocalSettings:
     localuser = "patrick"
 class RemoteSettings:
