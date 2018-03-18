@@ -10,6 +10,7 @@ from .models import StateType
 from .models import KVSetting
 from .models import CredentialsSetting
 from .models import SettingsCategory
+from .models import Module
 from django.contrib.auth.models import User
 from .viewmodels import StateTypeHandler
 from .viewmodels import InstallHost
@@ -33,6 +34,11 @@ class HostTestSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSer
     class Meta:
         model = Host
         fields = ('id','hostname','ipaddress','description')
+
+class ModuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Module
+        fields = ('id','name','active','menuoptionname')
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

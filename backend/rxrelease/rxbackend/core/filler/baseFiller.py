@@ -6,13 +6,16 @@ from ...models import ProfileType
 from ...models import Profile
 from ...models import Configuration
 from ...models import KVSetting
+from ...models import Module
 class BaseFiller:
     def createBaseFillForSalt(self):
         # Dit is hoe token authentication werkt voor als we willen weten hoe we een nieuwe user willen maken of willen weten hoe het zaakje geconfigureerd
         # http://cheng.logdown.com/posts/2015/10/27/how-to-use-django-rest-frameworks-token-based-authentication
 
-        # Built in profiletypes
+        salt_module = Module.objects.create(name="rxsalt",active=False,menuoptionname="Salt")
+        salt_module.save()
 
+        # Built in profiletypes
         buildin_saltmaster_profiletype = ProfileType.objects.create(name="Salt Master")
         buildin_saltmaster_profile = Profile.objects.create(name="RxRelease Salt Master")
         buildin_saltmaster_profile.profiletype = buildin_saltmaster_profiletype
