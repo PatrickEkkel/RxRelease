@@ -26,6 +26,7 @@ class StateType(models.Model):
     name = models.CharField(max_length=255)
     SettingsCategory = models.ForeignKey(SettingsCategory,default=None,null=True)
     handler = models.CharField(max_length=255,null=True)
+    module = models.CharField(max_length=255,null=True,default=None)
     dependentOn = models.ForeignKey('self',null=True,default=None)
 
     def __str__(self):
@@ -34,7 +35,7 @@ class StateType(models.Model):
 class Capability(models.Model):
     name = models.CharField(max_length=255)
     dependentOn = models.ForeignKey('self',null=True,default=None)
-    module = models.CharField(max_length=255)
+    #module = models.CharField(max_length=255)
     statetypes = models.ManyToManyField(StateType)
     def __str__(self):
         return self.name

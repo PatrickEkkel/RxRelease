@@ -30,16 +30,17 @@ class HandleHostState(generics.CreateAPIView):
         statetype_queryset = StateType.objects.filter(id = validated_data['statetype_id'])
         selected_capability = Capability.objects.filter(statetypes = statetype_queryset).get()
         selected_state = State.objects.filter(host=host_queryset,statetype = statetype_queryset).get()
-        logger.info(selected_capability.module)
+        #logger.info(selected_capability.module)
+        selected_statetype = statetype_queryset.get()
         selected_host = host_queryset.get()
         keyval_list = validated_data['keyvalList']
         handlerCommand = validated_data['handlerCommand']
         # default capabilities are handles from the root of the rxbackend project, the rest is channeled to the various plugin folders
         programroot = ''
-        if selected_capability.module == 'default':
+        if selected_statetype.module == 'default':
             programroot = 'rxbackend.statehandlers'
         else:
-            programroot = 'rxbackend.' + selected_capability.module + '.statehandlers'
+            programroot = 'rxbackend.' + selected_statetype.module + '.statehandlers'
         stateHandler = statehandler.StateHandler(programroot)
         stateHandler.handlePythonState(selected_state,selected_host,handlerCommand,keyval_list)
         # todo add some kind of json parsing to the keyval_list

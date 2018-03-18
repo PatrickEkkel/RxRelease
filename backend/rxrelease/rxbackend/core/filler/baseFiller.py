@@ -32,18 +32,18 @@ class BaseFiller:
         kvsetting_saltmaster.save()
 
         # De verschillende basis states maken
-        passwordless_login_state = StateType.objects.create(name="SSH passwordless login",handler="passwordless-sshlogin.py",SettingsCategory=global_category)
-        salt_minion_state = StateType.objects.create(name="Salt minion",handler="install-salt.py",SettingsCategory=global_category,dependentOn=passwordless_login_state)
-        salt_master_state = StateType.objects.create(name="salt-master",handler="intstall-salt-master.py",dependentOn=passwordless_login_state,SettingsCategory=global_category)
+        passwordless_login_state = StateType.objects.create(name="SSH passwordless login",handler="passwordless-sshlogin.py",SettingsCategory=global_category,module="default")
+        salt_minion_state = StateType.objects.create(name="Salt minion",handler="install-salt.py",SettingsCategory=global_category,dependentOn=passwordless_login_state,module="rxsalt")
+        salt_master_state = StateType.objects.create(name="salt-master",handler="intstall-salt-master.py",dependentOn=passwordless_login_state,SettingsCategory=global_category,module="rxsalt")
 
 
         passwordless_login_state.save()
         salt_minion_state.save()
         salt_master_state.save()
         # capabilities
-        standard_capability = Capability.objects.create(name="standard",module="default")
-        salt_minion_capability = Capability.objects.create(name="salt-minion",module="rxsalt")
-        salt_master_capability = Capability.objects.create(name="salt-master",module="rxsalt")
+        standard_capability = Capability.objects.create(name="standard")
+        salt_minion_capability = Capability.objects.create(name="salt-minion")
+        salt_master_capability = Capability.objects.create(name="salt-master")
 
 
         standard_capability.statetypes.add(passwordless_login_state)

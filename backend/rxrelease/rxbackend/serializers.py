@@ -26,7 +26,7 @@ logger.addHandler(ch)
 class CapabilityMTMSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
     class Meta:
         model = Capability
-        fields = ('id','name','module',)
+        fields = ('id','name',)
 
 class HostTestSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
 
@@ -90,13 +90,13 @@ class StateTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StateType
-        fields = ('id','name','handler','dependentOn','SettingsCategory')
+        fields = ('id','name','handler','module','dependentOn','SettingsCategory')
 
 class CapabilitySerializer(serializers.ModelSerializer):
     statetypes = StateTypeMTMSerializer(many=True,queryset=StateType.objects.all())
     class Meta:
         model = Capability
-        fields = ('id','name','module','statetypes','dependentOn')
+        fields = ('id','name','statetypes','dependentOn')
 
 class InstallHostSerializer(serializers.ModelSerializer):
     class Meta:
