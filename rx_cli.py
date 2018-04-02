@@ -18,6 +18,10 @@ if auth_token is not None:
 
  # shortcut for the activating Salt
 
+ def list_modules():
+     print("Listing modules")
+     for module in module_cli_api.listModules():
+      print('name: ' + str(module['name']) + ' active: ' + str(module['active']))
  def enable_salt():
      print("Enabling salt module")
      module_cli_api.activateModule('rxsalt')

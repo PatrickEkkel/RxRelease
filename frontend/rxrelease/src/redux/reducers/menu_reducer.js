@@ -14,7 +14,11 @@ export default function _menu(state = initialMenuState, action) {
         type: 'CHANGE_SELECTED_MENU',
         selectedMenu:  action.selectedMenu
       }
-
+    case 'PLUGINS_LOADED':
+    return {
+        type: 'PLUGINS_LOADED',
+        plugins: action.plugins
+      }
     case 'AUTHENTICATION_ERROR':
     return {
       type: 'AUTHENTICATION_ERROR'

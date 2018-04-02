@@ -9,6 +9,12 @@ class REST_modules(REST_base):
  def __init__(self,auth_token):
   super().__init__(auth_token)
   self.backendlocation = NetworkSettings.protocol + "://" + NetworkSettings.servername + ":" + NetworkSettings.port
+
+ def getModules(self):
+  serverAddress = self.backendlocation + '/rxbackend/modules/'
+  response = requests.get(serverAddress,headers=self.getAuthTokenHeader())
+  result = response.json()
+  return result
  def getModuleByName(self,name):
   serverAddress = self.backendlocation + '/rxbackend/modules/search/?name=' + name
   response = requests.get(serverAddress,headers=self.getAuthTokenHeader())

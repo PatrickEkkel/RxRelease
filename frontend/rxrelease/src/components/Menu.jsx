@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux'
 import BasicRxPanel from '../components/panels/BasicRxPanel';
 import  * as actionCreators from '../redux/actioncreators'
+import  * as pluginsactionCreators from '../redux/pluginactioncreators'
 
 class Menu extends BasicRxPanel {
   constructor() {
@@ -9,7 +10,8 @@ class Menu extends BasicRxPanel {
     var currentContext = this;
     this.state = {
       selectedItem: "empty",
-      mode: "LOGGED_OUT"
+      mode: "LOGGED_OUT",
+      loadedPlugins: []
     }
   }
   getMenuItems() {
@@ -29,35 +31,60 @@ class Menu extends BasicRxPanel {
     }
 
   }
+
   componentWillReceiveProps(nextProps) {
 
     var type = nextProps.type;
+    var plugins = nextProps.plugins
 
+    this.getLogger().debug("loaded plugins")
+    this.getLogger().traceObject(plugins)
     if(type == 'AUTHENTICATION_ERROR') {
       this.setState({mode: "LOGGED_OUT"});
     }
     else if(type == 'AUTHENTICATION_SUCCESS') {
       // TODO: centrale plek maken waar we de landing page kunnen configureren
-      this.props.dispatch(actionCreators.changeSelectedMenu("Profiles"));
-      this.setState({mode: "LOGGED_IN"})
+      this.props.dispatch(pluginsactionCreators.loadEnabledPlugins())
+      this.setState({mode: "LOGGED_IN",selectedMenu: "Profiles"})
     }
+    else if(type == 'PLUGINS_LOADED') {
+      this.getLogger().debug("plugins loaded")
+      this.setState({loadedPlugins: plugins })
+      //alert('plugins seem to be loaded')
+    }
+  }
+  getPluginMenuItems() {
+
+    this.getLogger().debug("Loaded plugins")
+
+    var plugins = this.state.loadedPlugins
+    var result = []
+    for(var i=0;i<plugins.length;i++) {
+      result.push(plugins[i].menuoptionname)
+    }
+    this.getLogger().traceObject(result)
+    return result;
   }
 
   render() {
-    var { selectedMenu,type,reduxState } = this.props
+    var { type,reduxState } = this.props
 
     var currentContext = this;
-
+    var selectedMenu = this.state.selectedMenu
     var rows = [];
 
     var link = "";
     var menuitem = "";
-    this.getLogger().debug("not authenticated, hide menu")
-    this.getLogger().traceObject(this.state.mode)
 
+    var menuItems = this.getMenuItems()
+    var pluginMenuItems = this.getPluginMenuItems()
+    menuItems = menuItems.concat(pluginMenuItems)
+
+    this.getLogger().debug("Menu Options")
+    this.getLogger().traceObject(menuItems)
     if(this.state.mode != "LOGGED_OUT") {
 
-      this.getMenuItems().forEach(function(entry) {
+      menuItems.forEach(function(entry) {
       //entry =>
         link =  <a href="#"  onClick={() => currentContext.onClickEvent(entry)}>{entry}</a>
         if(entry ==  selectedMenu) {
@@ -68,6 +95,11 @@ class Menu extends BasicRxPanel {
         }
       });
     }
+    else {
+      this.getLogger().debug("not authenticated, hide menu")
+      this.getLogger().traceObject(this.state.mode)
+    }
+
 
 
 return <div className="container-fluid">
@@ -86,6 +118,7 @@ const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._menu.type,
     selectedMenu: state._menu.selectedMenu,
+    plugins: state._menu.plugins,
     // It is very bad practice to provide the full state like that (reduxState: state) and it is only done here
     // for you to see its stringified version in our page. More about that here:
     // https://github.com/reactjs/react-redux/blob/master/docs/api.md#inject-dispatch-and-every-field-in-the-global-state

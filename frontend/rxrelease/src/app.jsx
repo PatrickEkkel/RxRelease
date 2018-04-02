@@ -33,8 +33,8 @@ class  App  extends  BasicRxPanel {
 
     var componentContainer = "empty";
     var currentComponent =  "empty";
-    var innerComponentRef = "empty";
-    var bcPanelRef = "empty";
+    //var innerComponentRef = "empty";
+    //var bcPanelRef = "empty";
     var modalHandle = "empty";
     var store = this.props.store;
 
@@ -45,9 +45,6 @@ class  App  extends  BasicRxPanel {
         modalHandle.setBody(element);
       }
 
-    //var buttondropdown = <Button key="profilespanel"/>
-    //var profiles = <ProfilesBreadCrumbPanel onModalLoad={onModalLoad}/>
-    //var hosts = <HostsBreadCrumbPanel/>
     var settings = <SettingsPanel/>
   //  var innerComponent =  profiles;
 
@@ -70,7 +67,6 @@ class  App  extends  BasicRxPanel {
            store.dispatch(toplevelActionCreators.loadHostsPanel())
           break;
         case "Logging":
-            //currentComponent.setInnerComponent(profiles);
           break;
         default:
 

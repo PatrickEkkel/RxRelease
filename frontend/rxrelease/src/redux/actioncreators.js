@@ -2,13 +2,6 @@ import Axios from 'axios';
 
 import * as profileActionCreators from './profileactioncreators';
 
-
-/*
-
-TODO dit moeten we gaan opsplitsen anders wordt het een grote clusterfuck
-
-*/
-
 /* Async message example */
 export function SendMessage (message) {
     return function (dispatch) {
