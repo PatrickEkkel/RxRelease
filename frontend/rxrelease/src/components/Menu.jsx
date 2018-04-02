@@ -18,6 +18,7 @@ class Menu extends BasicRxPanel {
     return this.props.menuitems || [];
   }
   onClickEvent(id) {
+    this.getLogger().debug("selected ID: " + id)
     this.props.dispatch(actionCreators.changeSelectedMenu(id));
     this.props.onclick(id);
   }
@@ -35,6 +36,7 @@ class Menu extends BasicRxPanel {
   componentWillReceiveProps(nextProps) {
 
     var type = nextProps.type;
+    var selectedMenu = nextProps.selectedMenu
     var plugins = nextProps.plugins
 
     this.getLogger().debug("loaded plugins")
@@ -47,9 +49,12 @@ class Menu extends BasicRxPanel {
       this.props.dispatch(pluginsactionCreators.loadEnabledPlugins())
       this.setState({mode: "LOGGED_IN",selectedMenu: "Profiles"})
     }
+    else if(type == 'CHANGE_SELECTED_MENU') {
+      this.setState({selectedMenu: selectedMenu })
+    }
     else if(type == 'PLUGINS_LOADED') {
       this.getLogger().debug("plugins loaded")
-      this.setState({loadedPlugins: plugins })
+      this.setState({loadedPlugins: plugins,selectedMenu: "Profiles",mode: "LOGGED_IN"})
       //alert('plugins seem to be loaded')
     }
   }
@@ -67,6 +72,8 @@ class Menu extends BasicRxPanel {
   }
 
   render() {
+    this.getLogger().debug("current state")
+    this.getLogger().traceObject(this.state)
     var { type,reduxState } = this.props
 
     var currentContext = this;
@@ -76,6 +83,7 @@ class Menu extends BasicRxPanel {
     var link = "";
     var menuitem = "";
 
+    this.getLogger().debug("Selected menu: " + selectedMenu)
     var menuItems = this.getMenuItems()
     var pluginMenuItems = this.getPluginMenuItems()
     menuItems = menuItems.concat(pluginMenuItems)

@@ -19,6 +19,6 @@ export function changeSelectedMenu(selectedMenu) {
 
   return {
       type: 'CHANGE_SELECTED_MENU',
-      selectedMenu
+      selectedMenu: selectedMenu
   }
 }

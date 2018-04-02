@@ -17,7 +17,8 @@ export default function _menu(state = initialMenuState, action) {
     case 'PLUGINS_LOADED':
     return {
         type: 'PLUGINS_LOADED',
-        plugins: action.plugins
+        plugins: action.plugins,
+        selectedMenu: action.selectedMenu
       }
     case 'AUTHENTICATION_ERROR':
     return {
