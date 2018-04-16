@@ -22,6 +22,11 @@ Na het selecteren van de image wordt er gevraagd of er nog meer (TODO)
 Na het selecten van de juiste docker image moet er een datum en een tijd ingevuld worden
 
 
+Install Salt module Wizard
+
+Kies een host voor de salt-master (Existing of New) 
+
+
 
 
 

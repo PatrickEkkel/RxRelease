@@ -68,8 +68,11 @@ class  App  extends  BasicRxPanel {
           break;
         case "Logging":
           break;
+        case "Configuration":
+          break;
         default:
-
+         console.log("wat wat wat ")
+         store.dispatch(toplevelActionCreators.loadModulePanel(id))
       }
     }
 

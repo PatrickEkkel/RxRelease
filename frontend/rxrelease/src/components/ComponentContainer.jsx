@@ -7,6 +7,7 @@ import HostsPanel from '../panels/HostsPanel';
 import HostsBreadCrumbPanel from '../panels/HostsBreadCrumbPanel';
 import SettingsPanel from '../panels/SettingsPanel';
 import LoginPanel from '../panels/LoginPanel'
+import ModulesPanel from '../panels/ModulesPanel'
 
 import ProfilesBreadCrumbPanel from '../panels/ProfilesBreadCrumbPanel';
 import  * as profileActionCreators from '../redux/profileactioncreators'
@@ -58,6 +59,9 @@ class  ComponentContainer  extends BasicRxPanel {
       case  'LOAD_SETTINGS_PANEL':
         this.setState({innerComponent: <SettingsPanel/>})
         this.props.dispatch()
+        break;
+      case 'LOAD_MODULE_PANEL':
+        this.setState({innerComponent: <ModulesPanel/> })
         break;
     }
   }

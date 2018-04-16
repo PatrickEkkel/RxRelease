@@ -23,6 +23,11 @@ export default function _toplevel(state = initialConfigurationState,action) {
      return {
        type: action.type
      }
+    case 'LOAD_MODULE_PANEL':
+      return {
+        type: action.type,
+        panelId: action.panelId
+      }
     case 'AUTHENTICATION_ERROR':
       return {
         type: action.type
