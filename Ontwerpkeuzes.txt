@@ -26,6 +26,8 @@ Install Salt module Wizard
 
 Kies een host voor de salt-master (Existing of New) 
 
+Als we een bestaande host kiezen willen we de mogelijkheid hebben een ip adres in te vullen en een root user/password
+
 
 
 

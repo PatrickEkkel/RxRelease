@@ -18,9 +18,14 @@ class Button extends React.Component {
    onClick() {
      this.props.onClick();
    }
+
+   getClassName() {
+     return this.props.css || "btn btn-primary"
+   }
    render() {
      var currentContext = this;
- return <button className="btn btn-primary" onClick={currentContext.onClick.bind(currentContext)}>{this.getTitle()}</button>
+     var className = this.getClassName();
+ return <button className={className} onClick={currentContext.onClick.bind(currentContext)}>{this.getTitle()}</button>
    }
  }
 

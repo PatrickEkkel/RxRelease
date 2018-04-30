@@ -9,6 +9,7 @@ import hostManagementReducer from './reducers/hostmanagement_reducer'
 import toplevelReducer from './reducers/toplevel_reducer'
 import hostBreadcrumbReducer from './reducers/hostbreadcrumb_reducer'
 import settingsReducer from './reducers/settings_reducer'
+import wizardReducer from './reducers/wizard_reducer'
 
 export function _menu(state, action) {
 return menuReducer(state,action)
@@ -43,4 +44,7 @@ export function _hostbreadcrumb(state,action) {
 }
 export function _settings(state,action) {
   return settingsReducer(state,action)
+}
+export function _wizard(state,action) {
+  return wizardReducer(state,action)
 }
