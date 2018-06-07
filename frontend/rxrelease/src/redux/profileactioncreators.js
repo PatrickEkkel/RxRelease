@@ -24,6 +24,21 @@ export function openNewProfile() {
       type: 'OPEN_NEW_PROFILE',
   }
 }
+// Hier was ik gebleven, TODO: beetje een luie implementatie natuurlijk, maar voldoet voor nu
+export function loadProfiletypeByName(name) {
+  return function (dispatch) {
+      var profiletypes = [];
+      Axios.get('http://localhost:8080/rxbackend/profiletypes/')
+      .then(function(response){
+        for(var i=0;i<response.data.length;i++) {
+          if(response.data[i].name == name) {
+            profiletypes.push(new ProfileType(response.data[i].id,response.data[i].name))
+          }
+        }
+          dispatch(profileTypesLoaded(profiletypes));
+      });
+  }
+}
 
 export function loadProfiletypes() {
   return function (dispatch) {

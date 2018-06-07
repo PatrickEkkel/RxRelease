@@ -20,7 +20,8 @@ export default function _host(state = initialHostState,action) {
     case 'SAVE_NEW_HOST':
     return {
       type: action.type,
-      showModal: false
+      showModal: false,
+      saved_host: action.saved_host
     }
     case 'SAVE_NEW_HOST_FAILED':
     return {

@@ -1,12 +1,15 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import BasicRxComponentPanel from './panels/BasicRxComponentPanel';
+import BasicRxPanel from './panels/BasicRxPanel';
 import  * as wizardActionCreators from '../redux/wizardactioncreators'
 import Button from '../components/Button'
 
-class Wizard extends BasicRxComponentPanel {
+class Wizard extends BasicRxPanel {
 
-
+  constructor() {
+    super('WIZARD','WIZARD')
+    this.setState({success: false})
+  }
   getItems() {
     return this.props.items;
   }
@@ -14,7 +17,10 @@ class Wizard extends BasicRxComponentPanel {
     this.setState({selectedTab: id})
   }
   onClickNext() {
-    this.props.dispatch(wizardActionCreators.loadNextWizardItem())
+    this.getLogger().debug("clicked next to proceed to the next screen")
+    this.getLogger().debug("Current wizard state is: " + this.state.success)
+    // go and try to save the date. If we get a succes state back, we can handle that in the componentWillReceiveProps part of the code
+    this.props.dispatch(wizardActionCreators.storeWizardData({},this.state.selectedTabIndex+1))
   }
   onclickPrevious() {
     this.props.dispatch(wizardActionCreators.loadPreviousWizardItem())
@@ -27,7 +33,7 @@ class Wizard extends BasicRxComponentPanel {
 
         if(scoopNext) {
           var newTabindex = this.state.selectedTabIndex + 1;
-          this.setState({selectedTab: key,selectedTabIndex: newTabindex })
+          this.setState({selectedTab: key,selectedTabIndex: newTabindex,success: false })
         }
         // current selected item
         scoopNext = key == currentSelectedTab;
@@ -58,23 +64,28 @@ class Wizard extends BasicRxComponentPanel {
     this.setState({
       selectedTab: selectedTab,
       selectedTabContents: selectedTabContents,
-      selectedTabIndex: selectedTabIndex
+      selectedTabIndex: selectedTabIndex,
+      maxTabIndex: Object.keys(this.getItems()).length-1
     })
   }
 
   componentWillReceiveProps(nextProps) {
     var type = nextProps.type;
     var data = nextProps.data;
+    var current_wizard_item = nextProps.current_wizard_item
 
-
-    if(type == 'LOAD_NEXT_WIZARD_ITEM') {
+    if(type == 'STORE_WIZARD_DATA_SUCCESS') {
+      this.setState({success: true})
       this.loadNextWizardItem()
+      this.getLogger().debug("Wizard moves on with a success state: " + current_wizard_item)
+      this.props.dispatch(wizardActionCreators.loadNextScreen(current_wizard_item))
+
     }
     else if(type == 'LOAD_PREVIOUS_WIZARD_ITEM') {
       this.loadPreviousWizardItem()
     }
     else if(type == 'STORE_WIZARD_DATA') {
-      console.log(this.state.selectedTabIndex)
+      this.getLogger().debug("Call for STORE_WIZARD_DATA recieved")
     }
   }
 
@@ -124,7 +135,7 @@ class Wizard extends BasicRxComponentPanel {
             </section>
             <div className="btn-group  ">
               { this.state.selectedTabIndex  > 0   ? (<Button css="btn btn-primary" title="Previous" onClick={() => this.onclickPrevious()}/>) : (<div/>) }
-            <Button css="btn btn-primary " title="Next" onClick={() => this.onClickNext()}/>
+              { this.state.selectedTabIndex != this.state.maxTabIndex ? (<Button css="btn btn-primary " title="Next" onClick={() => this.onClickNext()}/>) : (<div/>) }
             </div>
             <div className="clearfix"></div>
     </div>
@@ -138,6 +149,7 @@ const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._wizard.type,
     data: state._wizard.data,
+    current_wizard_item: state._wizard.current_item,
     // It is very bad practice to provide the full state like that (reduxState: state) and it is only done here
     // for you to see its stringified version in our page. More about that here:
     // https://github.com/reactjs/react-redux/blob/master/docs/api.md#inject-dispatch-and-every-field-in-the-global-state

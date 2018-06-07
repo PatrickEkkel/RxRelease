@@ -9,19 +9,44 @@ export default function _wizard(state = initialMenuState, action) {
   var lf = new ReducerLogFactory();
   lf.writeReducerAction('WIZARD',state,action);
   switch (action.type) {
-    case 'LOAD_NEXT_WIZARD_ITEM':
+    case 'STORE_WIZARD_DATA_SUCCESS':
+     return {
+       type: action.type,
+       current_item: action.current_item,
+       wizard_data: action.wizard_data
+     }
+    case 'WAIT_FOR_LOAD':
       return {
-        type: 'LOAD_NEXT_WIZARD_ITEM',
+        type: action.type
       }
+    case 'LOAD_NEXT_SCREEN':
+     return {
+       type: action.type,
+       current_item: action.current_item
+    }
+    case 'WAIT_FOR_SAVE':
+      return {
+        type: action.type
+      }
+    case 'STORE_WIZARD_DATA_FAILED':
+     return {
+       type: action.type
+    }
     case 'LOAD_PREVIOUS_WIZARD_ITEM':
     return {
-        type: 'LOAD_PREVIOUS_WIZARD_ITEM',
+       type: action.type
     }
     case 'STORE_WIZARD_DATA':
-    return {
-      type: 'STORE_WIZARD_DATA',
-      data: action.data
-    }
+     return {
+       type: action.type,
+       data: action.data,
+       current_item: action.current_item
+     }
+    case 'PROFILE_TYPES_LOADED':
+      return {
+        type: action.type,
+        profiletypes: action.profiletypes,
+      }
     default:
       return state
   }

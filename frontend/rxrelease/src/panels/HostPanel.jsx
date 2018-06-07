@@ -15,7 +15,6 @@ class  HostPanel  extends BasicRxPanel {
     this.state = { profiletypes: [] }
   }
   changeAttr(e) {
-    console.log("wat wat wat")
     this.props.changeAttr(e);
   }
   componentWillMount() {

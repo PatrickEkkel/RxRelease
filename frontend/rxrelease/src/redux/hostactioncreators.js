@@ -57,6 +57,7 @@ export function loadHostManagement(hostentry) {
         var data = jsonUtils.normalizeJson(response.data);
         var settingscategory = settingsfactory.createSettingsCategoryFromJson(data);
        host.getConnectionCredentials().setSettingCategory(settingscategory)
+       haLogger.debug('dispatch LOAD_HOST_MANAGEMENT_FROM_HOSTS')
        dispatch(hostManagementLoaded(host));
 
       });
@@ -164,8 +165,12 @@ export function saveNewHost(hostname,ipaddress,description,profiletype) {
       host.setConnectionCredentials(connectioncredentials)
       return hostsRequests.postHost(host);
     }).then(function(response) {
+
+      haLogger.trace("Saved host object:")
+      haLogger.traceObject(response.data)
       dispatch({
-        type: 'SAVE_NEW_HOST'
+        type: 'SAVE_NEW_HOST',
+        saved_host: response.data
       })
     }).catch(function(error) {
         errorHandler.addErrorResponse(error)

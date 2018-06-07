@@ -15,7 +15,14 @@ class BaseFiller:
         salt_module = Module.objects.create(name="rxsalt",active=False,menuoptionname="Salt")
         salt_module.save()
 
+
+
         # Built in profiletypes
+        buildin_default_rxrelease_profiletype = ProfileType.objects.create(name="Default")
+        buildin_default_profile = Profile.objects.create(name="Default")
+        buildin_default_profile.profiletype = buildin_default_rxrelease_profiletype
+        buildin_default_configuration = Configuration.objects.create(name="Default Configuration",profile=buildin_default_profile)
+
         buildin_saltmaster_profiletype = ProfileType.objects.create(name="Salt Master")
         buildin_saltmaster_profile = Profile.objects.create(name="RxRelease Salt Master")
         buildin_saltmaster_profile.profiletype = buildin_saltmaster_profiletype
@@ -59,6 +66,8 @@ class BaseFiller:
         #buildin_saltmaster_profiletype.capabilities.add(salt_master_capability)
         buildin_saltmaster_profiletype.capabilities.add(salt_minion_capability)
         buildin_saltmaster_profiletype.capabilities.add(standard_capability)
+
+        buildin_default_rxrelease_profiletype.capabilities.add(standard_capability)
 
 
         standard_capability.save()
