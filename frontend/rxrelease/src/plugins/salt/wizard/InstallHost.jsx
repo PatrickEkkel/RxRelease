@@ -5,15 +5,16 @@ import LabeledDropdown from '../../../components/LabeledDropdown';
 import LabeledTextfield from '../../../components/LabeledTextField';
 import LabeledTable from '../../../components/LabeledTable'
 import StandardListConverters from '../../../converters/StandardListConverters'
+import WizardBasePanel from '../../../components/panels/WizardBasePanel'
 import HostFactory from '../../../factories/hostFactory'
 import  * as hostActionCreators from '../../../redux/hostactioncreators'
 import  * as wizardActionCreators from '../../../redux/wizardactioncreators'
 
-class InstallHost extends BasicRxComponentPanel {
+class InstallHost extends WizardBasePanel {
 
 
 constructor() {
-    super('SALTWIZARD','INSTALLHOST')
+    super('SALTWIZARD','INSTALLHOST',WizardBasePanel.STEP3)
     this.setState({states: []})
 }
 
@@ -23,6 +24,9 @@ onRowClick(entry) {
 
 getStates() {
   if(this.state == null) {
+    return [];
+  }
+  else if(this.state.states == null) {
     return [];
   }
   else {
@@ -37,6 +41,42 @@ getStates() {
       return result;
 
     });
+  }
+}
+wizardStepSuccess(nextProps) {
+
+
+var wizard_data = nextProps.wizard_data;
+
+this.getLogger().trace("wizard step was success")
+this.getLogger().traceObject(wizard_data)
+this.setState({saved_host: wizard_data.saved_host})
+}
+waitForSave() {
+
+}
+loadNextScreen(nextProps) {
+  alert('wanneer komt dit dan?')
+  var selected_host = this.state.saved_host;
+  var factory = new HostFactory();
+  this.getLogger().trace("selected host: ")
+  this.getLogger().traceObject(selected_host)
+  var entry = [selected_host.id]
+  this.props.dispatch(hostActionCreators.loadHostManagement(entry))
+  this.props.dispatch(wizardActionCreators.waitForLoad())
+}
+waitForLoad(nextProps) {
+
+  var host_management_type = nextProps.hostmanagement_type;
+  var selected_host = nextProps.selected_host;
+
+  if(host_management_type == 'LOAD_HOST_MANAGEMENT_FROM_HOSTS') {
+    this.getLogger().trace("selected_host information:")
+    this.getLogger().traceObject(selected_host)
+
+    this.getLogger().trace("host states information:")
+    this.getLogger().traceObject(selected_host.states)
+    this.setState({states: selected_host.states})
   }
 }
 render() {
@@ -63,20 +103,9 @@ componentWillReceiveProps(nextProps) {
   var host_management_type = nextProps.hostmanagement_type;
   var current_wizard_item = nextProps.current_wizard_item;
   var selected_host = nextProps.selected_host;
-  this.getLogger().debug("Install Host is recieving the following type: " + type + " and the following current_wizard_item: " + current_wizard_item);
   this.getLogger().debug("Host type is currently " + host_management_type)
-  if(type == 'LOAD_NEXT_SCREEN' && current_wizard_item == 2 ) {
-    var factory = new HostFactory();
-    var entry = [7]
-    this.props.dispatch(hostActionCreators.loadHostManagement(entry))
-    this.props.dispatch(wizardActionCreators.waitForLoad())
 
-  }
-  else if(type == 'WAIT_FOR_LOAD' && host_management_type == 'LOAD_HOST_MANAGEMENT_FROM_HOSTS') {
-    this.getLogger().trace("host states information:")
-    this.getLogger().traceObject(selected_host.states)
-    this.setState({states: selected_host.states})
-  }
+  super.componentWillReceiveProps(nextProps)
 }
 
 }
@@ -88,6 +117,7 @@ const mapStateToProps = (state/*, props*/) => {
     hostmanagement_type: state._hostmanagement.type,
     selected_host: state._hostmanagement.selected_host,
     current_wizard_item: state._wizard.current_item,
+    wizard_data: state._wizard.wizard_data,
 
     // It is very bad practice to provide the full state like that (reduxState: state) and it is only done here
     // for you to see its stringified version in our page. More about that here:

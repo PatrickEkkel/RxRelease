@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import BasicRxPanel from '../../../components/panels/BasicRxPanel';
+import WizardBasePanel from '../../../components/panels/WizardBasePanel'
 import LabeledDropdown from '../../../components/LabeledDropdown';
 import LabeledTextfield from '../../../components/LabeledTextField';
 import Button from '../../../components/Button';
@@ -8,10 +9,10 @@ import  * as hostActionCreators from '../../../redux/hostactioncreators'
 import  * as wizardActionCreators from '../../../redux/wizardactioncreators'
 import  * as profileActionCreators from '../../../redux/profileactioncreators'
 
-class ConfigureHost extends BasicRxPanel {
+class ConfigureHost extends WizardBasePanel {
 
 constructor() {
-  super('SALTWIZARD','CONFIGUREHOST')
+  super('SALTWIZARD','CONFIGUREHOST',WizardBasePanel.STEP2)
   this.setState({stepCompleted: false,profileTypeId: null,selectedRadioValue: null})
 }
 
@@ -19,6 +20,53 @@ saveHost() {
  this.props.dispatch(hostActionCreators.saveNewHost(this.state.hostname,this.state.ipaddress,"Salt Master",this.state.profileTypeId.id))
  this.props.dispatch(wizardActionCreators.waitForSave())
 }
+
+storeWizardData(current_wizard_item) {
+  this.getLogger().trace("Profiletype ID: ")
+  this.getLogger().traceObject(this.state.profileTypeId)
+  this.setState({current_wizard_item: 2})
+  this.saveHost()
+}
+
+waitForSave(nextProps) {
+
+var host_type = nextProps.host_type;
+var error_fields = nextProps.error_fields;
+var saved_host = nextProps.saved_host;
+  if(host_type == 'SAVE_NEW_HOST') {
+    //alert('komt hij hier!')
+    this.props.dispatch(wizardActionCreators.storeWizardDataSuccess(this.state.current_wizard_item,{saved_host: saved_host}))
+    this.setState({stepCompleted: true})
+    this.getLogger().debug("Wait for save is working!")
+  }
+  else if(host_type == 'SAVE_NEW_HOST_FAILED') {
+    this.getLogger().debug("Persisting the failed, because of validation failures")
+    this.setState({error_fields: error_fields,success: false});
+  }
+}
+waitForLoad(nextProps) {
+
+}
+
+loadNextScreen(nextProps) {
+  this.getLogger().trace("Current selected radio value: ")
+  this.getLogger().traceObject(this.state.selectedRadioValue)
+  alert(this.state.selectedRadioValue)
+  if(this.state.selectedRadioValue == 'New') {
+    this.props.dispatch(profileActionCreators.loadProfiletypeByName("Salt Master"))
+  }
+  else if(this.state.selectedRadioValue == 'Existing') {
+    this.props.dispatch(profileActionCreators.loadProfiletypeByName("Default"))
+  }
+}
+
+wizardStepSuccess(nextProps) {
+  var wizard_data = nextProps.wizard_data
+  this.getLogger().trace("Recieving values from previous wizard screen")
+  this.getLogger().traceObject(wizard_data)
+  this.setState({selectedRadioValue: wizard_data})
+}
+
 componentWillReceiveProps(nextProps) {
   var type = nextProps.type;
   var host_type = nextProps.host_type
@@ -27,45 +75,13 @@ componentWillReceiveProps(nextProps) {
   var profiletypes = nextProps.profiletypes
   var wizard_data = nextProps.wizard_data
 
+  super.componentWillReceiveProps(nextProps)
+
   this.getLogger().debug("Configure host is recieving props")
   this.getLogger().debug("Current type: " + nextProps.type)
   this.getLogger().debug("Current Wizard Item: " + current_wizard_item)
 
-  if(type == 'LOAD_NEXT_SCREEN' && current_wizard_item == 1) {
-    this.getLogger().trace("Current selected radio value: ")
-    this.getLogger().traceObject(this.state.selectedRadioValue)
-    if(this.state.selectedRadioValue == 'New') {
-      this.props.dispatch(profileActionCreators.loadProfiletypeByName("Salt Master"))
-    }
-    else if(this.state.selectedRadioValue == 'Existing') {
-      this.props.dispatch(profileActionCreators.loadProfiletypeByName("Default"))
-    }
-
-  }
-  else if(type == 'STORE_WIZARD_DATA_SUCCESS') {
-
-    this.getLogger().trace("Recieving values from previous wizard screen")
-    this.getLogger().traceObject(wizard_data)
-    this.setState({selectedRadioValue: wizard_data})
-  }
-  else if(type == 'WAIT_FOR_SAVE' && host_type == 'SAVE_NEW_HOST') {
-
-    this.props.dispatch(wizardActionCreators.storeWizardDataSuccess(this.state.current_wizard_item,{}))
-    this.setState({stepCompleted: true})
-    this.getLogger().debug("Wait for save is working!")
-  }
-  else if(type == 'WAIT_FOR_SAVE' && host_type == 'SAVE_NEW_HOST_FAILED') {
-    this.getLogger().debug("Persisting the failed, because of validation failures")
-    this.setState({error_fields: error_fields,success: false});
-  }
-  else if(type == 'STORE_WIZARD_DATA' && current_wizard_item == 2) {
-      this.getLogger().trace("Profiletype ID: ")
-      this.getLogger().traceObject(this.state.profileTypeId)
-      this.setState({current_wizard_item: 2})
-      this.saveHost()
-  }
-
-  else if(type == 'PROFILE_TYPES_LOADED') {
+  if(type == 'PROFILE_TYPES_LOADED') {
     this.getLogger().trace("Loaded profiletypes:")
     this.getLogger().traceObject(profiletypes)
     this.setState({stepCompleted: false, profileTypeId: profiletypes[0]})
@@ -106,6 +122,7 @@ const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._wizard.type,
     current_wizard_item: state._wizard.current_item,
+    saved_host: state._host.saved_host,
     wizard_data: state._wizard.wizard_data,
     error_fields: state._host.error_fields,
     host_type: state._host.type,

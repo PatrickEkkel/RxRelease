@@ -1,20 +1,42 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import BasicRxPanel from '../../../components/panels/BasicRxPanel';
+import WizardBasePanel from '../../../components/panels/WizardBasePanel'
 import LabeledDropdown from '../../../components/LabeledDropdown';
 import  * as wizardActionCreators from '../../../redux/wizardactioncreators'
 
-class SelectNewOrExisting extends BasicRxPanel {
+class SelectNewOrExisting extends WizardBasePanel {
 
 constructor() {
-  super('SALTWIZARD','NEWOREXISTING')
-  this.setState({stepCompleted: false})
+  super('SALTWIZARD','NEWOREXISTING',WizardBasePanel.STEP1)
+//  this.setState({stepCompleted: false})
+  this.setState({stepCompleted: false});
+  this.getLogger().trace("state object in wizardPanel: " + this.state.current_step);
+  this.getLogger().traceObject(this.state)
+}
+
+
+waitForSave(nextProps) {
+
+}
+waitForLoad(nextProps) {
+
 }
 
 setRadioSelection(e) {
-    this.setState({selectedRadioValue: e.target.value,stepCompleted: true})
+  this.getLogger().trace("state object");
+  this.getLogger().traceObject(this.state)
+  var currentContext = this.state;
+  this.setState({selectedRadioValue: e.target.value,stepCompleted: true})
+
 }
 
+storeWizardData(current_wizard_item) {
+  if(this.state.stepCompleted) {
+    this.getLogger().debug("Storing the current data")
+    this.props.dispatch(wizardActionCreators.storeWizardDataSuccess(current_wizard_item,this.state.selectedRadioValue))
+  }
+}
 
 render() {
 
@@ -30,20 +52,13 @@ render() {
 
 componentWillReceiveProps(nextProps) {
 
+  super.componentWillReceiveProps(nextProps)
+
   var type = nextProps.type;
   var current_wizard_item = nextProps.current_wizard_item;
-  var host_type = nextProps.host_type
+  this.getLogger().debug("Current step: " + this.state.current_step)
   this.getLogger().debug("Is current step completed: " + this.state.stepCompleted)
   this.getLogger().debug("Current wizard item: " + current_wizard_item)
-  // gewoon doorsturen naar het volgende scherm
-  if(type == 'STORE_WIZARD_DATA' && current_wizard_item == 1) {
-
-    if(this.state.stepCompleted) {
-      this.getLogger().debug("Storing the current data")
-      this.props.dispatch(wizardActionCreators.storeWizardDataSuccess(current_wizard_item,this.state.selectedRadioValue))
-    }
-  }
-
 }
 
 }
@@ -53,8 +68,6 @@ const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._wizard.type,
     current_wizard_item: state._wizard.current_item,
-    host_type: state._host.type,
-
     // It is very bad practice to provide the full state like that (reduxState: state) and it is only done here
     // for you to see its stringified version in our page. More about that here:
     // https://github.com/reactjs/react-redux/blob/master/docs/api.md#inject-dispatch-and-every-field-in-the-global-state

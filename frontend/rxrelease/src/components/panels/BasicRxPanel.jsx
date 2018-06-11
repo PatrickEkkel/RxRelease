@@ -4,14 +4,17 @@ import React from 'react';
 
 class BasicRxPanel extends React.Component {
 
-
-constructor(component,subcomponent) {
+constructor(component,subcomponent,state) {
 super()
+
 this.component = component;
 this.subcomponent = subcomponent;
-
-this.state = { success: null,error_fields: [] }
-
+if(state == null) {
+  this.state = { success: null,error_fields: [] }
+}
+else {
+  this.state = state;
+}
 var logfactory = new LogFactory();
 this.logger = logfactory.createLogger(this.component,this.subcomponent);
 }
