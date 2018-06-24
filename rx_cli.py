@@ -23,6 +23,8 @@ def list_modules():
  print("Listing modules")
  for module in module_cli_api.listModules():
   print('name: ' + str(module['name']) + ' active: ' + str(module['active']))
+def reset_saltwizard():
+ module_cli_api.updateWizard('rxsalt_wizard','NEW')
 def enable_salt():
  print("Enabling salt module")
  # uitbreiden met een lamba waarmee we erdoorheen kunnen zoeken

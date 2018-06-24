@@ -17,3 +17,6 @@ class ModuleCLI:
     def createWizard(self,name,status):
      wizard_api = REST_wizard(self.auth_token)
      wizard_api.postWizard(name,status)
+    def updateWizard(self,name,status):
+      wizard_api = REST_wizard(self.auth_token)
+      wizard_api.putWizard(name,status)

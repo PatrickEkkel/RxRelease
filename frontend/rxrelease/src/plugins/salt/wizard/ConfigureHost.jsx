@@ -109,7 +109,7 @@ render() {
      <LabeledTextfield id="username" label="Username" errorHandler={(id,callee) => this.handleError(id,callee)}  labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
     </div>
     <div className="form-group row">
-     <LabeledTextfield id="password" label="Password" errorHandler={(id,callee) => this.handleError(id,callee)}  labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
+     <LabeledTextfield id="password" mode="password" label="Password" errorHandler={(id,callee) => this.handleError(id,callee)}  labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
     </div>
   </div>
 }

@@ -20,7 +20,7 @@ waitForSave(nextProps) {
 
 }
 waitForLoad(nextProps) {
-  alert('lalal')
+
 }
 
 setRadioSelection(e) {
