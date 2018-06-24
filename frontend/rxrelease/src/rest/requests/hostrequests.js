@@ -11,6 +11,13 @@ return Axios.get(GlobalSettings.getBackendUrl() + '/rxbackend/hosts/' + host_id)
 
 }
 
+export function putInstallHost(host) {
+  hrLogger.trace("host object")
+  hrLogger.traceObject(host)
+  var backend_url = GlobalSettings.getBackendUrl() + '/rxbackend/states/host/install/' + host.id + "/";
+  return Axios.put(backend_url,{host_id: '0'});
+}
+
 export function putHost(host) {
 
   var backend_url = GlobalSettings.getBackendUrl() + '/rxbackend/hosts/' + host.getId() + "/";

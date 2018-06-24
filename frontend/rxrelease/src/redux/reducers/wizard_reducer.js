@@ -36,6 +36,11 @@ export default function _wizard(state = initialMenuState, action) {
     return {
        type: action.type
     }
+    case 'WIZARD_STATE_LOADED':
+    return {
+       type: action.type,
+       wizard_state: action.wizard_state
+    }
     case 'STORE_WIZARD_DATA':
      return {
        type: action.type,

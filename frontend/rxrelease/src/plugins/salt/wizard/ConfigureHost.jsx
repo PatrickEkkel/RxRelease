@@ -51,7 +51,6 @@ waitForLoad(nextProps) {
 loadNextScreen(nextProps) {
   this.getLogger().trace("Current selected radio value: ")
   this.getLogger().traceObject(this.state.selectedRadioValue)
-  alert(this.state.selectedRadioValue)
   if(this.state.selectedRadioValue == 'New') {
     this.props.dispatch(profileActionCreators.loadProfiletypeByName("Salt Master"))
   }

@@ -26,6 +26,20 @@ export function initialHostState() {
   }
 }
 
+export function installHost(host) {
+  return function (dispatch) {
+    hostsRequests.putInstallHost(host).then(function(response) {
+      dispatch(hostInstalled(host))
+    })
+  }
+}
+export function hostInstalled(host) {
+  return {
+    type: 'HOST_INSTALLED',
+    installed_host: host
+  }
+}
+
 export function loadHostManagement(hostentry) {
   var host = HostFactory.convertMapToHost(hostentry)
   var settingsfactory = new SettingsFactory()

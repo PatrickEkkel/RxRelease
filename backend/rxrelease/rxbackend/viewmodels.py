@@ -10,4 +10,4 @@ class StateTypeHandler(models.Model):
 
 class InstallHost(models.Model):
     managed = False
-    host_id = models.IntegerField()
+    host_id = models.IntegerField(null=True,default=None)

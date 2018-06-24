@@ -26,6 +26,12 @@ actionFactory = JobActionFactory(None)
 requestFactory = HandlerFactory()
 
 
+api_user_settings_username = ApiUserSettings.username
+api_user_settings_password = ApiUserSettings.password
+
+if len(sys.argv) > 1:
+    api_user_settings_username = sys.argv[1]
+    api_user_settings_password = sys.argv[2]
 
 localuser=LocalSettings.localuser
 
@@ -33,7 +39,10 @@ filestorelocation = '/home/' + localuser + '/.rxrelease/'
 jobfeedRunnerDir = filestorelocation + '/jobfeed'
 authenticationApi = REST_authentication()
 
-token_result = authenticationApi.postCredentials(ApiUserSettings.username,ApiUserSettings.password)
+token_result = authenticationApi.postCredentials(api_user_settings_username,api_user_settings_password)
+if 'token' not in token_result:
+    print("Token could not be retrieved")
+    sys.exit()
 auth_token = token_result['token']
 statetypesApi = REST_statetypes(auth_token)
 

@@ -29,6 +29,11 @@ export default function _host(state = initialHostState,action) {
       showModal: true,
       error_fields: action.error_fields
     }
+    case 'HOST_INSTALLED':
+    return {
+      type: action.type,
+      installed_host: action.installed_host
+    }
     case 'PROFILE_TYPES_LOADED':
     return {
       type: action.type,
@@ -40,6 +45,12 @@ export default function _host(state = initialHostState,action) {
       type: action.type,
       showModal: false,
       hosts: action.hosts
+    }
+    case 'INSTALL_HOST':
+    return {
+      type: action.type,
+      showModal: false,
+      installed_host: action.installed_host
     }
     default:
     return state;

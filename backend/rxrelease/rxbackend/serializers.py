@@ -11,6 +11,7 @@ from .models import KVSetting
 from .models import CredentialsSetting
 from .models import SettingsCategory
 from .models import Module
+from .models import WizardStatus
 from django.contrib.auth.models import User
 from .viewmodels import StateTypeHandler
 from .viewmodels import InstallHost
@@ -85,7 +86,11 @@ class HostStateHandlerSerializer(serializers.ModelSerializer):
         model = StateTypeHandler
         fields = ("host_id","statetype_id","keyvalList","handlerType","handlerCommand")
 
+class WizardStatusSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = WizardStatus
+        fields = ('id','wizard_id','wizard_status')
 class StateTypeMTMSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
 
     class Meta:

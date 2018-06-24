@@ -65,7 +65,9 @@ class Menu extends BasicRxPanel {
     var plugins = this.state.loadedPlugins
     var result = []
     for(var i=0;i<plugins.length;i++) {
-      result.push(plugins[i].menuoptionname)
+      if(plugins[i].active) {
+        result.push(plugins[i].menuoptionname)
+      }
     }
     this.getLogger().traceObject(result)
     return result;

@@ -13,6 +13,19 @@ class Wizard extends BasicRxPanel {
   getItems() {
     return this.props.items;
   }
+  getEnabledPrevious() {
+    var previous_visible = this.props.previous_visible;
+
+    if (previous_visible != null && previous_visible == "false") {
+      return false;
+    }
+    else if(this.props.previous_visible == null) {
+      return true;
+    }
+  }
+  getSelectiveEnabledPrevious() {
+    
+  }
   onClickTab(id) {
     this.setState({selectedTab: id})
   }
@@ -134,7 +147,7 @@ class Wizard extends BasicRxPanel {
 
             </section>
             <div className="btn-group  ">
-              { this.state.selectedTabIndex  > 0   ? (<Button css="btn btn-primary" title="Previous" onClick={() => this.onclickPrevious()}/>) : (<div/>) }
+              { this.getEnabledPrevious() && this.state.selectedTabIndex  > 0   ? (<Button css="btn btn-primary" title="Previous" onClick={() => this.onclickPrevious()}/>) : (<div/>) }
               { this.state.selectedTabIndex != this.state.maxTabIndex ? (<Button css="btn btn-primary " title="Next" onClick={() => this.onClickNext()}/>) : (<div/>) }
             </div>
             <div className="clearfix"></div>

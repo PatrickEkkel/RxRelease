@@ -6,6 +6,7 @@ from .views import profileviews
 from .views import profiletypeviews
 from .views import hostviews
 from .views import capabilityviews
+from .views import wizardviews
 from .views import statesviews
 from .views import configurationviews
 from .views import statetypeviews
@@ -39,7 +40,9 @@ urlpatterns = [
     url(r'^modules/(?P<pk>[0-9]+)/$', moduleviews.DetailsView.as_view(), name="details"),
     url(r'^modules/search/$', moduleviews.ModuleSearchView.as_view(), name="bymodulename"),
 
-
+    url(r'^wizardstatus/$', wizardviews.CreateView.as_view(), name="create"),
+    url(r'^wizardstatus/search/$', wizardviews.SearchView.as_view(), name="search"),
+    url(r'^wizardstatus/(?P<pk>[0-9]+)/$', wizardviews.DetailsView.as_view(), name="details"),
 
     url(r'^capabilities/$', capabilityviews.CreateView.as_view(), name="create"),
     url(r'^capabilities/(?P<pk>[0-9]+)/$', capabilityviews.DetailsView.as_view(), name="details"),

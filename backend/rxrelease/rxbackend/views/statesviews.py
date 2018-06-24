@@ -42,6 +42,7 @@ class DetailsView(generics.RetrieveUpdateDestroyAPIView):
 class InstallHostView(generics.UpdateAPIView):
     serializer_class = InstallHostSerializer
     def get_queryset(self):
+        logger.info("installing host")
         host_id = self.kwargs['pk']
         # Get TheHost so we can the profiletype
         selected_host = Host.objects.filter(id=host_id).get()
@@ -120,7 +121,7 @@ class InstallHostView(generics.UpdateAPIView):
               jobfeed.newJobTask(action)
               jobfeed.triggerJob(newJob)
          # call jobfeed, with the correct parameters
-        return  capability_queryset
+        return   Host.objects.filter(id=host_id)
 
 class HostView(generics.ListAPIView):
     serializer_class = StateSerializer

@@ -85,3 +85,9 @@ class Configuration(models.Model):
     profile = models.ForeignKey(Profile)
     def __str__(self):
         return self.name
+
+class WizardStatus(models.Model):
+    wizard_id = models.CharField(max_length=200)
+    wizard_status = models.CharField(max_length=200,default=None)
+    def __str__(self):
+        return self.wizard_id

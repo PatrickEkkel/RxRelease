@@ -4,6 +4,7 @@ import BasicRxComponentPanel from '../../../components/panels/BasicRxComponentPa
 import LabeledDropdown from '../../../components/LabeledDropdown';
 import LabeledTextfield from '../../../components/LabeledTextField';
 import LabeledTable from '../../../components/LabeledTable'
+import Button from '../../../components/Button';
 import StandardListConverters from '../../../converters/StandardListConverters'
 import WizardBasePanel from '../../../components/panels/WizardBasePanel'
 import HostFactory from '../../../factories/hostFactory'
@@ -55,8 +56,13 @@ this.setState({saved_host: wizard_data.saved_host})
 waitForSave() {
 
 }
+installHost() {
+  this.getLogger().trace("intalling the host")
+  this.getLogger().traceObject(this.state.saved_host)
+  this.props.dispatch(hostActionCreators.installHost(this.state.saved_host))
+
+}
 loadNextScreen(nextProps) {
-  alert('wanneer komt dit dan?')
   var selected_host = this.state.saved_host;
   var factory = new HostFactory();
   this.getLogger().trace("selected host: ")
@@ -94,6 +100,8 @@ render() {
   }
   return <div className="container">
         <LabeledTable onLabelLoad={handleLabelLoad} labelText="Status" headers = {headers} data={states} onRowClick={(entry) => this.onRowClick(entry)}/>
+        <Button title="Install Host"  onClick={() => this.installHost()}/>
+
   </div>
 }
 
@@ -101,9 +109,16 @@ componentWillReceiveProps(nextProps) {
 
   var type = nextProps.type;
   var host_management_type = nextProps.hostmanagement_type;
+  var host_type = nextProps.host_type;
   var current_wizard_item = nextProps.current_wizard_item;
   var selected_host = nextProps.selected_host;
-  this.getLogger().debug("Host type is currently " + host_management_type)
+  this.getLogger().debug("Host management type is currently " + host_management_type)
+  this.getLogger().debug("Type is currently: " + type)
+  this.getLogger().debug("Host type is currently: " + host_type )
+  if(host_type == 'HOST_INSTALLED') {
+    this.props.dispatch(wizardActionCreators.updateWizardState('rxsalt_wizard','COMPLETED'))
+
+  }
 
   super.componentWillReceiveProps(nextProps)
 }
@@ -115,6 +130,7 @@ const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._wizard.type,
     hostmanagement_type: state._hostmanagement.type,
+    host_type: state._host.type,
     selected_host: state._hostmanagement.selected_host,
     current_wizard_item: state._wizard.current_item,
     wizard_data: state._wizard.wizard_data,
