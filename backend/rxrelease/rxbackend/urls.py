@@ -35,6 +35,7 @@ urlpatterns = [
 
     url(r'^hosts/$', hostviews.CreateView.as_view(), name="create"),
     url(r'^hosts/(?P<pk>[0-9]+)/$', hostviews.DetailsView.as_view(), name="details"),
+    url(r'^hosts/search/$', hostviews.SearchByProfiletypeView.as_view(), name="search"),
 
     url(r'^modules/$', moduleviews.CreateView.as_view(), name="create"),
     url(r'^modules/(?P<pk>[0-9]+)/$', moduleviews.DetailsView.as_view(), name="details"),

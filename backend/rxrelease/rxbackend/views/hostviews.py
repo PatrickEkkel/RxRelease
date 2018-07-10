@@ -3,6 +3,7 @@ from rest_framework import generics
 #from rest_framework.permissions import IsAuthenticated
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import ObjectDoesNotExist
 from ..serializers import HostSerializer
 from ..models import Host
 from ..models import StateType
@@ -50,3 +51,16 @@ class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
     queryset = Host.objects.all()
     serializer_class = HostSerializer
+
+class SearchByProfiletypeView(generics.ListAPIView):
+    serializer_class = HostSerializer
+    def get_queryset(self):
+        profiletype =  self.request.query_params.get('profiletype', None)
+        profiletype_queryset = ProfileType.objects.filter(name=profiletype)
+        host_queryset = None
+        try:
+         profiletype_result = profiletype_queryset.get()
+         host_queryset = Host.objects.filter(profileType=profiletype_result.id)
+        except ObjectDoesNotExist:
+         host_queryset = None
+        return host_queryset

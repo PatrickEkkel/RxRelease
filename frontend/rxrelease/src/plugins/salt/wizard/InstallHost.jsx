@@ -15,7 +15,7 @@ class InstallHost extends WizardBasePanel {
 
 
 constructor() {
-    super('SALTWIZARD','INSTALLHOST',WizardBasePanel.STEP3)
+    super('SALTWIZARD','INSTALL_HOST',WizardBasePanel.STEP3)
     this.setState({states: []})
 }
 
@@ -24,14 +24,20 @@ onRowClick(entry) {
 }
 
 getStates() {
-  if(this.state == null) {
-    return [];
+
+  var states = []
+  if(this.props.states != null) {
+    this.getLogger().trace("Loaded states from props")
+    this.getLogger().traceObject(this.props.states)
+    states = this.props.states;
   }
-  else if(this.state.states == null) {
-    return [];
+  else if(this.state != null && this.state.states != null) {
+    this.getLogger().trace("Loaded states from state")
+    this.getLogger().traceObject(this.state.states)
+    states = this.state.states;
   }
-  else {
-    return StandardListConverters.convertListToMap(this.state.states,function(item) {
+  
+  return StandardListConverters.convertListToMap(states,function(item) {
       var installed = item.getInstalled()
 
       var installedDisplayString = "NOT INSTALLED"
@@ -42,7 +48,7 @@ getStates() {
       return result;
 
     });
-  }
+
 }
 wizardStepSuccess(nextProps) {
 
@@ -90,6 +96,8 @@ render() {
   var headers = ['#','name'];
 
   var states = this.getStates();
+  this.getLogger().trace("States to display")
+  this.getLogger().traceObject(states)
   function handleLabelLoad(entry) {
       if(entry[2] == "NOT INSTALLED") {
         return "label-important label"
@@ -108,18 +116,15 @@ render() {
 componentWillReceiveProps(nextProps) {
 
   var type = nextProps.type;
-  var host_management_type = nextProps.hostmanagement_type;
   var host_type = nextProps.host_type;
   var current_wizard_item = nextProps.current_wizard_item;
   var selected_host = nextProps.selected_host;
-  this.getLogger().debug("Host management type is currently " + host_management_type)
   this.getLogger().debug("Type is currently: " + type)
   this.getLogger().debug("Host type is currently: " + host_type )
   if(host_type == 'HOST_INSTALLED') {
     this.props.dispatch(wizardActionCreators.updateWizardState('rxsalt_wizard','COMPLETED'))
 
   }
-
   super.componentWillReceiveProps(nextProps)
 }
 

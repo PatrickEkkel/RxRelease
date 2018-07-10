@@ -33,6 +33,20 @@ export function installHost(host) {
     })
   }
 }
+export function getHostByProfiletypeId(profiletype_id) {
+
+return function (dispatch) {
+  hostsRequests.getHostsByProfiletypeId(profiletype_id).then(function(response) {
+
+    haLogger.trace("Hosts by profiletype ID")
+    var factory = new HostFactory();
+    var hostList = factory.convertJsonList(response.data)
+    dispatch(hostsLoaded(hostList))
+  })
+
+}
+
+}
 export function hostInstalled(host) {
   return {
     type: 'HOST_INSTALLED',
