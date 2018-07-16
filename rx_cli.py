@@ -25,6 +25,7 @@ def list_modules():
   print('name: ' + str(module['name']) + ' active: ' + str(module['active']))
 def reset_saltwizard():
  module_cli_api.updateWizard('rxsalt_wizard','NEW')
+ module_cli_api.deleteHost('Salt Master')
 def enable_salt():
  print("Enabling salt module")
  # uitbreiden met een lamba waarmee we erdoorheen kunnen zoeken

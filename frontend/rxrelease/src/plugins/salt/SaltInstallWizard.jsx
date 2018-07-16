@@ -75,7 +75,7 @@ class SaltInstallWizard extends BasicRxPanel {
     else {
       this.getLogger().trace("Host to show the states of ")
       this.getLogger().traceObject(this.state.selected_host)
-      return <InstallHost states={ this.state.selected_host.states}/>
+      return <InstallHost states={ this.state.selected_host.states} selectedHost={this.state.selected_host}/>
     }
   }
 }

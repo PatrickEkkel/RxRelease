@@ -36,7 +36,7 @@ getStates() {
     this.getLogger().traceObject(this.state.states)
     states = this.state.states;
   }
-  
+
   return StandardListConverters.convertListToMap(states,function(item) {
       var installed = item.getInstalled()
 
@@ -54,22 +54,38 @@ wizardStepSuccess(nextProps) {
 
 
 var wizard_data = nextProps.wizard_data;
-
+var current_context = this
 this.getLogger().trace("wizard step was success")
 this.getLogger().traceObject(wizard_data)
-this.setState({saved_host: wizard_data.saved_host})
+this.setState({saved_host: current_context.getHost(nextProps)})
 }
 waitForSave() {
 
 }
 installHost() {
-  this.getLogger().trace("intalling the host")
-  this.getLogger().traceObject(this.state.saved_host)
-  this.props.dispatch(hostActionCreators.installHost(this.state.saved_host))
+  // TODO: hier een methode inbouwen die de saved_host ophaalt uit een methode (via props of state)
+  this.getLogger().trace("installing the host")
+  this.getLogger().traceObject(this.getHost())
+  this.props.dispatch(hostActionCreators.installHost(this.getHost()))
 
 }
+
+getHost(nextProps) {
+ if(this.state.saved_host == null && nextProps != null) {
+   this.getLogger().trace("host variable is not set,retrieving host info from nextProps")
+   var wizard_data = nextProps.wizard_data;
+   return wizard_data.saved_host;
+ }
+ else if (this.state.saved_host == null && nextProps == null) {
+   this.getLogger().trace("host variable is not set, nextProps is not available, retrieving host info from element props")
+   return this.props.selectedHost
+ }
+ else {
+   return this.state.saved_host;
+ }
+}
 loadNextScreen(nextProps) {
-  var selected_host = this.state.saved_host;
+  var selected_host = this.getHost()
   var factory = new HostFactory();
   this.getLogger().trace("selected host: ")
   this.getLogger().traceObject(selected_host)
