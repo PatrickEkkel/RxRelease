@@ -11,6 +11,7 @@ from rxbackend.core.jobs.api.utils import Utils
 from rxbackend.core.restapi.REST_states import REST_states
 from rxbackend.core.restapi.REST_authentication import REST_authentication
 from rxbackend.ssh.ssh import SSHClient
+from rxbackend.ssh.sshwrapper import SSHWrapper
 from rxbackend.core.rxfilestore import RxFileStore
 
 logger = logging.getLogger(__name__)
@@ -38,7 +39,7 @@ filestore = RxFileStore('/home/' + localuser + '/.rxrelease')
 if Utils.str2bool(dryrun):
  logger.info("running script in dryrun with the following parameters")
  logger.info(inputmapping.getKeyvalList())
- reststates_api = REST_states()
+ reststates_api = REST_states(auth_token)
  state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),inputmapping.getStateId())
  state =  state[0]
  state['installed'] = True
@@ -48,7 +49,8 @@ if Utils.str2bool(dryrun):
 logger.info("connecting with : " + inputmapping.getIpAddress())
  # TODO: code toevoegen die connectieproblemen afvangt
 try:
- client = SSHClient.withPassword(inputmapping.getIpAddress(),data["username"],data["password"])
+ #client = SSHClient.withPassword(inputmapping.getIpAddress(),data["username"],data["password"])
+ client = SSHWrapper.withPassword(inputmapping.getIpAddress(),data["username"],data["password"])
 
  # user creation on remote machine
  if client.sendCommand('id -u ' + remoteuser) == 1:

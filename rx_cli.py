@@ -4,10 +4,21 @@ import logging,sys,os,importlib
 from backend.rxrelease.rxbackend.configuration.globalsettings import ApiUserSettings,NetworkSettings
 from backend.rxrelease.rxbackend.core.restapi.REST_authentication import REST_authentication
 from backend.rxrelease.rxbackend.core.cli.modulecli import ModuleCLI
+from backend.rxrelease.rxbackend.ssh.ssh import SSHClient
+from backend.rxrelease.rxbackend.ssh.sshwrapper import SSHWrapper
+from backend.rxrelease.rxbackend.ssh.shell import Shell
+from backend.rxrelease.rxbackend.ssh.connectiondetails import ConnectionDetails
+from backend.rxrelease.rxbackend.statehandlers.statehandler_console_runner import ConsoleRunner
 
 module_cli_api = None
 api_user_settings_username = ApiUserSettings.username
 api_user_settings_password = ApiUserSettings.password
+
+shell = Shell()
+runner = ConsoleRunner()
+
+def createConnectionSettings(username,ipaddress,use_keys=False,password=''):
+    return ConnectionDetails(username,password,ipaddress)
 
 def load_settings_from_path(path):
  ApiUserSettings = importlib.import_module(path).ApiUserSettings

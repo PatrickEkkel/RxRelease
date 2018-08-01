@@ -63,7 +63,7 @@ class InstallHostView(generics.UpdateAPIView):
 
         capability_treemap.merge()
         capabilityList = capability_treemap.toList()
-
+        logger.debug("Amount of capabilities: " + str(len(capabilityList))) 
         sorted_capability_statesmap = {}
 
         for kv in capabilityList:

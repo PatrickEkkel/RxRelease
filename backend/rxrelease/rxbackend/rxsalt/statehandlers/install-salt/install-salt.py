@@ -29,10 +29,13 @@ client = SSHClient(inputmapping.getIpAddress())
 
 try:
  client.loginWithKeys(data['remoteuser'])
-
+ logging_dir = '/var/log/rxrelease'
  if data['os'] == "CentOS":
+  #client.sendCommandWithOutput('ls -al')
+  client.sendBlockingCommand('sudo mkdir -p ' + logging_dir)
+  client.sendBlockingCommand('sudo date >> ' + logging_dir + '/salt_minion_install')
   # first remove salt, if it was already installed
-  client.sendBlockingCommand('sudo yum remove -y salt-minion')
+  client.sendBlockingCommand('sudo yum remove -y salt-minion >>' + logging_dir)
   client.sendBlockingCommand('sudo rm -rf /etc/salt')
   client.sendBlockingCommand('sudo yum install -y salt-minion')
   client.sendCommand('sudo sed -i "s|#master: salt|master:\ "' + currenthost + '"|g" /etc/salt/minion')

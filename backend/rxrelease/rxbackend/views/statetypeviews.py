@@ -28,6 +28,7 @@ class HandleHostState(generics.CreateAPIView):
         #validated_data['handlerType']
         host_queryset = Host.objects.filter(id = validated_data['host_id'])
         statetype_queryset = StateType.objects.filter(id = validated_data['statetype_id'])
+        logger.info("Retrieving Capability for state_type: " + str(validated_data['statetype_id']))
         selected_capability = Capability.objects.filter(statetypes = statetype_queryset).get()
         selected_state = State.objects.filter(host=host_queryset,statetype = statetype_queryset).get()
         #logger.info(selected_capability.module)

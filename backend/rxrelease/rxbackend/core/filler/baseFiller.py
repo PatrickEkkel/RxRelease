@@ -43,29 +43,31 @@ class BaseFiller:
 
         # De verschillende basis states maken
         passwordless_login_state = StateType.objects.create(name="SSH passwordless login",handler="passwordless-sshlogin.py",SettingsCategory=global_category,module="default")
-        salt_minion_state = StateType.objects.create(name="Salt minion",handler="install-salt.py",SettingsCategory=global_category,dependentOn=passwordless_login_state,module="rxsalt")
-        salt_master_state = StateType.objects.create(name="salt-master",handler="intstall-salt-master.py",dependentOn=passwordless_login_state,SettingsCategory=global_category,module="rxsalt")
-
+        salt_minion_state = StateType.objects.create(name="Salt-minion",handler="install-salt.py",SettingsCategory=global_category,dependentOn=passwordless_login_state,module="rxsalt")
+        salt_master_state = StateType.objects.create(name="Salt-master",handler="install-salt-master.py",dependentOn=passwordless_login_state,SettingsCategory=global_category,module="rxsalt")
+        salt_minion_master_state = StateType.objects.create(name="Salt-minion-master",handler="install-salt.py",SettingsCategory=global_category,dependentOn=salt_master_state,module="rxsalt")
 
         passwordless_login_state.save()
         salt_minion_state.save()
         salt_master_state.save()
+        salt_minion_master_state.save()
         # capabilities
         standard_capability = Capability.objects.create(name="standard")
         salt_minion_capability = Capability.objects.create(name="salt-minion")
         salt_master_capability = Capability.objects.create(name="salt-master")
 
-
         standard_capability.statetypes.add(passwordless_login_state)
         salt_minion_capability.statetypes.add(salt_minion_state)
         salt_minion_capability.dependentOn = standard_capability
         salt_master_capability.statetypes.add(salt_master_state)
+        salt_master_capability.statetypes.add(salt_minion_master_state)
+
         salt_master_capability.dependentOn = standard_capability
 
 
-        #buildin_saltmaster_profiletype.capabilities.add(salt_master_capability)
-        buildin_saltmaster_profiletype.capabilities.add(salt_minion_capability)
+        #buildin_saltmaster_profiletype.capabilities.add(salt_minion_capability)
         buildin_saltmaster_profiletype.capabilities.add(standard_capability)
+        buildin_saltmaster_profiletype.capabilities.add(salt_master_capability)
 
         buildin_default_rxrelease_profiletype.capabilities.add(standard_capability)
 

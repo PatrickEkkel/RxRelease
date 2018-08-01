@@ -23,10 +23,10 @@ class SSHClient:
        client = SSHClient(address)
        client.loginWithPassword(username,password)
        return client
-       
+
     def __init__(self,address):
         self.address = address
-	
+
     def loginWithPassword(self,username,password):
        self.client = paramiko.client.SSHClient()
        self.client.set_missing_host_key_policy(paramiko.client.AutoAddPolicy())
@@ -36,7 +36,22 @@ class SSHClient:
         self.client = paramiko.client.SSHClient()
         self.client.set_missing_host_key_policy(paramiko.client.AutoAddPolicy())
         self.client.connect(self.address, username=username, password=None, look_for_keys=True)
-        
+    def sendCommandWithOutput(self,command):
+        logger.info("command sent to shell: " + command)
+        transport = self.client.get_transport()
+        channel = transport.open_session()
+        stdin, stdout, stderr =  channel.exec_command(command)
+        self.close()
+        stdout=stdout.readlines()
+
+        for line in stdout:
+            output=output+line
+            if output!="":
+                print(output)
+            else:
+                print("There was no output for this command")
+
+
     def sendFile(self,sourcefile,destfile):
         sftp  = self.client.open_sftp()
         sftp.put(sourcefile,destfile)
@@ -47,18 +62,24 @@ class SSHClient:
     #def openShell(self):
     #    self.shell = self.client.invoke_shell()
     def sendBlockingCommand(self,command):
-        logger.info("command sent to shell: " + command)
-        transport = self.client.get_transport()
-        channel = transport.open_session()
-        channel.exec_command(command)
-        while True:
-         rl, wl, xl = select.select([channel],[],[],0.0)
-         if channel.exit_status_ready():
-          break
-         else:
-          if len(rl) > 0:
+        #try:
+         logger.info("command sent to shell: " + command)
+         connection = self.client.invoke_shell()
+         transport = self.client.get_transport()
+         channel = transport.open_session()
+         channel.exec_command(command)
+         while True:
+          rl, wl, xl = select.select([channel],[],[],0.0)
+          if channel.exit_status_ready():
+           break
+          else:
+           if len(rl) > 0:
            # Must be stdout
-           print(channel.recv(1024))
+            print(channel.recv(1024))
+        #except:
+         #logger.error("Unexpected error:", sys.exc_info()[0])
+
+
     def sendCommand(self, command):
         logger.info("command sent to shell: " + command)
         stdin, stdout,stderr = self.client.exec_command(command)

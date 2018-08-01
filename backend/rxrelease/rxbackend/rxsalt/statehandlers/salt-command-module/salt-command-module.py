@@ -21,8 +21,5 @@ inputmapping = InputMapper().getInputFromCLI()
 data = json.loads(inputmapping.getKeyvalList())
 
 logger.info("Executing salt-master command:  " + data['command'])
-
-
 client = SSHClient(inputmapping.getIpAddress())
 client.loginWithKeys(data['remoteuser'])
-    
