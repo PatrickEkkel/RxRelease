@@ -17,7 +17,7 @@ class Shell:
       command = 'sshpass -p ' + connection_details.password + ' ssh ' + connection_details.username + '@' + connection_details.ipaddress + ' ' + '"' + remote_command + '"'
       print(command)
      else:
-      command = 'ssh ' + connection_details.username + '@' + connection_details.ipaddress + ' ' + remote_command
+      command = 'ssh ' + connection_details.username + '@' + connection_details.ipaddress + ' "' + remote_command + '"'
       print(command)
      #return 1
      return self.run_command(command)

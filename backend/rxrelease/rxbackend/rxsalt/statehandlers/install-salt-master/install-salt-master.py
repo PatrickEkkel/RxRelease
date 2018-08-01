@@ -1,4 +1,5 @@
 from rxbackend.ssh.ssh import SSHClient
+from rxbackend.ssh.sshwrapper import SSHWrapper
 from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
 from rxbackend.core.restapi.REST_states import REST_states
 from rxbackend.configuration.globalsettings import ApiUserSettings
@@ -24,23 +25,23 @@ print(data["username"])
 
 logger.info("Installing Salt master for " + data['os'] + " under useraccount " + data['username'])
 
-client = SSHClient(inputmapping.getIpAddress())
-client.loginWithKeys(data['remoteuser'])
+#client = SSHClient(inputmapping.getIpAddress())
+#client.loginWithKeys(data['remoteuser'])
 
 try:
- client.loginWithKeys(data['remoteuser'])
+  client = SSHWrapper.withKeys(data['remoteuser'],inputmapping.getIpAddress())
 
- if data['os'] == "CentOS":
+  if data['os'] == "CentOS":
   # first remove salt, if it was already installed
-  client.sendBlockingCommand('sudo yum remove -y salt-master')
-  client.sendBlockingCommand('sudo rm -rf /etc/salt')
-  client.sendBlockingCommand('sudo yum install -y salt-master')
-  client.sendBlockingCommand('sudo systemctl start salt-master')
+   client.sendBlockingCommand('sudo yum remove -y salt-master')
+   client.sendBlockingCommand('sudo rm -rf /etc/salt')
+   client.sendBlockingCommand('sudo yum install -y salt-master')
+   client.sendBlockingCommand('sudo systemctl start salt-master')
 
-  reststates_api = REST_states(auth_token)
-  state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),inputmapping.getStateId())
-  state =  state[0]
-  state['installed'] = True
+   reststates_api = REST_states(auth_token)
+   state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),inputmapping.getStateId())
+   state =  state[0]
+   state['installed'] = True
   reststates_api.putState(state)
 except paramiko.AuthenticationException:
  print("oops")

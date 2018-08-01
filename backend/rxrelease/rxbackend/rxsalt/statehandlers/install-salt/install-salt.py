@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from rxbackend.ssh.ssh import SSHClient
+from rxbackend.ssh.sshwrapper import SSHWrapper
 from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
 from rxbackend.core.restapi.REST_states import REST_states
 from rxbackend.configuration.globalsettings import ApiUserSettings
@@ -25,20 +26,18 @@ data = json.loads(inputmapping.getKeyvalList())
 
 logger.info("Installing Salt minion for " + data['os'] + " under useraccount " + data['username'])
 currenthost = data['saltmaster']
-client = SSHClient(inputmapping.getIpAddress())
+client = SSHWrapper.withKeys(data['remoteuser'],inputmapping.getIpAddress())
 
 try:
- client.loginWithKeys(data['remoteuser'])
+ #client.loginWithKeys(data['remoteuser'])
  logging_dir = '/var/log/rxrelease'
  if data['os'] == "CentOS":
   #client.sendCommandWithOutput('ls -al')
-  client.sendBlockingCommand('sudo mkdir -p ' + logging_dir)
-  client.sendBlockingCommand('sudo date >> ' + logging_dir + '/salt_minion_install')
   # first remove salt, if it was already installed
-  client.sendBlockingCommand('sudo yum remove -y salt-minion >>' + logging_dir)
+  client.sendBlockingCommand('sudo yum remove -y salt-minion')
   client.sendBlockingCommand('sudo rm -rf /etc/salt')
   client.sendBlockingCommand('sudo yum install -y salt-minion')
-  client.sendCommand('sudo sed -i "s|#master: salt|master:\ "' + currenthost + '"|g" /etc/salt/minion')
+  client.sendCommand('sudo sed -i \'s|#master: salt|master:\ \'' + currenthost + '\'|g\' /etc/salt/minion')
   client.sendBlockingCommand('sudo systemctl start salt-minion')
 
   reststates_api = REST_states(auth_token)

@@ -24,8 +24,10 @@ class SSHWrapper:
      return SSHWrapper(connection_details)
     def loginWithPassword(self,username,password):
      pass
-    def loginWithKeys(self,username):
-     self.connection_details = ConnectionDetails(username,'',self.address,True)
+    @classmethod
+    def withKeys(self,username,address):
+     connection_details = ConnectionDetails(username,'',address,True)
+     return SSHWrapper(connection_details)
     def sendCommandWithOutput(self,command):
      pass
      # TODO: deze ook nog implementeren, want dit is belangrijk voor passwordless_sshlogin state
