@@ -10,6 +10,12 @@ class REST_statetypes(REST_base):
   super().__init__(auth_token)
   self.backendlocation = NetworkSettings.protocol + "://" + NetworkSettings.servername + ":" + NetworkSettings.port
 
+ def getStatetypeByName(self,statetype_name):
+  serverAddress = self.backendlocation + '/rxbackend/statetypes/search/byname/?name=' + statetype_name
+  response = requests.get(serverAddress,headers=self.getAuthTokenHeader())
+  result = response.json()
+  return result
+
  def postHandleHostState(self,request):
   serverAddress= self.backendlocation +  '/rxbackend/statetypes/handlehoststate'
   print("wat sturen we nu naar de server")

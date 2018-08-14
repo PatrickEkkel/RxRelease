@@ -2,6 +2,9 @@ from ..restapi.REST_modules import REST_modules
 from ..restapi.REST_wizard import REST_wizard
 from ..restapi.REST_states import REST_states
 from ..restapi.REST_hosts  import REST_hosts
+from ..restapi.REST_statetypes import REST_statetypes
+from ..restapi.REST_settings import REST_settings
+from .environment import Environment
 
 import logging,sys
 
@@ -13,10 +16,47 @@ ch.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
-
+# TODO: de methodes in deze klasse zijn niet snakecase
 class ModuleCLI:
     def __init__(self,auth_token):
      self.auth_token = auth_token
+    def getEnvironment(self,hostname,statetype_name):
+
+      hosts_api = REST_hosts(self.auth_token)
+      statetypes_api = REST_statetypes(self.auth_token)
+
+      host = hosts_api.getHostByHostname(hostname)
+      statetype = statetypes_api.getStatetypeByName(statetype_name)
+      settings_api = REST_settings(self.auth_token)
+
+
+      if len(host) < 1:
+          print("no host entry found that matches your description")
+          return None;
+      if len(statetype) < 1:
+          print("no statetype entry found that matches your description")
+          return None
+
+       # assuming we have a result we pick the first itemi in the index
+      credentials_settings = settings_api.kv_credentials(host[0]['connectioncredentials'])
+      kv_settings = settings_api.kv_settings(statetype[0]['SettingsCategory'])
+      module = statetype[0]['module']
+      settings_dict = {}
+      settings_dict['dryrun'] = 'False'
+
+
+
+      for kv_setting in kv_settings:
+          key = kv_setting['key']
+          value = kv_setting['value']
+          settings_dict[key] = value
+      username = credentials_settings['username']
+      password = credentials_settings['password']
+      settings_dict['username'] = username
+      settings_dict['password'] = password
+      result = Environment(settings_dict,host,statetype,module)
+      return result
+
     def listModules(self):
        modules_api = REST_modules(self.auth_token)
        modules = modules_api.getModules()

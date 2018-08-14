@@ -30,6 +30,11 @@ def load_settings_from_path(path):
  print('settings changed')
 
 
+def help():
+ print("list_modules() -> Lists modules that are available")
+ print("enable_salt() -> enables salt module")
+ print("reset_saltwizard() -> DEVELOPER, resets the state of the saltwizard, easy for testing")
+
 def list_modules():
  print("Listing modules")
  for module in module_cli_api.listModules():
@@ -45,6 +50,11 @@ def enable_salt():
  module_cli_api.createWizard('rxsalt_wizard','NEW')
 
 
+def auth_token():
+    global api_user_settings_username
+    global api_user_settings_password
+    global module_cli_api
+    return REST_authentication().postCredentials(api_user_settings_username,api_user_settings_password)['token']
 def connect():
  auth_token = None
 

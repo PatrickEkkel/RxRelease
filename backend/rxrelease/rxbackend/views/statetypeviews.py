@@ -2,6 +2,7 @@ import logging,sys
 import os.path
 from rest_framework import generics
 from ..serializers import StateTypeSerializer
+from ..serializers import HostSerializer
 from ..serializers import HostStateHandlerSerializer
 from ..models import StateType
 from ..models import State
@@ -55,7 +56,23 @@ class CreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         """Save the post data when creating a new bucketlist."""
         serializer.save()
+
 class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
     queryset = StateType.objects.all()
     serializer_class = StateTypeSerializer
+
+class SearchByHostnameView(generics.ListAPIView):
+     serializer_class = HostSerializer
+     def get_queryset(self):
+         pass
+         name =  self.request.query_params.get('name', None)
+         statetype_queryset = Statetype.objects.filter(name=name)
+         return statetype_queryset
+class SearchbyNameView(generics.ListAPIView):
+    serializer_class = StateTypeSerializer
+    def get_queryset(self):
+        pass
+        name =  self.request.query_params.get('name', None)
+        statetype_queryset = StateType.objects.filter(name=name)
+        return statetype_queryset

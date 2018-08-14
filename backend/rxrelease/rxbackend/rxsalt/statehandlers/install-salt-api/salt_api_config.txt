@@ -1,0 +1,14 @@
+rest_cherrypy:
+  port: 8080
+  host: 0.0.0.0
+  disable_ssl: True
+  ssl_crt: /etc/ssl/private/cert.pem
+  ssl_key: /etc/ssl/private/key.pem
+
+external_auth:
+ pam:
+  salt:
+    - .*
+    - '@wheel' # to allow access to all wheel modules
+    - '@runner' # to allow access to all runner modules
+    - '@jobs' # to allow access to the jobs runner and/or wheel module

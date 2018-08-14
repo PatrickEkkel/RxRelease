@@ -52,6 +52,13 @@ class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Host.objects.all()
     serializer_class = HostSerializer
 
+class SearchByHostnameView(generics.ListAPIView):
+    serializer_class = HostSerializer
+    def get_queryset(self):
+        pass
+        hostname =  self.request.query_params.get('hostname', None)
+        host_queryset = Host.objects.filter(hostname=hostname)
+        return host_queryset
 class SearchByProfiletypeView(generics.ListAPIView):
     serializer_class = HostSerializer
     def get_queryset(self):

@@ -10,7 +10,7 @@ export function getHostById(host_id) {
   return Axios.get(GlobalSettings.getBackendUrl() + '/rxbackend/hosts/' + host_id);
 }
 export function getHostsByProfiletypeId(profiletype_id) {
-  return Axios.get(GlobalSettings.getBackendUrl() + '/rxbackend/hosts/search/?profiletype=' + profiletype_id);
+  return Axios.get(GlobalSettings.getBackendUrl() + '/rxbackend/hosts/search/byprofiletype/?profiletype=' + profiletype_id);
 }
 
 export function putInstallHost(host) {
