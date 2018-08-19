@@ -9,6 +9,7 @@ from backend.rxrelease.rxbackend.ssh.sshwrapper import SSHWrapper
 from backend.rxrelease.rxbackend.ssh.shell import Shell
 from backend.rxrelease.rxbackend.ssh.connectiondetails import ConnectionDetails
 from backend.rxrelease.rxbackend.statehandlers.statehandler_console_runner import ConsoleRunner
+from backend.rxrelease.rxbackend.rxsalt.statehandlers.statehandler_saltconsole_runner import SaltConsoleRunner
 
 module_cli_api = None
 api_user_settings_username = ApiUserSettings.username
@@ -16,6 +17,7 @@ api_user_settings_password = ApiUserSettings.password
 
 shell = Shell()
 runner = ConsoleRunner()
+saltrunner = SaltConsoleRunner()
 
 def createConnectionSettings(username,ipaddress,use_keys=False,password=''):
     return ConnectionDetails(username,password,ipaddress)

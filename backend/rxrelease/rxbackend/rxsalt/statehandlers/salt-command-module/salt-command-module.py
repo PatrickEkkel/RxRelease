@@ -3,6 +3,7 @@ from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
 from rxbackend.core.restapi.REST_states import REST_states
 from rxbackend.configuration.globalsettings import ApiUserSettings
 from rxbackend.core.restapi.REST_authentication import REST_authentication
+from rxbackend.rxsalt.salt_interface.commandshell import SaltShell
 import logging,paramiko,sh,sys,json
 
 
@@ -21,5 +22,5 @@ inputmapping = InputMapper().getInputFromCLI()
 data = json.loads(inputmapping.getKeyvalList())
 
 logger.info("Executing salt-master command:  " + data['command'])
-client = SSHClient(inputmapping.getIpAddress())
-client.loginWithKeys(data['remoteuser'])
+
+#saltShell = SaltShell()

@@ -66,6 +66,7 @@ try:
  installed_id_rsa_pub = '/home/' + localuser + '/.ssh/id_rsa.pub'
  id_rsa = rxfilestore + '/id_rsa'
  id_rsa_pub = rxfilestore + '/id_rsa.pub'
+ localstore_path = '/home/' + remoteuser + '/.localstore/'
 
  #if not os.path.exists(rxfilestore):
  #     os.makedirs(rxfilestore)
@@ -83,7 +84,9 @@ try:
   sh.cp(id_rsa,'/home/' + localuser + '/.ssh/')
  if not Path(installed_id_rsa_pub).exists():
   sh.cp(id_rsa_pub,'/home/' + localuser + '/.ssh/')
-
+ # create the localstore directory
+ client.sendCommand('mkdir -p ' + localstore_path)
+ client.sendCommand('chown ' + remoteuser + ':' + remoteuser + ' ' + localstore_path)
  # we need to transfer the public key to the host
  client.sendCommand('mkdir -p /home/' + remoteuser + '/.ssh')
  # TODO: misschien moeten we dit nog wat vriendelijker maken.. nu pleurt hij er gewoon een nieuw bestand neer, niet zo cool als er al keys geconfigureerd waren

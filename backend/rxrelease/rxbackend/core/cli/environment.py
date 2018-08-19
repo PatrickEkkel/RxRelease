@@ -8,3 +8,5 @@ class Environment:
         self.host = host
         self.statetype = statetype
         self.module = module
+    def append_to_dict(self,key,value):
+        self.settings_dict[key] = value
