@@ -64,7 +64,7 @@ class HostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Host
-        fields = ('id','hostname','ipaddress','description','status','profileType','connectioncredentials')
+        fields = ('id','hostname','ipaddress','description','status','profileType','connectioncredentials','hostSettings')
 
 class ConfigurationSerializer(serializers.ModelSerializer):
     hosts = HostTestSerializer(many=True,queryset=Host.objects.all())

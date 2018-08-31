@@ -41,6 +41,7 @@ class BaseFiller:
         kvsetting_saltmaster.category = global_category
         kvsetting_saltmaster.save()
 
+        
         # De verschillende basis states maken
         passwordless_login_state = StateType.objects.create(name="SSH passwordless login",handler="passwordless-sshlogin.py",SettingsCategory=global_category,module="default")
         salt_minion_state = StateType.objects.create(name="Salt-minion",handler="install-salt.py",SettingsCategory=global_category,dependentOn=passwordless_login_state,module="rxsalt")

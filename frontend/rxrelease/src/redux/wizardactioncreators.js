@@ -59,8 +59,6 @@ export function updateWizardState(wizard_id,wizard_status) {
   //  wizardRequests.putWizardState(wizard_id,wizard_status).then(function(response) {
     //  dispatch(wizardStateUpdated())
   //  })
-
-
   }
 }
 

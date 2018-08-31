@@ -19,6 +19,8 @@ export default function(data) {
   }
 
   var reducer = combineReducers(reducers)
+  //var plugin_reducer = combineReducers(plugin_reducers)
+  //reduceReducers(reducer,plugin_reducer)
   var finalCreateStore = applyMiddleware(thunkMiddleware)(createStore)
   var store = finalCreateStore(reducer, data)
 

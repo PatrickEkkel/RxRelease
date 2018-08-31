@@ -29,7 +29,14 @@ return Axios.post(backend_url + '/rxbackend/settings/kvsettings',{
   value: setting.getValue() ,
   category: setting.getCategoryId()
 })
+}
 
+export function postCategory(category_name) {
+  var backend_url = GlobalSettings.getBackendUrl();
+
+  return Axios.post(backend_url + '/rxbackend/settingscategory/',{
+    name: category_name
+  })
 }
 
 export function putCredentialSettings(settings) {

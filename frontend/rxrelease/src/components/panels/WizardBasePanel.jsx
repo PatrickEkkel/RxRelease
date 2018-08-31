@@ -46,7 +46,6 @@ storeWizardDataForStep(type,current_wizard_item) {
   if(type == 'STORE_WIZARD_DATA' && current_wizard_item == this.state.current_step) {
     this.storeWizardData(current_wizard_item)
   }
-
 }
 
 componentWillReceiveProps(nextProps) {
@@ -67,7 +66,6 @@ else if(type == 'STORE_WIZARD_DATA_SUCCESS') {
 else if(type == 'LOAD_NEXT_SCREEN' && current_wizard_item == (this.state.current_step-1)) {
   this.getLogger().debug("LOAD_NEXT_SCREEN called with current_wizard_item: " + current_wizard_item)
   this.loadNextScreen(nextProps)
-
 }
 
 this.storeWizardDataForStep(type,current_wizard_item)

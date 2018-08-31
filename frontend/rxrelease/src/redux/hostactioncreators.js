@@ -181,8 +181,10 @@ export function saveNewHost(hostname,ipaddress,description,profiletype) {
     })
     .then(function(response) {
        var settingscategory = settingsfactory.createSettingsCategoryFromJson(jsonUtils.normalizeJson(response.data));
+       // TODO: dit is niet goed natuurlijk, hier moeten we settings meegeven vanuit de GUI
       return settingsRequests.postSettings('test','test,',settingscategory)
-    }).then(function(response) {
+    })
+    .then(function(response) {
 
       var connectioncredentials = settingsfactory.createCredentialSettingFromJson(jsonUtils.normalizeJson(response.data))
 
@@ -192,7 +194,8 @@ export function saveNewHost(hostname,ipaddress,description,profiletype) {
 
       host.setConnectionCredentials(connectioncredentials)
       return hostsRequests.postHost(host);
-    }).then(function(response) {
+    })
+    .then(function(response) {
 
       haLogger.trace("Saved host object:")
       haLogger.traceObject(response.data)

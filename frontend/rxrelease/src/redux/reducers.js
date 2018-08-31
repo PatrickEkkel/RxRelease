@@ -10,6 +10,12 @@ import toplevelReducer from './reducers/toplevel_reducer'
 import hostBreadcrumbReducer from './reducers/hostbreadcrumb_reducer'
 import settingsReducer from './reducers/settings_reducer'
 import wizardReducer from './reducers/wizard_reducer'
+import * as plugin_reducers from '../plugins/plugin_reducers'
+
+
+export function _plugin(state,action) {
+  return plugin_reducers;
+}
 
 export function _menu(state, action) {
 return menuReducer(state,action)

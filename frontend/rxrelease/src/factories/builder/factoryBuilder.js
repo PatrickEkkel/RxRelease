@@ -5,6 +5,8 @@ import  * as jsonUtils from '../../lib/json/utils'
 
 class FactoryBuilder {
 
+  // NOTE: dit stukje code is overbodig, javascript heeft zulke dingen niet nodig
+
 createObjectFactoryFromJson(json,clazz) {
 var result = null;
 // first normalize the json, so we can determine an objectmap

@@ -26,6 +26,21 @@ export default function _settings(state = initialSettingsState,action) {
       type: action.type,
       showModal: false
     }
+    case 'LOAD_EXISTING_SETTING_CATEGORY':
+    return {
+      type: action.type,
+      showModal: false
+    }
+    case 'SAVE_NEW_SETTING_CATEGORY':
+    return {
+      type: action.type,
+      showModal: false
+    }
+    case 'SAVE_NEW_SETTING_CATEGORY_FAILED':
+    return {
+      type: action.type,
+      showModal: false
+    }
     case 'SAVE_NEW_SETTING_FAILED':
     return {
       type: action.type,

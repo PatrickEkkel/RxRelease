@@ -23,4 +23,4 @@ data = json.loads(inputmapping.getKeyvalList())
 
 logger.info("Executing salt-master command:  " + data['command'])
 
-#saltShell = SaltShell()
+saltShell = SaltShell()

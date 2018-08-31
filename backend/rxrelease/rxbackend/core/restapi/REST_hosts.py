@@ -19,7 +19,7 @@ class REST_hosts(REST_base):
   super().__init__(auth_token)
   self.backendlocation = NetworkSettings.protocol + "://" + NetworkSettings.servername + ":" + NetworkSettings.port
  def getHostByProfileType(self,profiletype_name):
-   serverAddress = self.backendlocation + '/rxbackend/hosts/byprofiletype/?profiletype=' + profiletype_name
+   serverAddress = self.backendlocation + '/rxbackend/hosts/search/byprofiletype/?profiletype=' + profiletype_name
    response = requests.get(serverAddress,headers=self.getAuthTokenHeader())
    result = response.json()
    return result
