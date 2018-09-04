@@ -6,6 +6,7 @@ import LogFactory from '../logging/LogFactory'
 import GlobalSettings from '../config/global'
 import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
 import  * as profileRequests from '../rest/requests/profilerequests'
+import  * as profiletypeRequests from '../rest/requests/profiletyperequests'
 import  * as commonActions from './commonactions'
 
 
@@ -24,11 +25,11 @@ export function openNewProfile() {
       type: 'OPEN_NEW_PROFILE',
   }
 }
-// Hier was ik gebleven, TODO: beetje een luie implementatie natuurlijk, maar voldoet voor nu
 export function loadProfiletypeByName(name) {
   return function (dispatch) {
       var profiletypes = [];
-      Axios.get('http://localhost:8080/rxbackend/profiletypes/')
+
+      profiletypeRequests.getProfileTypes()
       .then(function(response){
         for(var i=0;i<response.data.length;i++) {
           if(response.data[i].name == name) {
@@ -43,7 +44,7 @@ export function loadProfiletypeByName(name) {
 export function loadProfiletypes() {
   return function (dispatch) {
       var profiletypes = [];
-      Axios.get('http://localhost:8080/rxbackend/profiletypes/')
+      profiletypeRequests.getProfileTypes()
       .then(function(response){
         for(var i=0;i<response.data.length;i++) {
 

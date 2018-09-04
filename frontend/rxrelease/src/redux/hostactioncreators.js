@@ -108,7 +108,7 @@ export function openNewHost(hostentry) {
 export function loadHosts() {
   return function (dispatch) {
 
-      Axios.get('http://localhost:8080/rxbackend/hosts/')
+      hostsRequests.getHosts()
       .then(function(response){
 
         var factory = new HostFactory();

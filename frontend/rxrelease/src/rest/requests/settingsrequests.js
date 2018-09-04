@@ -2,6 +2,8 @@ import Axios from 'axios';
 import GlobalSettings from '../../config/global';
 
 
+
+// TODO: Deze methode hernoemen, verkeerde naam en de methode aanroepen zijn niet consistent
 export function postSettings(username,password,settingscategory) {
   var backend_url = GlobalSettings.getBackendUrl();
 
@@ -9,6 +11,16 @@ export function postSettings(username,password,settingscategory) {
   category:   settingscategory.getId(),
   username: username,
   password: password
+  })
+}
+
+export function postCredentialSettings(settings) {
+  var backend_url = GlobalSettings.getBackendUrl();
+
+  return Axios.post(backend_url + '/rxbackend/settings/credentials', {
+    username: settings.getUsername(),
+    password: settings.getPassword(),
+    category: settings.getSettingCategory().getId()
   })
 }
 
@@ -43,8 +55,7 @@ export function putCredentialSettings(settings) {
   console.log("voordat we de settings opslaan eerst even een kijkje nemen")
   console.log(settings)
   var backend_url = GlobalSettings.getBackendUrl();
-  return Axios.put(backend_url + '/rxbackend/settings/credentials/' + settings.getId() + '/',
-  {
+  return Axios.put(backend_url + '/rxbackend/settings/credentials/' + settings.getId() + '/', {
     username: settings.getUsername(),
     password: settings.getPassword(),
     category: settings.getSettingCategory().getId()

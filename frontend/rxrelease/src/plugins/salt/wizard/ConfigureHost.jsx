@@ -6,6 +6,7 @@ import LabeledDropdown from '../../../components/LabeledDropdown';
 import LabeledTextfield from '../../../components/LabeledTextField';
 import Button from '../../../components/Button';
 import HostModel from '../../../models/dbmodels/hostmodel'
+import CredentialsModel from '../../../models/dbmodels/credentialsmodel'
 import  * as hostActionCreators from '../../../redux/hostactioncreators'
 import  * as wizardActionCreators from '../../../redux/wizardactioncreators'
 import  * as profileActionCreators from '../../../redux/profileactioncreators'
@@ -22,8 +23,11 @@ constructor() {
 saveFormData() {
 
  // TODO: hier moeten we een factoryobject inzetten om een host object te maken
- var host = HostModel.newHost(this.state.hostname,this.state.ipaddress,"Salt Master",this.state.profileTypeId.id)
- this.props.dispatch(saltWizardActionCreators.saveConfigureHost(host))
+ var salt_api_creds = CredentialsModel.newCredentials(this.state.saltapi_username,this.state.saltapi_password)
+ var host = HostModel.newHost("",this.state.hostname,this.state.ipaddress,"Salt Master",this.state.profileTypeId.id)
+
+
+ this.props.dispatch(saltWizardActionCreators.saveConfigureHost(host,salt_api_creds))
  this.props.dispatch(wizardActionCreators.waitForSave())
 }
 saveHost() {
@@ -138,7 +142,7 @@ render() {
      <LabeledTextfield id="saltapi_username" label="Salt-api username" errorHandler={(id,callee) => this.handleError(id,callee)}  labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
     </div>
     <div className="form-group row">
-     <LabeledTextfield id="saltapi_password" label="Salt-api password" errorHandler={(id,callee) => this.handleError(id,callee)}  labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
+     <LabeledTextfield id="saltapi_password" mode="password" label="Salt-api password" errorHandler={(id,callee) => this.handleError(id,callee)}  labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
     </div>
   </div>
 </div>

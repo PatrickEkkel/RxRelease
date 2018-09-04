@@ -20,6 +20,11 @@ export function putInstallHost(host) {
   return Axios.put(backend_url,{host_id: '0'});
 }
 
+export function getHosts() {
+  var backend_url = GlobalSettings.getBackendUrl()
+  return Axios.get(backend_url + '/rxbackend/hosts')
+}
+
 export function putHost(host) {
 
   var backend_url = GlobalSettings.getBackendUrl() + '/rxbackend/hosts/' + host.getId() + "/";
