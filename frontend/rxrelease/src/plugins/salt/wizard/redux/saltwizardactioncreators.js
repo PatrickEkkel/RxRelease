@@ -5,10 +5,11 @@ import SettingsFactory from '../../../../factories/settingsFactory'
 import HostFactory from '../../../../factories/hostFactory'
 import SettingsCategoryModel from '../../../../models/dbmodels/settingscategorymodel'
 import HostModel from '../../../../models/dbmodels/hostmodel'
+import PromiseExecutor from '../../../../lib/promises/promise_executor'
 import AggregatedFieldsErrorHandler from '../../../../rest/errorhandlers/aggregatedfieldserrorhandler'
-import * as hostsRequests from '../../../../rest/requests/hostrequests'
+import  * as hostsRequests from '../../../../rest/requests/hostrequests'
 import  * as settingsRequests from '../../../../rest/requests/settingsrequests'
-
+import  * as settingsPromises from '../../../../rest/promises/settingspromises'
 
 var settings = new GlobalSettings();
 var swaLogger = new LogFactory().createLogger("SALTWIZARD","ACTIONCREATOR")
@@ -27,44 +28,13 @@ export function saveConfigureHost(host,salt_api_creds) {
 
   return function (dispatch) {
 
+    var e = new PromiseExecutor()
+
     settingsRequests.getSettingCategoryByName(category_name)
-    .then(function(response) {
-      var normalizedData = jsonUtils.normalizeJson(response.data)
-      // if the response from getting the category is null, create a new category
-      if(normalizedData == null) {
-        return settingsRequests.postSettingCategory(category_name);
-      }
-      else {
-        return settingsRequests.getSettingCategoryByName(category_name)
-      }
-
-    })
-    .then(function(response) {
-      category =  jsonUtils.normalizeJson(response.data)
-      swaLogger.debug("category response object")
-      swaLogger.traceObject(category)
-      salt_api_creds.setSettingCategory(SettingsCategoryModel.mapSettingsCategoryModel(category))
-      return settingsRequests.getSettingCategoryByName(search_string)
-    })
-    .then(function(response) {
-        var normalizedData = jsonUtils.normalizeJson(response.data)
-        // if the response from getting the category is null, create a new category
-        if(normalizedData == null) {
-          return settingsRequests.postSettingCategory(settings.SETTING_CATEGORY_HOSTNAME);
-        }
-        else {
-          return response;
-        }
-    })
-    .then(function(response) {
-       swaLogger.debug("settingcategory: ")
-       swaLogger.traceObject(response.data)
-
-       var settingscategory = settingsfactory.createSettingsCategoryFromJson(jsonUtils.normalizeJson(response.data));
-       // TODO: dit is niet goed natuurlijk, hier moeten we settings meegeven vanuit de GUI
-
-      return settingsRequests.postSettings('test','test,',settingscategory)
-    })
+    .then(e.execute(settingsPromises.CREATE_OR_UPDATE_SETTINGSCATEGORY,{ category_name: category_name}))
+    .then(e.execute(settingsPromises.UPDATE_SETTINGS_WITH_CATEGORY,{logger: swaLogger,salt_api_creds: salt_api_creds,search_string: search_string}))
+    .then(e.execute(settingsPromises.CREATE_SETTINGSCATEGORY,{}))
+    .then(e.execute(settingsPromises.CREATE_CREDENTIAL_SETTINGS,{logger: swaLogger,username: 'test',password: 'test'}))
     .then(function(response) {
       var connectioncredentials = settingsfactory.createCredentialSettingFromJson(jsonUtils.normalizeJson(response.data))
       host.setConnectionCredentials(connectioncredentials)
