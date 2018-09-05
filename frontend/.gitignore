@@ -1,1 +1,4 @@
 rxrelease/node_modules/*
+node_modules
+rxrelease/package-lock.json
+package-lock.json
