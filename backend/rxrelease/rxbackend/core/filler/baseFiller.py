@@ -1,4 +1,7 @@
+from django.contrib.auth.models import User
+
 from .profileFiller import ProfileFiller
+from ...configuration.globalsettings import ApiUserSettings
 from ...models import StateType
 from ...models import SettingsCategory
 from ...models import Capability
@@ -9,6 +12,11 @@ from ...models import KVSetting
 from ...models import Module
 class BaseFiller:
     def createBaseFillForSalt(self):
+
+        # 2 superusers aanmaken met de standaard BaseFiller
+        User.objects.create_superuser(username='superuser',password='changeit',email='')
+        User.objects.create_superuser(username=ApiUserSettings.username,password=ApiUserSettings.password,email='')
+
         # Dit is hoe token authentication werkt voor als we willen weten hoe we een nieuwe user willen maken of willen weten hoe het zaakje geconfigureerd
         # http://cheng.logdown.com/posts/2015/10/27/how-to-use-django-rest-frameworks-token-based-authentication
 
@@ -41,7 +49,7 @@ class BaseFiller:
         kvsetting_saltmaster.category = global_category
         kvsetting_saltmaster.save()
 
-        
+
         # De verschillende basis states maken
         passwordless_login_state = StateType.objects.create(name="SSH passwordless login",handler="passwordless-sshlogin.py",SettingsCategory=global_category,module="default")
         salt_minion_state = StateType.objects.create(name="Salt-minion",handler="install-salt.py",SettingsCategory=global_category,dependentOn=passwordless_login_state,module="rxsalt")

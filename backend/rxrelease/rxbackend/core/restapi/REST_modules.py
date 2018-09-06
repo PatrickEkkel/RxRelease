@@ -21,6 +21,10 @@ class REST_modules(REST_base):
   result = response.json()
   return result
 
+ def getFiller(self):
+  serverAddress = self.backendlocation + '/rxbackend/filler'
+  response = requests.get(serverAddress)
+
  def putModule(self,module):
   serverAddress = self.backendlocation + '/rxbackend/modules/' + str(module['id']) + '/'
   headers = {'content-type': 'application/json'}

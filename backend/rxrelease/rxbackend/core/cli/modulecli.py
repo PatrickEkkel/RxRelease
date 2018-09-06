@@ -56,7 +56,9 @@ class ModuleCLI:
       settings_dict['password'] = password
       result = Environment(settings_dict,host,statetype,module)
       return result
-
+    def initDb(self):
+      modules_api = REST_modules(None)
+      modules_api.getFiller()
     def listModules(self):
        modules_api = REST_modules(self.auth_token)
        modules = modules_api.getModules()

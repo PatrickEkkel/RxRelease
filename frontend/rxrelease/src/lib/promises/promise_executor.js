@@ -7,7 +7,7 @@ class PromiseExecutor  {
 constructor() {
   this.settings = new GlobalSettings();
   this.logger = new LogFactory().createLogger("PROMISES","EXECUTOR")
-  this.previous = null;
+  this.stored_state = {}
 }
 
 execute(promise,properties) {
@@ -18,8 +18,18 @@ execute(promise,properties) {
   var context = this
   return function(response) {
     var result = null;
-    result = promise(response,properties)
-    context.previous = properties
+
+    context.logger.trace("stored_state before merge: ")
+    context.logger.traceObject(context.stored_state)
+
+    context.logger.trace("current properties: ")
+    context.logger.traceObject(properties)
+    context.stored_state = Object.assign(context.stored_state,properties)
+    context.logger.trace("stored_state after merge: ")
+    context.logger.traceObject(context.stored_state)
+
+    result = promise(response,context.stored_state)
+
     return result;
   }
 }

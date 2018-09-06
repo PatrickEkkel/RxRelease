@@ -24,10 +24,11 @@ saveFormData() {
 
  // TODO: hier moeten we een factoryobject inzetten om een host object te maken
  var salt_api_creds = CredentialsModel.newCredentials(this.state.saltapi_username,this.state.saltapi_password)
+ var ssh_creds = CredentialsModel.newCredentials(this.state.username,this.state.password)
  var host = HostModel.newHost("",this.state.hostname,this.state.ipaddress,"Salt Master",this.state.profileTypeId.id)
 
 
- this.props.dispatch(saltWizardActionCreators.saveConfigureHost(host,salt_api_creds))
+ this.props.dispatch(saltWizardActionCreators.saveConfigureHost(host,salt_api_creds,ssh_creds))
  this.props.dispatch(wizardActionCreators.waitForSave())
 }
 saveHost() {
