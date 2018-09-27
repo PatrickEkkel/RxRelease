@@ -32,13 +32,15 @@ class RequestBuilder:
      handlerRequest.setStateTypeId(state.statetype_id)
      handlerRequest.setHandlerCommand(state.statetype.handler)
      # first get the global setting for this statetype by getting the vars defined in the specific category
-     statetypeSettings =  state.statetype.SettingsCategory
+     statetypeSettingsCategory =  state.statetype.SettingsCategory
      # this should always yield results, the filler that will be provided with the installer should always provide a set of default keyvalue pairs
-     globalHostSettings = settingsService.getHostSettingsByStatetype(state.statetype)
+     globalHostSettings = settingsService.getSettingsByCategoryname('Global Settings')
+
+     statetypeSettings = settingsService.getHostSettingsByStatetype(state.statetype)
      state_credentials = settingsService.getHostCredentialSettingsByStatetype(state.statetype)
      logger.debug("State credentials: " + str(state_credentials))
-     logger.debug("prefix: " + str(statetypeSettings.prefix))
-
+     logger.debug("prefix: " + str(statetypeSettingsCategory.prefix))
+     logger.debug("statetypeSettings: " + str(statetypeSettings))
      hostOnlySettings = settingsService.getHostSettingsByHost(state.host)
 
      # the host settings that will be selected
@@ -52,12 +54,16 @@ class RequestBuilder:
          else:
           selectedSettings[globalSetting.key] = globalSetting.value
      else:
-      logger.error("No global settings found for statetype: " + str(state.statetype))
+      logger.error("No global settings found")
 
-     print("globalHostSettings: ")
-     print(globalHostSettings)
-     print("selectedSettings: ")
-     print(selectedSettings)
+     if statetypeSettings is not None:
+      for statetypeSetting in statetypeSettings:
+          print("dikke test jongen.....")
+          selectedSettings[statetypeSetting.key] = statetypeSetting.value
+
+     logger.debug("globalHostSettings: " + str(globalHostSettings))
+     logger.debug("selectedSettings: " + str(selectedSettings))
+
      #for setting in selectedSettings:
         # print("current settings: " + setting)
      # keyvalue pairs moeten dus opgehaald worden aan de hand van de statetype,
@@ -76,10 +82,9 @@ class RequestBuilder:
      kvbuilder.addKeyValPair("password",credentials.password)
      kvbuilder.addKeyValPair("dryrun","False")
      if state_credentials is not None:
-      print("state credentials found")
-      print("teeeeeest")
-      kvbuilder.addKeyValPair(statetypeSettings.prefix + 'username',state_credentials.username)
-      kvbuilder.addKeyValPair(statetypeSettings.prefix + 'password',state_credentials.password)
+      logger.debug("state credentials found")
+      kvbuilder.addKeyValPair(statetypeSettingsCategory.prefix + 'username',state_credentials.username)
+      kvbuilder.addKeyValPair(statetypeSettingsCategory.prefix + 'password',state_credentials.password)
 
      for key, value in selectedSettings.items():
       kvbuilder.addKeyValPair(key,value)

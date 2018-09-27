@@ -10,6 +10,10 @@ class SettingsService:
        result[setting.key] = setting.value
       return result
 
+ def getSettingsByCategoryname(self,name):
+    settingsDao = SettingsDao()
+    settings = settingsDao.getSettingsByCategoryName(name)
+    return settings
  def getHostCredentialSettingsByStatetype(self,statetype):
     settingsDao = SettingsDao()
     settings =  settingsDao.getCredentialsByCategory(statetype.SettingsCategory)

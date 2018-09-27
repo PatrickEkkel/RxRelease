@@ -1,7 +1,7 @@
 import logging,sys
 from ...models import CredentialsSetting
 from ...models import KVSetting
-from ...models import CredentialsSetting
+from ...models import SettingsCategory
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -22,12 +22,18 @@ class SettingsDao:
         credentials =  CredentialsSetting.objects.get(id = credential_setting_id)
 
         return credentials;
+
+    def getSettingsByCategoryName(self,category_name):
+        kvsettings = KVSetting.objects.filter(category__name=category_name)
+        #SettingsCategory.objects.filter(name=category_name)
+
+        return kvsettings
     def getCredentialsByCategory(self,category):
       try:
        kvsettings = CredentialsSetting.objects.get(category = category)
       except CredentialsSetting.DoesNotExist:
        kvsettings = None
-       logger.error("Trying to get a Setting that does not exists with id " + str(category))
+       logger.error("Trying to get Settings by a Category that does not exists with name " + str(category))
       return kvsettings
 
     def getSettingsByCategory(self,category):
