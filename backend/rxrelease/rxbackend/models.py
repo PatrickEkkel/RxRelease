@@ -22,6 +22,7 @@ class SystemConfig(models.Model):
 
 class SettingsCategory(models.Model):
     name = models.CharField(max_length=255)
+    prefix = models.CharField(max_length=255,default=None,null=True)
 
     def __str__(self):
         return self.name

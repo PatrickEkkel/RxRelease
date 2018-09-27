@@ -21,6 +21,10 @@ class REST_modules(REST_base):
   result = response.json()
   return result
 
+ def getTestFiller(self):
+  serverAddress = self.backendlocation + '/rxbackend/testfiller'
+  response = requests.get(serverAddress)
+
  def getFiller(self):
   serverAddress = self.backendlocation + '/rxbackend/filler'
   response = requests.get(serverAddress)

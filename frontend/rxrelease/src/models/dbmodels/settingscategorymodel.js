@@ -2,15 +2,16 @@
 
 class SettingsCategoryModel {
 
-  static newSettingsCategoryModel(_id,_name) {
+  static newSettingsCategoryModel(_id,_name,_prefix) {
     return {
       id: _id,
       name: _name,
+      prefix: _prefix,
       getId: function() { return this.id }
       }
   }
   static mapSettingsCategoryModel(_model) {
-    return SettingsCategoryModel.newSettingsCategoryModel(_model.id,_model.name)
+    return SettingsCategoryModel.newSettingsCategoryModel(_model.id,_model.name,_model.prefix)
   }
 }
 

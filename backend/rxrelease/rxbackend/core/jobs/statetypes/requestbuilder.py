@@ -35,6 +35,10 @@ class RequestBuilder:
      statetypeSettings =  state.statetype.SettingsCategory
      # this should always yield results, the filler that will be provided with the installer should always provide a set of default keyvalue pairs
      globalHostSettings = settingsService.getHostSettingsByStatetype(state.statetype)
+     state_credentials = settingsService.getHostCredentialSettingsByStatetype(state.statetype)
+     logger.debug("State credentials: " + str(state_credentials))
+     logger.debug("prefix: " + str(statetypeSettings.prefix))
+
      hostOnlySettings = settingsService.getHostSettingsByHost(state.host)
 
      # the host settings that will be selected
@@ -49,6 +53,13 @@ class RequestBuilder:
           selectedSettings[globalSetting.key] = globalSetting.value
      else:
       logger.error("No global settings found for statetype: " + str(state.statetype))
+
+     print("globalHostSettings: ")
+     print(globalHostSettings)
+     print("selectedSettings: ")
+     print(selectedSettings)
+     #for setting in selectedSettings:
+        # print("current settings: " + setting)
      # keyvalue pairs moeten dus opgehaald worden aan de hand van de statetype,
      # maar omdat we zitten met een configuratie per host moeten we de werkelijke settings uit de host halen
 
@@ -64,14 +75,14 @@ class RequestBuilder:
      kvbuilder.addKeyValPair("username",credentials.username)
      kvbuilder.addKeyValPair("password",credentials.password)
      kvbuilder.addKeyValPair("dryrun","False")
+     if state_credentials is not None:
+      print("state credentials found")
+      print("teeeeeest")
+      kvbuilder.addKeyValPair(statetypeSettings.prefix + 'username',state_credentials.username)
+      kvbuilder.addKeyValPair(statetypeSettings.prefix + 'password',state_credentials.password)
 
      for key, value in selectedSettings.items():
       kvbuilder.addKeyValPair(key,value)
-
-
-
-
-
 
      handlerRequest.setKeyValList(kvbuilder.build())
 

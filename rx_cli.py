@@ -45,6 +45,14 @@ def reset_saltwizard():
  module_cli_api.updateWizard('rxsalt_wizard','NEW')
  module_cli_api.deleteHost('Salt Master')
 
+
+def init_test_db():
+ global module_cli_api
+ if module_cli_api is None:
+    module_cli_api = ModuleCLI(None)
+ print("Running initial database package for basic usage")
+ module_cli_api.initTestDb()
+
 def init_rxrelease_db():
  global module_cli_api
  if module_cli_api is None:

@@ -43,11 +43,12 @@ return Axios.post(backend_url + '/rxbackend/settings/kvsettings',{
 })
 }
 
-export function postCategory(category_name) {
+export function postCategory(category) {
   var backend_url = GlobalSettings.getBackendUrl();
 
   return Axios.post(backend_url + '/rxbackend/settingscategory/',{
-    name: category_name
+    name: category.name,
+    prefix: category.prefix
   })
 }
 

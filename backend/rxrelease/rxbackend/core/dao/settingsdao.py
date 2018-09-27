@@ -1,6 +1,7 @@
 import logging,sys
 from ...models import CredentialsSetting
 from ...models import KVSetting
+from ...models import CredentialsSetting
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -21,6 +22,13 @@ class SettingsDao:
         credentials =  CredentialsSetting.objects.get(id = credential_setting_id)
 
         return credentials;
+    def getCredentialsByCategory(self,category):
+      try:
+       kvsettings = CredentialsSetting.objects.get(category = category)
+      except CredentialsSetting.DoesNotExist:
+       kvsettings = None
+       logger.error("Trying to get a Setting that does not exists with id " + str(category))
+      return kvsettings
 
     def getSettingsByCategory(self,category):
        try:

@@ -59,6 +59,11 @@ class ModuleCLI:
     def initDb(self):
       modules_api = REST_modules(None)
       modules_api.getFiller()
+
+    def initTestDb(self):
+      modules_api = REST_modules(None)
+      modules_api.getTestFiller()
+
     def listModules(self):
        modules_api = REST_modules(self.auth_token)
        modules = modules_api.getModules()

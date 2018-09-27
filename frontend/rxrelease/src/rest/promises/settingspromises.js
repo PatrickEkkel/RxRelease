@@ -21,13 +21,16 @@ export function UPDATE_SETTINGS_WITH_CATEGORY(response,properties) {
 
 export function CREATE_OR_UPDATE_SETTINGSCATEGORY(response,properties) {
 
+    var category = properties.category
+
     var normalizedData = jsonUtils.normalizeJson(response.data)
     // if the response from getting the category is null, create a new category
+    // TODO: hier waren we gebleven, ombouwen tot een volledig object, niet vergeten om settingsactionscreators.js en hostactioncreators.js ook mee te nemen
     if(normalizedData == null) {
-      return settingsRequests.postSettingCategory(properties.category_name);
+      return settingsRequests.postSettingCategory(category);
     }
     else {
-      return settingsRequests.getSettingCategoryByName(properties.category_name)
+      return settingsRequests.getSettingCategoryByName(category.name)
     }
 }
 // NOTE: deze methode is deprecated, neit meer gebruiken, gebruik ipv dit gedrocht CREATE_CREDENTIAL_SETTINGS_NEW
@@ -35,12 +38,13 @@ export function CREATE_CREDENTIAL_SETTINGS(response,properties) {
 
   var swaLogger = properties.logger
   var settingsfactory = new SettingsFactory();
+  var ssh_creds = properties.ssh_creds
 
   swaLogger.debug("settingcategory: ")
   swaLogger.traceObject(response.data)
   var settingscategory = settingsfactory.createSettingsCategoryFromJson(jsonUtils.normalizeJson(response.data));
   // TODO: dit is niet goed natuurlijk, hier moeten we settings meegeven vanuit de GUI
- return settingsRequests.postSettings(properties.username,properties.password,settingscategory)
+ return settingsRequests.postSettings(ssh_creds.username,ssh_creds.password,settingscategory)
 }
 export function CREATE_CREDENTIAL_SETTINGS_NEW(response,properties) {
 

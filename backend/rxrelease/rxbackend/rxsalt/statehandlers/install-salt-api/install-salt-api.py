@@ -33,12 +33,15 @@ logger.info('Current working dir: ' + current_working_dir)
 try:
  #client.loginWithKeys(data['remoteuser'])
  logging_dir = '/var/log/rxrelease'
- salt_pass = 'testpass'
+ # TODO: settings pakken die we vanuit de wizard geset hebben
+ salt_username = data['salt_username']
+ salt_password = data['salt_password']
+
  if data['os'] == "CentOS":
   #client.sendCommandWithOutput('ls -al')
   # first remove salt, if it was already installed
-  client.sendBlockingCommand('sudo userdel salt')
-  client.sendBlockingCommand('sudo useradd salt -m')
+  client.sendBlockingCommand('sudo userdel ' + salt_username)
+  client.sendBlockingCommand('sudo useradd ' + salt_username + ' -m')
   client.sendBlockingCommand('sudo su -c \'echo ' + salt_pass +  ' | passwd --stdin salt\'')
   client.sendBlockingCommand('sudo yum remove  -y salt-api')
   client.sendBlockingCommand('sudo yum install -y salt-api')

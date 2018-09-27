@@ -10,8 +10,8 @@ from ...models import Profile
 from ...models import Configuration
 from ...models import KVSetting
 from ...models import Module
-class BaseFiller:
-    def createBaseFillForSalt(self):
+class TestFiller:
+    def createFillerForTest(self):
 
         # 2 superusers aanmaken met de standaard BaseFiller
         User.objects.create_superuser(username='superuser',password='changeit',email='')
@@ -22,7 +22,6 @@ class BaseFiller:
 
         salt_module = Module.objects.create(name="rxsalt",active=False,menuoptionname="Salt")
         salt_module.save()
-
 
 
         # Built in profiletypes
@@ -53,45 +52,22 @@ class BaseFiller:
         kvsetting_saltmaster.category = global_category
         kvsetting_saltmaster.save()
 
-
         # De verschillende basis states maken
-        passwordless_login_state = StateType.objects.create(name="SSH passwordless login",handler="passwordless-sshlogin.py",SettingsCategory=global_category,module="default")
-        salt_minion_state = StateType.objects.create(name="Salt-minion",handler="install-salt.py",SettingsCategory=global_category,dependentOn=passwordless_login_state,module="rxsalt")
-        salt_master_state = StateType.objects.create(name="Salt-master",handler="install-salt-master.py",dependentOn=passwordless_login_state,SettingsCategory=global_category,module="rxsalt")
-        salt_minion_master_state = StateType.objects.create(name="Salt-minion-master",handler="install-salt.py",SettingsCategory=global_category,dependentOn=salt_master_state,module="rxsalt")
-        salt_api_state = StateType.objects.create(name="Salt-Api",handler="install-salt-api.py",SettingsCategory=salt_settings_category,dependentOn=salt_master_state,module="rxsalt")
+        test_statetype1 = StateType.objects.create(name="test-state1",handler="testcommand.py",SettingsCategory=global_category,module="default")
+        test_statetype1.save()
 
-        passwordless_login_state.save()
-        salt_minion_state.save()
-        salt_master_state.save()
-        salt_minion_master_state.save()
-        salt_api_state.save()
+        test_statetype2 = StateType.objects.create(name="test-state2",handler="testcommand.py",SettingsCategory=salt_settings_category,dependentOn=test_statetype1,module="default")
+        test_statetype2.save()
 
         # capabilities
         standard_capability = Capability.objects.create(name="standard")
-        salt_minion_capability = Capability.objects.create(name="salt-minion")
-        salt_master_capability = Capability.objects.create(name="salt-master")
-
-        standard_capability.statetypes.add(passwordless_login_state)
-        salt_minion_capability.statetypes.add(salt_minion_state)
-        salt_minion_capability.dependentOn = standard_capability
-        salt_master_capability.statetypes.add(salt_master_state)
-        salt_master_capability.statetypes.add(salt_minion_master_state)
-        salt_master_capability.statetypes.add(salt_api_state)
-
-        salt_master_capability.dependentOn = standard_capability
-
-
+        standard_capability.statetypes.add(test_statetype1)
+        standard_capability.statetypes.add(test_statetype2)
         #buildin_saltmaster_profiletype.capabilities.add(salt_minion_capability)
         buildin_saltmaster_profiletype.capabilities.add(standard_capability)
-        buildin_saltmaster_profiletype.capabilities.add(salt_master_capability)
-
         buildin_default_rxrelease_profiletype.capabilities.add(standard_capability)
 
-
         standard_capability.save()
-        salt_minion_capability.save()
-        salt_master_capability.save()
 
         buildin_saltmaster_profiletype.save()
         buildin_saltmaster_profile.save()
