@@ -47,7 +47,7 @@ try:
   client.sendBlockingCommand('sudo yum remove  -y salt-api')
   client.sendBlockingCommand('sudo yum install -y salt-api')
   client.sendFile(current_working_dir + '/salt_api_config.txt','~/.localstore/salt_api_config.txt')
-  client.sendBlockingCommand('sudo cp ~/.localstore/salt_api_config.txt /etc/salt/master')
+  client.sendBlockingCommand('sudo cp /home/rxrelease/.localstore/salt_api_config.txt /etc/salt/master')
   client.sendBlockingCommand('sudo systemctl start salt-api')
   # implementeer de volgende stappen in dit install-salt-api script om ervoor te zorgen dat de salt-api volledig geinstalleerd wordt
   # http://bencane.com/2014/07/17/integrating-saltstack-with-other-services-via-salt-api/

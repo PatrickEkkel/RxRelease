@@ -59,7 +59,7 @@ class BaseFiller:
         salt_minion_state = StateType.objects.create(name="Salt-minion",handler="install-salt.py",SettingsCategory=global_category,dependentOn=passwordless_login_state,module="rxsalt")
         salt_master_state = StateType.objects.create(name="Salt-master",handler="install-salt-master.py",dependentOn=passwordless_login_state,SettingsCategory=global_category,module="rxsalt")
         salt_minion_master_state = StateType.objects.create(name="Salt-minion-master",handler="install-salt.py",SettingsCategory=global_category,dependentOn=salt_master_state,module="rxsalt")
-        salt_api_state = StateType.objects.create(name="Salt-Api",handler="install-salt-api.py",SettingsCategory=salt_settings_category,dependentOn=salt_master_state,module="rxsalt")
+        salt_api_state = StateType.objects.create(name="Salt-Api",handler="install-salt-api.py",SettingsCategory=salt_settings_category,dependentOn=salt_minion_master_state,module="rxsalt")
 
         passwordless_login_state.save()
         salt_minion_state.save()
