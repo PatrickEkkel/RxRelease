@@ -66,6 +66,8 @@ urlpatterns = [
 
     url(r'^settings/credentials$', credentialssettingsview.CreateView.as_view(), name="create"),
     url(r'^settings/credentials/(?P<pk>[0-9]+)/$', credentialssettingsview.DetailsView.as_view(), name="details"),
+    url(r'^settings/credentials/search/$', credentialssettingsview.SearchView.as_view(), name="bycategory_id"),
+
 
     url(r'^settingscategory/$', settingscategoryview.CreateView.as_view(), name="create"),
     url(r'^settingscategory/(?P<pk>[0-9]+)/$', settingscategoryview.DetailsView.as_view(), name="details"),

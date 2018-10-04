@@ -19,7 +19,11 @@ class SearchView(generics.ListAPIView):
     serializer_class = KVSettingsSerializer
     def get_queryset(self):
         category_id =  self.request.query_params.get('category_id', None)
-        if category_id is not None:
+        category_name = self.request.query_params.get('category_name',None)
+        if category_name is not None:
+         result_queryset = KVSetting.objects.filter(category__name=category_name)
+         return result_queryset
+        elif category_id is not None:
          result_queryset = KVSetting.objects.filter(category_id=category_id)
          return result_queryset
         else:

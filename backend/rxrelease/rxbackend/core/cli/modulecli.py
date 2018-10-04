@@ -4,6 +4,8 @@ from ..restapi.REST_states import REST_states
 from ..restapi.REST_hosts  import REST_hosts
 from ..restapi.REST_statetypes import REST_statetypes
 from ..restapi.REST_settings import REST_settings
+from backend.rxrelease.rxbackend.configuration.globalsettings import ApiUserSettings,NetworkSettings,RemoteSettings
+
 from .environment import Environment
 
 import logging,sys
@@ -37,23 +39,49 @@ class ModuleCLI:
           print("no statetype entry found that matches your description")
           return None
 
-       # assuming we have a result we pick the first itemi in the index
+      # get global settings
+      global_kv_settings = settings_api.kv_settings_byname('Global Settings')
+      # assuming we have a result we pick the first itemi in the index
+
       credentials_settings = settings_api.kv_credentials(host[0]['connectioncredentials'])
+      #get the first
+      state_credentials_settings = settings_api.kv_credentials_bycategory_id(statetype[0]["SettingsCategory"])[0]
+
+      statetype_category = settings_api.category_by_id(statetype[0]["SettingsCategory"])
+
       kv_settings = settings_api.kv_settings(statetype[0]['SettingsCategory'])
       module = statetype[0]['module']
       settings_dict = {}
       settings_dict['dryrun'] = 'False'
+      settings_dict['remoteuser'] = RemoteSettings.remoteuser
 
-
+      for kv_setting in global_kv_settings:
+          key = kv_setting['key']
+          value = kv_setting['value']
+          settings_dict[key] = value
 
       for kv_setting in kv_settings:
           key = kv_setting['key']
           value = kv_setting['value']
           settings_dict[key] = value
-      username = credentials_settings['username']
-      password = credentials_settings['password']
-      settings_dict['username'] = username
-      settings_dict['password'] = password
+
+      print(state_credentials_settings)
+      print(credentials_settings)
+      host_username = credentials_settings['username']
+      host_password = credentials_settings['password']
+
+      statetype_username = state_credentials_settings['username']
+      statetype_password = state_credentials_settings['password']
+      settings_dict['username'] = host_username
+      settings_dict['password'] = host_password
+
+      prefix = statetype_category['prefix']
+      settings_dict[prefix + 'username'] = statetype_username
+      settings_dict[prefix + 'password'] = statetype_password
+
+      print(settings_dict[prefix + 'username'])
+
+
       result = Environment(settings_dict,host,statetype,module)
       return result
     def initDb(self):

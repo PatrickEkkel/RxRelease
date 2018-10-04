@@ -124,7 +124,7 @@ class SettingsCategorySerializer(serializers.ModelSerializer):
     class Meta:
 
         model = SettingsCategory
-        fields = ('id','name')
+        fields = ('id','name','prefix')
 class KVSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         category = SettingsCategorySerializer
