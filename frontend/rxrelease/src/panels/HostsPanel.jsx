@@ -49,7 +49,7 @@ class  HostsPanel  extends BasicRxPanel {
 
   componentWillReceiveProps(nextProps) {
 
-
+    this.getLogger().debug("panel state: "  + nextProps.type)
     if(nextProps.type == 'HOSTS_LOADED') {
       this.setState({hosts: nextProps.hosts})
     }

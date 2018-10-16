@@ -3,13 +3,14 @@ import BreadCrumb from '../components/BreadCrumb'
 import HostsPanel from '../panels/HostsPanel'
 import HostManagementPanel from '../panels/HostManagementPanel'
 import *  as hostsActionCreators from '../redux/hostactioncreators'
+import BasicRxPanel from '../components/panels/BasicRxPanel';
 import { connect } from 'react-redux'
 
 
-class  HostsBreadCrumbPanel  extends React.Component {
+class  HostsBreadCrumbPanel  extends BasicRxPanel {
 
 constructor() {
- super();
+super('HOSTS','HOSTSBREADCRUMBPANEL')
  this.state = {
    breadcrumbItems: [],
  }
@@ -17,6 +18,7 @@ constructor() {
 
 componentWillReceiveProps(nextProps) {
 
+  this.getLogger().debug("current panel state: " + nextProps.type)
   var bc_items = [];
   switch(nextProps.type) {
     case 'INITIAL_HOSTS_STATE':
@@ -42,7 +44,10 @@ breadCrumbOnClick(clickedItem) {
 
 }
 componentWillMount() {
+
 var { type } = this.props;
+this.getLogger().debug("current panel state: " + type)
+
 var bc_items = [];
 switch(type) {
   default:

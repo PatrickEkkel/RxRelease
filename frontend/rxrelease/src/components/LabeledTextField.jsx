@@ -69,10 +69,10 @@ class LabeledTextField extends BasicRxComponentPanel {
 
     return  <fieldset>
 
-          <label className={this.getLabelCol()} for={this.getId()}>{this.getLabel()}</label>
+          <label className={this.getLabelCol()} htmlFor={this.getId()}>{this.getLabel()}</label>
           <div className={this.getCol() + " " + this.getErrorLabel()}>
             <input id={this.getId()} name={this.getId()} placeholder={this.getPlaceholder()} className="form-control input-md has-error" type={this.getMode()} value={this.getInputValue()} onChange={this.getOnchange()}/>
-            { error ? <span class="help-block">{this.getErrorText()}</span> : null}
+            { error ? <span className="help-block">{this.getErrorText()}</span> : null}
           </div>
       </fieldset>
   }

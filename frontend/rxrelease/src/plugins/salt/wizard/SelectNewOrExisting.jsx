@@ -9,7 +9,6 @@ class SelectNewOrExisting extends WizardBasePanel {
 
 constructor() {
   super('SALTWIZARD','NEWOREXISTING',WizardBasePanel.STEP1)
-//  this.setState({stepCompleted: false})
   this.setState({stepCompleted: false});
   this.getLogger().trace("state object in wizardPanel: " + this.state.current_step);
   this.getLogger().traceObject(this.state)

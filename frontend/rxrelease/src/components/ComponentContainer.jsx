@@ -54,7 +54,7 @@ class  ComponentContainer  extends BasicRxPanel {
         break;
       case 'LOAD_HOSTS_PANEL':
         this.setState({innerComponent: <HostsBreadCrumbPanel/>})
-        this.props.dispatch(hostActionCreators.loadHosts());
+        this.props.dispatch(hostActionCreators.initialHostState());
         break;
       case  'LOAD_SETTINGS_PANEL':
         this.setState({innerComponent: <SettingsPanel/>})

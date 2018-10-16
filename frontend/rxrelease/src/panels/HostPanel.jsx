@@ -18,7 +18,8 @@ class  HostPanel  extends BasicRxPanel {
     this.props.changeAttr(e);
   }
   componentWillMount() {
-
+    this.getLogger().debug("curernt recieved state: " + type)
+  
     var {type} = this.props;
     switch(type) {
 
@@ -32,6 +33,7 @@ class  HostPanel  extends BasicRxPanel {
     var type = nextProps.type;
     var error_fields = nextProps.error_fields;
 
+    this.getLogger().debug("curernt recieved state: " + type)
     switch(type) {
       case 'SAVE_NEW_HOST_FAILED':
           this.setState({error_fields: error_fields,success: false});

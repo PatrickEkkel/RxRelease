@@ -24,7 +24,7 @@ class Wizard extends BasicRxPanel {
     }
   }
   getSelectiveEnabledPrevious() {
-    
+
   }
   onClickTab(id) {
     this.setState({selectedTab: id})
@@ -121,7 +121,7 @@ class Wizard extends BasicRxPanel {
     if(key == this.state.selectedTab) {
       className = " active"
     }
-    return <div className={className}>
+    return <div key={key} className={className}>
       {value}
     </div>
   }
