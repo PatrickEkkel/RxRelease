@@ -1,5 +1,6 @@
 import React from 'react'
 import Axios from 'axios';
+
 import ReactDOM from 'react-dom';
 import Table from './components/Table';
 import Button from './components/Button';
@@ -69,6 +70,7 @@ class  App  extends  BasicRxPanel {
         case "Logging":
           break;
         case "Configuration":
+          store.dispatch(toplevelActionCreators.loadConfigurationPanel())
           break;
         default:
          store.dispatch(toplevelActionCreators.loadModulePanel(id))

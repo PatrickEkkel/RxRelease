@@ -37,6 +37,11 @@ export function loadModulePanel(panelId) {
     PanelId: panelId
   }
 }
+export function loadConfigurationPanel() {
+  return {
+    type: 'LOAD_CONFIGURATION_PANEL'
+  }
+}
 export function loadHostsPanel() {
   return {
     type: 'LOAD_HOSTS_PANEL'

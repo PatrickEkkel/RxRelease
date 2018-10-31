@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import BasicRxPanel from './panels/BasicRxPanel';
 import ProfilesPanel from '../panels/ProfilesPanel';
 import HostsPanel from '../panels/HostsPanel';
+import ConfigurationPanel from '../panels/Configuration/ConfigurationPanel'
 import HostsBreadCrumbPanel from '../panels/HostsBreadCrumbPanel';
 import SettingsPanel from '../panels/SettingsPanel';
 import LoginPanel from '../panels/LoginPanel'
@@ -59,6 +60,9 @@ class  ComponentContainer  extends BasicRxPanel {
       case  'LOAD_SETTINGS_PANEL':
         this.setState({innerComponent: <SettingsPanel/>})
         this.props.dispatch()
+        break;
+      case 'LOAD_CONFIGURATION_PANEL':
+        this.setState({innerComponent: <ConfigurationPanel/> })
         break;
       case 'LOAD_MODULE_PANEL':
         this.setState({innerComponent: <ModulesPanel/> })

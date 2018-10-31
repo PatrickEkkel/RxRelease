@@ -30,6 +30,20 @@ Als we een bestaande host kiezen willen we de mogelijkheid hebben een ip adres i
 
 
 
+Configuration van de statetypes 
+
+We hebben te maken met standaard statetypes, de default statetypes en we hebben te maken met een sepciale salt statetype, de default statetypes zijn in principe voorgedefinieerd en niet echt instelbaar, het is denk ik ook niet van toegevoegde waarde 
+dat we die kunnen instellen, eigenlijk is alleen het definieren van salt states een interessante bezigheid. De vraag is dan ook of het interessant is om deze states dan onder het kopje 'Configuration' onder te brengen, 
+
+Er is een module 'Salt' en die heeft zijn eigen kopje, wellicht is het een beter idee om aan het 'InstallHost' scherm een optie toe te voegen die het mogelijk maakt om salt states te configureren voor verschillende hosts. 
+
+Het 'Configuration' scherm is wellicht interessanter om te gebruiken voor het configureren van integraties, nu is salt ook een integratie natuurlijk. 
+
+In het salt scherm willen we een salt state kunnen definieren. Hiervoor hebben we een editor nodig. Deze editor moet in staat zijn om een yml file te kunnen parsen, moet zo gelayout zijn dat het fijn is om mee te werken. Je moet de salt-state 
+een naampje kunnen geven. en je moet een pillar configuratie hieraan kunnen koppelen, de pillar moet je in 'Settings' scherm kunnen definieren, of via een shortcut in de saltstate editor
+
+
+
 
 
 
