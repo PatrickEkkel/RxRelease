@@ -60,13 +60,8 @@ class  ProfilesPanel  extends BasicRxPanel {
     }
 
     if(nextProps.type == 'OPEN_NEW_PROFILE') {
-      //this.props.dispatch(profileActionCreators.loadProfiles());
       this.setState({showModal:  true});
     }
-    /*
-    if(nextProps.type == 'AUTHENTICATION_ERROR') {
-      alert('redirect please')
-    }*/
   }
 
   render() {
