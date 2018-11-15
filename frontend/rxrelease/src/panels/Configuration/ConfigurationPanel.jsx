@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import YAMLEditor from '../../components/YamlEditor'
-import Table from '../../components/Table';
+import * as plugincatalog from '../../plugins/plugincatalog'
+import BasicRxPanel from '../../components/panels/BasicRxPanel';
 
-class ConfigurationPanel  extends React.Component {
+class ConfigurationPanel  extends BasicRxPanel {
 
 
   constructor() {
-    super()
-
+    super('CONFIGURATION','TABPANEL')
+      this.state  = {selectedTab: 'Salt'}
   }
   changeAttr(e) {
     this.props.changeAttr(e);
@@ -16,58 +16,61 @@ class ConfigurationPanel  extends React.Component {
   updateCode() {
 
   }
-  onClickTab(name) {
-
+  onClickTab(id) {
+    this.setState({selectedTab: id})
   }
-  onRowClick() {
+  renderTab(entry) {
+    var className = "nav-item"
+    if(entry == this.state.selectedTab) {
+      className += " active"
+    }
 
+    return <li role="presentation" className={className}  key={entry}>
+          <a href="#step1" className="nav-link" data-toggle="tab"  aria-controls="step1" role="tab" title={entry}  onClick={() => this.onClickTab(entry)}>
+                  {entry}
+              </a>
+      </li>
   }
+
+
+  renderContents(key,value) {
+    var className = "tab-pane"
+    if(key == this.state.selectedTab) {
+      className = " active"
+    }
+    return <div key={key} className={className}>
+      {value}
+    </div>
+  }
+
   render() {
-      var headers = ['','']
-      var data = [['docker-ce','GREEN'],['utils','RED'],['test','GREEN']]
-      //return <div> <CodeMirror value={this.state.code} onChange={this.updateCode} options={options} /></div>
+      var tabs = ['Salt','Test']
+      var tabContent = []
+
+      var module = plugincatalog._modules('Salt')
+      tabContent.push(this.renderContents('Salt',module.getPanel('SALT_CONFIGURATION_PANEL')))
+
       return <div className="container">
         <section>
          <ul className="nav nav-tabs" role="tablist">
-          <li className="nav-item active" role="presentation">
-            <a href="#step1" className="nav-link" data-toggle="tab"  aria-controls="step1" role="tab" title="Menu1"  onClick={() => this.onClickTab("")}>Menu 1</a>
-
-          </li>
-        <li><a href="#">Menu 2</a></li>
+        { tabs.map(entry => this.renderTab(entry)) }
         </ul>
         </section>
         <div className="tab-content container form-group row">
-          <div className="container" >
-            <div className="row">
-              <div className="col-md-1">&nbsp;</div>
-            </div>
-            <div className="row no-gutters">
-             <div className="col-md-1">&nbsp;</div>
-             <div className="col-md-8"><h5><b>salt-formula</b>:&nbsp; <i>example-formula.sls*</i></h5></div>
-             <div className="col-md-2"><b><span className="pull-left">Formulas</span></b></div>
-            </div>
-            <div className="row h-100">
-              <div className="col-md-1">
-              </div>
-              <div className="col-md-8 h-100">
-                  <YAMLEditor/>
-              </div>
-              <div className="col">
-                  <Table headers = {headers} data={data} onRowClick={(entry) => this.onRowClick(entry)}/>
-              </div>
-            </div>
-         </div>
+          {tabContent}
         </div>
+
      </div>
   }
 }
+// TODO: dit is niet helemaal correct denk ik, connection hier weg halen als we die niet nodig blijken te hebben
 
-const mapStateToProps = (state/*, props*/) => {
-  return {
-    type: state._configuration.type,
-  }
-}
+//const mapStateToProps = (state/*, props*/) => {
+//  return {
+//    type: state._plugin._saltconfiguration.type,
+//  }
+//}
 
-const ConnectedConfigurationPanel = connect(mapStateToProps)(ConfigurationPanel)
+//const ConnectedConfigurationPanel = connect(mapStateToProps)(ConfigurationPanel)
 
-export default ConnectedConfigurationPanel;
+export default ConfigurationPanel;

@@ -1,5 +1,11 @@
 from django.db import models
 
+
+class SaltFormulas(models.Model):
+    name = models.CharField(max_length=255)
+    file = models.CharField(max_length=8000)
+    status = models.CharField(max_length=255,default=0)
+
 class SaltSettings(models.Model):
  username = models.CharField(max_length=255)
  saltmaster = models.CharField(max_length=255,default=0)

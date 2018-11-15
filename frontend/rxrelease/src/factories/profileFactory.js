@@ -1,5 +1,5 @@
 import Profile from '../models/profile'
-
+// NOTE:  Legacy dit niet meer gebruiken in de toekomst
 class ProfileFactory {
 
 

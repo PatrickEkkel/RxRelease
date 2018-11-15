@@ -12,6 +12,7 @@ from .models import CredentialsSetting
 from .models import SettingsCategory
 from .models import Module
 from .models import WizardStatus
+from .models import ConfigurationTab
 from django.contrib.auth.models import User
 from .viewmodels import StateTypeHandler
 from .viewmodels import InstallHost
@@ -142,3 +143,9 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('name','profiletype','id')
+
+class ConfigurationTabSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ConfigurationTab
+        fields = ('id','tabname','component_tag','module')

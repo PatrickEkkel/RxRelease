@@ -56,9 +56,6 @@ export function updateWizardState(wizard_id,wizard_status) {
       acwLogger.debug(data['id'])
       return wizardRequests.putWizardState(data['id'],wizard_id,wizard_status)
     })
-  //  wizardRequests.putWizardState(wizard_id,wizard_status).then(function(response) {
-    //  dispatch(wizardStateUpdated())
-  //  })
   }
 }
 

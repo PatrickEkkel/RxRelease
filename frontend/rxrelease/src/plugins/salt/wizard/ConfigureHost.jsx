@@ -11,7 +11,7 @@ import  * as hostActionCreators from '../../../redux/hostactioncreators'
 import  * as wizardActionCreators from '../../../redux/wizardactioncreators'
 import  * as profileActionCreators from '../../../redux/profileactioncreators'
 import  * as settingsActionCreators from '../../../redux/settingsactioncreators'
-import  * as saltWizardActionCreators from '../wizard/redux/saltwizardactioncreators'
+import  * as saltWizardActionCreators from '../redux/saltwizardactioncreators'
 
 class ConfigureHost extends WizardBasePanel {
 

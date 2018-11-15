@@ -1,5 +1,5 @@
 import Configuration from '../models/configuration'
-
+// NOTE:  Legacy dit niet meer gebruiken in de toekomst
 class ConfigurationFactory {
 
 createConfigurationFromArray(array) {

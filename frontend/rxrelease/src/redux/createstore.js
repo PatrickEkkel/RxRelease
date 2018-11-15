@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux'
 import promiseMiddleware from 'redux-promise-middleware'
 import * as reducers from './reducers'
+import * as pluginReducers from '../plugins/plugin_reducers'
 
 
 export default function(data) {
@@ -17,8 +18,8 @@ export default function(data) {
           }
       }
   }
-
-  var reducer = combineReducers(reducers)
+  const allReducers = Object.assign({}, reducers, pluginReducers);
+  var reducer = combineReducers(allReducers)
   //var plugin_reducer = combineReducers(plugin_reducers)
   //reduceReducers(reducer,plugin_reducer)
   var finalCreateStore = applyMiddleware(thunkMiddleware)(createStore)

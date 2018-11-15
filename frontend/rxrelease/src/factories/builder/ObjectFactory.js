@@ -1,5 +1,5 @@
 
-
+// DEZE OVERBODIGE ZUT NIET GEBRUIKEN!!!!!!!!!!!!!
 class ObjectFactory {
 
 constructor(objectMetadata) {

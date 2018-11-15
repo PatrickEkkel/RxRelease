@@ -113,8 +113,6 @@ class Wizard extends BasicRxPanel {
                   {entry}
               </a>
       </li>
-
-
   }
   renderContents(key,value) {
     var className = "tab-pane"
@@ -129,11 +127,10 @@ class Wizard extends BasicRxPanel {
       var tabs = [];
       var tabContent = [];
 
-
       for(var key in this.getItems()){
         var value = this.getItems()[key];
         tabs.push(key)
-        tabContent.push(this.renderContents(key,this.getItems()[key]))
+        tabContent.push(this.renderContents(key,value))
         /* use key/value for intended purpose */
       }
     return <div className="container">

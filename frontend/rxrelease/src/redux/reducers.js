@@ -11,6 +11,7 @@ import hostBreadcrumbReducer from './reducers/hostbreadcrumb_reducer'
 import settingsReducer from './reducers/settings_reducer'
 import wizardReducer from './reducers/wizard_reducer'
 import * as plugin_reducers from '../plugins/plugin_reducers'
+import saltReducer from '../plugins/salt/redux/reducers/saltconfiguration_reducer'
 
 
 export function _plugin(state,action) {
@@ -21,6 +22,9 @@ export function _menu(state, action) {
 return menuReducer(state,action)
 
 }
+/*export function _plugin_salt(state,action) {
+  return saltReducer(state,action)
+}*/
 export function _host(state,action) {
 return hostReducer(state,action)
 }

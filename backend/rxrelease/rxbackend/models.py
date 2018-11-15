@@ -92,3 +92,8 @@ class WizardStatus(models.Model):
     wizard_status = models.CharField(max_length=200,default=None)
     def __str__(self):
         return self.wizard_id
+
+class ConfigurationTab(models.Model):
+    tabname  = models.CharField(max_length=25)
+    component_tag = models.CharField(max_length=255)
+    module = models.ForeignKey(Module,default=None,null=True)

@@ -1,4 +1,4 @@
-import ReducerLogFactory from '../../../../../logging/ReducerLogFactory'
+import ReducerLogFactory from '../../../../logging/ReducerLogFactory'
 
 var initialConfigurationState = { type: 'INITIAL_CONFIGURATION_STATE', showModal: false}
 

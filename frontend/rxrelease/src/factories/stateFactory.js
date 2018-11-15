@@ -1,4 +1,6 @@
 import State from '../models/state'
+
+// NOTE:  Legacy dit niet meer gebruiken in de toekomst
 class StateFactory {
 
 convertJsonList(list) {

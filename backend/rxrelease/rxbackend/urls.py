@@ -17,7 +17,7 @@ from .views import credentialssettingsview
 from .views import moduleviews
 from .views import testview
 from .views import fillerview
-
+from .views import configurationtabview
 
 urlpatterns = [
 
@@ -42,6 +42,9 @@ urlpatterns = [
     url(r'^modules/$', moduleviews.CreateView.as_view(), name="create"),
     url(r'^modules/(?P<pk>[0-9]+)/$', moduleviews.DetailsView.as_view(), name="details"),
     url(r'^modules/search/$', moduleviews.ModuleSearchView.as_view(), name="bymodulename"),
+
+    url(r'^modules/configurationtabs/$', configurationtabview.CreateView.as_view(), name="create"),
+    url(r'^modules/configurationtabs/(?P<pk>[0-9]+)/$', configurationtabview.DetailsView.as_view(), name="details"),
 
     url(r'^wizardstatus/$', wizardviews.CreateView.as_view(), name="create"),
     url(r'^wizardstatus/search/$', wizardviews.SearchView.as_view(), name="search"),
@@ -78,4 +81,5 @@ urlpatterns = [
     url(r'^statetypes/(?P<pk>[0-9]+)/$', statetypeviews.DetailsView.as_view(), name="details"),
     url(r'^statetypes/handlehoststate$', statetypeviews.HandleHostState.as_view(), name="create"),
     url(r'^statetypes/search/byname/$', statetypeviews.SearchbyNameView.as_view(), name="search by name"),
+
 ]

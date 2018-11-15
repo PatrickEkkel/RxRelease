@@ -1,6 +1,6 @@
 import ProfileType from '../models/profiletype'
 
-
+// NOTE:  Legacy dit niet meer gebruiken in de toekomst
 class ProfileTypeFactory {
 
 constructor() {

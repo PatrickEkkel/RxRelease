@@ -31,7 +31,7 @@ return <div className="table-responsive" >
       <thead>
         <tr>
           { this.getHeaders().map(entry =>
-            <th key={entry} >{entry}</th>)
+            <th key={entry + Math.floor((Math.random() * 100) + 1)} >{entry}</th>)
           }
         </tr>
       </thead>

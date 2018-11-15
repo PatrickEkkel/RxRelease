@@ -1,4 +1,4 @@
-
+// DEZE OVERBODIGE ZUT NIET GEBRUIKEN!!!!!!!!!!!!!
 class ObjectMetaData {
 
 constructor() {

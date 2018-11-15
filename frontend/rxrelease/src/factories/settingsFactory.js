@@ -3,6 +3,8 @@ import KeyValueSetting from '../models/keyvaluesetting'
 import SettingsCategory from '../models/settingscategory'
 import  * as jsonUtils from '../lib/json/utils'
 
+
+// NOTE:  Legacy dit niet meer gebruiken in de toekomst
 class SettingsFactory {
 
 

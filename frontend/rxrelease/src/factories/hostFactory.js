@@ -1,5 +1,5 @@
 import Host from '../models/host'
-
+// NOTE:  Legacy dit niet meer gebruiken in de toekomst
 class HostFactory {
 
 

@@ -1,5 +1,5 @@
 import Module from '../models/module'
-
+// NOTE:  Legacy dit niet meer gebruiken in de toekomst
 class ModuleFactory {
 
 convertJsonList(list) {

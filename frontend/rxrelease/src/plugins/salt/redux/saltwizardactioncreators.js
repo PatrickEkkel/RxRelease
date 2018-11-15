@@ -1,16 +1,16 @@
-import LogFactory from '../../../../logging/LogFactory'
-import GlobalSettings from '../../../../config/global';
-import  * as jsonUtils from '../../../../lib/json/utils'
-import SettingsFactory from '../../../../factories/settingsFactory'
-import HostFactory from '../../../../factories/hostFactory'
-import SettingsCategoryModel from '../../../../models/dbmodels/settingscategorymodel'
-import HostModel from '../../../../models/dbmodels/hostmodel'
-import PromiseExecutor from '../../../../lib/promises/promise_executor'
-import AggregatedFieldsErrorHandler from '../../../../rest/errorhandlers/aggregatedfieldserrorhandler'
-import  * as hostsRequests from '../../../../rest/requests/hostrequests'
-import  * as settingsRequests from '../../../../rest/requests/settingsrequests'
-import  * as settingsPromises from '../../../../rest/promises/settingspromises'
-import  * as hostsPromises from '../../../../rest/promises/hostpromises'
+import LogFactory from '../../../logging/LogFactory'
+import GlobalSettings from '../../../config/global';
+import  * as jsonUtils from '../../../lib/json/utils'
+import SettingsFactory from '../../../factories/settingsFactory'
+import HostFactory from '../../../factories/hostFactory'
+import SettingsCategoryModel from '../../../models/dbmodels/settingscategorymodel'
+import HostModel from '../../../models/dbmodels/hostmodel'
+import PromiseExecutor from '../../../lib/promises/promise_executor'
+import AggregatedFieldsErrorHandler from '../../../rest/errorhandlers/aggregatedfieldserrorhandler'
+import  * as hostsRequests from '../../../rest/requests/hostrequests'
+import  * as settingsRequests from '../../../rest/requests/settingsrequests'
+import  * as settingsPromises from '../../../rest/promises/settingspromises'
+import  * as hostsPromises from '../../../rest/promises/hostpromises'
 
 var settings = new GlobalSettings();
 var swaLogger = new LogFactory().createLogger("SALTWIZARD","ACTIONCREATOR")
