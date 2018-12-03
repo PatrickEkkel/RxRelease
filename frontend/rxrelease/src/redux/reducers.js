@@ -10,6 +10,7 @@ import toplevelReducer from './reducers/toplevel_reducer'
 import hostBreadcrumbReducer from './reducers/hostbreadcrumb_reducer'
 import settingsReducer from './reducers/settings_reducer'
 import wizardReducer from './reducers/wizard_reducer'
+import yamlReducer from './reducers/yaml_editor_reducer'
 import * as plugin_reducers from '../plugins/plugin_reducers'
 import saltReducer from '../plugins/salt/redux/reducers/saltconfiguration_reducer'
 
@@ -46,6 +47,7 @@ export function _dockercompose_recipe(state,action) {
 export function _profilebreadcrumb(state,action) {
   return profilebreadCrumbReducer(state,action)
 }
+
 export function _hostmanagement(state,action) {
   return hostManagementReducer(state,action)
 }
@@ -57,4 +59,7 @@ export function _settings(state,action) {
 }
 export function _wizard(state,action) {
   return wizardReducer(state,action)
+}
+export function _yamleditor(state,action) {
+  return yamlReducer(state,action)
 }

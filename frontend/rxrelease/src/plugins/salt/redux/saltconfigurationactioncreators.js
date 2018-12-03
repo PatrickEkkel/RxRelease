@@ -19,6 +19,30 @@ export function switchSaltformula(saltformula) {
     selected_formula: saltformula
   }
 }
+export function formulaSaved(_saltformula) {
+  return {
+    type: 'SALT_FORMULA_SAVED',
+    saltformula: _saltformula,
+    showModal: false
+  }
+}
+export function openNewFormula() {
+  return {
+    type: 'OPEN_NEW_SALTFORMULA',
+    showModal: true
+  }
+}
+export function saveNewFormula(saltformula) {
+
+  return function (dispatch) {
+
+    saltConfigurationRequests.postSaltformula(saltformula)
+    .then(function(response) {
+        dispatch(formulaSaved())
+    })
+
+  }
+}
 
 export function loadAllSaltFormulas() {
   return function (dispatch) {
