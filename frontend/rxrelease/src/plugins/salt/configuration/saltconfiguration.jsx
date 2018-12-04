@@ -131,7 +131,8 @@ class SaltConfigurationPanel  extends BasicRxPanel {
                 </div>
                 <div className="row">
                  <div className="col-md-1">&nbsp;</div>
-                 <div className="col-md-8"><h5><b>salt-formula</b>:&nbsp; <i>{this.state.selected_formula.getName()}</i></h5></div>
+                 <div className="col-md-6"><h5><b>salt-formula</b>:&nbsp; <i>{this.state.selected_formula.getName()}</i></h5></div>
+                 <div className="col-md-2"></div>
                  <div className="col-md-2"><b><span className="pull-left">Formulas</span></b></div>
                 </div>
                 <div className="row h-100">
@@ -153,8 +154,9 @@ class SaltConfigurationPanel  extends BasicRxPanel {
                <div className="row"><div className="col-md-1">&nbsp;</div></div>
                <div className="row ">
                 <div className="col-md-1">&nbsp;</div>
-                <div className="col-md-6 text-left">&nbsp;&nbsp;&nbsp;&nbsp;<Button title="New Formula" onClick={() => this.createFormula()}/>&nbsp;</div>
-                <div className="col-md-2 text-right">&nbsp;<Button title="Save Formula" onClick={() => this.saveFormula()}/></div>
+                <div className="col-md-4 text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                <div className="col-md-4 text-right"><Button title="New Formula" onClick={() => this.createFormula()}/>&nbsp;<Button title="Save Formula" onClick={() => this.saveFormula()}/>  </div>
+
                </div>
              </div>
             </div>
