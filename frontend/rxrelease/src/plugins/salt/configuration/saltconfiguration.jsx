@@ -24,10 +24,11 @@ class SaltConfigurationPanel  extends BasicRxPanel {
     }
 
   }
-  changeAttr(value) {
+  changeYml(value) {
     var _selected_formula = this.state.selected_formula
     _selected_formula.file = value
     this.setState({selected_formula: _selected_formula})
+
   }
   onRowClick(entry) {
    var formula_id = entry[0]
@@ -43,15 +44,21 @@ class SaltConfigurationPanel  extends BasicRxPanel {
       case 'INITIAL_SALT_CONFIGURATION_STATE':
         this.props.dispatch(saltconfigurationActionCreators.loadAllSaltFormulas())
         break;
-      default:
-
+      case 'SELECT_SALT_FORMULA':
+      case 'SALT_CONFIGURATION_LOADED':
+      case 'UPDATE_YAML_FILE':
+      case 'SALT_FORMULA_SAVED':
+      case 'SALT_FORMULA_UPDATED':
+        this.props.dispatch(saltconfigurationActionCreators.initialConfigurationState())
+        this.getLogger().trace("Reload configuration")
+        break;
     }
   }
   componentWillReceiveProps(nextProps) {
 
     switch (nextProps.type) {
       case 'INITIAL_SALT_CONFIGURATION_STATE':
-        this.setState({showModal: nextProps.showModal})
+        this.getLogger().trace("Initial Salt Configuration State")
         this.props.dispatch(saltconfigurationActionCreators.loadAllSaltFormulas())
        break;
       case 'SALT_CONFIGURATION_LOADED':
@@ -80,7 +87,6 @@ class SaltConfigurationPanel  extends BasicRxPanel {
        this.props.dispatch(saltconfigurationActionCreators.loadAllSaltFormulas())
        break;
       case 'UPDATE_YAML_FILE':
-        console.log("doet hij het maar 1 keer")
         var _selected_formula = this.state.selected_formula
         _selected_formula.file = nextProps.yaml_contents
         this.setState({selected_formula: _selected_formula })
@@ -91,7 +97,6 @@ class SaltConfigurationPanel  extends BasicRxPanel {
   }
 
   saveAndClose() {
-
     var saltformula = SaltFormulaModel.newSaltFormula(null,this.state.formula_name,"#salt formula","NA")
     this.props.dispatch(saltconfigurationActionCreators.saveNewFormula(saltformula))
   }
@@ -109,11 +114,11 @@ class SaltConfigurationPanel  extends BasicRxPanel {
 
   render() {
     var headers = ['','','']
-    //var data = [['docker-ce','GREEN'],['utils','RED'],['test','GREEN']]
+
     var data = this.state.saltformulas_tabledata
     var selected_formula = this.state.selected_formula
     var code = selected_formula.file
-    //alert(code)
+
     this.getLogger().trace("Selected formula: ")
     this.getLogger().traceObject(selected_formula)
     return <div className="tab-content container form-group row">
@@ -126,14 +131,14 @@ class SaltConfigurationPanel  extends BasicRxPanel {
                 </div>
                 <div className="row">
                  <div className="col-md-1">&nbsp;</div>
-                 <div className="col-md-8"><h5><b>salt-formula</b>:&nbsp; <i>example-formula.sls*</i></h5></div>
+                 <div className="col-md-8"><h5><b>salt-formula</b>:&nbsp; <i>{this.state.selected_formula.getName()}</i></h5></div>
                  <div className="col-md-2"><b><span className="pull-left">Formulas</span></b></div>
                 </div>
                 <div className="row h-100">
                   <div className="col-md-1">
                   </div>
                   <div className="col-md-8 h-100">
-                      <YAMLEditor code={code} changeAttr={(e) => this.changeAttr(e)}/>
+                      <YAMLEditor code={code} changeAttr={(e) => this.changeYml(e)}/>
                   </div>
                   <div className="col">
                       <Table headers = {headers} data={data} onRowClick={(entry) => this.onRowClick(entry)}/>
