@@ -32,6 +32,28 @@ export function openNewFormula() {
     showModal: true
   }
 }
+
+export function updateFormula(saltformula) {
+
+  return function (dispatch) {
+
+    saltConfigurationRequests.putSaltFormula(saltformula)
+    .then(function(response) {
+        dispatch(formulaUpdated())
+    })
+
+  }
+
+}
+
+export function formulaUpdated() {
+
+  return {
+    type: 'SALT_FORMULA_UPDATED',
+    showModal: false
+  }
+}
+
 export function saveNewFormula(saltformula) {
 
   return function (dispatch) {

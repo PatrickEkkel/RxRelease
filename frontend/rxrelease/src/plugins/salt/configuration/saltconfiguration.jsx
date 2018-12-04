@@ -104,6 +104,7 @@ class SaltConfigurationPanel  extends BasicRxPanel {
   saveFormula() {
     this.getLogger().trace("Current formula to be saved")
     this.getLogger().traceObject(this.state.selected_formula)
+    this.props.dispatch(saltconfigurationActionCreators.updateFormula(this.state.selected_formula))
   }
 
   render() {
