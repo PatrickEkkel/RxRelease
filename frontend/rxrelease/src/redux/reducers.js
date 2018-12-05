@@ -11,6 +11,7 @@ import hostBreadcrumbReducer from './reducers/hostbreadcrumb_reducer'
 import settingsReducer from './reducers/settings_reducer'
 import wizardReducer from './reducers/wizard_reducer'
 import yamlReducer from './reducers/yaml_editor_reducer'
+import configurationpluginPanelReducer from './reducers/configurationpluginpanel_reducer'
 import * as plugin_reducers from '../plugins/plugin_reducers'
 import saltReducer from '../plugins/salt/redux/reducers/saltconfiguration_reducer'
 
@@ -28,6 +29,9 @@ return menuReducer(state,action)
 }*/
 export function _host(state,action) {
 return hostReducer(state,action)
+}
+export function _configuration_plugin_panel(state,action) {
+  return configurationpluginPanelReducer(state,action)
 }
 export function _profiles(state,action) {
   return profilesReducer(state,action)
