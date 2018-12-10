@@ -32,6 +32,26 @@ export function openNewFormula() {
     showModal: true
   }
 }
+// TODO: opdelen in promises
+export function testSaltFormula(saltformula) {
+
+return function(dispatch) {
+  saltConfigurationRequests.postSaltFormulaTest(saltformula)
+  .then(function(response) {
+    return response.data
+  }).then(function(response)
+  {
+    dispatch(formulaTested())
+  })
+}
+}
+
+export function formulaTested() {
+  return {
+    type: 'FORMULA_TESTED'
+  }
+}
+
 
 export function updateFormula(saltformula) {
 

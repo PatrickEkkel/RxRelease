@@ -19,6 +19,17 @@ export function putSaltFormula(saltformula) {
 
 }
 
+export function postSaltFormulaTest(saltformula) {
+
+  var backend_url = GlobalSettings.getBackendUrl();
+  return Axios.post(backend_url + '/rxbackend/rxsalt/formulas/test',{
+    name: saltformula.getName(),
+    file: saltformula.getFile(),
+    status: saltformula.getStatus()
+  })
+
+}
+
 export function postSaltformula(saltformula) {
 
   var backend_url = GlobalSettings.getBackendUrl();

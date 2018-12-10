@@ -6,6 +6,8 @@ class TextFile:
     def openReadOnly(self):
         if os.path.exists(self.location):
             self.filehandle = open(self.location,'r')
+    def create(self):
+        self.filehandle = open(self.location,'w+')
     def openOrCreate(self):
         if os.path.exists(self.location):
          self.filehandle = open(self.location,'a+')
@@ -19,6 +21,10 @@ class TextFile:
         self.openReadOnly()
         lines = self.filehandle.readlines()
         return lines
+    def write(self,line):
+        self.openOrCreate()
+        self.filehandle.write(line)
+        self.close()
     def writeLine(self,line):
         self.openOrCreate()
         self.filehandle.write(line + '\n')

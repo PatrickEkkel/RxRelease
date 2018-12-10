@@ -1,4 +1,6 @@
 import os.path
+import ntpath
+from shutil import copyfile
 from .textfile import TextFile
 
 class RxFileStore:
@@ -11,17 +13,25 @@ class RxFileStore:
  def setContext(self,context):
   self.context = context
  def copyFile(self,file):
-  sh.cp(file,self.location + self.context)
-  pass
+  copyfile(file,self.location + self.context + "/" + ntpath.basename(file))
+  return self.location + self.context + "/" + ntpath.basename(file)
  def openTextFile(self,file):
      result = TextFile(self.location + self.context + "/" + file)
      result.openOrCreate()
      result.close()
      return result
+ def newTextFile(self,file):
+     result = TextFile(self.location + self.context + "/" + file)
+     result.create()
+     result.close()
+     return result
+
 
  def createDir(self,dir):
   newPath = self.location + self.context + dir
   if not os.path.exists(newPath):
    os.makedirs(newPath)
+ def getFileStoreLocationWithContext(self):
+     return self.location + self.context + "/"
  def getFileStoreLocation(self):
   return self.location

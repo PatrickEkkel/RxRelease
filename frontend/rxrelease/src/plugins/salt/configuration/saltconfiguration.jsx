@@ -112,6 +112,10 @@ class SaltConfigurationPanel  extends BasicRxPanel {
     this.props.dispatch(saltconfigurationActionCreators.updateFormula(this.state.selected_formula))
   }
 
+  testSaltFormula() {
+    alert('test!')
+  }
+
   render() {
     var headers = ['','','']
 
@@ -153,10 +157,12 @@ class SaltConfigurationPanel  extends BasicRxPanel {
              <div className="container no-gutters">
                <div className="row"><div className="col-md-1">&nbsp;</div></div>
                <div className="row ">
-                <div className="col-md-1">&nbsp;</div>
-                <div className="col-md-4 text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                <div className="col-md-4 text-right"><Button title="New Formula" onClick={() => this.createFormula()}/>&nbsp;<Button title="Save Formula" onClick={() => this.saveFormula()}/>  </div>
-
+                <div className="col-md-2 text-right"></div>
+                <div className="col-md-3 text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                <div className="col-md-4 text-right">
+                  <Button title="Test Formula" css="btn btn-success" onClick={() => this.testSaltFormula()}/>&nbsp;
+                  <Button title="New Formula" onClick={() => this.createFormula()}/>&nbsp;
+                  <Button title="Save Formula" onClick={() => this.saveFormula()}/>  </div>
                </div>
              </div>
             </div>

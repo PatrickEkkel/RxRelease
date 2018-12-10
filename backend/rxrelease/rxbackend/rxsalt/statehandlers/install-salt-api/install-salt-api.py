@@ -3,7 +3,8 @@ from rxbackend.ssh.ssh import SSHClient
 from rxbackend.ssh.sshwrapper import SSHWrapper
 from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
 from rxbackend.core.restapi.REST_states import REST_states
-from rxbackend.configuration.globalsettings import ApiUserSettings
+from rxbackend.core.templateparser import TemplateParser
+from rxbackend.configuration.globalsettings import NetworkSettings,LocalSettings,ApiUserSettings
 from rxbackend.core.restapi.REST_authentication import REST_authentication
 import logging,paramiko,sh,sys,json,os
 # we gaan er even vanuit dat passwordless_sshlogin vanaf deze locatie nu geregeld is
@@ -38,6 +39,10 @@ try:
  salt_password = data['saltpassword']
 
  if data['os'] == "CentOS":
+  salt_api_config_txt  = current_working_dir + '/salt_api_config.txt'
+  template_parser = TemplateParser(salt_api_config_txt)
+  template_parser.replace_tokens('$SALT_USERNAME',salt_username)
+  salt_api_config_txt_handle =  template_parser.template_file()
   #client.sendCommandWithOutput('ls -al')
   # first remove salt, if it was already installed
   # TODO: salt crednentials moeten nog netjes worden doorgegeven aan de commando's
@@ -46,7 +51,7 @@ try:
   client.sendBlockingCommand('sudo su -c \'echo ' + salt_password +  ' | passwd --stdin ' + salt_username + '\'')
   client.sendBlockingCommand('sudo yum remove  -y salt-api')
   client.sendBlockingCommand('sudo yum install -y salt-api')
-  client.sendFile(current_working_dir + '/salt_api_config.txt','~/.localstore/salt_api_config.txt')
+  client.sendFile(salt_api_config_txt_handle,'~/.localstore/salt_api_config.txt')
   client.sendBlockingCommand('sudo cp /home/rxrelease/.localstore/salt_api_config.txt /etc/salt/master')
   client.sendBlockingCommand('sudo systemctl start salt-api')
   # implementeer de volgende stappen in dit install-salt-api script om ervoor te zorgen dat de salt-api volledig geinstalleerd wordt

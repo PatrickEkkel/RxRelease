@@ -7,7 +7,7 @@ rest_cherrypy:
 
 external_auth:
  pam:
-  salt:
+  $SALT_USERNAME:
     - .*
     - '@wheel' # to allow access to all wheel modules
     - '@runner' # to allow access to all runner modules

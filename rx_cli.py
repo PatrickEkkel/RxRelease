@@ -37,6 +37,8 @@ def help():
  print("enable_salt() -> enables salt module")
  print("reset_saltwizard() -> DEVELOPER, resets the state of the saltwizard, easy for testing")
  print("env = module_cli_api.getEnvironment(<hostname>,<statetype_name>) -> DEVELOPER, get an environment for a particular host,statetype combination, call runner.runStateHandlerJob(<statehandlername>,env)")
+ print("example voor getEnvironment:  env = module_cli_api.getEnvironment('salt-master','Salt-Api')")
+ print("execute statehandler without the scheduler, call runner.runStateHandlerJob('install-salt-api',env) ")
 
 def list_modules():
  print("Listing modules")
