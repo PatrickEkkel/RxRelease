@@ -40,5 +40,5 @@ sessionmanager = SessionManager(api_user_settings_username,api_user_settings_pas
 sessionmanager.login()
 
 dispatcher = Dispatcher('/home/' + localuser + '/.rxrelease/')
-dispatcher.registerJob(JobStateHandler(),"StateHandlerJob")
+dispatcher.registerJob(JobStateHandler(sessionmanager.session),"StateHandlerJob")
 dispatcher.run()

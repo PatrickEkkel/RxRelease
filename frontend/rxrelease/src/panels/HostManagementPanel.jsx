@@ -54,7 +54,16 @@ class  HostManagementPanel  extends BasicRxPanel {
   saveHostDetails() {
     this.props.dispatch(hostActionCreators.updateHost(this.state.selected_host))
   }
+  getHost() {
+    return this.state.selected_host
+  }
+  installHost() {
+    // TODO: hier een methode inbouwen die de saved_host ophaalt uit een methode (via props of state)
+    this.getLogger().trace("installing the host")
+    this.getLogger().traceObject(this.getHost())
+    this.props.dispatch(hostActionCreators.installHost(this.getHost()))
 
+  }
   render() {
     var currentContext = this;
     var { type } = this.props
@@ -146,7 +155,7 @@ class  HostManagementPanel  extends BasicRxPanel {
           &nbsp;
         </div>
       <LabeledTable onLabelLoad={handleLabelLoad} labelText="Status" headers = {headers} data={states} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
-      <Button title="Install Host"/>
+        <Button title="Install Host"  onClick={() => this.installHost()}/>
       </div>
   }
 }

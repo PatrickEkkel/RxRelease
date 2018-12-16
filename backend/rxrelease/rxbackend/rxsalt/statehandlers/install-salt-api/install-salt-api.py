@@ -37,7 +37,7 @@ try:
  # TODO: settings pakken die we vanuit de wizard geset hebben
  salt_username = data['saltusername']
  salt_password = data['saltpassword']
-
+ # TODO: deze state testen, als we met een schone lei beginnen
  if data['os'] == "CentOS":
   salt_api_config_txt  = current_working_dir + '/salt_api_config.txt'
   template_parser = TemplateParser(salt_api_config_txt)
@@ -54,6 +54,10 @@ try:
   client.sendFile(salt_api_config_txt_handle,'~/.localstore/salt_api_config.txt')
   client.sendBlockingCommand('sudo cp /home/rxrelease/.localstore/salt_api_config.txt /etc/salt/master')
   client.sendBlockingCommand('sudo systemctl start salt-api')
+  client.sendBlockingCommand('sudo firewall-cmd --permanent --add-port=8080/tcp')
+  client.sendBlockingCommand('sudo firewall-cmd --reload')
+  # TODO: salt-api heeft een afhankelijkheid met salt-master state, deze moet herstart worden
+  client.sendBlockingCommand('sudo systemctl start salt-master')
   # implementeer de volgende stappen in dit install-salt-api script om ervoor te zorgen dat de salt-api volledig geinstalleerd wordt
   # http://bencane.com/2014/07/17/integrating-saltstack-with-other-services-via-salt-api/
   # https://github.com/saltstack/pepper

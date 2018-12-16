@@ -1,7 +1,28 @@
 import ntpath
 import pyinotify
+import logging,sys
+
+from backend.rxrelease.rxbackend.core.jobs.api.jobfactory import JobFactory
+from backend.rxrelease.rxbackend.core.jobs.api.jobActionFactory import JobActionFactory
+from backend.rxrelease.rxbackend.core.jobs.api.jobfeed import JobFeed
+from backend.rxrelease.rxbackend.core.jobs.statetypes.handlerfactory import HandlerFactory
+from backend.rxrelease.rxbackend.core.restapi.REST_statetypes import REST_statetypes
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
 
 class JobStateHandler(pyinotify.ProcessEvent):
+
+
+    def __init__(self,session):
+        self.session = session
     # evt has useful properties, including pathname
     def process_IN_CLOSE_WRITE(self, evt):
             print("Trigger Job for: " + ntpath.basename(evt.pathname))
@@ -15,6 +36,12 @@ class JobStateHandler(pyinotify.ProcessEvent):
             textfile = jobfeed.getLatestJobTask(job)
 
             actions = []
+            actionFactory = JobActionFactory(None)
+            requestFactory = HandlerFactory()
+            statetypesApi = REST_statetypes(self.session.auth_token)
+
+
+
             for actionline in textfile.getLines():
                 newAction = actionFactory.createActionFromString(actionline)
                 actions.append(newAction)
