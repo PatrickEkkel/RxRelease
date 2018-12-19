@@ -26,6 +26,8 @@ npm install --save react-modal-bootstrap
 sudo pip install django
 sudo pip install django-webpack-loader
 sudo pip install djangorestframework
+sudo pip install pyzmq
+
 
 
 # python lib for ssh

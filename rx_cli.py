@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 #import importlib.util
 import logging,sys,os,importlib
+import zmq
 from backend.rxrelease.rxbackend.configuration.globalsettings import ApiUserSettings,NetworkSettings,RemoteSettings
 from backend.rxrelease.rxbackend.core.restapi.REST_authentication import REST_authentication
+from backend.rxrelease.rxbackend.core.jobs.zmq.scheduler_service import SchedulerService
 from backend.rxrelease.rxbackend.core.cli.modulecli import ModuleCLI
 from backend.rxrelease.rxbackend.ssh.ssh import SSHClient
 from backend.rxrelease.rxbackend.ssh.sshwrapper import SSHWrapper
@@ -18,6 +20,7 @@ api_user_settings_password = ApiUserSettings.password
 shell = Shell()
 runner = ConsoleRunner()
 saltrunner = SaltConsoleRunner()
+scheduler_service = SchedulerService()
 
 def createConnectionSettings(username,ipaddress,use_keys=False,password=''):
     return ConnectionDetails(username,password,ipaddress)

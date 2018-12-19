@@ -29,4 +29,4 @@ class HandlerRequest:
          return payload
     def __str__(self):
         return '{ "host_id": "' + str(self.getHostId()) + '", "statetype_id": "' + str(self.getStateTypeId()) + '", "keyvalList": "' + self.getKeyValList() + '",  "handlerType": "python","handlerCommand": "' + self.getHandlerCommand() + '"  }'
-        #return '{ "host_id": "' + self.getHostId() + '", "statetype_id": "' + self.getStateTypeId() + '", "keyvalList": "\'{\\"username\\": \\"test\\",\\"password\\": \\"biertje\\",\\"dryrun\\": \\"true\\"}\'", "handlerType": "python","handlerCommand": "' + self.getHandlerCommand() + '"  }'
+    

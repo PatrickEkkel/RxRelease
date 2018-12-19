@@ -1,5 +1,5 @@
 import logging,sys
-from handlerrequest import HandlerRequest
+from .handlerrequest import HandlerRequest
 from ...dao.hostdao import HostDao
 from ...dao.settingsdao import SettingsDao
 from ..api.keyvallistbuilder import KeyValListBuilder
@@ -88,8 +88,6 @@ class RequestBuilder:
 
      for key, value in selectedSettings.items():
       kvbuilder.addKeyValPair(key,value)
-
-     handlerRequest.setKeyValList(kvbuilder.build())
-
+      
      handlerRequest.setKeyValList(kvbuilder.build())
      return handlerRequest

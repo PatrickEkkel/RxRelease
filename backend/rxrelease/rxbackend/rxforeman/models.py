@@ -1,9 +1,9 @@
 from django.db import models
 from ..models import Host
-from foremanapi.ForemanApi import HostStatus
+from .foremanapi.ForemanApi import HostStatus
 
 class ForemanHost(models.Model):
- host = models.ForeignKey(Host,null=True)
+ host = models.ForeignKey(Host,null=True,on_delete=models.PROTECT)
  foreman_host_id = models.CharField(max_length=4,default=0)
  status = models.CharField(max_length=100,default= HostStatus.UNRESOLVED)
 

@@ -30,17 +30,17 @@ class SettingsCategory(models.Model):
 
 class StateType(models.Model):
     name = models.CharField(max_length=255)
-    SettingsCategory = models.ForeignKey(SettingsCategory,default=None,null=True)
+    SettingsCategory = models.ForeignKey(SettingsCategory,default=None,null=True,on_delete=models.PROTECT)
     handler = models.CharField(max_length=255,null=True)
     module = models.CharField(max_length=255,null=True,default=None)
-    dependentOn = models.ForeignKey('self',null=True,default=None)
+    dependentOn = models.ForeignKey('self',null=True,default=None,on_delete=models.PROTECT)
 
     def __str__(self):
         return self.name
 
 class Capability(models.Model):
     name = models.CharField(max_length=255)
-    dependentOn = models.ForeignKey('self',null=True,default=None)
+    dependentOn = models.ForeignKey('self',null=True,default=None,on_delete=models.PROTECT)
     #module = models.CharField(max_length=255)
     statetypes = models.ManyToManyField(StateType)
     def __str__(self):
@@ -53,38 +53,38 @@ class ProfileType(models.Model):
 
 class Profile(models.Model):
     name = models.CharField(max_length=200)
-    profiletype = models.ForeignKey(ProfileType,null=True)
+    profiletype = models.ForeignKey(ProfileType,null=True,on_delete=models.PROTECT)
     def __str__(self):
         return self.name
 class CredentialsSetting(models.Model):
     username = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
-    category = models.ForeignKey(SettingsCategory)
+    category = models.ForeignKey(SettingsCategory,on_delete=models.PROTECT)
 class KVSetting(models.Model):
     key = models.CharField(max_length=255)
     value = models.CharField(max_length=255)
-    category = models.ForeignKey(SettingsCategory)
+    category = models.ForeignKey(SettingsCategory,on_delete=models.PROTECT)
 class Host(models.Model):
     hostname =  models.CharField(max_length=255)
     ipaddress =  models.CharField(max_length=15)
     description =  models.CharField(max_length=400)
     status      = models.CharField(max_length=255,default="UNMANAGED")
-    connectioncredentials = models.ForeignKey(CredentialsSetting,default=None,null=True)
-    hostSettings = models.ForeignKey(SettingsCategory,default=None,null=True)
-    profileType = models.ForeignKey(ProfileType,default=None,null=True)
+    connectioncredentials = models.ForeignKey(CredentialsSetting,default=None,null=True,on_delete=models.PROTECT)
+    hostSettings = models.ForeignKey(SettingsCategory,default=None,null=True,on_delete=models.PROTECT)
+    profileType = models.ForeignKey(ProfileType,default=None,null=True,on_delete=models.PROTECT)
 
 class State(models.Model):
     name = models.CharField(max_length=255)
-    host = models.ForeignKey(Host)
+    host = models.ForeignKey(Host,on_delete=models.PROTECT)
     installed = models.BooleanField()
-    statetype = models.ForeignKey(StateType)
+    statetype = models.ForeignKey(StateType,on_delete=models.PROTECT)
     def __str__(self):
         return self.name
 
 class Configuration(models.Model):
     name = models.CharField(max_length=200)
     hosts = models.ManyToManyField(Host)
-    profile = models.ForeignKey(Profile)
+    profile = models.ForeignKey(Profile,on_delete=models.PROTECT)
     def __str__(self):
         return self.name
 
@@ -97,4 +97,4 @@ class WizardStatus(models.Model):
 class ConfigurationTab(models.Model):
     tabname  = models.CharField(max_length=25)
     component_tag = models.CharField(max_length=255)
-    module = models.ForeignKey(Module,default=None,null=True)
+    module = models.ForeignKey(Module,default=None,null=True,on_delete=models.PROTECT)

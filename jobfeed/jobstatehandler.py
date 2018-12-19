@@ -24,6 +24,8 @@ class JobStateHandler(pyinotify.ProcessEvent):
     def __init__(self,session):
         self.session = session
     # evt has useful properties, including pathname
+    def process_action(self):
+     pass
     def process_IN_CLOSE_WRITE(self, evt):
             print("Trigger Job for: " + ntpath.basename(evt.pathname))
             # remove trigger_ prefix from filename so we get the jobname

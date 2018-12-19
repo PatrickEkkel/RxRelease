@@ -79,8 +79,7 @@ class ModuleCLI:
       settings_dict[prefix + 'username'] = statetype_username
       settings_dict[prefix + 'password'] = statetype_password
 
-      print(settings_dict[prefix + 'username'])
-
+      
 
       result = Environment(settings_dict,host,statetype,module)
       return result
