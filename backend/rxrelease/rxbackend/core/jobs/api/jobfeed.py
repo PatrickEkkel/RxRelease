@@ -1,4 +1,4 @@
-import logging,sys,os,time
+import logging,sys,os,time,zmq
 from datetime import datetime
 from .job import Job
 from ...restapi.REST_states import REST_states

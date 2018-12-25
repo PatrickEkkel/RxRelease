@@ -6,6 +6,7 @@ from dateutil.parser import parse
 from jobfeed.dispatcher import Dispatcher
 from jobfeed.sessionmanager import SessionManager
 from jobfeed.jobstatehandler import JobStateHandler
+from jobfeed.jobdefinition import JobDefinition
 from backend.rxrelease.rxbackend.core.rxfilestore import RxFileStore
 from backend.rxrelease.rxbackend.core.jobs.api.jobfeed import JobFeed
 from backend.rxrelease.rxbackend.core.jobs.api.jobfactory import JobFactory
@@ -23,6 +24,7 @@ ch.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
+
 actionFactory = JobActionFactory(None)
 requestFactory = HandlerFactory()
 
@@ -39,6 +41,7 @@ localuser=LocalSettings.localuser
 sessionmanager = SessionManager(api_user_settings_username,api_user_settings_password)
 sessionmanager.login()
 
-dispatcher = Dispatcher('/home/' + localuser + '/.rxrelease/')
-dispatcher.registerJob(JobStateHandler(sessionmanager.session),"StateHandlerJob")
+dispatcher = Dispatcher(sessionmanager)
+stateHandlerDefinition = JobDefinition("StateHandlerJob")
+dispatcher.registerJob(stateHandlerDefinition)
 dispatcher.run()

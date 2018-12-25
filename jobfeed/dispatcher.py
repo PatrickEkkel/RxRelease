@@ -20,16 +20,16 @@ actionFactory = JobActionFactory(None)
 requestFactory = HandlerFactory()
 
 class Dispatcher:
-    def __init__(self,fs_location):
-     self.jobList = []
-     self.scheduler_server = SchedulerServer()
-     self.filestorelocation = fs_location
-     self.jobfeedRunnerDir = self.filestorelocation + '/jobfeed'
-    def registerJob(self,job,name):
-     jobdefinition = JobDefinition(job,name)
-     self.jobList.append(jobdefinition)
-     self.scheduler_server.register_messagehandler(jobdefinition)
-    
+    def __init__(self,session):
+     #self.jobList = []
+     self.scheduler_server = SchedulerServer(session)
+     #self.filestorelocation = fs_location
+     #self.jobfeedRunnerDir = self.filestorelocation + '/jobfeed'
+    def registerJob(self,job):
+     #jobdefinition = JobDefinition(name)
+     #self.jobList.append(jobdefinition)
+     self.scheduler_server.register_messagehandler(job)
+
     def run(self):
      self.scheduler_server.start()
      #thread = Thread(target = self.run_zmq_reciever,args = (10, ))

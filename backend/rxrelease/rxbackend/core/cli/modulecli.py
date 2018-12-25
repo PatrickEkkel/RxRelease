@@ -45,7 +45,14 @@ class ModuleCLI:
 
       credentials_settings = settings_api.kv_credentials(host[0]['connectioncredentials'])
       #get the first
-      state_credentials_settings = settings_api.kv_credentials_bycategory_id(statetype[0]["SettingsCategory"])[0]
+      #print(statetype[0]["SettingsCategory"])
+      state_credentials_settingsCategory = settings_api.kv_credentials_bycategory_id(statetype[0]["SettingsCategory"])
+      #print(state_credentials_settingsCategory)
+      if len(state_credentials_settingsCategory) > 0:
+       state_credentials_settings = state_credentials_settingsCategory[0]
+      else:
+       state_credentials_settings = None
+
 
       statetype_category = settings_api.category_by_id(statetype[0]["SettingsCategory"])
 
@@ -65,21 +72,25 @@ class ModuleCLI:
           value = kv_setting['value']
           settings_dict[key] = value
 
-      print(state_credentials_settings)
-      print(credentials_settings)
+      #print(state_credentials_settings)
+      #print(credentials_settings)
       host_username = credentials_settings['username']
       host_password = credentials_settings['password']
 
-      statetype_username = state_credentials_settings['username']
-      statetype_password = state_credentials_settings['password']
+      prefix = statetype_category['prefix']
+
+      # TODO: hier null checks implementeren
+      if state_credentials_settings is not None:
+       statetype_username = state_credentials_settings['username']
+       statetype_password = state_credentials_settings['password']
+       settings_dict[prefix + 'username'] = statetype_username
+       settings_dict[prefix + 'password'] = statetype_password
+
       settings_dict['username'] = host_username
       settings_dict['password'] = host_password
 
-      prefix = statetype_category['prefix']
-      settings_dict[prefix + 'username'] = statetype_username
-      settings_dict[prefix + 'password'] = statetype_password
 
-      
+
 
       result = Environment(settings_dict,host,statetype,module)
       return result

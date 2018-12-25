@@ -4,7 +4,7 @@ import logging,sys,os,importlib
 import zmq
 from backend.rxrelease.rxbackend.configuration.globalsettings import ApiUserSettings,NetworkSettings,RemoteSettings
 from backend.rxrelease.rxbackend.core.restapi.REST_authentication import REST_authentication
-from backend.rxrelease.rxbackend.core.jobs.zmq.scheduler_service import SchedulerService
+from backend.rxrelease.rxbackend.core.jobs.zmq.scheduler_service import SchedulerService,ActionFactory
 from backend.rxrelease.rxbackend.core.cli.modulecli import ModuleCLI
 from backend.rxrelease.rxbackend.ssh.ssh import SSHClient
 from backend.rxrelease.rxbackend.ssh.sshwrapper import SSHWrapper
@@ -21,6 +21,7 @@ shell = Shell()
 runner = ConsoleRunner()
 saltrunner = SaltConsoleRunner()
 scheduler_service = SchedulerService()
+action_factory = ActionFactory()
 
 def createConnectionSettings(username,ipaddress,use_keys=False,password=''):
     return ConnectionDetails(username,password,ipaddress)
@@ -65,6 +66,21 @@ def init_rxrelease_db():
      module_cli_api = ModuleCLI(None)
  print("Running initial database package for basic usage")
  module_cli_api.initDb()
+
+def send_test_workload():
+ salt_api_env = module_cli_api.getEnvironment('salt-master','Salt-Api')
+ ssh_passwordless_login_env = module_cli_api.getEnvironment('salt-master','SSH passwordless login')
+ salt_master_env = module_cli_api.getEnvironment('salt-master','Salt-master')
+ salt_minion_master_env = module_cli_api.getEnvironment('salt-master','Salt-minion-master')
+
+ first_action = action_factory.create_action_from_environment(ssh_passwordless_login_env)
+ second_action = action_factory.create_action_from_environment(salt_master_env)
+ third_action = action_factory.create_action_from_environment(salt_minion_master_env)
+ fourth_action = action_factory.create_action_from_environment(salt_api_env)
+ scheduler_service.schedule_state(first_action)
+ scheduler_service.schedule_state(second_action)
+ scheduler_service.schedule_state(third_action)
+ scheduler_service.schedule_state(fourth_action)
 
 def enable_salt():
  print("Enabling salt module")
