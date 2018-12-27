@@ -1,4 +1,4 @@
-import zmq,time,logging,sys
+import zmq,time,logging,sys,time
 import queue as queue
 import threading as threading
 from backend.rxrelease.rxbackend.core.jobs.api.jobActionFactory import JobActionFactory
@@ -35,8 +35,12 @@ class Worker:
      while True:
       logger.debug("Waiting for workitems")
       item = self.q.get()
-      item.handler.process_message(item.action,self.session)
-      self.q.task_done()
+      result =  item.handler.process_message(item.action,self.session)
+      if result == "STATE_FAILED":
+       logger.debug("state apply failed")
+       self.q.queue.clear()
+      else:
+       self.q.task_done()
 class SchedulerServer:
 
     def __init__(self,session):
