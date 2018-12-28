@@ -57,7 +57,7 @@ try:
   client.sendBlockingCommand('sudo firewall-cmd --permanent --add-port=8080/tcp')
   client.sendBlockingCommand('sudo firewall-cmd --reload')
   # TODO: salt-api heeft een afhankelijkheid met salt-master state, deze moet herstart worden
-  client.sendBlockingCommand('sudo systemctl start salt-master')
+  client.sendBlockingCommand('sudo systemctl restart salt-master')
   # implementeer de volgende stappen in dit install-salt-api script om ervoor te zorgen dat de salt-api volledig geinstalleerd wordt
   # http://bencane.com/2014/07/17/integrating-saltstack-with-other-services-via-salt-api/
   # https://github.com/saltstack/pepper

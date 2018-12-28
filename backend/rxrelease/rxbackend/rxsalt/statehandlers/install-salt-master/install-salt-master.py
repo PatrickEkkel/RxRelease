@@ -33,6 +33,7 @@ try:
 
   if data['os'] == "CentOS":
   # first remove salt, if it was already installed
+   client.sendBlockingCommand("sudo yum install -y https://repo.saltstack.com/yum/redhat/salt-repo-2018.3-1.el7.noarch.rpm")
    client.sendBlockingCommand('sudo yum remove -y salt-master')
    client.sendBlockingCommand('sudo rm -rf /etc/salt')
    client.sendBlockingCommand('sudo yum install -y salt-master')

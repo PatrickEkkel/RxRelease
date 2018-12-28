@@ -31,8 +31,6 @@ inputmapping = InputMapper().getInputFromCLI()
 # retrieve the authentication token
 token_result = REST_authentication().postCredentials(ApiUserSettings.username,ApiUserSettings.password)
 auth_token = token_result['token']
-print("show me the money")
-print(inputmapping.getKeyvalList())
 data = json.loads(inputmapping.getKeyvalList())
 dryrun = data["dryrun"]
 
