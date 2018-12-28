@@ -15,4 +15,17 @@ class StateHandlerInput:
     def getIpAddress(self):
         return self.ipaddress
     def getKeyvalList(self):
-        return self.keyvallist
+
+        result = "{"
+        kv_list = self.keyvallist.split(',')
+
+        for kv in kv_list:
+         key = kv.split(':')[0]
+         value = kv.split(':')[1]
+         result += "\"" + key + "\"" + ":" + "\"" + value + "\","
+
+        result = result[:-1]
+        result += "}"
+
+        print(result)
+        return result

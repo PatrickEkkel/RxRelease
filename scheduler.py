@@ -5,10 +5,8 @@ import logging,sys
 from dateutil.parser import parse
 from jobfeed.dispatcher import Dispatcher
 from jobfeed.sessionmanager import SessionManager
-from jobfeed.jobstatehandler import JobStateHandler
 from jobfeed.jobdefinition import JobDefinition
 from backend.rxrelease.rxbackend.core.rxfilestore import RxFileStore
-from backend.rxrelease.rxbackend.core.jobs.api.jobfeed import JobFeed
 from backend.rxrelease.rxbackend.core.jobs.api.jobfactory import JobFactory
 from backend.rxrelease.rxbackend.configuration.globalsettings import NetworkSettings,LocalSettings,ApiUserSettings
 from backend.rxrelease.rxbackend.core.jobs.api.jobActionFactory import JobActionFactory

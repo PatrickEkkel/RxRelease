@@ -29,4 +29,3 @@ class HandlerRequest:
          return payload
     def __str__(self):
         return '{ "host_id": "' + str(self.getHostId()) + '", "statetype_id": "' + str(self.getStateTypeId()) + '", "keyvalList": "' + self.getKeyValList() + '",  "handlerType": "python","handlerCommand": "' + self.getHandlerCommand() + '"  }'
-    

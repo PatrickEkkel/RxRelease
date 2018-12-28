@@ -20,8 +20,6 @@ class SchedulerClient:
 
 
     def send_message(self,message):
-
-
         self.socket.send_string(message)
         message = self.socket.recv()
         logger.debug("recieved message: " + str(message))

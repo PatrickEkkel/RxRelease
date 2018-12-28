@@ -24,10 +24,8 @@ class JobDefinition:
     def getJobName(self):
      return self.jobName
 
-    def pollJobCompleted(self,auth_token,action):
+    def pollJobCompleted(self,auth_token,statetypeRequest):
 
-     payload =  action.getPayload()
-     statetypeRequest = HandlerFactory().createRequest(payload)
      statesApi = REST_states(auth_token)
      result = 'STATE_NOT_EXECUTED'
 
@@ -42,7 +40,7 @@ class JobDefinition:
          state = statesApi.getStateByHostAndStateTypeId(statetypeRequest.getHostId(),statetypeRequest.getStateTypeId())
          print(state)
          if state[0]['installed'] == True:
-             print("task " + latestFilename + " succesfully installed")
+             print("task " + self.jobName + " succesfully installed")
              result = "STATE_INSTALLED"
              break
          if polling_counter == max_pollingtime:
@@ -63,7 +61,11 @@ class JobDefinition:
         logger.debug("Starting job: " + self.getJobName())
         logger.debug("session: " + str(session.session_id) + " started at: " + str(session.session_start))
         statetypesApi = REST_statetypes(session.auth_token)
-        return self.pollJobCompleted(session.auth_token,action)
+        payload =  action.getPayload()
+        statetypeRequest = HandlerFactory().createRequest(payload)
+
+        statetypesApi.postHandleHostState(statetypeRequest)
+        return self.pollJobCompleted(session.auth_token,statetypeRequest)
 
     def is_message_reciever(self,message):
      job_actionfactory = JobActionFactory(None)

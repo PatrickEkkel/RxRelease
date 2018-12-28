@@ -37,7 +37,7 @@ class Worker:
       item = self.q.get()
       result =  item.handler.process_message(item.action,self.session)
       if result == "STATE_FAILED":
-       logger.debug("state apply failed")
+       logger.debug("state apply failed clearing worker queue")
        self.q.queue.clear()
       else:
        self.q.task_done()
@@ -65,6 +65,8 @@ class SchedulerServer:
           if handler.is_message_reciever(str(message)):
            self.socket.send_string("MESSAGE_OK")
            action = job_actionfactory.createActionFromString(str(message))
+           print('dikke payload')
+           print(action.getPayload())
            self.worker.do_task(Task(handler,action))
           else:
            self.socket.send_string("MESSAGE_NOT_OK")

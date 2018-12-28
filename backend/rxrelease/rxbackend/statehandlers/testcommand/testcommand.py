@@ -26,11 +26,12 @@ state['installed'] = True
 reststates_api.putState(state)
 
 print("state json object")
+print(inputmapping.getKeyvalList)
 data = json.loads(inputmapping.getKeyvalList())
 dryrun = data["dryrun"]
 
 print(inputmapping.getIpAddress())
 print(dryrun)
 print(data)
-#print(data["username"])
-#print(data["password"])
+print(data["username"])
+print(data["password"])

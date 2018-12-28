@@ -73,14 +73,7 @@ class ConfigurationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Configuration
         fields = ('id','name','profile','hosts')
-    #def update(self,instance,validated_data):
-    #    instance.name = validated_data.get('name',instance.name)
-    #    for host in validated_data['hosts']:
-    #        host = Host(hostname=host['hostname'],ipaddress=host['ipaddress'],description=host['description'],configuration=instance)
-    #        print('eventesten')
-    #        host.save()
-    #    return instance
-
+    
 class HostStateHandlerSerializer(serializers.ModelSerializer):
 
     class Meta:

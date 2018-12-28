@@ -7,7 +7,6 @@ from ..models import State
 from ..models import Capability
 from ..models import Host
 from ..viewmodels import StateTypeHandler
-from ..core.jobs.api.jobfeed import JobFeed
 from ..core.jobs.api.job import Job
 from ..core.jobs.api.jobfactory import JobFactory
 from ..core.jobs.api import jobActionFactory
@@ -15,6 +14,7 @@ from ..core.jobs.statetypes.handlerrequest import HandlerRequest
 from ..core.jobs.statetypes.requestbuilder import RequestBuilder
 from ..core.jobs.api.utils import Utils
 from ..core.datastructures.tree.dependencytreemap import DependencyTreeMap
+from ..core.jobs.zmq.scheduler_service import SchedulerService,ActionFactory
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -63,7 +63,7 @@ class InstallHostView(generics.UpdateAPIView):
 
         capability_treemap.merge()
         capabilityList = capability_treemap.toList()
-        logger.debug("Amount of capabilities: " + str(len(capabilityList))) 
+        logger.debug("Amount of capabilities: " + str(len(capabilityList)))
         sorted_capability_statesmap = {}
 
         for kv in capabilityList:
@@ -106,7 +106,8 @@ class InstallHostView(generics.UpdateAPIView):
         treemap.merge()
         statesList =  treemap.toList()
 
-        jobfeed = JobFeed()
+        #jobfeed = JobFeed()
+        scheduler_service = SchedulerService()
         for kv in statesList:
          state = kv[1]
          if state.installed == False:
@@ -118,8 +119,9 @@ class InstallHostView(generics.UpdateAPIView):
               # encode the request for transport
               handlerRequest.setKeyValList(Utils.escapeJsonForTransport(handlerRequest.getKeyValList()))
               action = actionFactory.createAction('INSTALL',state.name,handlerRequest.getAsPayload())
-              jobfeed.newJobTask(action)
-              jobfeed.triggerJob(newJob)
+              scheduler_service.schedule_state(action)
+              #jobfeed.newJobTask(action)
+              #jobfeed.triggerJob(newJob)
          # call jobfeed, with the correct parameters
         return   Host.objects.filter(id=host_id)
 

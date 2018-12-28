@@ -1,8 +1,21 @@
+import logging,sys
+from ast import literal_eval
 from .scheduler_client import SchedulerClient
 from ..api import jobActionFactory
+from ..api.utils import Utils
 from ..statetypes.handlerrequest import HandlerRequest
 from ..api.keyvallistbuilder import KeyValListBuilder
 from ..api.jobfactory import JobFactory
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
 
 class ActionFactory:
 
@@ -40,6 +53,7 @@ class ActionBuilder:
     #def build_from_environment(self,environment):
     # return self.build()
     def build(self):
+
      handler_request = HandlerRequest()
 
      handler_request.setIpAddress(self.ipaddress)
@@ -52,17 +66,16 @@ class ActionBuilder:
      actionFactory = jobActionFactory.JobActionFactory(newJob)
      #self.kvbuilder.addKeyValPair("remoteuser",'rxrelease')
      if self.settings_dict is None:
-      handler_request.setKeyValList(self.kvbuilder.build())
+      logger.debug("Settings is not set building kv from scratch")
+      handler_request.setKeyValList(Utils.escapeJsonForTransport(self.kvbuilder.build()))
      else:
-      handler_request.setKeyValList(self.settings_dict)
+      logger.debug("importing settings direct from the settings_dict")
+      for key,value in literal_eval(self.settings_dict).items():
+       self.add_kv(key,value)
+      handler_request.setKeyValList(Utils.escapeJsonForTransport(self.kvbuilder.build()))
 
-     #kvbuilder.addKeyValPair("username",'salt')
-     #kvbuilder.addKeyValPair("password",'testpass')
-     #kvbuilder.addKeyValPair("dryrun","False")
      action = actionFactory.createAction('INSTALL','test',handler_request.getAsPayload())
      return action
-
-
 
 class SchedulerService:
 

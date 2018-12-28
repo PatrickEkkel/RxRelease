@@ -67,6 +67,10 @@ def init_rxrelease_db():
  print("Running initial database package for basic usage")
  module_cli_api.initDb()
 
+def send_workload(host,statetype):
+ env = module_cli_api.getEnvironment(host,statetype)
+ action = action_factory.create_action_from_environment(env)
+ scheduler_service.schedule_state(action)
 def send_test_workload():
  salt_api_env = module_cli_api.getEnvironment('salt-master','Salt-Api')
  ssh_passwordless_login_env = module_cli_api.getEnvironment('salt-master','SSH passwordless login')
