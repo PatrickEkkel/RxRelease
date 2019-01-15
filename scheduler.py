@@ -40,6 +40,10 @@ sessionmanager = SessionManager(api_user_settings_username,api_user_settings_pas
 sessionmanager.login()
 
 dispatcher = Dispatcher(sessionmanager)
+# TODO: these job definitions should not be defined here, but in a more central place, for example in the database, therefore we should aim at making a few API calls that support this idea
 stateHandlerDefinition = JobDefinition("StateHandlerJob")
+saltStateHandlerDefinition = JobDefinition("SaltHandlerJob")
+
 dispatcher.registerJob(stateHandlerDefinition)
+dispatcher.registerJob(saltStateHandlerDefinition)
 dispatcher.run()

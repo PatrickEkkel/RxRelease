@@ -22,6 +22,18 @@ class ActionFactory:
     def __init__(self):
      pass
 
+    def create_action_from_host(self,host,settings_dict):
+
+     action_builder = ActionBuilder()
+     action_builder.host_id = host[0]['id']
+     action_builder.ipaddress = host[0]['ipaddress']
+     action_builder.job_type = "SaltHandlerJob"
+     action_builder.statetype_id = ""
+     action_builder.handler_command = ""
+     action_builder.settings_dict = str(settings_dict)
+
+     return action_builder.build()
+
     def create_action_from_environment(self,env):
      action_builder = ActionBuilder()
 
@@ -30,6 +42,7 @@ class ActionFactory:
      action_builder.statetype_id = env.statetype[0]['id']
      action_builder.handler_command = env.statetype[0]['handler']
      action_builder.settings_dict =  str(env.settings_dict)
+     action_builder.job_type = "StateHandlerJob"
 
      return action_builder.build()
     def create_action(self,host,statetype):
@@ -62,9 +75,15 @@ class ActionBuilder:
      handler_request.setHandlerCommand(self.handler_command)
 
      jobfactory = JobFactory()
-     newJob = jobfactory.createNewJob("StateHandlerJob")
+     if self.job_type is None:
+      logger.debug("job type is not set, assuming default StateHandlerJob")
+      self.job_type = "StateHandlerJob"
+
+     newJob = jobfactory.createNewJob(self.job_type)
+
      actionFactory = jobActionFactory.JobActionFactory(newJob)
      #self.kvbuilder.addKeyValPair("remoteuser",'rxrelease')
+
      if self.settings_dict is None:
       logger.debug("Settings is not set building kv from scratch")
       handler_request.setKeyValList(Utils.escapeJsonForTransport(self.kvbuilder.build()))

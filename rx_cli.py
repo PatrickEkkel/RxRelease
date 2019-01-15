@@ -71,6 +71,17 @@ def send_workload(host,statetype):
  env = module_cli_api.getEnvironment(host,statetype)
  action = action_factory.create_action_from_environment(env)
  scheduler_service.schedule_state(action)
+
+def send_salt_command(salt_minion,command):
+ # we need to get the saltmaster host object so we know where to send our commands
+
+ settings_dict = {}
+
+ settings_dict['salt-command'] = 'ls -al'
+ salt_master = module_cli_api.getHostByName('salt-master')
+ action =  action_factory.create_action_from_host(salt_master,settings_dict)
+ print(action)
+ pass
 def send_test_workload():
  salt_api_env = module_cli_api.getEnvironment('salt-master','Salt-Api')
  ssh_passwordless_login_env = module_cli_api.getEnvironment('salt-master','SSH passwordless login')

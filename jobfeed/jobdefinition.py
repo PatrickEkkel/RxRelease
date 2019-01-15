@@ -70,6 +70,8 @@ class JobDefinition:
     def is_message_reciever(self,message):
      job_actionfactory = JobActionFactory(None)
      action =  job_actionfactory.createActionFromString(message)
+
+     
      # pretty nasty, TODO: deze tekens moeten eruit en zijn van een legacy voor ZMQ
      recieved_jobname =  action.getJob().getName().strip('\'').strip('"')
      #logger.debug("recieved_jobname: " + recieved_jobname)
