@@ -33,6 +33,7 @@ class StateType(models.Model):
     SettingsCategory = models.ForeignKey(SettingsCategory,default=None,null=True,on_delete=models.PROTECT)
     handler = models.CharField(max_length=255,null=True)
     module = models.CharField(max_length=255,null=True,default=None)
+    jobtype = models.CharField(max_length=255,null=True,default="SIMPLE_STATE")
     dependentOn = models.ForeignKey('self',null=True,default=None,on_delete=models.PROTECT)
 
     def __str__(self):
@@ -73,13 +74,25 @@ class Host(models.Model):
     hostSettings = models.ForeignKey(SettingsCategory,default=None,null=True,on_delete=models.PROTECT)
     profileType = models.ForeignKey(ProfileType,default=None,null=True,on_delete=models.PROTECT)
 
+
 class State(models.Model):
     name = models.CharField(max_length=255)
     host = models.ForeignKey(Host,on_delete=models.PROTECT)
-    installed = models.BooleanField()
     statetype = models.ForeignKey(StateType,on_delete=models.PROTECT)
     def __str__(self):
         return self.name
+
+class SimpleState(models.Model):
+    base_state = models.ForeignKey(State,default=None,on_delete=models.PROTECT)
+    installed = models.BooleanField(default=False)
+
+class ComplexState(models.Model):
+    base_state = models.ForeignKey(State,default=None,on_delete=models.PROTECT)
+    status = models.CharField(max_length=255,default="NOT_APPLIED")
+
+class RepeatableState(models.Model):
+    base_state = models.ForeignKey(State,default=None,on_delete=models.PROTECT)
+
 
 class Configuration(models.Model):
     name = models.CharField(max_length=200)

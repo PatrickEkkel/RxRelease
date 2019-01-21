@@ -80,7 +80,7 @@ def send_salt_command(salt_minion,command):
  settings_dict['salt-command'] = 'ls -al'
  salt_master = module_cli_api.getHostByName('salt-master')
  action =  action_factory.create_action_from_host(salt_master,settings_dict)
- print(action)
+ scheduler_service.schedule_state(action)
  pass
 def send_test_workload():
  salt_api_env = module_cli_api.getEnvironment('salt-master','Salt-Api')

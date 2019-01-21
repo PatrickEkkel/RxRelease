@@ -55,12 +55,12 @@ class BaseFiller:
 
 
         # De verschillende basis states maken
-        passwordless_login_state = StateType.objects.create(name="SSH passwordless login",handler="passwordless-sshlogin.py",SettingsCategory=global_category,module="default")
-        prerequisites_state = StateType.objects.create(name="Prerequisites",handler="prerequisites.py",SettingsCategory=global_category,module="default",dependentOn=passwordless_login_state)
-        salt_minion_state = StateType.objects.create(name="Salt-minion",handler="install-salt.py",SettingsCategory=global_category,dependentOn=prerequisites_state,module="rxsalt")
-        salt_master_state = StateType.objects.create(name="Salt-master",handler="install-salt-master.py",dependentOn=prerequisites_state,SettingsCategory=global_category,module="rxsalt")
-        salt_minion_master_state = StateType.objects.create(name="Salt-minion-master",handler="install-salt.py",SettingsCategory=global_category,dependentOn=salt_master_state,module="rxsalt")
-        salt_api_state = StateType.objects.create(name="Salt-Api",handler="install-salt-api.py",SettingsCategory=salt_settings_category,dependentOn=salt_minion_master_state,module="rxsalt")
+        passwordless_login_state = StateType.objects.create(name="SSH passwordless login",handler="passwordless-sshlogin.py",SettingsCategory=global_category,module="default",jobtype="SIMPLE_STATE")
+        prerequisites_state = StateType.objects.create(name="Prerequisites",handler="prerequisites.py",SettingsCategory=global_category,module="default",dependentOn=passwordless_login_state,jobtype="SIMPLE_STATE")
+        salt_minion_state = StateType.objects.create(name="Salt-minion",handler="install-salt.py",SettingsCategory=global_category,dependentOn=prerequisites_state,module="rxsalt",jobtype="SIMPLE_STATE")
+        salt_master_state = StateType.objects.create(name="Salt-master",handler="install-salt-master.py",dependentOn=prerequisites_state,SettingsCategory=global_category,module="rxsalt",jobtype="SIMPLE_STATE")
+        salt_minion_master_state = StateType.objects.create(name="Salt-minion-master",handler="install-salt.py",SettingsCategory=global_category,dependentOn=salt_master_state,module="rxsalt",jobtype="SIMPLE_STATE")
+        salt_api_state = StateType.objects.create(name="Salt-Api",handler="install-salt-api.py",SettingsCategory=salt_settings_category,dependentOn=salt_minion_master_state,module="rxsalt",jobtype="SIMPLE_STATE")
 
         passwordless_login_state.save()
         prerequisites_state.save()

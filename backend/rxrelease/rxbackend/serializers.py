@@ -5,6 +5,7 @@ from .models import Host
 from .models import Configuration
 from .models import Capability
 from .models import State
+from .models import SimpleState
 from .models import ProfileType
 from .models import StateType
 from .models import KVSetting
@@ -73,7 +74,7 @@ class ConfigurationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Configuration
         fields = ('id','name','profile','hosts')
-    
+
 class HostStateHandlerSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -95,7 +96,7 @@ class StateTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StateType
-        fields = ('id','name','handler','module','dependentOn','SettingsCategory')
+        fields = ('id','name','handler','module','dependentOn','SettingsCategory','jobtype')
 
 class CapabilitySerializer(serializers.ModelSerializer):
     statetypes = StateTypeMTMSerializer(many=True,queryset=StateType.objects.all())
@@ -107,16 +108,21 @@ class InstallHostSerializer(serializers.ModelSerializer):
     class Meta:
         model = InstallHost
         fields = ('id','host_id')
-class StateSerializer(serializers.ModelSerializer):
-    #capabilities = CapabilityMTMSerializer(many=True,queryset=Capability.objects.all())
-    class Meta:
 
+class StateSerializer(serializers.ModelSerializer):
+    class Meta:
         model = State
-        fields = ('id','name','installed','host','statetype')
+        fields = ('id','name','host','statetype')
+
+
+class SimpleStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        #base_state = StateSerializer
+        model = SimpleState
+        fields = ('id','base_state','installed')
 
 class SettingsCategorySerializer(serializers.ModelSerializer):
     class Meta:
-
         model = SettingsCategory
         fields = ('id','name','prefix')
 class KVSettingsSerializer(serializers.ModelSerializer):

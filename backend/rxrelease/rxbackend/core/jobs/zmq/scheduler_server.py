@@ -61,13 +61,16 @@ class SchedulerServer:
      while True:
          message = self.socket.recv()
          logger.debug(str(message))
+         message_failed = True
          for handler in self.handlers:
           if handler.is_message_reciever(str(message)):
            self.socket.send_string("MESSAGE_OK")
            action = job_actionfactory.createActionFromString(str(message))
-           print('dikke payload')
-           print(action.getPayload())
+           #print(action.getPayload())
            self.worker.do_task(Task(handler,action))
-          else:
-           self.socket.send_string("MESSAGE_NOT_OK")
+           message_failed = False
+          #else:
+          # self.socket.send_string("MESSAGE_NOT_OK")
+         if message_failed:
+          self.socket.send_string("MESSAGE_NOT_OK")
          time.sleep(1)

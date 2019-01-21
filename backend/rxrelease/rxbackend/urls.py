@@ -8,6 +8,7 @@ from .views import hostviews
 from .views import capabilityviews
 from .views import wizardviews
 from .views import statesviews
+from .views import simplestatesviews
 from .views import configurationviews
 from .views import statetypeviews
 from .views import userviews
@@ -52,6 +53,10 @@ urlpatterns = [
 
     url(r'^capabilities/$', capabilityviews.CreateView.as_view(), name="create"),
     url(r'^capabilities/(?P<pk>[0-9]+)/$', capabilityviews.DetailsView.as_view(), name="details"),
+
+    url(r'^simplestates/$',simplestatesviews.CreateView.as_view(),name="details"),
+    url(r'^simplestates/(?P<pk>[0-9]+)/$', simplestatesviews.DetailsView.as_view(), name="details"),
+
 
     url(r'^states/$', statesviews.CreateView.as_view(), name="create"),
     url(r'^states/(?P<pk>[0-9]+)/$', statesviews.DetailsView.as_view(), name="details"),
