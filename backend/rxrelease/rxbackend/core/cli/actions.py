@@ -1,9 +1,17 @@
 from .connection import Connection
 
 module_cli_api = None
-
+connection = None
 #def _init():
  #global module_cli_api = ModuleCLI(auth_token)
+
+def __init():
+    global connection
+    connection = Connection()
+    connection.connect()
+__init()
+
+
 
 def help():
  print("list_modules() -> Lists modules that are available")
@@ -14,9 +22,17 @@ def help():
  print("execute statehandler without the scheduler, call runner.runStateHandlerJob('install-salt-api',env) ")
  print("init_rxrelease_db() -> fill the database with default objects, run only once because it does not drop things")
 
-def force_state(state_id,status):
+
+def connect():
+    global connection
     connection = Connection()
     connection.connect()
+
+def force_state(hostname,statetype_name,status):
+    global connection
+    connection.module_cli_api.setState(hostname,statetype_name,status)
+    #print(host)
+
  # get the statetype object from the API
  # determine what kind of state this is
  # if determined validate the given state we want to enforce and if we can enforce it

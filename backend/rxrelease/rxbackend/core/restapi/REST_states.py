@@ -28,7 +28,11 @@ class REST_states(REST_base):
        logger.info("deleted state id: " + str(state['id']) + str(response))
       # logger.info("deleted state id: " + str(state['id']) + str(response.text))
 
-
+ def putSimpleState(self,simple_state):
+  serverAddress = self.backendlocation + '/rxbackend/simplestates/' + str(simple_state['id']) + '/'
+  headers = {'content-type': 'application/json'}
+  headers.update(self.getAuthTokenHeader())
+  response = requests.put(serverAddress,data=json.dumps(simple_state),headers=headers)
    # response = requests.delete(serverAddress)
  def putState(self,state):
   serverAddress = self.backendlocation + '/rxbackend/states/' + str(state['id']) + '/'

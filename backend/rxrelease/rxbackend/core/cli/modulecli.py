@@ -1,3 +1,4 @@
+import types
 from ..restapi.REST_modules import REST_modules
 from ..restapi.REST_wizard import REST_wizard
 from ..restapi.REST_states import REST_states
@@ -117,8 +118,25 @@ class ModuleCLI:
       wizard_api = REST_wizard(self.auth_token)
       wizard_api.putWizard(name,status)
 
-    def getStateByHostAndStateType(self,host,statetype):
-        pass
+    def setState(self,hostname,statetype_name,status):
+     hosts_api = REST_hosts(self.auth_token)
+     statetypes_api = REST_statetypes(self.auth_token)
+     states_api = REST_states(self.auth_token)
+
+     host = hosts_api.getHostByHostname(hostname)
+     statetype = statetypes_api.getStatetypeByName(statetype_name)
+
+     if statetype[0]['jobtype'] == 'SIMPLE_STATE':
+      if not isinstance(status,(bool)):
+       print('Not a valid state for a Simple State, please supply a boolean parameter ')
+       return None
+      state = states_api.getStateByHostAndStateTypeId(host[0]['id'],statetype[0]['id'])
+      state[0]['installed'] = True
+      states_api.putSimpleState(state[0])
+
+
+     print(statetype)
+
     def getHostByName(self,hostname):
      hosts_api = REST_hosts(self.auth_token)
      host = hosts_api.getHostByHostname(hostname)

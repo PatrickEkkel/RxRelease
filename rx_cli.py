@@ -129,4 +129,4 @@ def print_networksettings():
     print("ApiUserSettings username: " + api_user_settings_username)
     print("ApiUserSettings password: " + api_user_settings_password)
 
-connect()
+#connect()
