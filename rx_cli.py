@@ -2,6 +2,7 @@
 #import importlib.util
 import logging,sys,os,importlib
 import zmq
+from backend.rxrelease.rxbackend.core.cli.actions import *
 from backend.rxrelease.rxbackend.configuration.globalsettings import ApiUserSettings,NetworkSettings,RemoteSettings
 from backend.rxrelease.rxbackend.core.restapi.REST_authentication import REST_authentication
 from backend.rxrelease.rxbackend.core.jobs.zmq.scheduler_service import SchedulerService,ActionFactory
@@ -34,15 +35,6 @@ def load_settings_from_path(path):
  api_user_settings_username = ApiUserSettings.username
  api_user_settings_password = ApiUserSettings.password
  print('settings changed')
-
-
-def help():
- print("list_modules() -> Lists modules that are available")
- print("enable_salt() -> enables salt module")
- print("reset_saltwizard() -> DEVELOPER, resets the state of the saltwizard, easy for testing")
- print("env = module_cli_api.getEnvironment(<hostname>,<statetype_name>) -> DEVELOPER, get an environment for a particular host,statetype combination, call runner.runStateHandlerJob(<statehandlername>,env)")
- print("example voor getEnvironment:  env = module_cli_api.getEnvironment('salt-master','Salt-Api')")
- print("execute statehandler without the scheduler, call runner.runStateHandlerJob('install-salt-api',env) ")
 
 def list_modules():
  print("Listing modules")

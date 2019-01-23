@@ -117,10 +117,11 @@ class ModuleCLI:
       wizard_api = REST_wizard(self.auth_token)
       wizard_api.putWizard(name,status)
 
+    def getStateByHostAndStateType(self,host,statetype):
+        pass
     def getHostByName(self,hostname):
      hosts_api = REST_hosts(self.auth_token)
      host = hosts_api.getHostByHostname(hostname)
-
      return host
 
     def deleteHost(self,profiletype_name):
