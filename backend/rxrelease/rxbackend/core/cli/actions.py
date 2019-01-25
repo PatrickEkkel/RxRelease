@@ -21,6 +21,7 @@ def help():
  print("example voor getEnvironment:  env = module_cli_api.getEnvironment('salt-master','Salt-Api')")
  print("execute statehandler without the scheduler, call runner.runStateHandlerJob('install-salt-api',env) ")
  print("init_rxrelease_db() -> fill the database with default objects, run only once because it does not drop things")
+ print("force_state(hostname,statetype_name,status) -> can be used to force a state, can be usefull for testing or recovering from a borked state")
 
 
 def connect():
