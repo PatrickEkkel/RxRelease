@@ -8,8 +8,10 @@ import Button from '../../../components/Button';
 import StandardListConverters from '../../../converters/StandardListConverters'
 import WizardBasePanel from '../../../components/panels/WizardBasePanel'
 import HostFactory from '../../../factories/hostFactory'
+import  *  as  stateComponents from '../../../panels/Hosts/States/Components/StateComponents'
 import  * as hostActionCreators from '../../../redux/hostactioncreators'
 import  * as wizardActionCreators from '../../../redux/wizardactioncreators'
+
 
 class InstallHost extends WizardBasePanel {
 
@@ -38,15 +40,7 @@ getStates() {
   }
 
   return StandardListConverters.convertListToMap(states,function(item) {
-      var installed = item.getInstalled()
-
-      var installedDisplayString = "NOT INSTALLED"
-      if(installed) {
-        installedDisplayString =  "INSTALLED"
-      }
-      var result = [item.getId(),item.getName(),installedDisplayString];
-      return result;
-
+      return stateComponents.renderStateAsString(item)
     });
 
 }

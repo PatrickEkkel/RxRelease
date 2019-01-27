@@ -1,5 +1,6 @@
 import React from 'react';
 import  * as hostActionCreators from '../redux/hostactioncreators'
+import * as stateComponents from '../panels/Hosts/States/Components/StateComponents'
 import BasicRxPanel from '../components/panels/BasicRxPanel';
 import Button from '../components/Button'
 import Utils from '../lib/react/utils'
@@ -68,18 +69,8 @@ class  HostManagementPanel  extends BasicRxPanel {
     var currentContext = this;
     var { type } = this.props
 
-
     var states = StandardListConverters.convertListToMap(this.state.selected_host.getStates(),function(item) {
-      var result = null;
-      if(item.type == "SIMPLE") {
-        var installed = item.simple_state.installed
-        var installedDisplayString = "NOT INSTALLED"
-        if(installed) {
-          installedDisplayString =  "INSTALLED"
-        }
-        result = [item.id,item.name,installedDisplayString];
-      }
-      return result
+      return stateComponents.renderStateAsString(item)
     });
 
     function handleLabelLoad(entry) {

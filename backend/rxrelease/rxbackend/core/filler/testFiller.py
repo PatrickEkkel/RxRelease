@@ -20,7 +20,7 @@ class TestFiller:
         # Dit is hoe token authentication werkt voor als we willen weten hoe we een nieuwe user willen maken of willen weten hoe het zaakje geconfigureerd
         # http://cheng.logdown.com/posts/2015/10/27/how-to-use-django-rest-frameworks-token-based-authentication
 
-        salt_module = Module.objects.create(name="rxsalt",active=False,menuoptionname="Salt")
+        salt_module = Module.objects.create(name="rxsalt",active=False,menuoptionname="Salt",configurationPanel="SALT_CONFIGURATION_PANEL")
         salt_module.save()
 
 
