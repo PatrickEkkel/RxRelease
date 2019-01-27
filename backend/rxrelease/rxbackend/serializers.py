@@ -109,17 +109,16 @@ class InstallHostSerializer(serializers.ModelSerializer):
         model = InstallHost
         fields = ('id','host_id')
 
-class StateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = State
-        fields = ('id','name','host','statetype')
-
-
 class SimpleStateSerializer(serializers.ModelSerializer):
     class Meta:
-        #base_state = StateSerializer
         model = SimpleState
-        fields = ('id','base_state','installed')
+        fields = ('id','installed')
+
+class StateSerializer(serializers.ModelSerializer):
+    simple_state = SimpleStateSerializer(read_only=True)
+    class Meta:
+        model = State
+        fields = ('id','name','host','statetype','simple_state')
 
 class SettingsCategorySerializer(serializers.ModelSerializer):
     class Meta:

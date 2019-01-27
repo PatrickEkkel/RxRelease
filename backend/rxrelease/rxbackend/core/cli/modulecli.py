@@ -131,8 +131,9 @@ class ModuleCLI:
        print('Not a valid state for a Simple State, please supply a boolean parameter ')
        return None
       state = states_api.getStateByHostAndStateTypeId(host[0]['id'],statetype[0]['id'])
-      state[0]['installed'] = True
-      states_api.putSimpleState(state[0])
+      simple_state = state[0]['simple_state']
+      simple_state['installed'] = True
+      states_api.putSimpleState(simple_state)
 
 
      print(statetype)

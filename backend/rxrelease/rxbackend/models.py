@@ -75,24 +75,25 @@ class Host(models.Model):
     profileType = models.ForeignKey(ProfileType,default=None,null=True,on_delete=models.PROTECT)
 
 
+
+class SimpleState(models.Model):
+    installed = models.BooleanField(default=False)
+
+class ComplexState(models.Model):
+    status = models.CharField(max_length=255,default="NOT_APPLIED")
+
+class RepeatableState(models.Model):
+    pass
+
 class State(models.Model):
     name = models.CharField(max_length=255)
     host = models.ForeignKey(Host,on_delete=models.PROTECT)
     statetype = models.ForeignKey(StateType,on_delete=models.PROTECT)
+    simple_state = models.ForeignKey(SimpleState,default=None,null=True,on_delete=models.PROTECT)
+    complex_state = models.ForeignKey(ComplexState,default=None,null=True,on_delete=models.PROTECT)
+    RepeatableState = models.ForeignKey(RepeatableState,default=None,null=True,on_delete=models.PROTECT)
     def __str__(self):
         return self.name
-
-class SimpleState(models.Model):
-    base_state = models.ForeignKey(State,default=None,on_delete=models.PROTECT)
-    installed = models.BooleanField(default=False)
-
-class ComplexState(models.Model):
-    base_state = models.ForeignKey(State,default=None,on_delete=models.PROTECT)
-    status = models.CharField(max_length=255,default="NOT_APPLIED")
-
-class RepeatableState(models.Model):
-    base_state = models.ForeignKey(State,default=None,on_delete=models.PROTECT)
-
 
 class Configuration(models.Model):
     name = models.CharField(max_length=200)

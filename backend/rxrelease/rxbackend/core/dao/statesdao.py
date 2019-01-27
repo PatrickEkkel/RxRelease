@@ -20,8 +20,8 @@ class StatesDao:
     @transaction.atomic
     def create_state(self,statetype,host):
         result = None
-        state = State.objects.create(statetype=statetype,host=host,name=statetype.name)
         if statetype.jobtype == "SIMPLE_STATE":
              logger.debug("Constructing SIMPLE_STATE Object")
-             result = SimpleState.objects.create(base_state=state,installed=False)
+             result = SimpleState.objects.create(installed=False)
+             state = State.objects.create(statetype=statetype, host=host, name=statetype.name,simple_state=result)
         return result

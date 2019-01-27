@@ -3,6 +3,8 @@ import Axios from 'axios';
 import Host from '../models/host'
 import LogFactory from '../logging/LogFactory'
 import HostFactory from '../factories/hostFactory'
+import StateModel from '../models/dbmodels/statemodel'
+import SimpleStateModel from '../models/dbmodels/simplestatemodel'
 import StateFactory from '../factories/stateFactory'
 import SettingsFactory from '../factories/settingsFactory'
 import ProfileTypeFactory from '../factories/profiletypeFactory'
@@ -63,6 +65,15 @@ export function loadHostManagement(hostentry) {
       statesRequests.getStatesByHost(host)
       .then(function(response) {
         var states = factory.convertJsonList(response.data)
+        //haLogger.trace(response.data.length())
+        /*for(i=0;i<response.data.length();i++) {
+          if(states[i]["simple_state"] != null) {
+            haLogger.trace("simple_state applied!")
+          }
+        }*/
+        haLogger.traceObject(response.data)
+        haLogger.trace("states are loaded")
+        haLogger.traceObject(states)
         host.setStates(states);
 
       }).then(function(response) {
