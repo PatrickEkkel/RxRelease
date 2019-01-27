@@ -64,14 +64,16 @@ export function loadHostManagement(hostentry) {
   return function (dispatch) {
       statesRequests.getStatesByHost(host)
       .then(function(response) {
-        var states = factory.convertJsonList(response.data)
-        //haLogger.trace(response.data.length())
-        /*for(i=0;i<response.data.length();i++) {
-          if(states[i]["simple_state"] != null) {
+        var states = []
+
+        for(var i=0;i<response.data.length;i++) {
+          if(response.data[i].simple_state != null) {
             haLogger.trace("simple_state applied!")
+            var state_response = response.data[i]
+            states.push(StateModel.newSimpleState(state_response.id,state_response.name,state_response.simple_state))
           }
-        }*/
-        haLogger.traceObject(response.data)
+        }
+        
         haLogger.trace("states are loaded")
         haLogger.traceObject(states)
         host.setStates(states);
@@ -99,7 +101,9 @@ export function loadHostManagement(hostentry) {
        haLogger.debug('dispatch LOAD_HOST_MANAGEMENT_FROM_HOSTS')
        dispatch(hostManagementLoaded(host));
 
-      });
+     }).catch(function(error) {
+       console.log(error)
+     });
   }
 }
 export function hostManagementLoaded(host) {

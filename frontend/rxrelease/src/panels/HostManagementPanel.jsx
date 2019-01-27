@@ -70,15 +70,16 @@ class  HostManagementPanel  extends BasicRxPanel {
 
 
     var states = StandardListConverters.convertListToMap(this.state.selected_host.getStates(),function(item) {
-      var installed = item.getInstalled()
-
-      var installedDisplayString = "NOT INSTALLED"
-      if(installed) {
-        installedDisplayString =  "INSTALLED"
+      var result = null;
+      if(item.type == "SIMPLE") {
+        var installed = item.simple_state.installed
+        var installedDisplayString = "NOT INSTALLED"
+        if(installed) {
+          installedDisplayString =  "INSTALLED"
+        }
+        result = [item.id,item.name,installedDisplayString];
       }
-      var result = [item.getId(),item.getName(),installedDisplayString];
-      return result;
-
+      return result
     });
 
     function handleLabelLoad(entry) {
