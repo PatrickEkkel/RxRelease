@@ -1,11 +1,14 @@
 from ...configuration.globalsettings import ApiUserSettings,NetworkSettings,RemoteSettings
 from ..restapi.REST_authentication import REST_authentication
+from ..jobs.zmq.scheduler_service import SchedulerService,ActionFactory
 from .modulecli import ModuleCLI
 
 
 class Connection:
     def __init__(self):
         self.module_cli_api = None
+        self.action_factory = ActionFactory()
+        self.scheduler_service = SchedulerService()
     def connect(self):
          auth_token = None
 

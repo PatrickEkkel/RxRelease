@@ -132,7 +132,7 @@ class ModuleCLI:
        return None
       state = states_api.getStateByHostAndStateTypeId(host[0]['id'],statetype[0]['id'])
       simple_state = state[0]['simple_state']
-      simple_state['installed'] = True
+      simple_state['installed'] = status
       states_api.putSimpleState(simple_state)
 
 

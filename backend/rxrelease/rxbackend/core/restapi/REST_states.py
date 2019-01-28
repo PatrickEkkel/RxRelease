@@ -19,14 +19,13 @@ class REST_states(REST_base):
   super().__init__(auth_token)
   self.backendlocation = NetworkSettings.protocol + "://" + NetworkSettings.servername + ":" + NetworkSettings.port
  def deleteStateByHostId(self,host_id):
-   serverAddress = self.backendlocation + '/rxbackend/states/' #+ str(state['id']) + '/'
+   serverAddress = self.backendlocation + '/rxbackend/states/'
    headers = {'content-type': 'application/json'}
    headers.update(self.getAuthTokenHeader())
    states_to_be_deleted = self.getStatesByHostId(host_id)
    for state in states_to_be_deleted:
        response = requests.delete(serverAddress + str(state['id']) + '/',headers=headers)
        logger.info("deleted state id: " + str(state['id']) + str(response))
-      # logger.info("deleted state id: " + str(state['id']) + str(response.text))
 
  def putSimpleState(self,simple_state):
   serverAddress = self.backendlocation + '/rxbackend/simplestates/' + str(simple_state['id']) + '/'
@@ -34,6 +33,13 @@ class REST_states(REST_base):
   headers.update(self.getAuthTokenHeader())
   response = requests.put(serverAddress,data=json.dumps(simple_state),headers=headers)
    # response = requests.delete(serverAddress)
+ def putSimpleState(self,simple_state):
+  serverAddress = self.backendlocation + '/rxbackend/simplestates/' + str(simple_state['id']) + '/'
+  headers = {'content-type': 'application/json'}
+  headers.update(self.getAuthTokenHeader())
+  response = requests.put(serverAddress,data=json.dumps(simple_state),headers=headers)
+
+
  def putState(self,state):
   serverAddress = self.backendlocation + '/rxbackend/states/' + str(state['id']) + '/'
   headers = {'content-type': 'application/json'}

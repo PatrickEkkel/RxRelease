@@ -23,6 +23,19 @@ class JobDefinition:
 
     def getJobName(self):
      return self.jobName
+    def check_job_for_completion(self,state):
+     result = "STATE_NOT_INSTALLED"
+     logger.debug(state)
+     if state['simple_state'] != None:
+      logger.debug("SIMPLE_STATE detected")
+      is_installed = state['simple_state']['installed']
+      if is_installed:
+       print("task " + self.jobName + " succesfully installed")
+       result = "STATE_INSTALLED"
+       logger.debug("task " + self.jobName + " succesfully installed")
+     else:
+      logger.debug("state not recognized")
+     return result
 
     def pollJobCompleted(self,auth_token,statetypeRequest):
 
@@ -38,11 +51,13 @@ class JobDefinition:
          time.sleep(polling_frequenty)
          logger.info("checking task  " + self.jobName + " for completion")
          state = statesApi.getStateByHostAndStateTypeId(statetypeRequest.getHostId(),statetypeRequest.getStateTypeId())
-         print(state)
-         if state[0]['installed'] == True:
-             print("task " + self.jobName + " succesfully installed")
-             result = "STATE_INSTALLED"
-             break
+         # NOTE: dit wordt wel weer anders gedaan straks als we de complex state moeten gaan ondersteunen
+         if self.check_job_for_completion(state[0]) == 'STATE_INSTALLED':
+             break;
+         #if state[0]['installed'] == True:
+         #
+         #result = "STATE_INSTALLED"
+         #     break
          if polling_counter == max_pollingtime:
              job_failed = True
              result = "STATE_FAILED"

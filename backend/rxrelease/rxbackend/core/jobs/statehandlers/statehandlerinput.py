@@ -20,8 +20,15 @@ class StateHandlerInput:
         kv_list = self.keyvallist.split(',')
 
         for kv in kv_list:
-         key = kv.split(':')[0]
-         value = kv.split(':')[1]
+         kv_array = kv.split(':')
+         key = ""
+         value = ""
+
+         if len(kv_array) < 2:
+          print(kv_array[0] + " contains empty value, skipping.. ")
+         else:
+          key = kv_array[0]
+          value = kv_array[1]
          result += "\"" + key + "\"" + ":" + "\"" + value + "\","
 
         result = result[:-1]

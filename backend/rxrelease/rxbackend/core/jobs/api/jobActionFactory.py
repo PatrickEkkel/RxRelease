@@ -13,8 +13,6 @@ class JobActionFactory:
       actionType = lineElements[0]
       command = lineElements[1]
       payload = lineElements[2]
-      print("na de split ziet het er zo uit")
-      print(payload)
       actionCommand = actionType + ":"  + command + ":" + payload
       result = Action()
       result.setPayload(payload)

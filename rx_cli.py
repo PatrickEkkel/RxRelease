@@ -74,7 +74,12 @@ def send_salt_command(salt_minion,command):
  action =  action_factory.create_action_from_host(salt_master,settings_dict)
  scheduler_service.schedule_state(action)
  pass
-def send_test_workload():
+
+
+
+
+# TODO: deze methode is niet geschrevn op de testset
+def _send_test_workload():
  salt_api_env = module_cli_api.getEnvironment('salt-master','Salt-Api')
  ssh_passwordless_login_env = module_cli_api.getEnvironment('salt-master','SSH passwordless login')
  salt_master_env = module_cli_api.getEnvironment('salt-master','Salt-master')
