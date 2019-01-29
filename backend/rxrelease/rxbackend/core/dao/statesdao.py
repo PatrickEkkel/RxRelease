@@ -17,6 +17,7 @@ class StatesDao:
 
     def __init__(self):
      pass
+    # NOTE: hier waren we gebleven, we moeten een repeatable_state aan de filler toevoegen en een nieuwe host maken via de interface
     @transaction.atomic
     def create_state(self,statetype,host):
         result = None

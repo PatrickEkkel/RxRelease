@@ -18,18 +18,29 @@ logger.addHandler(ch)
 class JobDefinition:
 
     def __init__(self,jobname):
-     #self.jobHandler = jobHandler
      self.jobName = jobname
 
     def getJobName(self):
      return self.jobName
+    def is_simple_state_installed(self,state):
+     result = False
+     if state['simple_state']['installed']:
+      result = True
+     return result
+
+    def is_simple_state(self,state):
+     result = False
+     if state['simple_state'] != None:
+      logger.debug("SIMPLE_STATE detected")
+      result = True
+     return result
+    def is_repeatable_state(self,state):
+     pass
     def check_job_for_completion(self,state):
      result = "STATE_NOT_INSTALLED"
      logger.debug(state)
-     if state['simple_state'] != None:
-      logger.debug("SIMPLE_STATE detected")
-      is_installed = state['simple_state']['installed']
-      if is_installed:
+     if self.is_simple_state(state):
+      if is_simple_state_installed(state):
        print("task " + self.jobName + " succesfully installed")
        result = "STATE_INSTALLED"
        logger.debug("task " + self.jobName + " succesfully installed")
@@ -85,6 +96,7 @@ class JobDefinition:
     def is_message_reciever(self,message):
      job_actionfactory = JobActionFactory(None)
      action =  job_actionfactory.createActionFromString(message)
+
      # pretty nasty, TODO: deze tekens moeten eruit en zijn van een legacy voor ZMQ
      recieved_jobname =  action.getJob().getName().strip('\'').strip('"')
 

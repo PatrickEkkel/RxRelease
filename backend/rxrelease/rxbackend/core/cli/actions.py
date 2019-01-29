@@ -39,9 +39,6 @@ def force_state(hostname,statetype_name,status):
     connection.module_cli_api.setState(hostname,statetype_name,status)
     #print(host)
 
-
-
-
 def send_test_workload_2(hostname):
  global connection
  test_state_2 = module_cli_api.getEnvironment(hostname, 'test-state1')
@@ -53,3 +50,14 @@ def send_test_workload_1(hostname):
  test_state_1 = connection.module_cli_api.getEnvironment(hostname, 'test-state1')
  first_action = connection.action_factory.create_action_from_environment(test_state_1)
  connection.scheduler_service.schedule_state(first_action)
+
+def send_salt_command():
+ # we need to get the saltmaster host object so we know where to send our commands
+ global connection
+ settings_dict = {'dryrun': 'False'}
+ settings_dict['salt-command'] = 'ls -al'
+
+ salt_master = connection.module_cli_api.getHostByName('salt-master')
+ statetype = connection.module_cli_api.getStatetypeByName('test-saltstate1')
+ action =  connection.action_factory.create_action_from_host(salt_master,settings_dict,statetype)
+ connection.scheduler_service.schedule_state(action)

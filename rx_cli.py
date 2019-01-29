@@ -64,20 +64,7 @@ def send_workload(host,statetype):
  action = action_factory.create_action_from_environment(env)
  scheduler_service.schedule_state(action)
 
-def send_salt_command(salt_minion,command):
- # we need to get the saltmaster host object so we know where to send our commands
-
- settings_dict = {}
-
- settings_dict['salt-command'] = 'ls -al'
- salt_master = module_cli_api.getHostByName('salt-master')
- action =  action_factory.create_action_from_host(salt_master,settings_dict)
- scheduler_service.schedule_state(action)
- pass
-
-
-
-
+ 
 # TODO: deze methode is niet geschrevn op de testset
 def _send_test_workload():
  salt_api_env = module_cli_api.getEnvironment('salt-master','Salt-Api')
@@ -120,7 +107,7 @@ def connect():
  except:
   print('CLI connection with backend could not be established')
  if auth_token is not None:
-  print("CLI connection with backend successfull")
+  print("Legacy CLI connection with backend successfull")
 
   # shortcut for the activating Salt
 

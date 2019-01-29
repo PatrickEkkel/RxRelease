@@ -22,14 +22,14 @@ class ActionFactory:
     def __init__(self):
      pass
 
-    def create_action_from_host(self,host,settings_dict):
+    def create_action_from_host(self,host,settings_dict,statetype):
 
      action_builder = ActionBuilder()
      action_builder.host_id = host[0]['id']
      action_builder.ipaddress = host[0]['ipaddress']
      action_builder.job_type = "SaltHandlerJob"
-     action_builder.statetype_id = ""
-     action_builder.handler_command = ""
+     action_builder.statetype_id = statetype[0]["id"]
+     action_builder.handler_command = statetype[0]["handler"]
      action_builder.settings_dict = str(settings_dict)
 
      return action_builder.build()

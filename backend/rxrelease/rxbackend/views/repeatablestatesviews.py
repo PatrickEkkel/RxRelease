@@ -1,10 +1,10 @@
 import logging,sys,os.path
 from rest_framework import generics
 from ..serializers import StateSerializer
-from ..serializers import SimpleStateSerializer
+from ..serializers import RepeatableStateSerializer
 from ..serializers import InstallHostSerializer
 from ..serializers import HostStateHandlerSerializer
-from ..models import SimpleState
+from ..models import RepeatableState
 from ..models import Capability
 from ..models import Host
 from ..viewmodels import StateTypeHandler
@@ -29,13 +29,13 @@ logger.addHandler(ch)
 
 class CreateView(generics.ListCreateAPIView):
     """This class defines th,e create behavior of our rest api."""
-    queryset = SimpleState.objects.all()
-    serializer_class = SimpleStateSerializer
+    queryset = RepeatableState.objects.all()
+    serializer_class = RepeatableStateSerializer
 
     def perform_create(self, serializer):
         """Save the post data when creating a new bucketlist."""
         serializer.save()
 class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
-    queryset = SimpleState.objects.all()
-    serializer_class = SimpleStateSerializer
+    queryset = RepeatableState.objects.all()
+    serializer_class = RepeatableStateSerializer

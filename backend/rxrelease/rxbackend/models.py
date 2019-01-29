@@ -83,7 +83,7 @@ class ComplexState(models.Model):
     status = models.CharField(max_length=255,default="NOT_APPLIED")
 
 class RepeatableState(models.Model):
-    pass
+    last_successfull_run = models.DateTimeField(auto_now=True)
 
 class State(models.Model):
     name = models.CharField(max_length=255)
@@ -91,7 +91,7 @@ class State(models.Model):
     statetype = models.ForeignKey(StateType,on_delete=models.PROTECT)
     simple_state = models.ForeignKey(SimpleState,default=None,null=True,on_delete=models.PROTECT)
     complex_state = models.ForeignKey(ComplexState,default=None,null=True,on_delete=models.PROTECT)
-    RepeatableState = models.ForeignKey(RepeatableState,default=None,null=True,on_delete=models.PROTECT)
+    repeatable_state = models.ForeignKey(RepeatableState,default=None,null=True,on_delete=models.PROTECT)
     def __str__(self):
         return self.name
 

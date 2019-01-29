@@ -9,6 +9,7 @@ from .views import capabilityviews
 from .views import wizardviews
 from .views import statesviews
 from .views import simplestatesviews
+from .views import repeatablestatesviews
 from .views import configurationviews
 from .views import statetypeviews
 from .views import userviews
@@ -56,6 +57,9 @@ urlpatterns = [
 
     url(r'^simplestates/$',simplestatesviews.CreateView.as_view(),name="details"),
     url(r'^simplestates/(?P<pk>[0-9]+)/$', simplestatesviews.DetailsView.as_view(), name="details"),
+
+    url(r'^repeatablestates/$',repeatablestatesviews.CreateView.as_view(),name="details"),
+    url(r'^repeatablestates/(?P<pk>[0-9]+)/$', repeatablestatesviews.DetailsView.as_view(), name="details"),
 
 
     url(r'^states/$', statesviews.CreateView.as_view(), name="create"),

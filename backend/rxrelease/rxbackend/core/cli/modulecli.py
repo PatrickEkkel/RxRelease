@@ -118,6 +118,11 @@ class ModuleCLI:
       wizard_api = REST_wizard(self.auth_token)
       wizard_api.putWizard(name,status)
 
+    def getStatetypeByName(self,name):
+        statetypes_api = REST_statetypes(self.auth_token)
+        statetype = statetypes_api.getStatetypeByName(name)
+        return statetype
+
     def setState(self,hostname,statetype_name,status):
      hosts_api = REST_hosts(self.auth_token)
      statetypes_api = REST_statetypes(self.auth_token)

@@ -6,6 +6,8 @@ from .models import Configuration
 from .models import Capability
 from .models import State
 from .models import SimpleState
+from .models import ComplexState
+from .models import RepeatableState
 from .models import ProfileType
 from .models import StateType
 from .models import KVSetting
@@ -109,16 +111,26 @@ class InstallHostSerializer(serializers.ModelSerializer):
         model = InstallHost
         fields = ('id','host_id')
 
+class RepeatableStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RepeatableState
+        fields = ('id','last_successfull_run')
+class ComplexStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ComplexState
+        fields = ('id')
 class SimpleStateSerializer(serializers.ModelSerializer):
     class Meta:
         model = SimpleState
         fields = ('id','installed')
 
 class StateSerializer(serializers.ModelSerializer):
-    simple_state = SimpleStateSerializer(read_only=True)
+    simple_state = SimpleStateSerializer(required=False,read_only=True)
+    repeatable_state = RepeatableStateSerializer(required=False,read_only=True)
+
     class Meta:
         model = State
-        fields = ('id','name','host','statetype','simple_state')
+        fields = ('id','name','host','statetype','simple_state','repeatable_state')
 
 class SettingsCategorySerializer(serializers.ModelSerializer):
     class Meta:
