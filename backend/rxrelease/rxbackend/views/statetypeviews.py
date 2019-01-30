@@ -26,13 +26,11 @@ class HandleHostState(generics.CreateAPIView):
     def perform_create(self,serializer):
         validated_data = serializer.validated_data
 
-        #validated_data['handlerType']
         host_queryset = Host.objects.filter(id = validated_data['host_id'])
         statetype_queryset = StateType.objects.filter(id = validated_data['statetype_id'])
         logger.info("Retrieving Capability for state_type: " + str(validated_data['statetype_id']))
         selected_capability = Capability.objects.filter(statetypes = validated_data['statetype_id']).get()
         selected_state = State.objects.filter(host=validated_data['host_id'],statetype = validated_data['statetype_id']).get()
-        #logger.info(selected_capability.module)
         selected_statetype = statetype_queryset.get()
         selected_host = host_queryset.get()
         keyval_list = validated_data['keyvalList']
@@ -46,7 +44,7 @@ class HandleHostState(generics.CreateAPIView):
         stateHandler = statehandler.StateHandler(programroot)
         stateHandler.handlePythonState(selected_state,selected_host,handlerCommand,keyval_list)
         # todo add some kind of json parsing to the keyval_list
-        logger.info("Handling State for host " +  selected_host.ipaddress)
+        logger.debug("Handling State for host " +  selected_host.ipaddress)
 
 class CreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""

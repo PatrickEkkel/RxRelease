@@ -10,7 +10,7 @@ from ..models import StateType
 from ..models import State
 from ..models import Capability
 from ..models import ProfileType
-from ..core.dao.statesdao import StatesDao
+from ..core.services.stateservice import StateService
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -29,18 +29,16 @@ class CreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         # instead of taking all the statetypes, get the profiletype from the host,
         # and than get its capebilities which contains all relevant stateypes
-        # TODO: this change will cause problems to the dependency resolver,
-        # fix this by adding dependendOn to capabilities and
        statetype_set = StateType.objects.all()
        host = serializer.save()
-       statesdao = StatesDao()
+       stateservice = StateService()
 
        capabilities = host.profileType.capabilities
        for capability in capabilities.iterator():
            for statetype in capability.statetypes.iterator():
             logger.debug("statetype.jobtype " + statetype.jobtype)
             # TODO factory,dao? have to look at how to do this
-            state = statesdao.create_state(statetype,host)
+            state = stateservice.create_state(statetype,host)
 
 @method_decorator(csrf_exempt, name='dispatch')
 class DetailsView(generics.RetrieveUpdateDestroyAPIView):

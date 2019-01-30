@@ -34,6 +34,7 @@ class TestFiller:
         buildin_saltmaster_profile = Profile.objects.create(name="RxRelease Salt Master")
         buildin_saltmaster_profile.profiletype = buildin_saltmaster_profiletype
         buildin_saltmaster_configuration = Configuration.objects.create(name="Salt master default Configuration",profile=buildin_saltmaster_profile)
+
         #buildin_saltmaster_configuration.profile = buildin_saltmaster_profile
 
         # Salt settings category maken
@@ -59,10 +60,17 @@ class TestFiller:
         test_statetype2 = StateType.objects.create(name="test-state2",handler="testcommand.py",SettingsCategory=salt_settings_category,dependentOn=test_statetype1,module="default")
         test_statetype2.save()
 
+        salt_run_state = StateType.objects.create(name="Salt-Run-State",handler="testcommand.py",dependentOn=None,module="default",jobtype="REPEATABLE_STATE")
+        salt_run_state.save()
+
         # capabilities
         standard_capability = Capability.objects.create(name="standard")
         standard_capability.statetypes.add(test_statetype1)
         standard_capability.statetypes.add(test_statetype2)
+        standard_capability.statetypes.add(salt_run_state)
+
+
+
         #buildin_saltmaster_profiletype.capabilities.add(salt_minion_capability)
         buildin_saltmaster_profiletype.capabilities.add(standard_capability)
         buildin_default_rxrelease_profiletype.capabilities.add(standard_capability)

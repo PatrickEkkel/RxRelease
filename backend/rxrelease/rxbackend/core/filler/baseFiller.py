@@ -61,6 +61,7 @@ class BaseFiller:
         salt_master_state = StateType.objects.create(name="Salt-master",handler="install-salt-master.py",dependentOn=prerequisites_state,SettingsCategory=global_category,module="rxsalt",jobtype="SIMPLE_STATE")
         salt_minion_master_state = StateType.objects.create(name="Salt-minion-master",handler="install-salt.py",SettingsCategory=global_category,dependentOn=salt_master_state,module="rxsalt",jobtype="SIMPLE_STATE")
         salt_api_state = StateType.objects.create(name="Salt-Api",handler="install-salt-api.py",SettingsCategory=salt_settings_category,dependentOn=salt_minion_master_state,module="rxsalt",jobtype="SIMPLE_STATE")
+        salt_run_state = StateType.objects.create(name="Salt-Run-State",handler="salt-command-module.py",dependentOn=None,module="rxsalt",jobtype="REPEATABLE_STATE")
 
         passwordless_login_state.save()
         prerequisites_state.save()
@@ -68,6 +69,7 @@ class BaseFiller:
         salt_master_state.save()
         salt_minion_master_state.save()
         salt_api_state.save()
+        salt_run_state.save()
 
         # capabilities
         standard_capability = Capability.objects.create(name="standard")

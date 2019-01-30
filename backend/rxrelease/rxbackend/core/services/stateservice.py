@@ -2,6 +2,7 @@ import logging,sys
 from django.db import transaction
 from ...models import State
 from ...models import SimpleState
+from ...models import RepeatableState
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -13,7 +14,7 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 
-class StatesDao:
+class StateService:
 
     def __init__(self):
      pass
@@ -24,5 +25,10 @@ class StatesDao:
         if statetype.jobtype == "SIMPLE_STATE":
              logger.debug("Constructing SIMPLE_STATE Object")
              result = SimpleState.objects.create(installed=False)
-             state = State.objects.create(statetype=statetype, host=host, name=statetype.name,simple_state=result)
+          
+        elif statetype.jobtype == "REPEATABLE_STATE":
+            logger.debug("Constructing REPEATABLE_STATE Object")
+            result = SimpleState.objects.create()
+            State.objects.create(statetype=statetype, host=host, name=statetype.name,
+                                 simple_state=result)
         return result

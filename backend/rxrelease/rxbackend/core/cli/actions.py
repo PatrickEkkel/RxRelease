@@ -23,6 +23,7 @@ def help():
  print("init_rxrelease_db() -> fill the database with default objects, run only once because it does not drop things")
  print("force_state(hostname,statetype_name,status) -> can be used to force a state, can be usefull for testing or recovering from a borked state")
  print("init_test_db() -> fills the database with mock statetypes that can be used to test functionality without having a VM ")
+ print("send_salt_command() -> N.A")
 
 
 def connect():

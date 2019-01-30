@@ -68,7 +68,7 @@ class InstallHostView(generics.UpdateAPIView):
 
         for kv in capabilityList:
             capability = kv[1]
-            logger.info("Current capability: " + str(capability))
+            logger.debug("Current capability: " + str(capability))
 
             statetypes = capability.statetypes.all()
             capability_states = State.objects.filter(host_id=host_id).filter(statetype_id__in=statetypes).all()
@@ -81,18 +81,16 @@ class InstallHostView(generics.UpdateAPIView):
                 sorted_capability_statesmap[capability.id].append(state)
 
         capability_queryset = Capability.objects.all()
-        #stateobject_queryset = State.objects.filter(host_id=host_id)
         jobfactory = JobFactory()
         newJob = jobfactory.createNewJob("StateHandlerJob")
 
         actionFactory = jobActionFactory.JobActionFactory(newJob)
-        #states =  stateobject_queryset.all()
 
         treemap = DependencyTreeMap()
         logger.debug("found capabilities: " + str(len(sorted_capability_statesmap)))
         for key in sorted_capability_statesmap:
-         logger.info("how many states are being found: " + str(len(sorted_capability_statesmap[key])))
-         logger.info("current capability: " + str(key))
+         logger.debug("how many states are being found: " + str(len(sorted_capability_statesmap[key])))
+         logger.debug("current capability: " + str(key))
          for state in sorted_capability_statesmap[key]:
           logger.info("state: " + str(state))
           parent = state.statetype.dependentOn
@@ -106,7 +104,6 @@ class InstallHostView(generics.UpdateAPIView):
         treemap.merge()
         statesList =  treemap.toList()
 
-        #jobfeed = JobFeed()
         scheduler_service = SchedulerService()
         for kv in statesList:
          state = kv[1]
@@ -114,15 +111,13 @@ class InstallHostView(generics.UpdateAPIView):
              print("state: " + str(state))
              if state.statetype.handler is not None:
               handlerRequest = RequestBuilder().buildRequest(state)
-              logger.info(str(handlerRequest))
-              logger.info("dit is het request in string formaat")
+              logger.debug(str(handlerRequest))
+              logger.debug("dit is het request in string formaat")
               # encode the request for transport
               handlerRequest.setKeyValList(Utils.escapeJsonForTransport(handlerRequest.getKeyValList()))
               action = actionFactory.createAction('INSTALL',state.name,handlerRequest.getAsPayload())
               scheduler_service.schedule_state(action)
-              #jobfeed.newJobTask(action)
-              #jobfeed.triggerJob(newJob)
-         # call jobfeed, with the correct parameters
+             # call jobfeed, with the correct parameters
         return   Host.objects.filter(id=host_id)
 
 class HostView(generics.ListAPIView):
