@@ -21,24 +21,27 @@ auth_token = token_result['token']
 reststates_api = REST_states(auth_token)
 state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),inputmapping.getStateId())
 #update state to ready
-print(state)
 state = state[0]
-
-
-
 statemanager = StateManager(auth_token)
 statemanager.setRepeatableStateDone(state)
 print("state json object")
 data = json.loads(inputmapping.getKeyvalList())
 
+# TODO: saltpassword uit de database halen via het statetype
+
 salt_command = data['salt-command']
 use_salt_api = data['use-salt-api']
-salt_master = data['salt-master']
+minion_id = data['salt-minion-id']
+salt_function = data['salt-function']
+salt_master = inputmapping.ipaddress
 if use_salt_api == 'True':
     api = Pepper('http://' + salt_master  + ':8080')
     api.login('salt','saltmaster','pam')
     # cmd.run example
-    print(api.low([{'client': 'local','tgt': '*','fun': 'cmd.run','arg': 'touch test'}]))
+    if salt_function == 'SALTCOMMAND':
+     print(api.low([{'client': 'local','tgt': minion_id,'fun': 'cmd.run','arg': salt_command}]))
+    elif salt_function == 'SALTPING':
+     print(api.low([{'client': 'local', 'tgt': minion_id, 'fun': 'test.ping'}]))
 else:
  print("don't invoke the salt api, print this string to let you know we are in testing mode")
  print(salt_command)
