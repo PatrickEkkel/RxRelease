@@ -55,8 +55,7 @@ def send_test_workload_1(hostname):
 def send_salt_command():
  # we need to get the saltmaster host object so we know where to send our commands
  global connection
- settings_dict = {'dryrun': 'False'}
- settings_dict['salt-command'] = 'ls -al'
+ settings_dict = {'dryrun': 'False','salt-command': 'ls -al','minion-id': 'test','salt-master': '192.168.178.92','use-salt-api': 'True'}
 
  salt_master = connection.module_cli_api.getHostByName('salt-master')
  statetype = connection.module_cli_api.getStatetypeByName('Salt-Run-State')

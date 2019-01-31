@@ -2,6 +2,7 @@
 import sys
 import json
 import sh
+from pepper import Pepper
 from rxbackend.configuration.globalsettings import LocalSettings,RemoteSettings,ApiUserSettings
 from rxbackend.core.restapi.REST_states import REST_states
 from rxbackend.configuration.globalsettings import NetworkSettings
@@ -31,5 +32,13 @@ print("state json object")
 data = json.loads(inputmapping.getKeyvalList())
 
 salt_command = data['salt-command']
-
-print(salt_command)
+use_salt_api = data['use-salt-api']
+salt_master = data['salt-master']
+if use_salt_api == 'True':
+    api = Pepper('http://' + salt_master  + ':8080')
+    api.login('salt','saltmaster','pam')
+    # cmd.run example
+    print(api.low([{'client': 'local','tgt': '*','fun': 'cmd.run','arg': 'touch test'}]))
+else:
+ print("don't invoke the salt api, print this string to let you know we are in testing mode")
+ print(salt_command)
