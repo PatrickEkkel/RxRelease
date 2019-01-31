@@ -69,8 +69,6 @@ class TestFiller:
         standard_capability.statetypes.add(test_statetype2)
         standard_capability.statetypes.add(salt_run_state)
 
-
-
         #buildin_saltmaster_profiletype.capabilities.add(salt_minion_capability)
         buildin_saltmaster_profiletype.capabilities.add(standard_capability)
         buildin_default_rxrelease_profiletype.capabilities.add(standard_capability)

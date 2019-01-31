@@ -10,6 +10,9 @@ class StateModel {
       repeatable_state: _repeatable_state,
       type: _type }
     }
+    static newRepeatableState(_id,_name,_repeatable_state) {
+      return StateModel.newState(_id,_name,null,_repeatable_state,null,'REPEATABLE')
+    }
     static newSimpleState(_id,_name,_simple_state) {
       return StateModel.newState(_id,_name,_simple_state,null,null,'SIMPLE')
     }

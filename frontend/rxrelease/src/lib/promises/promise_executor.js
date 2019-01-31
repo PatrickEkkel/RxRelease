@@ -29,7 +29,8 @@ execute(promise,properties) {
     context.logger.traceObject(context.stored_state)
 
     result = promise(response,context.stored_state)
-
+    context.logger.trace("promise result")
+    context.logger.traceObject(result)
     return result;
   }
 }

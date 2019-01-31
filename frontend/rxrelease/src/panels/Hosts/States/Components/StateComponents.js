@@ -9,5 +9,8 @@ export function renderStateAsString(item) {
     }
     result = [item.id,item.name,installedDisplayString];
   }
+  else if(item.type == "REPEATABLE") {
+    result = [item.id,item.name,"REPEATABLE"]
+  }
   return result
 }

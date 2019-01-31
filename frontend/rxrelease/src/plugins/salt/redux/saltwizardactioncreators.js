@@ -33,7 +33,6 @@ export function saveConfigureHost(current_host,salt_api_creds,ssh_creds) {
     swaLogger.trace("Current host object to be processed")
     swaLogger.traceObject(current_host)
     settingsRequests.getSettingCategoryByName(category.name)
-    // TODO: dit is volgens mij tamelijk overbodig, ff testne of we dit eruit kunnen halen
     .then(e.execute(settingsPromises.CREATE_OR_UPDATE_SETTINGSCATEGORY,{ category: category}))
     .then(e.execute(settingsPromises.UPDATE_SETTINGS_WITH_CATEGORY,{logger: swaLogger,salt_api_creds: salt_api_creds,search_string: search_string}))
     .then(e.execute(settingsPromises.CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS,{}))

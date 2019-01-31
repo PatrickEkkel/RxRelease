@@ -7,6 +7,7 @@ import StateModel from '../models/dbmodels/statemodel'
 import SimpleStateModel from '../models/dbmodels/simplestatemodel'
 import StateFactory from '../factories/stateFactory'
 import SettingsFactory from '../factories/settingsFactory'
+import PromiseExecutor from '../lib/promises/promise_executor'
 import ProfileTypeFactory from '../factories/profiletypeFactory'
 import GlobalSettings from '../config/global'
 import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
@@ -16,6 +17,7 @@ import  * as hostsRequests from '../rest/requests/hostrequests'
 import  * as statesRequests from '../rest/requests/statesrequests'
 import  * as settingsPromises from '../rest/promises/settingspromises'
 import  * as jsonUtils from '../lib/json/utils'
+import  * as hostPromises from '../rest/promises/hostpromises'
 
 
 var settings = new GlobalSettings();
@@ -60,35 +62,15 @@ export function loadHostManagement(hostentry) {
   var host = HostFactory.convertMapToHost(hostentry)
   var settingsfactory = new SettingsFactory()
   var factory = new StateFactory()
-
+  var e = new PromiseExecutor()
   return function (dispatch) {
       statesRequests.getStatesByHost(host)
+      .then(e.execute(hostPromises.GET_STATES_FOR_HOST,{logger: haLogger,current_host: host}))
       .then(function(response) {
-        var states = []
-
-        for(var i=0;i<response.data.length;i++) {
-          if(response.data[i].simple_state != null) {
-            haLogger.trace("simple_state applied!")
-            var state_response = response.data[i]
-            states.push(StateModel.newSimpleState(state_response.id,state_response.name,state_response.simple_state))
-          }
-        }
-        
-        haLogger.trace("states are loaded")
-        haLogger.traceObject(states)
-        host.setStates(states);
-
-      }).then(function(response) {
-        // we don't have the credentials id available so we need to do a call to the backend to retrieve it
-          return hostsRequests.getHostById(host.getId())
-        // load the credentials
-      }).then(function(response) {
-
         var data = jsonUtils.normalizeJson(response.data);
         var connectioncredentials_id =  data.connectioncredentials
         return settingsRequests.getCredentialSettingsByHostById(connectioncredentials_id);
       }).then(function(response) {
-
         var data = jsonUtils.normalizeJson(response.data);
 
         var connectioncredentials =  settingsfactory.createCredentialSettingFromJson(data);
@@ -98,11 +80,12 @@ export function loadHostManagement(hostentry) {
         var data = jsonUtils.normalizeJson(response.data);
         var settingscategory = settingsfactory.createSettingsCategoryFromJson(data);
        host.getConnectionCredentials().setSettingCategory(settingscategory)
-       haLogger.debug('dispatch LOAD_HOST_MANAGEMENT_FROM_HOSTS')
+       haLogger.trace('dispatch LOAD_HOST_MANAGEMENT_FROM_HOSTS')
+       haLogger.traceObject(host)
        dispatch(hostManagementLoaded(host));
 
      }).catch(function(error) {
-       console.log(error)
+       haLogger.debug(error)
      });
   }
 }

@@ -25,10 +25,12 @@ class StateService:
         if statetype.jobtype == "SIMPLE_STATE":
              logger.debug("Constructing SIMPLE_STATE Object")
              result = SimpleState.objects.create(installed=False)
-          
+             State.objects.create(statetype=statetype, host=host, name=statetype.name,
+                                  simple_state=result)
+
         elif statetype.jobtype == "REPEATABLE_STATE":
             logger.debug("Constructing REPEATABLE_STATE Object")
-            result = SimpleState.objects.create()
+            result = RepeatableState.objects.create()
             State.objects.create(statetype=statetype, host=host, name=statetype.name,
-                                 simple_state=result)
+                                 repeatable_state=result)
         return result

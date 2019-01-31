@@ -36,6 +36,7 @@ class  HostManagementPanel  extends BasicRxPanel {
   componentWillMount() {
     var {type,selected_host} = this.props;
     if(type == 'LOAD_HOST_MANAGEMENT_FROM_HOSTS') {
+      this.getLogger().traceObject(selected_host)
       this.setState({selected_host: selected_host})
     }
   }
