@@ -32,12 +32,12 @@ class REST_states(REST_base):
   headers = {'content-type': 'application/json'}
   headers.update(self.getAuthTokenHeader())
   response = requests.put(serverAddress,data=json.dumps(simple_state),headers=headers)
-   # response = requests.delete(serverAddress)
- def putSimpleState(self,simple_state):
-  serverAddress = self.backendlocation + '/rxbackend/simplestates/' + str(simple_state['id']) + '/'
+
+ def putRepeatableState(self,repeatable_state):
+  serverAddress = self.backendlocation + '/rxbackend/repeatablestates/' + str(repeatable_state['id']) + '/'
   headers = {'content-type': 'application/json'}
   headers.update(self.getAuthTokenHeader())
-  response = requests.put(serverAddress,data=json.dumps(simple_state),headers=headers)
+  response = requests.put(serverAddress,data=json.dumps(repeatable_state),headers=headers)
 
 
  def putState(self,state):

@@ -59,6 +59,6 @@ def send_salt_command():
  settings_dict['salt-command'] = 'ls -al'
 
  salt_master = connection.module_cli_api.getHostByName('salt-master')
- statetype = connection.module_cli_api.getStatetypeByName('test-saltstate1')
+ statetype = connection.module_cli_api.getStatetypeByName('Salt-Run-State')
  action =  connection.action_factory.create_action_from_host(salt_master,settings_dict,statetype)
  connection.scheduler_service.schedule_state(action)

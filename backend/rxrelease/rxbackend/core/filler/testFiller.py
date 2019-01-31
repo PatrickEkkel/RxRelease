@@ -60,7 +60,7 @@ class TestFiller:
         test_statetype2 = StateType.objects.create(name="test-state2",handler="testcommand.py",SettingsCategory=salt_settings_category,dependentOn=test_statetype1,module="default")
         test_statetype2.save()
 
-        salt_run_state = StateType.objects.create(name="Salt-Run-State",handler="testcommand.py",dependentOn=None,module="default",jobtype="REPEATABLE_STATE")
+        salt_run_state = StateType.objects.create(name="Salt-Run-State",handler="testcommand.py",dependentOn=None,module="rxsalt",jobtype="REPEATABLE_STATE")
         salt_run_state.save()
 
         # capabilities

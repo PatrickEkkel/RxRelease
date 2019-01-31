@@ -77,8 +77,12 @@ class  HostManagementPanel  extends BasicRxPanel {
     function handleLabelLoad(entry) {
         if(entry[2] == "NOT INSTALLED") {
           return "label-important label"
-        }else {
+        }
+        else if (entry[2] == "INSTALLED") {
           return "label-success label"
+        }
+        else if(entry[2] == "REPEATABLE") {
+          return "label-info label"
         }
 
     }

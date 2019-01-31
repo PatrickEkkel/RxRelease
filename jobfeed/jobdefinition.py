@@ -27,6 +27,12 @@ class JobDefinition:
      if state['simple_state']['installed']:
       result = True
      return result
+    def is_repeatable_state(self,state):
+     result = False
+     if state['repeatable_state'] != None:
+      logger.debug("REPEATABLE_STATE detected")
+      result = True
+     return result
 
     def is_simple_state(self,state):
      result = False
@@ -34,8 +40,6 @@ class JobDefinition:
       logger.debug("SIMPLE_STATE detected")
       result = True
      return result
-    def is_repeatable_state(self,state):
-     pass
     def check_job_for_completion(self,state):
      result = "STATE_NOT_INSTALLED"
      logger.debug(state)
@@ -44,6 +48,8 @@ class JobDefinition:
        print("task " + self.jobName + " succesfully installed")
        result = "STATE_INSTALLED"
        logger.debug("task " + self.jobName + " succesfully installed")
+     elif self.is_repeatable_state(state):
+        result = 'REPEATABLE_STATE'
      else:
       logger.debug("state not recognized")
      return result
@@ -63,12 +69,9 @@ class JobDefinition:
          logger.info("checking task  " + self.jobName + " for completion")
          state = statesApi.getStateByHostAndStateTypeId(statetypeRequest.getHostId(),statetypeRequest.getStateTypeId())
          # NOTE: dit wordt wel weer anders gedaan straks als we de complex state moeten gaan ondersteunen
-         if self.check_job_for_completion(state[0]) == 'STATE_INSTALLED':
+         job_state = self.check_job_for_completion(state[0])
+         if job_state == 'STATE_INSTALLED' or job_state == 'REPEATABLE_STATE':
              break;
-         #if state[0]['installed'] == True:
-         #
-         #result = "STATE_INSTALLED"
-         #     break
          if polling_counter == max_pollingtime:
              job_failed = True
              result = "STATE_FAILED"
@@ -79,9 +82,6 @@ class JobDefinition:
      return result
 
 
-
-    #def getHandler(self):
-    # return self.jobHandler
     def process_message(self,action,session):
         session = session.get_session()
         logger.debug("Starting job: " + self.getJobName())
