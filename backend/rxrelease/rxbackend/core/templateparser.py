@@ -34,5 +34,4 @@ class TemplateParser:
       newFile.write(line.replace(key,value))
      self.newFile = newFile
     def template_file(self):
-     #return "blalala"
      return self.filestore.getFileStoreLocationWithContext() + self.newFile.getFilename()

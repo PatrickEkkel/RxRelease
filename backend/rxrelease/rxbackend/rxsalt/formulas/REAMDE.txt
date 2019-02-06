@@ -1,0 +1,1 @@
+Temp folder to put a few default states in, so we can develop the salt api further

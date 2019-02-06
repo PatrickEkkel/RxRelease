@@ -8,7 +8,7 @@ api = Pepper('http://192.168.178.92:8080')
 #print(api)
 
 
-api.login('salt','saltmaster','pam')
+api.login('salt','test','pam')
 
 # cmd.run example
 print(api.low([{'client': 'local','tgt': 'test-minion','fun': 'cmd.run','arg': 'ls -al'}]))
