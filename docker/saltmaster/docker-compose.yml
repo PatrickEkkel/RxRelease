@@ -1,0 +1,6 @@
+
+saltmaster:
+ image: centos_saltmaster:latest 
+ ports:
+  - "2222:22" 
+

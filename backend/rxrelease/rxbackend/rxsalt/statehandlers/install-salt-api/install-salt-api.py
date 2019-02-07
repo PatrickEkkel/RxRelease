@@ -4,9 +4,10 @@ from rxbackend.ssh.sshwrapper import SSHWrapper
 from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
 from rxbackend.core.restapi.REST_states import REST_states
 from rxbackend.core.templateparser import TemplateParser
-from rxbackend.configuration.globalsettings import NetworkSettings,LocalSettings,ApiUserSettings
+from rxbackend.configuration.globalsettings import NetworkSettings, LocalSettings, ApiUserSettings
 from rxbackend.core.restapi.REST_authentication import REST_authentication
-import logging,paramiko,sh,sys,json,os
+import logging, paramiko, sh, sys, json, os
+
 # we gaan er even vanuit dat passwordless_sshlogin vanaf deze locatie nu geregeld is
 
 logger = logging.getLogger(__name__)
@@ -20,54 +21,55 @@ logger.addHandler(ch)
 
 # before we start lets do some authentication
 
-token_result = REST_authentication().postCredentials(ApiUserSettings.username,ApiUserSettings.password)
+token_result = REST_authentication().postCredentials(ApiUserSettings.username,
+                                                     ApiUserSettings.password)
 auth_token = token_result['token']
 inputmapping = InputMapper().getInputFromCLI()
 data = json.loads(inputmapping.getKeyvalList())
 
 logger.info("Installing Salt api for " + data['os'] + " under useraccount " + data['username'])
 currenthost = data['saltmaster']
-client = SSHWrapper.withKeys(data['remoteuser'],inputmapping.getIpAddress())
+client = SSHWrapper.withKeys(data['remoteuser'], inputmapping.getIpAddress())
 current_working_dir = dir_path = os.path.dirname(os.path.realpath(__file__))
 
 logger.info('Current working dir: ' + current_working_dir)
 try:
- #client.loginWithKeys(data['remoteuser'])
- logging_dir = '/var/log/rxrelease'
- # TODO: settings pakken die we vanuit de wizard geset hebben
- salt_username = data['saltusername']
- salt_password = data['saltpassword']
- # TODO: deze state testen, als we met een schone lei beginnen
- if data['os'] == "CentOS":
-  salt_api_config_txt  = current_working_dir + '/salt_api_config.txt'
-  template_parser = TemplateParser(salt_api_config_txt)
-  template_parser.replace_tokens('$SALT_USERNAME',salt_username)
-  salt_api_config_txt_handle =  template_parser.template_file()
-  #client.sendCommandWithOutput('ls -al')
-  # first remove salt, if it was already installed
-  # TODO: salt crednentials moeten nog netjes worden doorgegeven aan de commando's
-  client.sendBlockingCommand('sudo userdel ' + salt_username)
-  client.sendBlockingCommand('sudo useradd ' + salt_username + ' -m')
-  client.sendBlockingCommand('sudo su -c \'echo ' + salt_password +  ' | passwd --stdin ' + salt_username + '\'')
-  client.sendBlockingCommand('sudo yum remove  -y salt-api')
-  client.sendBlockingCommand('sudo yum install -y salt-api')
-  client.sendFile(salt_api_config_txt_handle,'~/.localstore/salt_api_config.txt')
-  client.sendBlockingCommand('sudo cp /home/rxrelease/.localstore/salt_api_config.txt /etc/salt/master')
-  client.sendBlockingCommand('sudo systemctl start salt-api')
-  client.sendBlockingCommand('sudo firewall-cmd --permanent --add-port=8080/tcp')
-  client.sendBlockingCommand('sudo firewall-cmd --reload')
-  # TODO: salt-api heeft een afhankelijkheid met salt-master state, deze moet herstart worden
-  client.sendBlockingCommand('sudo systemctl restart salt-master')
-  # implementeer de volgende stappen in dit install-salt-api script om ervoor te zorgen dat de salt-api volledig geinstalleerd wordt
-  # http://bencane.com/2014/07/17/integrating-saltstack-with-other-services-via-salt-api/
-  # https://github.com/saltstack/pepper
-  # https://docs.saltstack.com/en/latest/ref/netapi/all/salt.netapi.rest_cherrypy.html#login
+    # client.loginWithKeys(data['remoteuser'])
+    logging_dir = '/var/log/rxrelease'
+    salt_username = data['saltusername']
+    salt_password = data['saltpassword']
+    if data['os'] == "CentOS":
+        salt_api_config_txt = current_working_dir + '/salt_api_config.txt'
+        template_parser = TemplateParser(salt_api_config_txt)
+        template_parser.replace_tokens('$SALT_USERNAME', salt_username)
+        salt_api_config_txt_handle = template_parser.template_file()
+        # client.sendCommandWithOutput('ls -al')
+        # first remove salt, if it was already installed
+        client.sendBlockingCommand('sudo userdel ' + salt_username)
+        client.sendBlockingCommand('sudo useradd ' + salt_username + ' -m')
+        client.sendBlockingCommand('sudo su -c \'echo ' + salt_password +
+                                   ' | passwd --stdin ' + salt_username + '\'')
+        client.sendBlockingCommand('sudo yum remove  -y salt-api')
+        client.sendBlockingCommand('sudo yum install -y salt-api')
+        client.sendFile(salt_api_config_txt_handle, '~/.localstore/salt_api_config.txt')
+        client.sendBlockingCommand('sudo cp /home/rxrelease/'
+                                   '.localstore/salt_api_config.txt /etc/salt/master')
+    client.sendBlockingCommand('sudo systemctl start salt-api')
+    client.sendBlockingCommand('sudo firewall-cmd --permanent --add-port=8080/tcp')
+    client.sendBlockingCommand('sudo firewall-cmd --reload')
+    client.sendBlockingCommand('sudo systemctl restart salt-master')
+    # implementeer de volgende stappen in dit install-salt-api script om ervoor te zorgen dat de
+    # salt-api volledig geinstalleerd wordt
+    # http://bencane.com/2014/07/17/integrating-saltstack-with-other-services-via-salt-api/
+    # https://github.com/saltstack/pepper
+    # https://docs.saltstack.com/en/latest/ref/netapi/all/salt.netapi.rest_cherrypy.html#login
 
-  reststates_api = REST_states(auth_token)
-  state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),inputmapping.getStateId())
-  state =  state[0]
-  state['installed'] = True
-  reststates_api.putState(state)
+    reststates_api = REST_states(auth_token)
+    state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),
+                                                    inputmapping.getStateId())
+    state = state[0]
+    state['installed'] = True
+    reststates_api.putState(state)
 except paramiko.AuthenticationException:
- print("oops")
- raise
+    print("oops")
+    raise

@@ -1,0 +1,6 @@
+
+saltmaster:
+ image: sshd_centos:latest 
+ ports:
+  - "2222:22" 
+
