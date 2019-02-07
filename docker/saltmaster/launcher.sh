@@ -3,4 +3,4 @@
 salt-master &
 salt-minion &
 
-tail -f
+tail -f /dev/null

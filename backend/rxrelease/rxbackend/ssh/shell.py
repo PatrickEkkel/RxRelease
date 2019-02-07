@@ -14,21 +14,21 @@ class Shell:
     def run_remote_command(self,connection_details,remote_command):
      command = ''
      if not connection_details.use_keys:
-      command = 'sshpass -p ' + connection_details.password + ' ssh ' + connection_details.username + '@' + connection_details.ipaddress + '-p ' + connection_details.port + '"' + remote_command + '"'
+      command = 'sshpass -p ' + connection_details.password + ' ssh -oStrictHostKeyChecking=no ' + connection_details.username + '@' + connection_details.ipaddress + ' -p ' + str(connection_details.port) + '  "' + remote_command + '"'
       print(command)
      else:
-      command = 'ssh ' + connection_details.username + '@' + connection_details.ipaddress + '-p ' + connection_details.port  + ' "' + remote_command + '"'
+      command = 'ssh -oStrictHostKeyChecking=no  ' + connection_details.username + '@' + connection_details.ipaddress + ' -p ' + str(connection_details.port)  + ' "' + remote_command + '"'
       print(command)
      #return 1
      return self.run_command(command)
 
     def scp_file(self,connection_details,source,destination):
      if not connection_details.use_keys:
-      command =  'sshpass -p ' + connection_details.password + ' scp -P ' + str(connection_details.port) + ' ' + source + ' ' + connection_details.username + '@' + connection_details.ipaddress + ':' + destination
+      command =  'sshpass -p ' + connection_details.password + ' scp -P ' + str(connection_details.port) + ' '  + source + ' ' + connection_details.username + '@' + connection_details.ipaddress + ':' + destination 
       print(command)
       return call(command,shell=True)
      else:
-      command =  'scp -P ' + str(connection_details.port) + ' ' + source + ' ' + connection_details.username + '@' + connection_details.ipaddress + ':' + destination
+      command =  'scp -P ' + ' ' + str(connection_details.port) + ' ' + source + ' ' + connection_details.username + '@' + connection_details.ipaddress + ':' + destination
       print(command)
       return call(command,shell=True)
     def run_command(self,command):

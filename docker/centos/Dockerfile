@@ -10,6 +10,8 @@ RUN adduser test
 RUN chmod 0640 /etc/shadow
 RUN echo test | passwd --stdin test
 RUN echo test | passwd --stdin root
+RUN ssh-keygen -A
+RUN yum -y install openssh-clients
 #ENTRYPOINT ["/usr/sbin/sshd", "-D"]
 COPY launcher.sh /root
 ENTRYPOINT ["./root/launcher.sh"]

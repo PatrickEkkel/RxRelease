@@ -65,15 +65,17 @@ if api_mode == 'SALTTESTDOCKER':
                 raise
 
     id_rsa = tmp_dir + 'id_rsa'
-    id_rsa_pub = tmp_dir = 'id_rsa.pub'
-    sh.rm(id_rsa)
+    id_rsa_pub = tmp_dir + 'id_rsa.pub'
+    if os.path.exists(id_rsa):
+        sh.rm(id_rsa)
+
     sh.ssh_keygen("-t","rsa","-f",id_rsa,_in="\n")
     rx_localstore = RxLocalStore()
     connection_details = ConnectionDetails(host_username,host_password,salt_master,False,2222)
     ssh_login = SSHWrapper.with_connection_details(connection_details)
     ssh_login.send_blocking_command('mkdir /root/.ssh')
     ssh_login.send_file(id_rsa_pub,'/root/.ssh/authorized_keys')
-    ssh_login.send_file(id_rsa,'/root/.ssh/id_rsa.pub')
+    #ssh_login.send_file(id_rsa,'/root/.ssh/id_rsa.pub')
 
 
 #if api_mode == 'SALTTESTVIRT' or api_mode == 'SALTTESTDOCKER:
