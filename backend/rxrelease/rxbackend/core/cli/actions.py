@@ -31,6 +31,7 @@ def connect():
     connection = Connection()
     connection.connect()
 
+
 def force_state(hostname,statetype_name,status):
     # get the statetype object from the API
     # determine what kind of state this is
@@ -38,34 +39,41 @@ def force_state(hostname,statetype_name,status):
     # if the state is valid, call the API en update the state information
     global connection
     connection.module_cli_api.setState(hostname,statetype_name,status)
-    #print(host)
+
 
 def send_test_workload_2(hostname):
- global connection
- test_state_2 = module_cli_api.getEnvironment(hostname, 'test-state1')
- first_action = connection.action_factory.create_action_from_environment(test_state_2)
- connection.scheduler_service.schedule_state(first_action)
+    global connection
+    test_state_2 = module_cli_api.getEnvironment(hostname, 'test-state1')
+    first_action = connection.action_factory.create_action_from_environment(test_state_2)
+    connection.scheduler_service.schedule_state(first_action)
+
 
 def send_test_workload_1(hostname):
- global connection
- test_state_1 = connection.module_cli_api.getEnvironment(hostname, 'test-state1')
- first_action = connection.action_factory.create_action_from_environment(test_state_1)
- connection.scheduler_service.schedule_state(first_action)
+    global connection
+    test_state_1 = connection.module_cli_api.getEnvironment(hostname, 'test-state1')
+    first_action = connection.action_factory.create_action_from_environment(test_state_1)
+    connection.scheduler_service.schedule_state(first_action)
 
 
 def send_salt_ping(minion_id):
- settings_dict = {'dryrun': 'False','salt-command': '','salt-minion-id': minion_id,'use-salt-api': 'True','salt-function': 'SALTPING'}
- salt_master = connection.module_cli_api.getHostByName('salt-master')
- statetype = connection.module_cli_api.getStatetypeByName('Salt-Run-State')
- action =  connection.action_factory.create_action_from_host(salt_master,settings_dict,statetype)
- connection.scheduler_service.schedule_state(action)
+    settings_dict = {'dryrun': 'False', 'salt-command': '', 'salt-minion-id': minion_id, 'use-salt-api': 'True', 'salt-function': 'SALTPING'}
+    salt_master = connection.module_cli_api.getHostByName('salt-master')
+    statetype = connection.module_cli_api.getStatetypeByName('Salt-Run-State')
+    action =  connection.action_factory.create_action_from_host(salt_master, settings_dict, statetype)
+    connection.scheduler_service.schedule_state(action)
 
-def send_salt_command(minion_id,command):
- # we need to get the saltmaster host object so we know where to send our commands
- global connection
- settings_dict = {'dryrun': 'False','salt-command': command,'minion-id': 'test','salt-minion-id': minion_id,'use-salt-api': 'True','salt-function': 'SALTCOMMAND'}
+def send_salt_dockermock_command(minion_id,command):
+    send_salt_command(minion_id,command,'SALTTESTDOCKER')
 
- salt_master = connection.module_cli_api.getHostByName('salt-master')
- statetype = connection.module_cli_api.getStatetypeByName('Salt-Run-State')
- action =  connection.action_factory.create_action_from_host(salt_master,settings_dict,statetype)
- connection.scheduler_service.schedule_state(action)
+def send_salt_dryrun_command(minion_id,command):
+    send_salt_command(minion_id,command,'SALTTESTDRYRUN')
+
+
+def send_salt_command(minion_id,command,salt_api_mode):
+    # we need to get the saltmaster host object so we know where to send our commands
+    global connection
+    settings_dict = {'dryrun': 'False','salt-command': command,'minion-id': 'test', 'salt-minion-id': minion_id, 'api-mode': salt_api_mode, 'salt-function': 'SALTCOMMAND'}
+    salt_master = connection.module_cli_api.getHostByName('salt-master')
+    statetype = connection.module_cli_api.getStatetypeByName('Salt-Run-State')
+    action =  connection.action_factory.create_action_from_host(salt_master, settings_dict, statetype)
+    connection.scheduler_service.schedule_state(action)

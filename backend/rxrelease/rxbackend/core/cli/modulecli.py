@@ -145,7 +145,7 @@ class ModuleCLI:
 
     def getHostByName(self,hostname):
      hosts_api = REST_hosts(self.auth_token)
-     host = hosts_api.getHostByHostname(hostname)
+     host = hosts_api.get_host_by_hostname(hostname)
      return host
 
     def deleteHost(self,profiletype_name):

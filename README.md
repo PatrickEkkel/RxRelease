@@ -1,4 +1,9 @@
 
+external tools that are used by the various statehandlers
+
+apt-get install sshpass
+
+
 To run the scheduler you need to install the following packages 
 
 sudo apt install python3-pip 
@@ -24,5 +29,10 @@ npm install webpack-dev-server --save-dev
 run webpackdev-server with node_modules/.bin/webpack-dev-server the frontend/rxrelease directory
 npm install webpack-cli
 npm install --save-dev react-hot-loader
+
+
+get the saltplugin working 
+
+pip3 install salt-pepper
 
 
