@@ -3,5 +3,5 @@ saltmaster:
  image: centos_saltmaster:latest 
  ports:
   - "2222:22" 
-  - "8081:8080"
+  - "8082:8080"
 

@@ -9,6 +9,7 @@ from rxbackend.core.restapi.REST_authentication import REST_authentication
 from rxbackend.core.restapi.REST_hosts import REST_hosts
 from rxbackend.rxsalt.api.salt_api import SaltApi
 from rxbackend.rxsalt.api.salt_command import SaltCommandMapper
+from rxbackend.rxsalt.api.salt_service import SaltService
 from rxbackend.rxsalt.api.salt_connection_details import SaltConnectionDetails
 from rxbackend.core.io.rxlocalstore import RxLocalStore
 from rxbackend.ssh.sshwrapper import SSHWrapper
@@ -44,12 +45,8 @@ statemanager.setRepeatableStateDone(state)
 data = json.loads(inputmapping.getKeyvalList())
 
 # TODO: saltpassword uit de database halen via het statetype
-salt_command = data['salt-command']
-api_mode = data['api-mode']
-minion_id = data['salt-minion-id']
-salt_function = data['salt-function']
 
-salt_mapping = SaltCommandMapper.create_from_json(data)
+salt_mapping = SaltCommandMapper.create_from_dict(data)
 
 host = resthosts_api.get_host_by_id(inputmapping.host_id)
 
@@ -60,7 +57,7 @@ tmp_dir = '/tmp/saltmock/'
 id_rsa = tmp_dir + 'id_rsa'
 
 # TODO: zmq berichten underscores laten ondersteunen, dit begint vervelend te worden
-if api_mode == 'SALTTESTDOCKER':
+if salt_mapping.api_mode == 'SALTTESTDOCKER':
     logger.debug("Creating intermediate SSH key for accessing the mock salt-master")
 
     if not os.path.exists(tmp_dir):
@@ -82,21 +79,26 @@ if api_mode == 'SALTTESTDOCKER':
     ssh_login.send_file(id_rsa_pub,'/root/.ssh/authorized_keys')
 
 
-if api_mode == 'SALTTESTVIRT' or api_mode == 'SALTTESTDOCKER':
+if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTESTDOCKER':
     salt_username = 'salt'
-    salt_password = 'test'
+    salt_password = 'salt'
 
     ssh_connection_details = ConnectionDetails.\
         new_connection_with_custom_key(host_username, host_password, salt_master, id_rsa, 2222)
-    salt_connection_details = SaltConnectionDetails(salt_username, salt_password, salt_master)
+    # TODO: port number for the salt-master should be stored in the database
+    salt_connection_details = SaltConnectionDetails(salt_username, salt_password, salt_master,8082)
+    salt_service = SaltService(ssh_connection_details,salt_connection_details)
     salt_api = SaltApi(ssh_connection_details, salt_connection_details)
 
-    if salt_function == 'SALTCOMMAND':
-        salt_api.cmd_run(salt_command)
+    if salt_mapping.salt_function == 'SALTCOMMAND':
+        salt_api.cmd_run(salt_mapping.command)
         salt_api.sync_formula(formulas_dir + "/docker_ce/init.sls")
-    elif salt_function == 'LISTALLACCEPTEDMINIONS':
-        print(salt_api.list_all_unaccepted_minions())
+    elif salt_mapping.salt_function == 'LISTALLACCEPTEDMINIONS':
+        minions = salt_api.list_all_unaccepted_minions()
+        print(minions)
+    elif salt_mapping.salt_function == 'ACCEPTMINIONS':
+        print(salt_service.accept_unaccepted_minions())
 
-elif api_mode == 'SALTTESTDRYRUN':
+elif salt_mapping.api_mode == 'SALTTESTDRYRUN':
     print("don't invoke the salt api, print this string to let you know we are in testing mode")
-    print(salt_command)
+    print(salt_command.command)

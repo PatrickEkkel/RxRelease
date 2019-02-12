@@ -1,9 +1,19 @@
-import ntpath,os
+import ntpath,os,logging,sys
 from pepper import Pepper
 from rxbackend.core.io.rxfilestore import RxFileStore
 from rxbackend.ssh.sshwrapper import SSHWrapper
 from rxbackend.ssh.connectiondetails import ConnectionDetails
+from rxbackend.rxsalt.api.salt_command import SaltDataRoot
 from rxbackend.configuration.globalsettings import NetworkSettings,LocalSettings,ApiUserSettings
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
 
 
 class SaltApi:
@@ -13,7 +23,10 @@ class SaltApi:
         self.salt_connection_details = salt_connection_details
 
     def _connect(self):
-        api = Pepper('http://' + self.salt_connection_details.salt_master + ':8080')
+        api = Pepper(('http://'
+         + self.salt_connection_details.salt_master
+         + ':'
+         + str(self.salt_connection_details.port)))
         api.login(self.salt_connection_details.username, self.salt_connection_details.password, 'pam')
         return api
 
@@ -24,10 +37,17 @@ class SaltApi:
     def high_state(self, minion_id):
         pass
 
+
+    def accept_minion(self,minion_id):
+         api = self._connect()
+         result = api.low([{'client': 'wheel', 'tgt': '*', 'fun': 'key.accept','match': minion_id}])
+         logger.debug(result)
+         return result
     def list_all_unaccepted_minions(self):
         api = self._connect()
-        result = api.low([{'client': 'wheel', 'tgt': target, 'fun': 'key.list_all'}])
-        return result
+        result = api.low([{'client': 'wheel', 'fun': 'key.list_all'}])
+        return SaltDataRoot(result).get_data(0).get_minions_pre()
+        # return result['return'][0]['data']['return']['minions_pre']
 
     def sync_formula(self, formula_name):
         remoteuser = self.ssh_connectiondetails.username
