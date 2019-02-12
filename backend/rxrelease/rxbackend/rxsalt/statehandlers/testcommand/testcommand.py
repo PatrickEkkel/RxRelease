@@ -8,6 +8,7 @@ from rxbackend.core.jobs.statehandlers.statemanager import StateManager
 from rxbackend.core.restapi.REST_authentication import REST_authentication
 from rxbackend.core.restapi.REST_hosts import REST_hosts
 from rxbackend.rxsalt.api.salt_api import SaltApi
+from rxbackend.rxsalt.api.salt_command import SaltCommandMapper
 from rxbackend.rxsalt.api.salt_connection_details import SaltConnectionDetails
 from rxbackend.core.io.rxlocalstore import RxLocalStore
 from rxbackend.ssh.sshwrapper import SSHWrapper
@@ -29,14 +30,14 @@ token_result = REST_authentication().postCredentials(ApiUserSettings.username,Ap
 auth_token = token_result['token']
 
 formulas_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '..','formulas'))
-#print(formulas_dir)
+# print(formulas_dir)
 
 reststates_api = REST_states(auth_token)
 resthosts_api = REST_hosts(auth_token)
 
 
 state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(), inputmapping.getStateId())
-#update state to ready
+# update state to ready
 state = state[0]
 statemanager = StateManager(auth_token)
 statemanager.setRepeatableStateDone(state)
@@ -47,6 +48,8 @@ salt_command = data['salt-command']
 api_mode = data['api-mode']
 minion_id = data['salt-minion-id']
 salt_function = data['salt-function']
+
+salt_mapping = SaltCommandMapper.create_from_json(data)
 
 host = resthosts_api.get_host_by_id(inputmapping.host_id)
 
@@ -67,14 +70,13 @@ if api_mode == 'SALTTESTDOCKER':
             if e.errno != errno.EEXIST:
                 raise
 
-
     id_rsa_pub = tmp_dir + 'id_rsa.pub'
     if os.path.exists(id_rsa):
         sh.rm(id_rsa)
 
-    sh.ssh_keygen("-t","rsa","-f",id_rsa,_in="\n")
+    sh.ssh_keygen("-t", "rsa", "-f", id_rsa, _in="\n")
     rx_localstore = RxLocalStore()
-    connection_details = ConnectionDetails(host_username,host_password,salt_master,False,2222)
+    connection_details = ConnectionDetails(host_username,host_password, salt_master, False, 2222)
     ssh_login = SSHWrapper.with_connection_details(connection_details)
     ssh_login.send_blocking_command('mkdir /root/.ssh')
     ssh_login.send_file(id_rsa_pub,'/root/.ssh/authorized_keys')
@@ -83,10 +85,17 @@ if api_mode == 'SALTTESTDOCKER':
 if api_mode == 'SALTTESTVIRT' or api_mode == 'SALTTESTDOCKER':
     salt_username = 'salt'
     salt_password = 'test'
-    ssh_connection_details =  ConnectionDetails.new_connection_with_custom_key(host_username,host_password,salt_master,id_rsa,2222)
-    salt_connection_details = SaltConnectionDetails(salt_username,salt_password,salt_master)
-    salt_api = SaltApi(ssh_connection_details,salt_connection_details)
-    salt_api.sync_formula(formulas_dir + "/docker_ce/init.sls")
+
+    ssh_connection_details = ConnectionDetails.\
+        new_connection_with_custom_key(host_username, host_password, salt_master, id_rsa, 2222)
+    salt_connection_details = SaltConnectionDetails(salt_username, salt_password, salt_master)
+    salt_api = SaltApi(ssh_connection_details, salt_connection_details)
+
+    if salt_function == 'SALTCOMMAND':
+        salt_api.cmd_run(salt_command)
+        salt_api.sync_formula(formulas_dir + "/docker_ce/init.sls")
+    elif salt_function == 'LISTALLACCEPTEDMINIONS':
+        print(salt_api.list_all_unaccepted_minions())
 
 elif api_mode == 'SALTTESTDRYRUN':
     print("don't invoke the salt api, print this string to let you know we are in testing mode")
