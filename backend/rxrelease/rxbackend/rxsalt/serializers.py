@@ -3,6 +3,7 @@ from .models import SaltSettings
 from .models import SaltFormulas
 from .models import SaltMinion
 from ..models import Host
+from ..serializers import HostTestSerializer
 
 
 class SaltFormulasSerializer(serializers.ModelSerializer):
@@ -15,7 +16,7 @@ class SaltMinionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SaltMinion
-        fields = ('id', 'minion_id', 'accepted', 'host_id')
+        fields = ('id', 'minion_id', 'accepted', 'host')
 
 
 class SaltSettingsSerializer(serializers.ModelSerializer):
