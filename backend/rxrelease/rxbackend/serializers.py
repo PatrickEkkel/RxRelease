@@ -56,7 +56,9 @@ class ProfileTypeSerializer(serializers.ModelSerializer):
         model = ProfileType
         fields  = ('id','name','system','capabilities')
 
+
 class HostSerializer(serializers.ModelSerializer):
+
     def validate_ipaddress(self,value):
         try:
             socket.inet_aton(value)
@@ -68,7 +70,7 @@ class HostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Host
-        fields = ('id','hostname','ipaddress','description','status','profileType','connectioncredentials','hostSettings')
+        fields = ('id', 'hostname', 'ipaddress', 'description', 'status', 'profileType', 'connectioncredentials', 'hostSettings')
 
 class ConfigurationSerializer(serializers.ModelSerializer):
     hosts = HostTestSerializer(many=True,queryset=Host.objects.all())

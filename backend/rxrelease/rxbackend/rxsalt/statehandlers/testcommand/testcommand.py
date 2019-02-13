@@ -98,6 +98,8 @@ if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTEST
         print(minions)
     elif salt_mapping.salt_function == 'ACCEPTMINIONS':
         print(salt_service.accept_unaccepted_minions())
+    elif salt_mapping.salt_function == 'ACCEPTMINION':
+        print(salt_service.accept_minion(host))
 
 elif salt_mapping.api_mode == 'SALTTESTDRYRUN':
     print("don't invoke the salt api, print this string to let you know we are in testing mode")

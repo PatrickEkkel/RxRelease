@@ -28,6 +28,7 @@ class SettingsCategory(models.Model):
     def __str__(self):
         return self.name
 
+
 class StateType(models.Model):
     name = models.CharField(max_length=255)
     SettingsCategory = models.ForeignKey(SettingsCategory,default=None,null=True,on_delete=models.PROTECT)
@@ -57,58 +58,76 @@ class Profile(models.Model):
     profiletype = models.ForeignKey(ProfileType,null=True,on_delete=models.PROTECT)
     def __str__(self):
         return self.name
+
+
 class CredentialsSetting(models.Model):
     username = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
     category = models.ForeignKey(SettingsCategory,on_delete=models.PROTECT)
+
+
 class KVSetting(models.Model):
     key = models.CharField(max_length=255)
     value = models.CharField(max_length=255)
     category = models.ForeignKey(SettingsCategory,on_delete=models.PROTECT)
-class Host(models.Model):
-    hostname =  models.CharField(max_length=255)
-    ipaddress =  models.CharField(max_length=15)
-    description =  models.CharField(max_length=400)
-    status      = models.CharField(max_length=255,default="UNMANAGED")
-    connectioncredentials = models.ForeignKey(CredentialsSetting,default=None,null=True,on_delete=models.PROTECT)
-    hostSettings = models.ForeignKey(SettingsCategory,default=None,null=True,on_delete=models.PROTECT)
-    profileType = models.ForeignKey(ProfileType,default=None,null=True,on_delete=models.PROTECT)
 
+
+class Host(models.Model):
+    hostname = models.CharField(max_length=255)
+    ipaddress = models.CharField(max_length=15)
+    description = models.CharField(max_length=400)
+    status = models.CharField(max_length=255, default="UNMANAGED")
+    connectioncredentials = models.\
+        ForeignKey(CredentialsSetting, default=None, null=True, on_delete=models.PROTECT)
+    hostSettings = models.\
+        ForeignKey(SettingsCategory, default=None, null=True, on_delete=models.PROTECT)
+    profileType = models.\
+        ForeignKey(ProfileType, default=None, null=True, on_delete=models.PROTECT)
 
 
 class SimpleState(models.Model):
     installed = models.BooleanField(default=False)
 
+
 class ComplexState(models.Model):
     status = models.CharField(max_length=255,default="NOT_APPLIED")
 
+
 class RepeatableState(models.Model):
     last_successfull_run = models.DateTimeField(auto_now=True)
+
 
 class State(models.Model):
     name = models.CharField(max_length=255)
     host = models.ForeignKey(Host,on_delete=models.PROTECT)
     statetype = models.ForeignKey(StateType,on_delete=models.PROTECT)
-    simple_state = models.ForeignKey(SimpleState,default=None,null=True,on_delete=models.PROTECT)
-    complex_state = models.ForeignKey(ComplexState,default=None,null=True,on_delete=models.PROTECT)
-    repeatable_state = models.ForeignKey(RepeatableState,default=None,null=True,on_delete=models.PROTECT)
+    simple_state = models.\
+        ForeignKey(SimpleState, default=None, null=True, on_delete=models.PROTECT)
+    complex_state = models.ForeignKey(ComplexState, default=None, null=True, on_delete=models.PROTECT)
+    repeatable_state = models.ForeignKey(RepeatableState, default=None, null=True, on_delete=models.PROTECT)
+
     def __str__(self):
         return self.name
+
 
 class Configuration(models.Model):
     name = models.CharField(max_length=200)
     hosts = models.ManyToManyField(Host)
     profile = models.ForeignKey(Profile,on_delete=models.PROTECT)
+
     def __str__(self):
         return self.name
 
+
 class WizardStatus(models.Model):
     wizard_id = models.CharField(max_length=200)
-    wizard_status = models.CharField(max_length=200,default=None)
+    wizard_status = models.CharField(max_length=200, default=None)
+
     def __str__(self):
         return self.wizard_id
 
+
 class ConfigurationTab(models.Model):
-    tabname  = models.CharField(max_length=25)
+    tabname = models.CharField(max_length=25)
     component_tag = models.CharField(max_length=255)
     module = models.ForeignKey(Module,default=None,null=True,on_delete=models.PROTECT)
