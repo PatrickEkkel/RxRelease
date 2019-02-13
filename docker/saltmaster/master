@@ -1,3 +1,7 @@
+file_roots:
+  base:
+    - /srv/salt
+
 rest_cherrypy:
   port: 8080
   host: 0.0.0.0
@@ -12,4 +16,3 @@ external_auth:
     - '@wheel' # to allow access to all wheel modules
     - '@runner' # to allow access to all runner modules
     - '@jobs' # to allow access to the jobs runner and/or wheel module
-

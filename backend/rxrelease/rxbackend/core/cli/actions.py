@@ -85,6 +85,22 @@ def send_salt_dryrun_command(minion_id, command):
     global SALT_API_MODE
     send_salt_command(minion_id, command, SALT_API_MODE)
 
+def apply_salt_state(state):
+    global connection
+    global SALT_API_MODE
+    salt_master = connection.module_cli_api.getHostByName('salt-master')
+    statetype = connection.module_cli_api.getStatetypeByName('Salt-Run-State')
+    settings_dict = {
+        'dryrun': 'False'
+        , 'salt-minion-id': 'None'
+        , 'api-mode': SALT_API_MODE
+        , 'salt-function': 'APPLYSTATE'
+        , 'salt-formula': state
+    }
+    action = connection.action_factory\
+            .create_action_from_host(salt_master, settings_dict, statetype)
+    connection.scheduler_service.schedule_state(action)
+
 def accept_minion(hostname):
     global connection
     global SALT_API_MODE

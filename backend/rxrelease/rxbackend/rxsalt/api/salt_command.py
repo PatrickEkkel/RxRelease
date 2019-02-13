@@ -13,6 +13,8 @@ class SaltCommandMapper:
             result.salt_minion_id = dict['salt-minion-id']
         if 'salt-function' in dict:
             result.salt_function = dict['salt-function']
+        if 'salt-formula' in dict:
+            result.formula = dict['salt-formula']
 
         return result
 
@@ -24,6 +26,8 @@ class SaltDataChild:
     def get_minions_pre(self):
         return self.get_return()['minions_pre']
 
+    def get_success(self):
+        return self._data['success']
     def get_return(self):
         return self._data['return']
 

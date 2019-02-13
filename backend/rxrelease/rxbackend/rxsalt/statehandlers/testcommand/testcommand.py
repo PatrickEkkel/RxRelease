@@ -91,15 +91,18 @@ if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTEST
     salt_api = SaltApi(ssh_connection_details, salt_connection_details)
 
     if salt_mapping.salt_function == 'SALTCOMMAND':
+        # TODO: deze directe call naar de salt-api eruit slopen
         salt_api.cmd_run(salt_mapping.command)
-        salt_api.sync_formula(formulas_dir + "/docker_ce/init.sls")
+        #salt_api.sync_formula(formulas_dir + "/docker_ce/init.sls")
+    elif salt_mapping.salt_function == 'APPLYSTATE':
+        salt_service.execute_formula(salt_mapping.formula)
     elif salt_mapping.salt_function == 'LISTALLACCEPTEDMINIONS':
         minions = salt_api.list_all_unaccepted_minions()
         print(minions)
     elif salt_mapping.salt_function == 'ACCEPTMINIONS':
-        print(salt_service.accept_unaccepted_minions())
+        salt_service.accept_unaccepted_minions()
     elif salt_mapping.salt_function == 'ACCEPTMINION':
-        print(salt_service.accept_minion(host))
+        salt_service.accept_minion(host)
 
 elif salt_mapping.api_mode == 'SALTTESTDRYRUN':
     print("don't invoke the salt api, print this string to let you know we are in testing mode")

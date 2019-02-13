@@ -32,8 +32,9 @@ class SaltApi:
 
     def apply_state(self, state):
         api = self._connect()
-        pass
-
+        result = api.low([{'client': 'local', 'tgt': '*', 'fun': 'state.apply','arg': state}])
+        logger.debug(result)
+        return result
     def high_state(self, minion_id):
         pass
 
@@ -66,8 +67,16 @@ class SaltApi:
         textfile = rxfilestore.open_text_file(ntpath.basename(copied_file))
         file_handle = rxfilestore.get_filestore_location_with_context() + textfile.getFilename()
         # TODO: gebruik laten maken van de localstore API
-        client.send_blocking_command('mkdir -p ~/.localstore/' + parent_dir)
-        client.send_file(file_handle, '~/.localstore/' + parent_dir + '/' + ntpath.basename(formula_name))
+        localstore_formula_dir = '~/.localstore/' + parent_dir
+        localstore_formula_init_file = localstore_formula_dir + '/' + ntpath.basename(formula_name)
+
+        salt_home_dir = '/srv/salt/'
+        formula_home_dir = salt_home_dir  + parent_dir + '/'
+        client.send_blocking_command('mkdir -p ' + localstore_formula_dir)
+
+        client.send_file(file_handle, localstore_formula_init_file)
+        client.send_blocking_command('mkdir -p ' + formula_home_dir )
+        client.send_blocking_command('cp ' + localstore_formula_init_file + ' ' + formula_home_dir  )
 
     def ping(self, target):
         api = self._connect()
