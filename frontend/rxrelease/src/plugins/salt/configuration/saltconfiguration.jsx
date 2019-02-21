@@ -134,13 +134,15 @@ class SaltConfigurationPanel  extends BasicRxPanel {
                   <div className="col-md-1">&nbsp;</div>
                 </div>
                 <div className="row">
-                 <div className="col-md-1">&nbsp;</div>
+                 <div className="col-md-1"><b><span className="pull-left">Formulas</span></b></div>
+
                  <div className="col-md-6"><h5><b>salt-formula</b>:&nbsp; <i>{this.state.selected_formula.getName()}</i></h5></div>
                  <div className="col-md-2"></div>
                  <div className="col-md-2"><b><span className="pull-left">Formulas</span></b></div>
                 </div>
                 <div className="row h-100">
-                  <div className="col-md-1">
+                  <div className="col-md-2">
+                      <Table headers = {headers} data={data} onRowClick={(entry) => this.onRowClick(entry)}/>
                   </div>
                   <div className="col-md-8 h-100">
                       <YAMLEditor code={code} changeAttr={(e) => this.changeYml(e)}/>

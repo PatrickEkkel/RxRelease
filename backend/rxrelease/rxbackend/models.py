@@ -40,22 +40,34 @@ class StateType(models.Model):
     def __str__(self):
         return self.name
 
+
 class Capability(models.Model):
     name = models.CharField(max_length=255)
-    dependentOn = models.ForeignKey('self',null=True,default=None,on_delete=models.PROTECT)
-    #module = models.CharField(max_length=255)
+    dependentOn = models.ForeignKey('self', null=True, default=None, on_delete=models.PROTECT)
     statetypes = models.ManyToManyField(StateType)
+
     def __str__(self):
         return self.name
+
 
 class ProfileType(models.Model):
     name = models.CharField(max_length=255)
     capabilities = models.ManyToManyField(Capability)
     system = models.BooleanField(default=True)
 
+
+class File(models.Model):
+    filename = models.CharField(max_length=255)
+    path = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.path + self.filename
+
+
 class Profile(models.Model):
     name = models.CharField(max_length=200)
     profiletype = models.ForeignKey(ProfileType,null=True,on_delete=models.PROTECT)
+
     def __str__(self):
         return self.name
 

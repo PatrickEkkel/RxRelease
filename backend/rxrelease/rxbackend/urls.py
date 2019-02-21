@@ -20,6 +20,7 @@ from .views import moduleviews
 from .views import testview
 from .views import fillerview
 from .views import configurationtabview
+from .views import filesviews
 
 urlpatterns = [
 
@@ -60,6 +61,11 @@ urlpatterns = [
 
     url(r'^repeatablestates/$',repeatablestatesviews.CreateView.as_view(),name="details"),
     url(r'^repeatablestates/(?P<pk>[0-9]+)/$', repeatablestatesviews.DetailsView.as_view(), name="details"),
+
+    url(r'^files/$',filesviews.CreateView.as_view(),name="details"),
+    url(r'^files/(?P<pk>[0-9]+)/$', filesviews.DetailsView.as_view(), name="details"),
+    url(r'^files/upload/$', filesviews.FileUploadView.as_view(), name="details"),
+
 
 
     url(r'^states/$', statesviews.CreateView.as_view(), name="create"),

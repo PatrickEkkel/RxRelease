@@ -64,7 +64,7 @@ def send_workload(host,statetype):
  action = action_factory.create_action_from_environment(env)
  scheduler_service.schedule_state(action)
 
- 
+
 # TODO: deze methode is niet geschrevn op de testset
 def _send_test_workload():
  salt_api_env = module_cli_api.getEnvironment('salt-master','Salt-Api')
@@ -80,13 +80,6 @@ def _send_test_workload():
  scheduler_service.schedule_state(second_action)
  scheduler_service.schedule_state(third_action)
  scheduler_service.schedule_state(fourth_action)
-
-def enable_salt():
- print("Enabling salt module")
- # uitbreiden met een lamba waarmee we erdoorheen kunnen zoeken
- #module_cli_api.listModules()
- module_cli_api.activateModule('rxsalt')
- module_cli_api.createWizard('rxsalt_wizard','NEW')
 
 
 def auth_token():

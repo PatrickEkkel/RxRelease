@@ -3,6 +3,7 @@ from ..restapi.REST_modules import REST_modules
 from ..restapi.REST_wizard import REST_wizard
 from ..restapi.REST_states import REST_states
 from ..restapi.REST_hosts  import REST_hosts
+from ..restapi.REST_files import REST_files
 from ..restapi.REST_statetypes import REST_statetypes
 from ..restapi.REST_settings import REST_settings
 from backend.rxrelease.rxbackend.configuration.globalsettings import ApiUserSettings,NetworkSettings,RemoteSettings
@@ -23,6 +24,10 @@ logger.addHandler(ch)
 class ModuleCLI:
     def __init__(self,auth_token):
      self.auth_token = auth_token
+
+    def upload_file(self,file_path):
+        files_api = REST_files(self.auth_token)
+        files_api.post_filedata(file_path)
     def getEnvironment(self,hostname,statetype_name):
 
       hosts_api = REST_hosts(self.auth_token)

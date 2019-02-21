@@ -14,7 +14,8 @@ export function putSaltFormula(saltformula) {
   return Axios.put(backend_url + '/rxbackend/rxsalt/formulas/' + saltformula.getId() + '/',{
     name: saltformula.getName(),
     file: saltformula.getFile(),
-    status: saltformula.getStatus()
+    status: saltformula.getStatus(),
+    files: []
   })
 
 }
@@ -25,7 +26,8 @@ export function postSaltFormulaTest(saltformula) {
   return Axios.post(backend_url + '/rxbackend/rxsalt/formulas/test',{
     name: saltformula.getName(),
     file: saltformula.getFile(),
-    status: saltformula.getStatus()
+    status: saltformula.getStatus(),
+    files: []
   })
 
 }
@@ -37,6 +39,7 @@ export function postSaltformula(saltformula) {
   return Axios.post(backend_url + '/rxbackend/rxsalt/formulas/',{
     name: saltformula.getName(),
     file: saltformula.getFile(),
-    status: saltformula.getStatus()
+    status: saltformula.getStatus(),
+    files: []
   })
 }

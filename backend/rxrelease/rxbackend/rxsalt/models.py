@@ -1,5 +1,6 @@
 from django.db import models
 from ..models import Host
+from ..models import File
 
 
 class SaltMinion(models.Model):
@@ -8,10 +9,11 @@ class SaltMinion(models.Model):
     accepted = models.BooleanField(default=False)
 
 
-class SaltFormulas(models.Model):
+class SaltFormula(models.Model):
     name = models.CharField(max_length=255)
     file = models.CharField(max_length=8000)
-    status = models.CharField(max_length=255,default=0)
+    status = models.CharField(max_length=255, default=0)
+    files = models.ManyToManyField(File,blank=True,null=True)
 
 
 class SaltSettings(models.Model):

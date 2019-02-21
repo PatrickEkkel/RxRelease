@@ -2,6 +2,7 @@ import logging,sys,socket
 from rest_framework import serializers
 from .models import Profile
 from .models import Host
+from .models import File
 from .models import Configuration
 from .models import Capability
 from .models import State
@@ -29,6 +30,13 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
+
+class FileMTMSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
+    class Meta:
+        model = File
+        fields = ('id', 'filename', 'path')
+
+
 class CapabilityMTMSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
     class Meta:
         model = Capability
@@ -38,23 +46,33 @@ class HostTestSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSer
 
     class Meta:
         model = Host
-        fields = ('id','hostname','ipaddress','description')
+        fields = ('id', 'hostname', 'ipaddress', 'description')
+
 
 class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Module
-        fields = ('id','name','active','menuoptionname','configurationPanel')
+        fields = ('id', 'name', 'active', 'menuoptionname', 'configurationPanel')
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id','username')
+        fields = ('id', 'username')
+
 
 class ProfileTypeSerializer(serializers.ModelSerializer):
-    capabilities = CapabilityMTMSerializer(many=True,queryset=Capability.objects.all())
+    capabilities = CapabilityMTMSerializer(many=True, queryset=Capability.objects.all())
+
     class Meta:
         model = ProfileType
-        fields  = ('id','name','system','capabilities')
+        fields = ('id', 'name', 'system', 'capabilities')
+
+
+class FileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = File
+        fields = ('filename', 'path')
 
 
 class HostSerializer(serializers.ModelSerializer):

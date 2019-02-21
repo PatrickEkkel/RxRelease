@@ -1,15 +1,19 @@
 from rest_framework import serializers
 from .models import SaltSettings
-from .models import SaltFormulas
+from .models import SaltFormula
 from .models import SaltMinion
 from ..models import Host
+from ..models import File
 from ..serializers import HostTestSerializer
+from ..serializers import FileMTMSerializer
 
 
 class SaltFormulasSerializer(serializers.ModelSerializer):
+    files = FileMTMSerializer(many=True, queryset=File.objects.all())
+
     class Meta:
-        model = SaltFormulas
-        fields = ('id', 'name', 'file', 'status')
+        model = SaltFormula
+        fields = ('id', 'name', 'file', 'status', 'files')
 
 
 class SaltMinionSerializer(serializers.ModelSerializer):
