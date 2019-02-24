@@ -1,8 +1,12 @@
 from rest_framework import generics
 from rest_framework import views
+from rest_framework import viewsets
 from rest_framework.parsers import FileUploadParser
-from ..serializers import FileSerializer
-from ..models import File
+from rest_framework.response import Response
+from rest_framework import status
+from rxbackend.serializers import FileSerializer
+from rxbackend.models import File
+from rxbackend.core.io.rxfilestore import RxFileStore
 
 
 class CreateView(generics.ListCreateAPIView):
@@ -23,7 +27,40 @@ class DetailsView(generics.RetrieveUpdateDestroyAPIView):
 class FileUploadView(views.APIView):
     parser_classes = (FileUploadParser,)
 
-    def put(self, request, filename, format=None):
+    def put(self, request, *args, **kwargs):
         file_obj = request.FILES['file']
-        # do some stuff with uploaded file
-        return Response(status=204)
+
+        print(file_obj.content_type)
+        boundary = file_obj.content_type.split(';')[1]
+        boundary_id = boundary.split('=')[1]
+        print(boundary_id)
+        # Hier zijn we gebleven
+        filestore = RxFileStore.get_instance()
+
+        filestore.create_dir('files')
+        filestore.set_context('files')
+        file_handle = filestore.new_text_file(str(file_obj))
+
+        file_contents = file_obj.read()
+
+        #print("filelength: " + str(file_contents))
+        for line in file_obj:
+            decoded_string = line.decode('utf-8')
+            print(decoded_string)
+            if not decoded_string.startswith('--' + boundary_id) \
+            and not decoded_string.startswith('Content-Disposition'):
+                file_handle.write(str(line.decode('utf-8')))
+
+        print(file_handle.get_location())
+        file_record = File.objects.create(filename=file_handle.getFilename(),
+        path=file_handle.get_location())
+
+        file_record.save()
+
+
+
+
+        #file_handle.write(file_obj.read())
+        #file_handle.write(file_obj)
+
+        return Response(status=status.HTTP_201_CREATED)
