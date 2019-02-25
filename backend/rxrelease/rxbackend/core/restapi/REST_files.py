@@ -18,10 +18,7 @@ class REST_files(REST_base):
  def post_filedata(self,file_path):
 
   serverAddress = self.backendlocation + '/rxbackend/files/upload/'
-  print(serverAddress)
   file =  open(file_path,'rb')
-
-  import requests
   files = {'file': open(file_path, 'rb')}
 
   filename = ntpath.basename(file_path)
@@ -34,13 +31,7 @@ class REST_files(REST_base):
     'Content-Length': str(os.stat(file_path).st_size),
     'charset': 'UTF-8'  }
 
-  r = requests.put(serverAddress,headers=custom_headers, files=files)
-  print(r.text)
-
-  #theRequest = request.Request(serverAddress, file, self.getAuthTokenHeader(),method='PUT')
-  #urlopen(theRequest)
-
-  #response = requests.post(serverAddress, headers=self.getAuthTokenHeader(), files=files)
-  #result = response.json()
-  return None
-  #return result
+  response = requests.put(serverAddress,headers=custom_headers, files=files)
+  print(response.text)
+  result = response.json()
+  return result

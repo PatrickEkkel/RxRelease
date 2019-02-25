@@ -6,6 +6,10 @@ from ..restapi.REST_hosts  import REST_hosts
 from ..restapi.REST_files import REST_files
 from ..restapi.REST_statetypes import REST_statetypes
 from ..restapi.REST_settings import REST_settings
+
+# This should not be here, consider giving all salt stuff their own modulecli
+from ...rxsalt.restapi.REST_formulas import REST_formula
+
 from backend.rxrelease.rxbackend.configuration.globalsettings import ApiUserSettings,NetworkSettings,RemoteSettings
 
 from .environment import Environment
@@ -27,7 +31,7 @@ class ModuleCLI:
 
     def upload_file(self,file_path):
         files_api = REST_files(self.auth_token)
-        files_api.post_filedata(file_path)
+        return files_api.post_filedata(file_path)
     def getEnvironment(self,hostname,statetype_name):
 
       hosts_api = REST_hosts(self.auth_token)
@@ -144,8 +148,6 @@ class ModuleCLI:
       simple_state = state[0]['simple_state']
       simple_state['installed'] = status
       states_api.putSimpleState(simple_state)
-
-
      print(statetype)
 
     def getHostByName(self,hostname):
@@ -160,3 +162,8 @@ class ModuleCLI:
         #logger.info(host)
         states_api.deleteStateByHostId(host[0]['id'])
         hosts_api.deleteHost(host[0]['id'])
+
+    def create_salt_formula(self,formula):
+
+        formulas_api = REST_formula(self.auth_token)
+        formulas_api.post_formula(formula)

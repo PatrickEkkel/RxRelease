@@ -1,9 +1,11 @@
+import json
 from rest_framework import generics
 from rest_framework import views
 from rest_framework import viewsets
 from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework import status
+
 from rxbackend.serializers import FileSerializer
 from rxbackend.models import File
 from rxbackend.core.io.rxfilestore import RxFileStore
@@ -46,21 +48,13 @@ class FileUploadView(views.APIView):
         #print("filelength: " + str(file_contents))
         for line in file_obj:
             decoded_string = line.decode('utf-8')
-            print(decoded_string)
             if not decoded_string.startswith('--' + boundary_id) \
             and not decoded_string.startswith('Content-Disposition'):
                 file_handle.write(str(line.decode('utf-8')))
 
-        print(file_handle.get_location())
+        #print(file_handle.get_location())
         file_record = File.objects.create(filename=file_handle.getFilename(),
         path=file_handle.get_location())
-
         file_record.save()
-
-
-
-
-        #file_handle.write(file_obj.read())
-        #file_handle.write(file_obj)
-
-        return Response(status=status.HTTP_201_CREATED)
+        return Response({'id': file_record.id,'filename': file_record.filename,'path': file_record.path})
+    

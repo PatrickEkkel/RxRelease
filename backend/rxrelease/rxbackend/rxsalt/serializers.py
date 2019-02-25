@@ -13,7 +13,7 @@ class SaltFormulasSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SaltFormula
-        fields = ('id', 'name', 'file', 'status', 'files')
+        fields = ('id', 'name', 'status', 'files')
 
 
 class SaltMinionSerializer(serializers.ModelSerializer):

@@ -1,3 +1,4 @@
+import glob
 from .connection import Connection
 
 module_cli_api = None
@@ -171,3 +172,17 @@ def send_salt_command(minion_id, command, salt_api_mode):
     action = connection.action_factory\
         .create_action_from_host(salt_master, settings_dict, statetype)
     connection.scheduler_service.schedule_state(action)
+
+
+def create_salt_formula(name,salt_state_path):
+    global connection
+
+    files = glob.glob(salt_state_path)
+    ids = []
+    for file in files:
+        result = connection.module_cli_api.upload_file(file)
+        ids.append(result['id'])
+    formula = {'name': name,'status': 'NEW','files': ids}
+    connection.module_cli_api.create_salt_formula(formula)
+    # do a call to the backend to create a formula
+    # upload all the files associated with the formula

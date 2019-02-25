@@ -11,7 +11,7 @@ class SaltMinion(models.Model):
 
 class SaltFormula(models.Model):
     name = models.CharField(max_length=255)
-    file = models.CharField(max_length=8000)
+    # file = models.CharField(max_length=8000)
     status = models.CharField(max_length=255, default=0)
     files = models.ManyToManyField(File,blank=True)
 
