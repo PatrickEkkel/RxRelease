@@ -22,6 +22,16 @@ export default function _saltconfiguration(state = initialSettingsState,action) 
        showModal: false,
        selected_formula: action.selected_formula
      }
+    case 'OPEN_NEW_SALTFILE':
+     return {
+       type: action.type,
+       showModal: action.showModal
+     }
+    case 'SALT_FILE_SAVED':
+    return {
+      type: action.type,
+      showModal: action.showModal
+    }
     case 'OPEN_NEW_SALTFORMULA':
       return {
         type: action.type,

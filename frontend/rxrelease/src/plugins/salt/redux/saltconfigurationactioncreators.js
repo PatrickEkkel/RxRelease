@@ -1,4 +1,5 @@
 import  * as saltConfigurationRequests from '../rest/saltconfigurationrequests'
+import  * as fileRequests from '../../../rest/requests/filerequests'
 import  * as jsonUtils from '../../../lib/json/utils'
 import GlobalSettings from '../../../config/global'
 import LogFactory from '../../../logging/LogFactory'
@@ -9,7 +10,8 @@ var scaLogger = new LogFactory().createLogger("SALT_CONFIGURATION","ACTIONCREATO
 export function initialConfigurationState() {
 
 return {
-  type: 'INITIAL_SALT_CONFIGURATION_STATE'
+  type: 'INITIAL_SALT_CONFIGURATION_STATE',
+  showModal: false
 }
 
 }
@@ -24,6 +26,12 @@ export function formulaSaved(_saltformula) {
     type: 'SALT_FORMULA_SAVED',
     saltformula: _saltformula,
     showModal: false
+  }
+}
+export function openNewFile() {
+  return {
+    type: 'OPEN_NEW_SALTFILE',
+    showModal: true
   }
 }
 export function openNewFormula() {
@@ -74,6 +82,21 @@ export function formulaUpdated() {
   }
 }
 
+export function saveNewFile(file) {
+
+  return function (dispatch) {
+    fileRequests.postFile(file)
+    .then(function(response) {
+        dispatch(fileSaved(file))
+    })
+  }
+}
+export function fileSaved(file) {
+  return {
+    type: 'SALT_FILE_SAVED',
+    showModal: false
+  }
+}
 export function saveNewFormula(saltformula) {
 
   return function (dispatch) {

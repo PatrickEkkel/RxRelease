@@ -6,10 +6,12 @@ import Button from '../../../components/Button';
 import Modal from '../../../components/Modal';
 import BasicRxPanel from '../../../components/panels/BasicRxPanel';
 import NewFormulaPanel from './newSaltformula';
-import StandardListConverters from '../../../converters/StandardListConverters'
-import SaltFormulaModel from '../models/dbmodels/saltformulamodel'
-import  * as saltconfigurationActionCreators from '../redux/saltconfigurationactioncreators'
-import  * as yamlEditorActionCreator from '../../../redux/yamleditoractioncreator'
+import NewSaltFilePanel from './newSaltFile';
+import StandardListConverters from '../../../converters/StandardListConverters';
+import FileModel from '../../../models/dbmodels/filemodel'
+import SaltFormulaModel from '../models/dbmodels/saltformulamodel';
+import  * as saltconfigurationActionCreators from '../redux/saltconfigurationactioncreators';
+import  * as yamlEditorActionCreator from '../../../redux/yamleditoractioncreator';
 
 
 class SaltConfigurationPanel  extends BasicRxPanel {
@@ -19,7 +21,8 @@ class SaltConfigurationPanel  extends BasicRxPanel {
     this.state = {
       saltformulas_tabledata: [],
       saltformulas_modeldata: [],
-      showModal: false,
+      showSaltModal: false,
+      showFileModal: false,
       selected_formula: SaltFormulaModel.emptySaltFormula()
     }
 
@@ -64,6 +67,7 @@ class SaltConfigurationPanel  extends BasicRxPanel {
       case 'SALT_CONFIGURATION_LOADED':
         this.getLogger().trace("recieved Saltformulas")
         this.getLogger().traceObject(nextProps.saltformulas)
+        this.setState({showFileModal: false, showSaltModal: false})
 
         var data = StandardListConverters.convertListToMap(nextProps.saltformulas,function(item) {
           return [item.getId(),item.getName(),item.getStatus()]
@@ -80,10 +84,14 @@ class SaltConfigurationPanel  extends BasicRxPanel {
        this.props.dispatch(yamlEditorActionCreator.loadYamlFile(nextProps.selected_formula.getFile()))
        break;
       case 'OPEN_NEW_SALTFORMULA':
-       this.setState({showModal: nextProps.showModal})
+       this.setState({showSaltModal: nextProps.showModal})
        break;
+      case 'OPEN_NEW_SALTFILE':
+       this.setState({showFileModal: nextProps.showModal})
+       break;
+      case 'SALT_FILE_SAVED':
       case 'SALT_FORMULA_SAVED':
-       this.setState({showModal: nextProps.showModal })
+       this.setState({showSaltModal: nextProps.showModal,showFileModal: nextProps.showModal })
        this.props.dispatch(saltconfigurationActionCreators.loadAllSaltFormulas())
        break;
       case 'UPDATE_YAML_FILE':
@@ -96,12 +104,21 @@ class SaltConfigurationPanel  extends BasicRxPanel {
     }
   }
 
-  saveAndClose() {
+  saveAndCloseNewSaltFormula() {
     var saltformula = SaltFormulaModel.newSaltFormula(null,this.state.formula_name,"#salt formula","NA")
     this.props.dispatch(saltconfigurationActionCreators.saveNewFormula(saltformula))
   }
+
+  savenAndCloseNewFile() {
+
+    var file = FileModel.newFile(null,this.state.file_name,'/local/')
+    this.props.dispatch(saltconfigurationActionCreators.saveNewFile(file))
+  }
   close() {
     this.props.dispatch(saltconfigurationActionCreators.initialConfigurationState())
+  }
+  createFile() {
+    this.props.dispatch(saltconfigurationActionCreators.openNewFile())
   }
   createFormula() {
     this.props.dispatch(saltconfigurationActionCreators.openNewFormula())
@@ -117,9 +134,11 @@ class SaltConfigurationPanel  extends BasicRxPanel {
   }
 
   render() {
-    var headers = ['','','']
+    var formulaHeaders = ['','','']
+    var fileHeaders = ['']
 
-    var data = this.state.saltformulas_tabledata
+    var formulas = this.state.saltformulas_tabledata
+    var files = [['init.sls'],['test.txt'],['map.jinja']]
     var selected_formula = this.state.selected_formula
     var code = selected_formula.file
 
@@ -127,14 +146,27 @@ class SaltConfigurationPanel  extends BasicRxPanel {
     this.getLogger().traceObject(selected_formula)
     return <div className="tab-content container form-group row">
               <div className="container" >
-                        <Modal title="New Salt Formula" saveAndClose={() => this.saveAndClose()} close={() => this.close()} showModal={this.state.showModal}>
-                        <NewFormulaPanel changeAttr={(e) => this.changeAttr(e)}/>
+                        <Modal title="New Salt Formula" saveAndClose={() => this.saveAndCloseNewSaltFormula()} close={() => this.close()} showModal={this.state.showSaltModal}>
+                          <NewFormulaPanel changeAttr={(e) => this.changeAttr(e)}/>
+                        </Modal>
+                        <Modal title="New Salt File" saveAndClose={() => this.savenAndCloseNewFile()} close={() => this.close()} showModal={this.state.showFileModal}>
+                          <NewSaltFilePanel changeAttr={(e) => this.changeAttr(e)}/>
                         </Modal>
                 <div className="row">
                   <div className="col-md-1">&nbsp;</div>
                 </div>
                 <div className="row">
-                 <div className="col-md-1"><b><span className="pull-left">Formulas</span></b></div>
+                 <div className="col-md-2">
+                  <span className="pull-right">
+                   <Button title="-" onClick={() => this.testSaltFormula()}/>&nbsp;
+                   <Button title="+" onClick={() => this.createFile()}/>&nbsp;
+                  </span>
+                 </div>
+                </div>
+                <div className="row">
+                 <div className="col-md-2">
+                  &nbsp;
+                 </div>
 
                  <div className="col-md-6"><h5><b>salt-formula</b>:&nbsp; <i>{this.state.selected_formula.getName()}</i></h5></div>
                  <div className="col-md-2"></div>
@@ -142,13 +174,13 @@ class SaltConfigurationPanel  extends BasicRxPanel {
                 </div>
                 <div className="row h-100">
                   <div className="col-md-2">
-                      <Table headers = {headers} data={data} onRowClick={(entry) => this.onRowClick(entry)}/>
+                      <Table headers = {fileHeaders} data={files} onRowClick={(entry) => this.onRowClick(entry)}/>
                   </div>
                   <div className="col-md-8 h-100">
                       <YAMLEditor code={code} changeAttr={(e) => this.changeYml(e)}/>
                   </div>
                   <div className="col">
-                      <Table headers = {headers} data={data} onRowClick={(entry) => this.onRowClick(entry)}/>
+                      <Table headers = {formulaHeaders} data={formulas} onRowClick={(entry) => this.onRowClick(entry)}/>
                   </div>
                 </div>
                 <div className="row">
