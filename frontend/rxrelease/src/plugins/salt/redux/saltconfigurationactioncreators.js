@@ -4,6 +4,7 @@ import  * as jsonUtils from '../../../lib/json/utils'
 import GlobalSettings from '../../../config/global'
 import LogFactory from '../../../logging/LogFactory'
 import SaltFormulaModel from '../models/dbmodels/saltformulamodel'
+import FileModel from '../../../models/dbmodels/filemodel'
 var settings = new GlobalSettings();
 var scaLogger = new LogFactory().createLogger("SALT_CONFIGURATION","ACTIONCREATOR")
 
@@ -119,13 +120,29 @@ export function loadAllSaltFormulas() {
      scaLogger.trace("recieved response for salt-configuration request")
      scaLogger.traceObject(response.data)
      var data = response.data
-     for(var i=0;i<response.data.length;i++) {
+     for (var i=0;i<response.data.length;i++) {
        var dataElement = data[i]
        var files  = dataElement['files']
-       scaLogger.trace("Salt files")
-       scaLogger.traceObject(files)
-       
+
+
        var newSaltFormula = SaltFormulaModel.newSaltFormula(dataElement['id'],dataElement['name'],dataElement['file'],dataElement['status'])
+       scaLogger.trace(files.length)
+       for (var a=0;a<files.length;a++) {
+        //try {
+        var fileDataElement = files[a]
+        scaLogger.traceObject(fileDataElement)
+        var newFile =  FileModel.newFile(fileDataElement['id'], fileDataElement['filename'],fileDataElement['path'])
+        newSaltFormula.addFile(newFile)
+        scaLogger.trace("new salt file")
+        scaLogger.traceObject(newFile)
+        //}
+        //catch(err) {
+      //    console.log(err)
+      //  }
+      }
+       // Add file objects to the interface
+
+
        scaLogger.trace("Transformed object")
        scaLogger.traceObject(newSaltFormula)
        saltFormulas.push(newSaltFormula)

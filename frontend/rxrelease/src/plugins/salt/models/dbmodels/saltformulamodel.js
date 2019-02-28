@@ -1,8 +1,9 @@
 
 class SaltFormulaModel {
 
-    static newSaltFormula(_id,_name,_file,_status) {
+    static newSaltFormula(_id, _name, _file, _status) {
       return {
+        files: [],
         id: _id,
         name: _name,
         file: _file,
@@ -10,7 +11,9 @@ class SaltFormulaModel {
         getName() { return this.name },
         getFile() { return this.file },
         getStatus() { return this.status },
-        getId() { return this.id }
+        getFiles() { return this.files },
+        getId() { return this.id },
+        addFile(file) { this.files.push(file) }
 
       }
     }

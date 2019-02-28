@@ -6,11 +6,16 @@ from ..models import Host
 from ..models import File
 from ..serializers import HostTestSerializer
 from ..serializers import FileMTMSerializer
+from ..serializers import FileSerializer
 
 
 class SaltFormulasSerializer(serializers.ModelSerializer):
-    files = FileMTMSerializer(many=True, queryset=File.objects.all())
-
+    #files  = serializers.SlugRelatedField(
+    # many=True,
+    # slug_field='filename',
+    # queryset=File.objects.all())
+    #files = FileMTMSerializer(many=True, queryset=File.objects.all())
+    files = FileSerializer(many=True)
     class Meta:
         model = SaltFormula
         fields = ('id', 'name', 'status', 'files')

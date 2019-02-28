@@ -45,16 +45,13 @@ class FileUploadView(views.APIView):
 
         file_contents = file_obj.read()
 
-        #print("filelength: " + str(file_contents))
         for line in file_obj:
             decoded_string = line.decode('utf-8')
             if not decoded_string.startswith('--' + boundary_id) \
             and not decoded_string.startswith('Content-Disposition'):
                 file_handle.write(str(line.decode('utf-8')))
 
-        #print(file_handle.get_location())
         file_record = File.objects.create(filename=file_handle.getFilename(),
         path=file_handle.get_location())
         file_record.save()
         return Response({'id': file_record.id,'filename': file_record.filename,'path': file_record.path})
-    

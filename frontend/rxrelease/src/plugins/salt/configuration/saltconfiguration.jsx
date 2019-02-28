@@ -35,7 +35,7 @@ class SaltConfigurationPanel  extends BasicRxPanel {
     this.setState({selected_formula: _selected_formula})
 
   }
-  onRowClick(entry) {
+  onFormulaRowClick(entry) {
    var formula_id = entry[0]
    var _selected_salt_formula = this.state.saltformulas_modeldata.filter(function(x) { return x.getId() == formula_id})[0]
    this.props.dispatch(saltconfigurationActionCreators.switchSaltformula(_selected_salt_formula))
@@ -82,8 +82,15 @@ class SaltConfigurationPanel  extends BasicRxPanel {
          )
         break;
       case 'SELECT_SALT_FORMULA':
-       this.setState({selected_formula: nextProps.selected_formula})
+
+       var files = nextProps.selected_formula.getFiles()
+       var formula_files = StandardListConverters.convertListToMap(files,function(item) {
+         return [item.getId(),item.getFilename(),item.getPath()]
+       });
+       this.setState({selected_formula: nextProps.selected_formula,salt_file_tabledata: formula_files})
        this.props.dispatch(yamlEditorActionCreator.loadYamlFile(nextProps.selected_formula.getFile()))
+
+
        break;
       case 'OPEN_NEW_SALTFORMULA':
        this.setState({showSaltModal: nextProps.showModal})
@@ -140,7 +147,7 @@ class SaltConfigurationPanel  extends BasicRxPanel {
     var fileHeaders = ['']
 
     var formulas = this.state.saltformulas_tabledata
-    var files = [['init.sls'],['test.txt'],['map.jinja']]
+    var files = this.state.salt_file_tabledata
     var selected_formula = this.state.selected_formula
     var code = selected_formula.file
 
@@ -182,7 +189,7 @@ class SaltConfigurationPanel  extends BasicRxPanel {
                       <YAMLEditor code={code} changeAttr={(e) => this.changeYml(e)}/>
                   </div>
                   <div className="col">
-                      <Table headers = {formulaHeaders} data={formulas} onRowClick={(entry) => this.onRowClick(entry)}/>
+                      <Table headers = {formulaHeaders} data={formulas} onRowClick={(entry) => this.onFormulaRowClick(entry)}/>
                   </div>
                 </div>
                 <div className="row">

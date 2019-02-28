@@ -72,7 +72,7 @@ class ProfileTypeSerializer(serializers.ModelSerializer):
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
-        fields = ('filename', 'path')
+        fields = ('id', 'filename', 'path')
 
 
 class HostSerializer(serializers.ModelSerializer):
