@@ -120,7 +120,12 @@ export function loadAllSaltFormulas() {
      scaLogger.traceObject(response.data)
      var data = response.data
      for(var i=0;i<response.data.length;i++) {
-       var newSaltFormula = SaltFormulaModel.newSaltFormula(data[i]['id'],data[i]['name'],data[i]['file'],data[i]['status'])
+       var dataElement = data[i]
+       var files  = dataElement['files']
+       scaLogger.trace("Salt files")
+       scaLogger.traceObject(files)
+       
+       var newSaltFormula = SaltFormulaModel.newSaltFormula(dataElement['id'],dataElement['name'],dataElement['file'],dataElement['status'])
        scaLogger.trace("Transformed object")
        scaLogger.traceObject(newSaltFormula)
        saltFormulas.push(newSaltFormula)

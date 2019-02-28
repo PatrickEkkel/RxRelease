@@ -19,8 +19,10 @@ class SaltConfigurationPanel  extends BasicRxPanel {
   constructor() {
     super('SALT','CONFIGURATIONPANEL')
     this.state = {
-      saltformulas_tabledata: [],
-      saltformulas_modeldata: [],
+      salt_formula_tabledata: [],
+      salt_file_tabledata: [],
+      salt_formula_modeldata: [],
+      salt_formula_filedata: [],
       showSaltModal: false,
       showFileModal: false,
       selected_formula: SaltFormulaModel.emptySaltFormula()
