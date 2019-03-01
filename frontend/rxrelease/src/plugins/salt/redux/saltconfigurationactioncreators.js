@@ -65,12 +65,12 @@ export function formulaTested() {
 export function updateFormula(saltformula) {
 
   return function (dispatch) {
-
+  
     saltConfigurationRequests.putSaltFormula(saltformula)
     .then(function(response) {
+        alert('nog meer lololol')
         dispatch(formulaUpdated())
     })
-
   }
 
 }
@@ -128,19 +128,13 @@ export function loadAllSaltFormulas() {
        var newSaltFormula = SaltFormulaModel.newSaltFormula(dataElement['id'],dataElement['name'],dataElement['file'],dataElement['status'])
        scaLogger.trace(files.length)
        for (var a=0;a<files.length;a++) {
-        //try {
-        var fileDataElement = files[a]
-        scaLogger.traceObject(fileDataElement)
-        var newFile =  FileModel.newFile(fileDataElement['id'], fileDataElement['filename'],fileDataElement['path'])
-        newSaltFormula.addFile(newFile)
-        scaLogger.trace("new salt file")
-        scaLogger.traceObject(newFile)
-        //}
-        //catch(err) {
-      //    console.log(err)
-      //  }
-      }
-       // Add file objects to the interface
+            var fileDataElement = files[a]
+            scaLogger.traceObject(fileDataElement)
+            var newFile =  FileModel.newFile(fileDataElement['id'], fileDataElement['filename'],fileDataElement['path'])
+            newSaltFormula.addFile(newFile)
+            scaLogger.trace("new salt file")
+            scaLogger.traceObject(newFile)
+        }
 
 
        scaLogger.trace("Transformed object")

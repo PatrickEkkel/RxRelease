@@ -12,6 +12,7 @@ class SaltFormulaModel {
         getFile() { return this.file },
         getStatus() { return this.status },
         getFiles() { return this.files },
+        toJson() { return null; },
         getId() { return this.id },
         addFile(file) { this.files.push(file) }
 

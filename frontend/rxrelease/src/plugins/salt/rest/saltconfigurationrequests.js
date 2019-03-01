@@ -9,13 +9,20 @@ export function GetAllFormulas() {
 }
 
 export function putSaltFormula(saltformula) {
+  console.log(saltformula)
   var backend_url = GlobalSettings.getBackendUrl();
+  var files = saltformula.getFiles()
+  var jsonList = []
+
+  for (var i=0;i<files.length;i++) {
+    jsonList.push(files[i].toJson())
+  }
 
   return Axios.put(backend_url + '/rxbackend/rxsalt/formulas/' + saltformula.getId() + '/',{
     name: saltformula.getName(),
     file: saltformula.getFile(),
     status: saltformula.getStatus(),
-    files: []
+    files:  [] //jsonList
   })
 
 }

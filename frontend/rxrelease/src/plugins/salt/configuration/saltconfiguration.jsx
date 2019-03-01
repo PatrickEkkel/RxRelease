@@ -60,54 +60,62 @@ class SaltConfigurationPanel  extends BasicRxPanel {
     }
   }
   componentWillReceiveProps(nextProps) {
-
+    this.getLogger().trace('currentstate:  ' + nextProps.type)
     switch (nextProps.type) {
       case 'INITIAL_SALT_CONFIGURATION_STATE':
-        this.getLogger().trace("Initial Salt Configuration State")
-        this.props.dispatch(saltconfigurationActionCreators.loadAllSaltFormulas())
-       break;
+          this.getLogger().trace("Initial Salt Configuration State")
+          this.props.dispatch(saltconfigurationActionCreators.loadAllSaltFormulas())
+          break;
       case 'SALT_CONFIGURATION_LOADED':
-        this.getLogger().trace("recieved Saltformulas")
-        this.getLogger().traceObject(nextProps.saltformulas)
-        this.setState({showFileModal: false, showSaltModal: false})
+          this.getLogger().trace("recieved Saltformulas")
+          this.getLogger().traceObject(nextProps.saltformulas)
+          this.setState({showFileModal: false, showSaltModal: false})
 
-        var data = StandardListConverters.convertListToMap(nextProps.saltformulas,function(item) {
-          return [item.getId(),item.getName(),item.getStatus()]
-        });
-        this.getLogger().trace("tabledata saltformulas")
-        this.getLogger().traceObject(data)
-        this.setState({
-           saltformulas_tabledata: data,
-           saltformulas_modeldata: nextProps.saltformulas }
-         )
-        break;
+          var data = StandardListConverters.convertListToMap(nextProps.saltformulas,function(item) {
+              return [item.getId(),item.getName(),item.getStatus()]
+          });
+          this.getLogger().trace("tabledata saltformulas")
+          this.getLogger().traceObject(data)
+          this.setState({
+              saltformulas_tabledata: data,
+              saltformulas_modeldata: nextProps.saltformulas }
+              )
+          break;
       case 'SELECT_SALT_FORMULA':
-
-       var files = nextProps.selected_formula.getFiles()
-       var formula_files = StandardListConverters.convertListToMap(files,function(item) {
-         return [item.getId(),item.getFilename(),item.getPath()]
-       });
-       this.setState({selected_formula: nextProps.selected_formula,salt_file_tabledata: formula_files})
-       this.props.dispatch(yamlEditorActionCreator.loadYamlFile(nextProps.selected_formula.getFile()))
+          var files = nextProps.selected_formula.getFiles()
+          var formula_files = StandardListConverters.convertListToMap(files,function(item) {
+              return [item.getId(),item.getFilename(),item.getPath()]
+          });
+          this.setState({selected_formula: nextProps.selected_formula,salt_file_tabledata: formula_files})
+          this.props.dispatch(yamlEditorActionCreator.loadYamlFile(nextProps.selected_formula.getFile()))
 
 
        break;
       case 'OPEN_NEW_SALTFORMULA':
-       this.setState({showSaltModal: nextProps.showModal})
+          this.setState({showSaltModal: nextProps.showModal})
        break;
       case 'OPEN_NEW_SALTFILE':
-       this.setState({showFileModal: nextProps.showModal})
-       break;
+          this.setState({showFileModal: nextProps.showModal})
+          break;
+      case 'SALT_FORMULA_UPDATED':
+          alert('lol updated')
+          this.setState({showSaltModal: nextProps.showModal,showFileModal: nextProps.showModal })
+          this.props.dispatch(saltconfigurationActionCreators.loadAllSaltFormulas())
       case 'SALT_FILE_SAVED':
+          alert('lol saved')
+          //this.setState({showSaltModal: nextProps.showModal,showFileModal: nextProps.showModal })
+          this.props.dispatch(saltconfigurationActionCreators.updateFormula(nextProps.selected_formula))
+          //this.props.dispatch(saltconfigurationActionCreators)
+          break;
       case 'SALT_FORMULA_SAVED':
-       this.setState({showSaltModal: nextProps.showModal,showFileModal: nextProps.showModal })
-       this.props.dispatch(saltconfigurationActionCreators.loadAllSaltFormulas())
+          this.setState({showSaltModal: nextProps.showModal,showFileModal: nextProps.showModal })
+          this.props.dispatch(saltconfigurationActionCreators.loadAllSaltFormulas())
        break;
       case 'UPDATE_YAML_FILE':
-        var _selected_formula = this.state.selected_formula
-        _selected_formula.file = nextProps.yaml_contents
-        this.setState({selected_formula: _selected_formula })
-        break;
+          var _selected_formula = this.state.selected_formula
+          _selected_formula.file = nextProps.yaml_contents
+          this.setState({selected_formula: _selected_formula })
+          break;
       default:
 
     }

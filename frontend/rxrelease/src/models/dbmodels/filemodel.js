@@ -9,7 +9,8 @@ class FileModel {
       path: _path,
       getId() { return this.id },
       getFilename() { return this.filename},
-      getPath() { return this.path}
+      getPath() { return this.path},
+      toJson() { return { 'id': this.id, 'filename': this.filename, 'path': this.path}}
      }
     }
   }
