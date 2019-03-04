@@ -15,3 +15,4 @@ class REST_formula(REST_base):
           headers = {'content-type': 'application/json'}
           headers.update(self.getAuthTokenHeader())
           response =  requests.post(serverAddress,data=json.dumps(formula),headers=headers)
+          print(response.text)

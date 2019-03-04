@@ -178,11 +178,12 @@ def create_salt_formula(name,salt_state_path):
     global connection
 
     files = glob.glob(salt_state_path)
-    ids = []
+    file_refs = []
     for file in files:
         result = connection.module_cli_api.upload_file(file)
-        ids.append(result['id'])
-    formula = {'name': name,'status': 'NEW','files': ids}
+        print(result)
+        file_refs.append(result)
+    formula = {'name': name,'status': 'NEW','files': file_refs}
     connection.module_cli_api.create_salt_formula(formula)
     # do a call to the backend to create a formula
     # upload all the files associated with the formula
