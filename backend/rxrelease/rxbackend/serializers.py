@@ -73,8 +73,7 @@ class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
         fields = ('id', 'filename', 'path')
-
-
+        
 class HostSerializer(serializers.ModelSerializer):
 
     def validate_ipaddress(self,value):

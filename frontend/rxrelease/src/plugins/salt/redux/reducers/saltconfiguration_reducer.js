@@ -30,7 +30,9 @@ export default function _saltconfiguration(state = initialSettingsState,action) 
     case 'SALT_FILE_SAVED':
     return {
       type: action.type,
-      showModal: action.showModal
+      showModal: action.showModal,
+      selected_formula: action.selected_formula,
+      file: action.file
     }
     case 'OPEN_NEW_SALTFORMULA':
       return {
@@ -41,6 +43,12 @@ export default function _saltconfiguration(state = initialSettingsState,action) 
       return {
         type: action.type,
         yaml_contents: action.yaml_contents
+      }
+    case 'SALT_FORMULA_UPDATED':
+      return {
+        type: action.type,
+        showModal: action.showModal,
+        updated_formula: action.updated_formula
       }
     case 'SALT_FORMULA_SAVED':
       return {

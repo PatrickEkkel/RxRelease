@@ -63,39 +63,50 @@ export function formulaTested() {
 
 
 export function updateFormula(saltformula) {
+  scaLogger.trace('updated salt formula')
+  scaLogger.traceObject(saltformula)
+
 
   return function (dispatch) {
-  
     saltConfigurationRequests.putSaltFormula(saltformula)
     .then(function(response) {
-        alert('nog meer lololol')
-        dispatch(formulaUpdated())
+        var data = response.data
+        var files = response.data['files']
+        var updatedSaltFormula = SaltFormulaModel.newSaltFormula(data['id'],data['name'],data['file'],data['status'])
+        for(var i=0;i<files.length;i++) {
+          var currentFile = files[i]
+          var updatedFile = FileModel.newFile(currentFile['id'],currentFile['filename'],currentFile['path'])
+          updatedSaltFormula.addFile(updatedFile)
+        }
+        scaLogger.trace("salt formula updated")
+        scaLogger.traceObject(response)
+        dispatch(formulaUpdated(updatedSaltFormula))
     })
   }
 
 }
 
-export function formulaUpdated() {
+export function formulaUpdated(updated_formula) {
 
   return {
     type: 'SALT_FORMULA_UPDATED',
-    showModal: false
+    showModal: false,
+    updated_formula: updated_formula
   }
 }
 
-export function saveNewFile(file) {
+export function saveNewFile(file,saltformula) {
 
   return function (dispatch) {
-    fileRequests.postFile(file)
-    .then(function(response) {
-        dispatch(fileSaved(file))
-    })
+        dispatch(fileSaved(file,saltformula))
   }
 }
-export function fileSaved(file) {
+export function fileSaved(file,saltformula) {
   return {
     type: 'SALT_FILE_SAVED',
-    showModal: false
+    showModal: false,
+    selected_formula: saltformula,
+    file: file
   }
 }
 export function saveNewFormula(saltformula) {
@@ -126,21 +137,15 @@ export function loadAllSaltFormulas() {
 
 
        var newSaltFormula = SaltFormulaModel.newSaltFormula(dataElement['id'],dataElement['name'],dataElement['file'],dataElement['status'])
-       scaLogger.trace(files.length)
        for (var a=0;a<files.length;a++) {
             var fileDataElement = files[a]
-            scaLogger.traceObject(fileDataElement)
             var newFile =  FileModel.newFile(fileDataElement['id'], fileDataElement['filename'],fileDataElement['path'])
             newSaltFormula.addFile(newFile)
-            scaLogger.trace("new salt file")
-            scaLogger.traceObject(newFile)
         }
-
-
-       scaLogger.trace("Transformed object")
-       scaLogger.traceObject(newSaltFormula)
        saltFormulas.push(newSaltFormula)
      }
+     scaLogger.trace('loaded saltformulas')
+     scaLogger.traceObject(saltFormulas)
      dispatch(saltConfigurationLoaded(saltFormulas))
   });
 }
@@ -152,6 +157,6 @@ export function saltConfigurationLoaded(_saltformulas) {
 
   return {
     type: 'SALT_CONFIGURATION_LOADED',
-    saltformulas: _saltformulas
+    saltformulas: _saltformulas,
   }
 }

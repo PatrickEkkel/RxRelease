@@ -79,7 +79,20 @@ class SaltConfigurationPanel  extends BasicRxPanel {
           this.setState({
               saltformulas_tabledata: data,
               saltformulas_modeldata: nextProps.saltformulas }
-              )
+            )
+          var selected_formula = null;
+          if(this.state.selected_formula != null) {
+            selected_formula = this.state.selected_formula
+          }
+          else if(nextProps.saltformulas.length > 0) {
+            selected_formula = nextProps.saltformulas[0]
+          }
+
+          if(selected_formula != null) {
+            this.props.dispatch(saltconfigurationActionCreators.switchSaltformula(this.state.selected_formula))
+          }
+
+
           break;
       case 'SELECT_SALT_FORMULA':
           var files = nextProps.selected_formula.getFiles()
@@ -98,14 +111,25 @@ class SaltConfigurationPanel  extends BasicRxPanel {
           this.setState({showFileModal: nextProps.showModal})
           break;
       case 'SALT_FORMULA_UPDATED':
-          alert('lol updated')
-          this.setState({showSaltModal: nextProps.showModal,showFileModal: nextProps.showModal })
+          this.getLogger().trace('SALT_FORMULA_UPDATED selected formula')
+          this.getLogger().traceObject(nextProps.updated_formula)
+          this.getLogger().traceObject(nextProps.showModal)
+          this.setState({showSaltModal: false,showFileModal: false,selected_formula: nextProps.updated_formula })
           this.props.dispatch(saltconfigurationActionCreators.loadAllSaltFormulas())
+          break;
       case 'SALT_FILE_SAVED':
-          alert('lol saved')
-          //this.setState({showSaltModal: nextProps.showModal,showFileModal: nextProps.showModal })
+          this.getLogger().trace('SALT_FILE_SAVED selected formula')
+          this.getLogger().traceObject(nextProps.selected_formula)
+
+          var saltformula =  nextProps.selected_formula
+          this.getLogger().trace('salt formula file')
+          this.getLogger().traceObject(nextProps.file)
+
+          this.getLogger().trace('updated fileslist')
+          this.getLogger().traceObject(saltformula.getFiles())
+
+          saltformula.addFile(nextProps.file)
           this.props.dispatch(saltconfigurationActionCreators.updateFormula(nextProps.selected_formula))
-          //this.props.dispatch(saltconfigurationActionCreators)
           break;
       case 'SALT_FORMULA_SAVED':
           this.setState({showSaltModal: nextProps.showModal,showFileModal: nextProps.showModal })
@@ -129,7 +153,7 @@ class SaltConfigurationPanel  extends BasicRxPanel {
   savenAndCloseNewFile() {
 
     var file = FileModel.newFile(null,this.state.file_name,'/local/')
-    this.props.dispatch(saltconfigurationActionCreators.saveNewFile(file))
+    this.props.dispatch(saltconfigurationActionCreators.saveNewFile(file,this.state.selected_formula))
   }
   close() {
     this.props.dispatch(saltconfigurationActionCreators.initialConfigurationState())
@@ -226,7 +250,9 @@ const mapStateToProps = (state/*, props*/) => {
     yaml_contents: state._saltconfiguration.yaml_contents,
     saltformulas: state._saltconfiguration.saltformulas,
     selected_formula: state._saltconfiguration.selected_formula,
-    showModal: state._saltconfiguration.showModal
+    updated_formula: state._saltconfiguration.updated_formula,
+    showModal: state._saltconfiguration.showModal,
+    file: state._saltconfiguration.file
   }
 }
 

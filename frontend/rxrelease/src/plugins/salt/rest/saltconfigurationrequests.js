@@ -9,7 +9,7 @@ export function GetAllFormulas() {
 }
 
 export function putSaltFormula(saltformula) {
-  console.log(saltformula)
+
   var backend_url = GlobalSettings.getBackendUrl();
   var files = saltformula.getFiles()
   var jsonList = []
@@ -22,10 +22,10 @@ export function putSaltFormula(saltformula) {
     name: saltformula.getName(),
     file: saltformula.getFile(),
     status: saltformula.getStatus(),
-    files:  [] //jsonList
+    files: jsonList
   })
-
 }
+
 
 export function postSaltFormulaTest(saltformula) {
 
