@@ -10,8 +10,12 @@ from ...models import Profile
 from ...models import Configuration
 from ...models import KVSetting
 from ...models import Module
+from ...rxsalt.filler.saltFiller import SaltFiller
+
 class TestFiller:
     def createFillerForTest(self):
+
+
 
         # 2 superusers aanmaken met de standaard BaseFiller
         User.objects.create_superuser(username='superuser',password='changeit',email='')
@@ -38,7 +42,6 @@ class TestFiller:
         #buildin_saltmaster_configuration.profile = buildin_saltmaster_profile
 
         # Salt settings category maken
-
         salt_settings_category = SettingsCategory.objects.create(name="Salt Settings",prefix="salt")
         salt_settings_category.save()
 
@@ -78,3 +81,6 @@ class TestFiller:
         buildin_saltmaster_profiletype.save()
         buildin_saltmaster_profile.save()
         buildin_saltmaster_configuration.save()
+
+        saltFiller = SaltFiller()
+        saltFiller.createFillerForTest()
