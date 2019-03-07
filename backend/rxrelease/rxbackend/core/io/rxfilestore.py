@@ -24,6 +24,9 @@ class RxFileStore:
  def set_context(self,context):
      self.context = context
 
+ def get_current_context(self):
+     return self.location + '/' + self.context
+
  def copy_file(self,file):
      copyfile(file,self.location + self.context + "/" + ntpath.basename(file))
      return self.location + self.context + "/" + ntpath.basename(file)
@@ -48,6 +51,7 @@ class RxFileStore:
 
  def create_dir(self,dir):
      newPath = self.location + self.context + dir
+     print(newPath)
      if not os.path.exists(newPath):
          os.makedirs(newPath)
 

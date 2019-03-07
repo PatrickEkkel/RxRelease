@@ -3,6 +3,7 @@
 import logging,sys,os,importlib
 import zmq
 from backend.rxrelease.rxbackend.core.cli.actions import *
+from backend.rxrelease.rxbackend.rxsalt.cli.actions import *
 from backend.rxrelease.rxbackend.configuration.globalsettings import ApiUserSettings,NetworkSettings,RemoteSettings
 from backend.rxrelease.rxbackend.core.restapi.REST_authentication import REST_authentication
 from backend.rxrelease.rxbackend.core.jobs.zmq.scheduler_service import SchedulerService,ActionFactory
@@ -13,6 +14,13 @@ from backend.rxrelease.rxbackend.ssh.shell import Shell
 from backend.rxrelease.rxbackend.ssh.connectiondetails import ConnectionDetails
 from backend.rxrelease.rxbackend.statehandlers.statehandler_console_runner import ConsoleRunner
 from backend.rxrelease.rxbackend.rxsalt.statehandlers.statehandler_saltconsole_runner import SaltConsoleRunner
+from backend.rxrelease.rxbackend.core.cli.connection import Connection
+
+def __init():
+    connection = Connection.get_connection()
+    connection.connect()
+__init()
+
 
 module_cli_api = None
 api_user_settings_username = ApiUserSettings.username
@@ -44,26 +52,7 @@ def reset_saltwizard():
  module_cli_api.updateWizard('rxsalt_wizard','NEW')
  module_cli_api.deleteHost('Salt Master')
 
-def init_salt_db():
-        global module_cli_api
-        if module_cli_api is None:
-           module_cli_api = ModuleCLI(None)
-        print("Running initial database package for basic usage")
-        module_cli_api.initSaltDb()
 
-def init_test_db():
- global module_cli_api
- if module_cli_api is None:
-    module_cli_api = ModuleCLI(None)
- print("Running initial database package for basic usage")
- module_cli_api.initTestDb()
-
-def init_rxrelease_db():
- global module_cli_api
- if module_cli_api is None:
-     module_cli_api = ModuleCLI(None)
- print("Running initial database package for basic usage")
- module_cli_api.initDb()
 
 def send_workload(host,statetype):
  env = module_cli_api.getEnvironment(host,statetype)

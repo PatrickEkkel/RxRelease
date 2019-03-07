@@ -61,6 +61,13 @@ export function formulaTested() {
   }
 }
 
+export function getFileContents(file) {
+
+  return function(dispatch) {
+
+  }
+}
+
 
 export function updateFormula(saltformula) {
   scaLogger.trace('updated salt formula')

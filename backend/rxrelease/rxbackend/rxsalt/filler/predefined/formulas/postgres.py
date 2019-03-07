@@ -11,6 +11,6 @@ class PostgresFormula(Formula):
         postgres_formula = SaltFormula.objects.create(name='PostgreSQL',status='NONE')
         init_filename = 'init.sls'
         init_filehandle = localstore.new_text_file(init_filename)
-        init_file = File.objects.create(filename=init_filename,path=localstore.get_location())
+        init_file = File.objects.create(filename=init_filename,path=localstore.get_current_context())
         init_file.save()
         postgres_formula.files.set([init_file])

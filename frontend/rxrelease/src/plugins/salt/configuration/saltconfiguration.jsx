@@ -25,7 +25,8 @@ class SaltConfigurationPanel  extends BasicRxPanel {
       salt_formula_filedata: [],
       showSaltModal: false,
       showFileModal: false,
-      selected_formula: SaltFormulaModel.emptySaltFormula()
+      selected_formula: SaltFormulaModel.emptySaltFormula(),
+      selected_file: null
     }
 
   }
@@ -34,6 +35,16 @@ class SaltConfigurationPanel  extends BasicRxPanel {
     _selected_formula.file = value
     this.setState({selected_formula: _selected_formula})
 
+  }
+  onFileRowClick(entry) {
+    var file_id = entry[0]
+    var selected_formula = this.state.selected_formula
+    var files = selected_formula.getFiles()
+    var selected_file = files.filter(function(x) { return x.getId() == file_id})[0]
+    this.getLogger().trace("selected file")
+    this.getLogger().traceObject(selected_file)
+    this.props.dispatch(saltconfigurationActionCreators.getFileContents(selected_file))
+    
   }
   onFormulaRowClick(entry) {
    var formula_id = entry[0]
@@ -44,7 +55,6 @@ class SaltConfigurationPanel  extends BasicRxPanel {
   componentWillMount() {
 
     var {type} = this.props;
-    //this.props.dispatch(saltconfigurationActionCreators.initialConfigurationState())
     switch (type) {
       case 'INITIAL_SALT_CONFIGURATION_STATE':
         this.props.dispatch(saltconfigurationActionCreators.loadAllSaltFormulas())
@@ -215,7 +225,7 @@ class SaltConfigurationPanel  extends BasicRxPanel {
                 </div>
                 <div className="row h-100">
                   <div className="col-md-2">
-                      <Table headers = {fileHeaders} data={files} onRowClick={(entry) => this.onRowClick(entry)}/>
+                      <Table headers = {fileHeaders} data={files} onRowClick={(entry) => this.onFileRowClick(entry)}/>
                   </div>
                   <div className="col-md-8 h-100">
                       <YAMLEditor code={code} changeAttr={(e) => this.changeYml(e)}/>

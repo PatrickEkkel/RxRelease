@@ -14,25 +14,24 @@ logger.addHandler(ch)
 
 class RxLocalStore:
 
-    localstore = '.localstore'
+    localstore = '.localstore/'
 
     @staticmethod
     def get_localstore():
         result = RxFileStore.get_instance()
         result.set_context(localstore)
+        #result.create_dir(localstore)
         return result
-
+    def get_location():
+        return RxFileStore.get_filestore_location()
+        + '/'
+        + RxLocalStore.localstore
     def get_or_create_dir_from_localstore(dir):
         result = RxFileStore.get_instance()
         result.set_context(RxLocalStore.localstore)
-        subdirs = dir.split('//')
+        subdirs = dir.split('/')
         current_context = ''
-        for subdir in subdirs:
-            logging.debug("create directory: " + subdir)
-            result.create_dir(subdir)
-            current_context += subdir + '/'
-            result.set_context(current_context)
 
         result.create_dir(dir)
-        result.set_context(RxLocalStore.localstore + '/' + dir)
+        result.set_context(RxLocalStore.localstore + dir + '/')
         return result

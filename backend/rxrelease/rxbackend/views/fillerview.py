@@ -23,6 +23,7 @@ def testFill(request):
     return HttpResponse(response)
 
 def saltFill(request):
+    response = 'Saltfiller'
     saltFiller = SaltFiller()
     saltFiller.createFillerForTest()
     return HttpResponse(response)

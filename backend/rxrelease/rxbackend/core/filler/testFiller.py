@@ -10,7 +10,6 @@ from ...models import Profile
 from ...models import Configuration
 from ...models import KVSetting
 from ...models import Module
-from ...rxsalt.filler.saltFiller import SaltFiller
 
 class TestFiller:
     def createFillerForTest(self):
@@ -81,6 +80,3 @@ class TestFiller:
         buildin_saltmaster_profiletype.save()
         buildin_saltmaster_profile.save()
         buildin_saltmaster_configuration.save()
-
-        saltFiller = SaltFiller()
-        saltFiller.createFillerForTest()
