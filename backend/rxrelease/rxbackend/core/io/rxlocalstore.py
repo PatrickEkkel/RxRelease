@@ -19,7 +19,7 @@ class RxLocalStore:
     @staticmethod
     def get_localstore():
         result = RxFileStore.get_instance()
-        result.set_context(localstore)
+        result.set_context(RxLocalStore.localstore)
         #result.create_dir(localstore)
         return result
     def get_location():

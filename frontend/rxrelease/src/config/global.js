@@ -8,13 +8,16 @@ constructor() {
   this.BACKEND_PORT = '8080'
   this.BACKEND_PROTOCOL = 'http'
   this.SETTING_CATEGORY_HOSTNAME = "Host Settings"
+  // TODO: this is a workaround, because the backend is lacking a proper API for this information
+  this.LOCAL_SALT_STORE = 'salt-formulas'
   this.LOGLEVEL = "TRACE"
   // if this contins NONE, deny any loggging, if it contains ALL, ALLOW everything to get trought, if it contains LIST, log only the components/subcomponents that are listed
   this.LOGMODULES = "LIST"
   // Will only be used if we LOGMODULES contains te value list
   // To access Reducer Logging you can add the following 'REDUCER.<Reducer Name>', for example to get the HOST Redcuer Logging add 'REDUCER.HOST'
   //this.ENABLED_LOGGING = ['HOSTS.HOSTMANAGEMENTPANEL','HOSTS.HOSTSPANEL','HOSTS.ACTIONCREATOR','REDUCER.HOST','PROFILES.ACTIONCREATOR']
-  this.ENABLED_LOGGING = ['SALT_CONFIGURATION.ACTIONCREATOR','SALT.CONFIGURATIONPANEL']
+  this.ENABLED_LOGGING = ['SALT.CONFIGURATIONPANEL']
+
 
 }
 

@@ -138,6 +138,6 @@ def enable_salt():
     print("Enabling salt module")
     # uitbreiden met een lamba waarmee we erdoorheen kunnen zoeken
     # module_cli_api.listModules()
-    global connection
+    connection = Connection.get_connection()
     connection.module_cli_api.activateModule('rxsalt')
     connection.module_cli_api.createWizard('rxsalt_wizard', 'NEW')

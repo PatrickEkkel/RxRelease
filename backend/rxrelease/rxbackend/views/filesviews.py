@@ -9,6 +9,7 @@ from rest_framework import status
 from rxbackend.serializers import FileSerializer
 from rxbackend.models import File
 from rxbackend.core.io.rxfilestore import RxFileStore
+from rxbackend.core.io.rxlocalstore import RxLocalStore
 
 
 class CreateView(generics.ListCreateAPIView):
@@ -26,17 +27,38 @@ class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = FileSerializer
 
 
+class FileUpdateView(views.APIView):
+
+    def put(self,request,*args,**kwargs):
+        data = self.request.data
+        content = data['content']
+        path = data['path']
+        filename = data['filename']
+        storage = RxLocalStore.get_or_create_dir_from_localstore(path)
+        file_handle = storage.open_text_file(filename)
+        file_handle.write(content)
+
+        return Response({'data': content})
+class FileDownloadView(views.APIView):
+
+    def get(self, request, format=None):
+
+        path = self.request.query_params.get('path')
+        filename = self.request.query_params.get('filename')
+        storage = RxLocalStore.get_or_create_dir_from_localstore(path)
+        textfile = storage.open_text_file(filename)
+        content = textfile.getContent()
+        return Response({'data': content})
+
 class FileUploadView(views.APIView):
     parser_classes = (FileUploadParser,)
 
     def put(self, request, *args, **kwargs):
         file_obj = request.FILES['file']
 
-        print(file_obj.content_type)
         boundary = file_obj.content_type.split(';')[1]
         boundary_id = boundary.split('=')[1]
-        print(boundary_id)
-        # Hier zijn we gebleven
+
         filestore = RxFileStore.get_instance()
 
         filestore.create_dir('files')

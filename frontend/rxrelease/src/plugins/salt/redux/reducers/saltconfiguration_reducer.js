@@ -56,6 +56,12 @@ export default function _saltconfiguration(state = initialSettingsState,action) 
         showModal: action.showModal,
         saltformula: action.saltformula
       }
+    case 'FILE_CONTENTS_LOADED':
+    return {
+      type: action.type,
+      contents: action.contents,
+      selected_file: action.selected_file
+    }
     default:
     return state;
   }

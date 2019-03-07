@@ -8,9 +8,11 @@ import BasicRxPanel from '../../../components/panels/BasicRxPanel';
 import NewFormulaPanel from './newSaltformula';
 import NewSaltFilePanel from './newSaltFile';
 import StandardListConverters from '../../../converters/StandardListConverters';
+import GlobalSettings from '../../../config/global'
 import FileModel from '../../../models/dbmodels/filemodel'
 import SaltFormulaModel from '../models/dbmodels/saltformulamodel';
 import  * as saltconfigurationActionCreators from '../redux/saltconfigurationactioncreators';
+import  * as fileActionCreators from '../../../redux/fileactionscreator';
 import  * as yamlEditorActionCreator from '../../../redux/yamleditoractioncreator';
 
 
@@ -26,7 +28,8 @@ class SaltConfigurationPanel  extends BasicRxPanel {
       showSaltModal: false,
       showFileModal: false,
       selected_formula: SaltFormulaModel.emptySaltFormula(),
-      selected_file: null
+      selected_file: null,
+      contents: null
     }
 
   }
@@ -43,8 +46,8 @@ class SaltConfigurationPanel  extends BasicRxPanel {
     var selected_file = files.filter(function(x) { return x.getId() == file_id})[0]
     this.getLogger().trace("selected file")
     this.getLogger().traceObject(selected_file)
-    this.props.dispatch(saltconfigurationActionCreators.getFileContents(selected_file))
-    
+    this.props.dispatch(fileActionCreators.getFileContents(selected_file))
+
   }
   onFormulaRowClick(entry) {
    var formula_id = entry[0]
@@ -72,6 +75,13 @@ class SaltConfigurationPanel  extends BasicRxPanel {
   componentWillReceiveProps(nextProps) {
     this.getLogger().trace('currentstate:  ' + nextProps.type)
     switch (nextProps.type) {
+
+      case 'FILE_CONTENTS_LOADED':
+          this.getLogger().trace('recieved contents')
+          this.getLogger().traceObject(nextProps.contents)
+          this.setState({contents: nextProps.contents,selected_file: nextProps.selected_file})
+          this.props.dispatch(yamlEditorActionCreator.loadYamlFile(nextProps.contents))
+          break;
       case 'INITIAL_SALT_CONFIGURATION_STATE':
           this.getLogger().trace("Initial Salt Configuration State")
           this.props.dispatch(saltconfigurationActionCreators.loadAllSaltFormulas())
@@ -110,7 +120,7 @@ class SaltConfigurationPanel  extends BasicRxPanel {
               return [item.getId(),item.getFilename(),item.getPath()]
           });
           this.setState({selected_formula: nextProps.selected_formula,salt_file_tabledata: formula_files})
-          this.props.dispatch(yamlEditorActionCreator.loadYamlFile(nextProps.selected_formula.getFile()))
+
 
 
        break;
@@ -146,9 +156,7 @@ class SaltConfigurationPanel  extends BasicRxPanel {
           this.props.dispatch(saltconfigurationActionCreators.loadAllSaltFormulas())
        break;
       case 'UPDATE_YAML_FILE':
-          var _selected_formula = this.state.selected_formula
-          _selected_formula.file = nextProps.yaml_contents
-          this.setState({selected_formula: _selected_formula })
+            this.setState({contents: nextProps.yaml_contents})
           break;
       default:
 
@@ -161,8 +169,9 @@ class SaltConfigurationPanel  extends BasicRxPanel {
   }
 
   savenAndCloseNewFile() {
-
-    var file = FileModel.newFile(null,this.state.file_name,'/local/')
+    // NOTE: possible improvement is to get the localstore path from the backend, rather than getting it from global.js
+    var path = new GlobalSettings().LOCAL_SALT_STORE + '/' + this.state.selected_formula.getName() + '/'
+    var file = FileModel.newFile(null,this.state.file_name,path)
     this.props.dispatch(saltconfigurationActionCreators.saveNewFile(file,this.state.selected_formula))
   }
   close() {
@@ -175,9 +184,8 @@ class SaltConfigurationPanel  extends BasicRxPanel {
     this.props.dispatch(saltconfigurationActionCreators.openNewFormula())
   }
   saveFormula() {
-    this.getLogger().trace("Current formula to be saved")
-    this.getLogger().traceObject(this.state.selected_formula)
-    this.props.dispatch(saltconfigurationActionCreators.updateFormula(this.state.selected_formula))
+      this.props.dispatch(fileActionCreators.putFileContent(this.state.selected_file,this.state.contents))
+    //this.props.dispatch(saltconfigurationActionCreators.updateFormula(this.state.selected_formula))
   }
 
   testSaltFormula() {
@@ -260,8 +268,10 @@ const mapStateToProps = (state/*, props*/) => {
     yaml_contents: state._saltconfiguration.yaml_contents,
     saltformulas: state._saltconfiguration.saltformulas,
     selected_formula: state._saltconfiguration.selected_formula,
+    selected_file: state._saltconfiguration.selected_file,
     updated_formula: state._saltconfiguration.updated_formula,
     showModal: state._saltconfiguration.showModal,
+    contents: state._saltconfiguration.contents,
     file: state._saltconfiguration.file
   }
 }

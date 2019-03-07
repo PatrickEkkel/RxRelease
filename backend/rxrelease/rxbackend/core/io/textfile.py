@@ -4,7 +4,7 @@ class TextFile:
 
     def __init__(self,location):
         self.location = location
-        
+
     def openReadOnly(self):
         if os.path.exists(self.location):
             self.filehandle = open(self.location,'r')
@@ -24,6 +24,9 @@ class TextFile:
     def close(self):
         self.filehandle.close()
 
+    def getContent():
+        self.openReadOnly()
+        return self.filehandle.read()
     def getLines(self):
         self.openReadOnly()
         lines = self.filehandle.readlines()

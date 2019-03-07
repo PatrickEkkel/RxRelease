@@ -30,7 +30,7 @@ urlpatterns = [
     url(r'^profiles/$', profileviews.CreateView.as_view(), name="create"),
     url(r'^filler/$',fillerview.fill, name="filler"),
     url(r'^testfiller/$',fillerview.testFill, name="filler"),
-    url(r'^saltfiller/$',fillerview.saltFill, name="filler"),    
+    url(r'^saltfiller/$',fillerview.saltFill, name="filler"),
     url(r'^profiles/(?P<pk>[0-9]+)/$', profileviews.DetailsView.as_view(), name="details"),
 
     url(r'^(?P<configuration_id>[0-9]+)/test/$', testview.test, name='results'),
@@ -66,6 +66,8 @@ urlpatterns = [
     url(r'^files/$',filesviews.CreateView.as_view(),name="details"),
     url(r'^files/(?P<pk>[0-9]+)/$', filesviews.DetailsView.as_view(), name="details"),
     url(r'^files/upload/$', filesviews.FileUploadView.as_view(), name="details"),
+    url(r'^files/download/$', filesviews.FileDownloadView.as_view(), name="details"),
+    url(r'^files/update/$', filesviews.FileUpdateView.as_view(), name="details"),
 
 
 

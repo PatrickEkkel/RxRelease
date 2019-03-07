@@ -35,6 +35,7 @@ export function openNewFile() {
     showModal: true
   }
 }
+
 export function openNewFormula() {
   return {
     type: 'OPEN_NEW_SALTFORMULA',
@@ -58,13 +59,6 @@ return function(dispatch) {
 export function formulaTested() {
   return {
     type: 'FORMULA_TESTED'
-  }
-}
-
-export function getFileContents(file) {
-
-  return function(dispatch) {
-
   }
 }
 
