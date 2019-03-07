@@ -105,6 +105,10 @@ class ModuleCLI:
       modules_api = REST_modules(None)
       modules_api.getFiller()
 
+    def initSaltDb(self):
+        modules_api = REST_modules(None)
+        modules_api.getSaltFiller()
+
     def initTestDb(self):
       modules_api = REST_modules(None)
       modules_api.getTestFiller()
