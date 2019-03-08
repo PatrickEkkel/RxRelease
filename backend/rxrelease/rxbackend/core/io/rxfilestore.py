@@ -1,10 +1,20 @@
 import os.path
+import logging
+import sys
 import ntpath
 from shutil import copyfile
 from .textfile import TextFile
 from rxbackend.core.io.binaryfile import BinaryFile
 from rxbackend.configuration.globalsettings import NetworkSettings,LocalSettings,ApiUserSettings
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
 
 
 class RxFileStore:
@@ -31,10 +41,19 @@ class RxFileStore:
      copyfile(file,self.location + self.context + "/" + ntpath.basename(file))
      return self.location + self.context + "/" + ntpath.basename(file)
 
- def open_text_file(self,file):
-     result = TextFile(self.location + self.context + "/" + file)
-     result.openOrCreate()
-     result.close()
+ def open_text_file(self,file,overwrite=False):
+     filelocation = self.location + self.context + '/' + file
+     logger.debug('open file: ' + filelocation)
+     result = TextFile(filelocation)
+     if not overwrite:
+         logger.debug('open file in append mode')
+         result.openOrCreate()
+         result.close()
+     else:
+         logger.debug('open file in overwrite mode')
+         result.overwriteOrCreate()
+         result.close()
+
      return result
 
  def new_binary_file(self,file):
@@ -43,10 +62,15 @@ class RxFileStore:
      result.close()
      return result
 
- def new_text_file(self,file):
+ def new_text_file(self,file,overwrite=False):
      result = TextFile(self.location + self.context + "/" + file)
-     result.create()
-     result.close()
+     if not overwrite:
+         result.create()
+         result.close()
+     else:
+         result.overwriteOrCreate()
+         result.close()
+
      return result
 
  def create_dir(self,dir):

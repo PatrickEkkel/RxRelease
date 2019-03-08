@@ -1,4 +1,10 @@
 import  * as fileRequests from '../rest/requests/filerequests'
+import GlobalSettings from '../config/global'
+import LogFactory from '../logging/LogFactory'
+
+
+var settings = new GlobalSettings();
+var faLogger = new LogFactory().createLogger("FILES","ACTIONCREATOR")
 
 export function getFileContents(file) {
 
@@ -7,6 +13,9 @@ export function getFileContents(file) {
     .then(function(response) {
       var contents = response.data['data']
       dispatch(fileContentsLoaded(contents,file))
+    })
+    .catch(function(response) {
+      faLogger.error(response)
     })
   }
 }

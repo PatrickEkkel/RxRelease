@@ -33,12 +33,26 @@ class SaltConfigurationPanel  extends BasicRxPanel {
     }
 
   }
+
+  saveAndCloseNewSaltFormula() {
+    var saltformula = SaltFormulaModel.newSaltFormula(null,this.state.formula_name,"#salt formula","NA")
+    this.props.dispatch(saltconfigurationActionCreators.saveNewFormula(saltformula))
+  }
+
+  savenAndCloseNewFile() {
+    // NOTE: possible improvement is to get the localstore path from the backend, rather than getting it from global.js
+    var path = new GlobalSettings().LOCAL_SALT_STORE + '/' + this.state.selected_formula.getName()
+    var file = FileModel.newFile(null,this.state.file_name,path)
+    this.props.dispatch(saltconfigurationActionCreators.saveNewFile(file,this.state.selected_formula))
+  }
+
   changeYml(value) {
     var _selected_formula = this.state.selected_formula
     _selected_formula.file = value
     this.setState({selected_formula: _selected_formula})
 
   }
+
   onFileRowClick(entry) {
     var file_id = entry[0]
     var selected_formula = this.state.selected_formula
@@ -49,11 +63,32 @@ class SaltConfigurationPanel  extends BasicRxPanel {
     this.props.dispatch(fileActionCreators.getFileContents(selected_file))
 
   }
+
   onFormulaRowClick(entry) {
    var formula_id = entry[0]
    var _selected_salt_formula = this.state.saltformulas_modeldata.filter(function(x) { return x.getId() == formula_id})[0]
    this.props.dispatch(saltconfigurationActionCreators.switchSaltformula(_selected_salt_formula))
   }
+
+
+  close() {
+    this.props.dispatch(saltconfigurationActionCreators.initialConfigurationState())
+  }
+  createFile() {
+    this.props.dispatch(saltconfigurationActionCreators.openNewFile())
+  }
+  createFormula() {
+    this.props.dispatch(saltconfigurationActionCreators.openNewFormula())
+  }
+  saveFormula() {
+      this.getLogger().trace('selected file to save')
+      this.getLogger().traceObject(this.state.selected_file)
+      this.props.dispatch(fileActionCreators.putFileContent(this.state.selected_file,this.state.contents))
+  }
+
+    testSaltFormula() {
+      alert('test!')
+    }
 
   componentWillMount() {
 
@@ -79,6 +114,8 @@ class SaltConfigurationPanel  extends BasicRxPanel {
       case 'FILE_CONTENTS_LOADED':
           this.getLogger().trace('recieved contents')
           this.getLogger().traceObject(nextProps.contents)
+          this.getLogger().trace('file loaded')
+          this.getLogger().traceObject(nextProps.selected_file)
           this.setState({contents: nextProps.contents,selected_file: nextProps.selected_file})
           this.props.dispatch(yamlEditorActionCreator.loadYamlFile(nextProps.contents))
           break;
@@ -161,35 +198,6 @@ class SaltConfigurationPanel  extends BasicRxPanel {
       default:
 
     }
-  }
-
-  saveAndCloseNewSaltFormula() {
-    var saltformula = SaltFormulaModel.newSaltFormula(null,this.state.formula_name,"#salt formula","NA")
-    this.props.dispatch(saltconfigurationActionCreators.saveNewFormula(saltformula))
-  }
-
-  savenAndCloseNewFile() {
-    // NOTE: possible improvement is to get the localstore path from the backend, rather than getting it from global.js
-    var path = new GlobalSettings().LOCAL_SALT_STORE + '/' + this.state.selected_formula.getName() + '/'
-    var file = FileModel.newFile(null,this.state.file_name,path)
-    this.props.dispatch(saltconfigurationActionCreators.saveNewFile(file,this.state.selected_formula))
-  }
-  close() {
-    this.props.dispatch(saltconfigurationActionCreators.initialConfigurationState())
-  }
-  createFile() {
-    this.props.dispatch(saltconfigurationActionCreators.openNewFile())
-  }
-  createFormula() {
-    this.props.dispatch(saltconfigurationActionCreators.openNewFormula())
-  }
-  saveFormula() {
-      this.props.dispatch(fileActionCreators.putFileContent(this.state.selected_file,this.state.contents))
-    //this.props.dispatch(saltconfigurationActionCreators.updateFormula(this.state.selected_formula))
-  }
-
-  testSaltFormula() {
-    alert('test!')
   }
 
   render() {

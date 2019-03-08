@@ -1,4 +1,6 @@
 import json
+import logging
+import sys
 from rest_framework import generics
 from rest_framework import views
 from rest_framework import viewsets
@@ -11,6 +13,14 @@ from rxbackend.models import File
 from rxbackend.core.io.rxfilestore import RxFileStore
 from rxbackend.core.io.rxlocalstore import RxLocalStore
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
 
 class CreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
@@ -36,7 +46,7 @@ class FileUpdateView(views.APIView):
         filename = data['filename']
         storage = RxLocalStore.get_or_create_dir_from_localstore(path)
         file_handle = storage.open_text_file(filename)
-        file_handle.write(content)
+        file_handle.write(content,overwrite=True)
 
         return Response({'data': content})
 class FileDownloadView(views.APIView):
@@ -45,6 +55,7 @@ class FileDownloadView(views.APIView):
 
         path = self.request.query_params.get('path')
         filename = self.request.query_params.get('filename')
+        logger.debug('retrieving file from: ' + path + filename)
         storage = RxLocalStore.get_or_create_dir_from_localstore(path)
         textfile = storage.open_text_file(filename)
         content = textfile.getContent()

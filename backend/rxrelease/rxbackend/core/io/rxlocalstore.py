@@ -33,5 +33,5 @@ class RxLocalStore:
         current_context = ''
 
         result.create_dir(dir)
-        result.set_context(RxLocalStore.localstore + dir + '/')
+        result.set_context(RxLocalStore.localstore + dir)
         return result
