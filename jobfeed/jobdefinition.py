@@ -44,7 +44,7 @@ class JobDefinition:
      result = "STATE_NOT_INSTALLED"
      logger.debug(state)
      if self.is_simple_state(state):
-      if is_simple_state_installed(state):
+      if self.is_simple_state_installed(state):
        print("task " + self.jobName + " succesfully installed")
        result = "STATE_INSTALLED"
        logger.debug("task " + self.jobName + " succesfully installed")

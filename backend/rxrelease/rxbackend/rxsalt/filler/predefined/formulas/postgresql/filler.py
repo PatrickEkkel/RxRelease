@@ -1,4 +1,4 @@
-from .formula import Formula
+from rxbackend.rxsalt.filler.predefined.formulas.formula import Formula
 from rxbackend.rxsalt.models import SaltFormula
 from rxbackend.models import File
 from rxbackend.configuration.globalsettings import LocalSettings

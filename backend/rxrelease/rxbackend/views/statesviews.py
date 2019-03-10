@@ -71,7 +71,8 @@ class InstallHostView(generics.UpdateAPIView):
             logger.debug("Current capability: " + str(capability))
 
             statetypes = capability.statetypes.all()
-            capability_states = State.objects.filter(host_id=host_id).filter(statetype_id__in=statetypes).all()
+            # filter out repeatable states, they are not scheduled via the dependency tree
+            capability_states = State.objects.filter(host_id=host_id).filter(statetype_id__in=statetypes,repeatable_state__isnull=True).all()
 
             sorted_capability_statesmap[capability.id] = []
             for state in capability_states:
@@ -106,11 +107,13 @@ class InstallHostView(generics.UpdateAPIView):
 
         scheduler_service = SchedulerService()
         for kv in statesList:
-         state = kv[1]
-         if state.installed == False:
+         # TODO: this is problematic for complex states,
+         base_state = kv[1]
+         simple_state = base_state.simple_state
+         if simple_state.installed == False:
              print("state: " + str(state))
-             if state.statetype.handler is not None:
-              handlerRequest = RequestBuilder().buildRequest(state)
+             if base_state.statetype.handler is not None:
+              handlerRequest = RequestBuilder().buildRequest(base_state)
               logger.debug(str(handlerRequest))
               logger.debug("dit is het request in string formaat")
               # encode the request for transport

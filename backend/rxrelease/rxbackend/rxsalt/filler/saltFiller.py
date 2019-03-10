@@ -1,4 +1,4 @@
-from .predefined.formulas.postgres import PostgresFormula
+from .predefined.formulas.postgresql.filler import PostgresFormula
 
 
 class SaltFiller:
