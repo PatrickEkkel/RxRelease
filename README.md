@@ -35,4 +35,5 @@ get the saltplugin working
 
 pip3 install salt-pepper
 
-
+# clean dir from pyc files
+sudo find . -name "*.pyc" -exec rm -f {} \;

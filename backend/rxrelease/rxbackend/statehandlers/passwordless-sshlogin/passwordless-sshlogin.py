@@ -12,7 +12,7 @@ from rxbackend.core.restapi.REST_states import REST_states
 from rxbackend.core.restapi.REST_authentication import REST_authentication
 from rxbackend.ssh.ssh import SSHClient
 from rxbackend.ssh.sshwrapper import SSHWrapper
-from rxbackend.core.rxfilestore import RxFileStore
+# from rxbackend.core.rxfilestore import RxFileStore
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -34,7 +34,7 @@ auth_token = token_result['token']
 data = json.loads(inputmapping.getKeyvalList())
 dryrun = data["dryrun"]
 
-filestore = RxFileStore('/home/' + localuser + '/.rxrelease')
+# filestore = RxFileStore('/home/' + localuser + '/.rxrelease')
 
 if Utils.str2bool(dryrun):
  logger.info("running script in dryrun with the following parameters")

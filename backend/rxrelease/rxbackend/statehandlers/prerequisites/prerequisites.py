@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import logging
-import sh,sys
+import sh,sys,json
 
 from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
 from rxbackend.configuration.globalsettings import LocalSettings,RemoteSettings,ApiUserSettings
