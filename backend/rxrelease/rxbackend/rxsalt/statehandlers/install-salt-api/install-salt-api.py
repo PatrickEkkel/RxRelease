@@ -6,6 +6,7 @@ from rxbackend.core.restapi.REST_states import REST_states
 from rxbackend.core.templateparser import TemplateParser
 from rxbackend.configuration.globalsettings import NetworkSettings, LocalSettings, ApiUserSettings
 from rxbackend.core.restapi.REST_authentication import REST_authentication
+from rxbackend.core.jobs.statehandlers.statemanager import StateManager
 import logging, paramiko, sh, sys, json, os
 
 # we gaan er even vanuit dat passwordless_sshlogin vanaf deze locatie nu geregeld is
@@ -29,7 +30,7 @@ data = json.loads(inputmapping.getKeyvalList())
 
 logger.info("Installing Salt api for " + data['os'] + " under useraccount " + data['username'])
 currenthost = data['saltmaster']
-client = SSHWrapper.withKeys(data['remoteuser'], inputmapping.getIpAddress())
+client = SSHWrapper.with_keys(data['remoteuser'], inputmapping.getIpAddress())
 current_working_dir = dir_path = os.path.dirname(os.path.realpath(__file__))
 
 logger.info('Current working dir: ' + current_working_dir)
@@ -45,19 +46,19 @@ try:
         salt_api_config_txt_handle = template_parser.template_file()
         # client.sendCommandWithOutput('ls -al')
         # first remove salt, if it was already installed
-        client.sendBlockingCommand('sudo userdel ' + salt_username)
-        client.sendBlockingCommand('sudo useradd ' + salt_username + ' -m')
-        client.sendBlockingCommand('sudo su -c \'echo ' + salt_password +
+        client.send_blocking_command('sudo userdel ' + salt_username)
+        client.send_blocking_command('sudo useradd ' + salt_username + ' -m')
+        client.send_blocking_command('sudo su -c \'echo ' + salt_password +
                                    ' | passwd --stdin ' + salt_username + '\'')
-        client.sendBlockingCommand('sudo yum remove  -y salt-api')
-        client.sendBlockingCommand('sudo yum install -y salt-api')
-        client.sendFile(salt_api_config_txt_handle, '~/.localstore/salt_api_config.txt')
-        client.sendBlockingCommand('sudo cp /home/rxrelease/'
+        client.send_blocking_command('sudo yum remove  -y salt-api')
+        client.send_blocking_command('sudo yum install -y salt-api')
+        client.send_file(salt_api_config_txt_handle, '~/.localstore/salt_api_config.txt')
+        client.send_blocking_command('sudo cp /home/rxrelease/'
                                    '.localstore/salt_api_config.txt /etc/salt/master')
-    client.sendBlockingCommand('sudo systemctl start salt-api')
-    client.sendBlockingCommand('sudo firewall-cmd --permanent --add-port=8080/tcp')
-    client.sendBlockingCommand('sudo firewall-cmd --reload')
-    client.sendBlockingCommand('sudo systemctl restart salt-master')
+    client.send_blocking_command('sudo systemctl start salt-api')
+    client.send_blocking_command('sudo firewall-cmd --permanent --add-port=8080/tcp')
+    client.send_blocking_command('sudo firewall-cmd --reload')
+    client.send_blocking_command('sudo systemctl restart salt-master')
     # implementeer de volgende stappen in dit install-salt-api script om ervoor te zorgen dat de
     # salt-api volledig geinstalleerd wordt
     # http://bencane.com/2014/07/17/integrating-saltstack-with-other-services-via-salt-api/
@@ -68,8 +69,11 @@ try:
     state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),
                                                     inputmapping.getStateId())
     state = state[0]
-    state['installed'] = True
-    reststates_api.putState(state)
+    statemanager = StateManager(auth_token)
+    statemanager.setSimpleStateInstalled(state)
+
+    #state['installed'] = True
+    #reststates_api.putState(state)
 except paramiko.AuthenticationException:
     print("oops")
     raise

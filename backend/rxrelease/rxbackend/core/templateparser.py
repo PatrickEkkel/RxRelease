@@ -1,5 +1,5 @@
 import logging,sys,ntpath
-from rxbackend.core.rxfilestore import RxFileStore
+from .io.rxfilestore import RxFileStore
 from rxbackend.configuration.globalsettings import NetworkSettings,LocalSettings,ApiUserSettings
 
 logger = logging.getLogger(__name__)
@@ -20,18 +20,18 @@ class TemplateParser:
      self.filestorelocation = '/home/' + localuser + '/.rxrelease/'
      self.file_location = file_location
      self.filestore = RxFileStore(self.filestorelocation)
-     self.filestore.createDir('template_parser')
-     self.filestore.setContext('template_parser')
-     copied_file = self.filestore.copyFile(file_location)
+     self.filestore.create_dir('template_parser')
+     self.filestore.set_context('template_parser')
+     copied_file = self.filestore.copy_file(file_location)
      logger.debug(copied_file)
-     self.textfile = self.filestore.openTextFile(ntpath.basename(copied_file))
+     self.textfile = self.filestore.open_text_file(ntpath.basename(copied_file))
 
     def replace_tokens(self,key,value):
      lines = self.textfile.getLines()
-     newFile = self.filestore.newTextFile('filled_salt_api_template.txt')
+     newFile = self.filestore.new_text_file('filled_salt_api_template.txt')
      self.file_handle = newFile.getFilename()
      for line in lines:
       newFile.write(line.replace(key,value))
      self.newFile = newFile
     def template_file(self):
-     return self.filestore.getFileStoreLocationWithContext() + self.newFile.getFilename()
+     return self.filestore.get_filestore_location_with_context() + self.newFile.getFilename()
