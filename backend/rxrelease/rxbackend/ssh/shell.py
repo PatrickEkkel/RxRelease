@@ -94,7 +94,5 @@ class Shell:
 
 
     def run_command(self, command):
-        pass
-        #call(["ls", "-l"])
         return call(command, shell=True)
         # TODO: haal de exitcode van het commando op doormiddel van $?

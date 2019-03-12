@@ -4,6 +4,8 @@ class ApiUserSettings:
      password = "TESTAPIPASSWORD"
 class LocalSettings:
     localuser = "patrick"
+    localconfig = '/home/' + localuser + '/.rxrelease'
+
 class RemoteSettings:
     remoteuser = "rxrelease"
 class NetworkSettings:

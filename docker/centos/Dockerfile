@@ -6,6 +6,7 @@ RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
 
 RUN yum install which -y
 RUN yum install mlocate -y
+RUN yum install sudo -y
 RUN adduser test
 RUN chmod 0640 /etc/shadow
 RUN echo test | passwd --stdin test

@@ -53,13 +53,6 @@ def reset_saltwizard():
  module_cli_api.deleteHost('Salt Master')
 
 
-
-def send_workload(host,statetype):
- env = module_cli_api.getEnvironment(host,statetype)
- action = action_factory.create_action_from_environment(env)
- scheduler_service.schedule_state(action)
-
-
 # TODO: deze methode is niet geschrevn op de testset
 def _send_test_workload():
  salt_api_env = module_cli_api.getEnvironment('salt-master','Salt-Api')

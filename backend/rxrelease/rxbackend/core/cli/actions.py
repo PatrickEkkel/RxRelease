@@ -33,19 +33,23 @@ def force_state(hostname, statetype_name, status):
     global connection
     connection.module_cli_api.setState(hostname, statetype_name, status)
 
+def send_workload(hostname,statetype_name):
+    global c
+    env = c.module_cli_api.getEnvironment(hostname,statetype_name)
+    action = c.action_factory.create_action_from_environment(env)
+    c.scheduler_service.schedule_state(action)
 
 def send_test_workload_2(hostname):
-    global connection
+    global c
     test_state_2 = module_cli_api.getEnvironment(hostname, 'test-state1')
-    first_action = connection.action_factory.create_action_from_environment(test_state_2)
-    connection.scheduler_service.schedule_state(first_action)
-
+    first_action = c.action_factory.create_action_from_environment(test_state_2)
+    c.scheduler_service.schedule_state(first_action)
 
 def send_test_workload_1(hostname):
     global connection
     test_state_1 = connection.module_cli_api.getEnvironment(hostname, 'test-state1')
     first_action = connection.action_factory.create_action_from_environment(test_state_1)
-    connection.scheduler_service.schedule_state(first_action)
+    c.scheduler_service.schedule_state(first_action)
 
 def init_test_db():
     module_cli_api = ModuleCLI(None)

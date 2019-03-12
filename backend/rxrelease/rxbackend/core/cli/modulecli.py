@@ -37,7 +37,7 @@ class ModuleCLI:
       hosts_api = REST_hosts(self.auth_token)
       statetypes_api = REST_statetypes(self.auth_token)
 
-      host = hosts_api.getHostByHostname(hostname)
+      host = hosts_api.get_host_by_hostname(hostname)
       statetype = statetypes_api.getStatetypeByName(statetype_name)
       settings_api = REST_settings(self.auth_token)
 

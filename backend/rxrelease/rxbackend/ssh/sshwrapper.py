@@ -2,6 +2,7 @@ import logging,sys
 
 from .shell import Shell
 from .connectiondetails import ConnectionDetails
+from ..configuration.globalsettings import LocalSettings,RemoteSettings,ApiUserSettings
 
 
 logger = logging.getLogger(__name__)
@@ -29,15 +30,16 @@ class SSHWrapper:
     def with_password(self, address, username, password):
      connection_details = ConnectionDetails(username, password, address)
      # TODO: dit instelbaar maken op het host object
-     #connection_details.port = 2222
+     connection_details.port = 2222
      return SSHWrapper(connection_details)
 
 
     @classmethod
     def with_keys(self,username,address):
-     connection_details = ConnectionDetails(username, '', address,True)
-      # TODO: dit instelbaar maken op het host object
-     #connection_details.port = 2222
+     # TODO: dit instelbaar maken op het host object
+     # TODO: same for the key, that is being used
+     id_rsa = LocalSettings.localconfig + '/id_rsa'
+     connection_details = ConnectionDetails.new_connection_with_custom_key(username,'',address,id_rsa,2222)
      return SSHWrapper(connection_details)
 
 
@@ -50,7 +52,9 @@ class SSHWrapper:
 
     def send_blocking_command(self,command):
       print("command sent to shell: " + command)
-      return self.shell.run_remote_command(self.connection_details, command)
+      exit_code = self.shell.run_remote_command(self.connection_details, command)
+      print("command exited with: " + str(exit_code))
+      return exit_code
 
 
     def send_command(self, command):
