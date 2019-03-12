@@ -28,18 +28,22 @@ class SSHWrapper:
     @classmethod
     def with_password(self, address, username, password):
      connection_details = ConnectionDetails(username, password, address)
+     # TODO: dit instelbaar maken op het host object
+     #connection_details.port = 2222
      return SSHWrapper(connection_details)
 
 
     @classmethod
     def with_keys(self,username,address):
      connection_details = ConnectionDetails(username, '', address,True)
+      # TODO: dit instelbaar maken op het host object
+     #connection_details.port = 2222
      return SSHWrapper(connection_details)
 
 
     def send_command_with_output(self,command):
      pass
-     # TODO: deze ook nog implementeren, want dit is belangrijk voor passwordless_sshlogin state
+
     def send_file(self,sourcefile,destfile):
      return self.shell.scp_file(self.connection_details, sourcefile, destfile)
 

@@ -58,7 +58,6 @@ class RequestBuilder:
 
      if statetypeSettings is not None:
       for statetypeSetting in statetypeSettings:
-          print("dikke test jongen.....")
           selectedSettings[statetypeSetting.key] = statetypeSetting.value
 
      logger.debug("globalHostSettings: " + str(globalHostSettings))
@@ -88,6 +87,6 @@ class RequestBuilder:
 
      for key, value in selectedSettings.items():
       kvbuilder.addKeyValPair(key,value)
-      
+
      handlerRequest.setKeyValList(kvbuilder.build())
      return handlerRequest

@@ -21,7 +21,7 @@ reststates_api = REST_states(auth_token)
 state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),inputmapping.getStateId())
 #update state to ready
 print(state)
-state  =  state[0]
+state = state[0]
 
 
 statemanager = StateManager(auth_token)

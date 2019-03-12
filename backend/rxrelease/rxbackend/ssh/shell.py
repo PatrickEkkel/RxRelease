@@ -22,7 +22,6 @@ class Shell:
             + ' -p '+ str(connection_details.port) + '  "' + remote_command + '"')
             print(command)
         elif not connection_details.use_default_keys and connection_details.key_location is not None:
-            print('Not implemented yet')
             command = ('ssh -oStrictHostKeyChecking=no '
             + '-i '
             + connection_details.key_location
@@ -36,6 +35,7 @@ class Shell:
             + remote_command + '"')
             print(command)
         elif connection_details.use_default_keys:
+            logger.debug("using default keys")
             command = ('ssh -oStrictHostKeyChecking=no  '
             + connection_details.username
             + '@'
@@ -51,7 +51,7 @@ class Shell:
         if not connection_details.use_default_keys and connection_details.key_location is None:
             command =  ('sshpass -p '
             + connection_details.password
-            +' scp -P '
+            +' scp -oStrictHostKeyChecking=no -P '
             + str(connection_details.port)
             + ' '
             + source + ' '
@@ -63,7 +63,7 @@ class Shell:
             return call(command,shell=True)
 
         elif not connection_details.use_default_keys and connection_details.key_location is not None:
-            command =  ('scp '
+            command =  ('scp -oStrictHostKeyChecking=no '
             + ' -i '
             + connection_details.key_location
             + ' -P'
@@ -79,7 +79,7 @@ class Shell:
             return call(command,shell=True)
 
         elif connection_details.use_default_keys:
-            command =  ('scp -P '
+            command =  ('scp -oStrictHostKeyChecking=no -P '
             + ' '
             + str(connection_details.port)
             + ' '

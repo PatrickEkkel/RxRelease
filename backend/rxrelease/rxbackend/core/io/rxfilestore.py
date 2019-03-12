@@ -4,8 +4,8 @@ import sys
 import ntpath
 from shutil import copyfile
 from .textfile import TextFile
-from rxbackend.core.io.binaryfile import BinaryFile
-from rxbackend.configuration.globalsettings import NetworkSettings,LocalSettings,ApiUserSettings
+from .binaryfile import BinaryFile
+from ...configuration.globalsettings import NetworkSettings,LocalSettings,ApiUserSettings
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

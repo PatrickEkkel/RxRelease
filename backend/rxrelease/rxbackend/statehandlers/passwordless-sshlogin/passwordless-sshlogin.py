@@ -6,14 +6,14 @@ import os.path, sys
 import paramiko
 from pathlib import Path
 from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
+from rxbackend.core.jobs.statehandlers.statemanager import StateManager
 from rxbackend.configuration.globalsettings import LocalSettings,RemoteSettings,ApiUserSettings
 from rxbackend.core.jobs.api.utils import Utils
 from rxbackend.core.restapi.REST_states import REST_states
 from rxbackend.core.restapi.REST_authentication import REST_authentication
 from rxbackend.ssh.ssh import SSHClient
 from rxbackend.ssh.sshwrapper import SSHWrapper
-# from rxbackend.core.rxfilestore import RxFileStore
-
+from rxbackend.core.io.rxfilestore import RxFileStore
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -34,7 +34,7 @@ auth_token = token_result['token']
 data = json.loads(inputmapping.getKeyvalList())
 dryrun = data["dryrun"]
 
-# filestore = RxFileStore('/home/' + localuser + '/.rxrelease')
+filestore = RxFileStore('/home/' + localuser + '/.rxrelease')
 
 if Utils.str2bool(dryrun):
  logger.info("running script in dryrun with the following parameters")
@@ -49,14 +49,13 @@ if Utils.str2bool(dryrun):
 logger.info("connecting with : " + inputmapping.getIpAddress())
  # TODO: code toevoegen die connectieproblemen afvangt
 try:
- #client = SSHClient.withPassword(inputmapping.getIpAddress(),data["username"],data["password"])
- client = SSHWrapper.withPassword(inputmapping.getIpAddress(),data["username"],data["password"])
+ client = SSHWrapper.with_password(inputmapping.getIpAddress(),data["username"],data["password"])
 
  # user creation on remote machine
- if client.sendCommand('id -u ' + remoteuser) == 1:
+ if client.send_command('id -u ' + remoteuser) == 1:
   #user does not exist, lets make it
   logger.info("user " + remoteuser +  " does not exist on " + inputmapping.getIpAddress())
-  client.sendCommand('adduser ' + remoteuser )
+  client.send_command('adduser ' + remoteuser )
 
   # after user creation we want to be able to transfer the public key to the remote server. But first we need to generate a private/public key pair on this server
 
@@ -67,9 +66,6 @@ try:
  id_rsa = rxfilestore + '/id_rsa'
  id_rsa_pub = rxfilestore + '/id_rsa.pub'
  localstore_path = '/home/' + remoteuser + '/.localstore/'
-
- #if not os.path.exists(rxfilestore):
- #     os.makedirs(rxfilestore)
 
  # if there is no private key in the rxfilestore dir, then create a new one
  if not Path(id_rsa).exists():
@@ -85,22 +81,22 @@ try:
  if not Path(installed_id_rsa_pub).exists():
   sh.cp(id_rsa_pub,'/home/' + localuser + '/.ssh/')
  # create the localstore directory
- client.sendCommand('mkdir -p ' + localstore_path)
- client.sendCommand('chown ' + remoteuser + ':' + remoteuser + ' ' + localstore_path)
+ client.send_command('mkdir -p ' + localstore_path)
+ client.send_command('chown ' + remoteuser + ':' + remoteuser + ' ' + localstore_path)
  # we need to transfer the public key to the host
- client.sendCommand('mkdir -p /home/' + remoteuser + '/.ssh')
+ client.send_command('mkdir -p /home/' + remoteuser + '/.ssh')
  # TODO: misschien moeten we dit nog wat vriendelijker maken.. nu pleurt hij er gewoon een nieuw bestand neer, niet zo cool als er al keys geconfigureerd waren
- client.sendFile(id_rsa_pub,'/home/' + remoteuser + '/.ssh/authorized_keys')
- client.sendCommand("echo '" + remoteuser +  " ALL=(ALL) NOPASSWD:ALL' | sudo EDITOR='tee -a' visudo")
+ client.send_file(id_rsa_pub,'/home/' + remoteuser + '/.ssh/authorized_keys')
+ client.send_command("echo '" + remoteuser +  " ALL=(ALL) NOPASSWD:ALL' | sudo EDITOR='tee -a' visudo")
 
  # on my ubuntu i need to call ssh-add to get the authentication working..
  sh.ssh_add()
 
  reststates_api = REST_states(auth_token)
  state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),inputmapping.getStateId())
- state =  state[0]
- state['installed'] = True
- reststates_api.putState(state)
+ state = state[0]
+ statemanager = StateManager(auth_token)
+ statemanager.setSimpleStateInstalled(state)
 
 except paramiko.AuthenticationException:
  print("oops")
