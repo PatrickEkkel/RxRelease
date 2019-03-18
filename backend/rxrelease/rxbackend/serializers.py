@@ -73,7 +73,7 @@ class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
         fields = ('id', 'filename', 'path')
-        
+
 class HostSerializer(serializers.ModelSerializer):
 
     def validate_ipaddress(self,value):
@@ -155,6 +155,7 @@ class SettingsCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SettingsCategory
         fields = ('id','name','prefix')
+
 class KVSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         category = SettingsCategorySerializer

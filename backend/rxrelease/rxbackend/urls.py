@@ -82,6 +82,8 @@ urlpatterns = [
     url(r'^profiletypes/(?P<pk>[0-9]+)/$', profiletypeviews.DetailsView.as_view(), name="details"),
 
     url(r'^settings/kvsettings$', kvsettingsview.CreateView.as_view(), name="create"),
+    url(r'^settings/kvsettings$', kvsettingsview.CreateView.as_view(), name="create"),
+    url(r'^settings/kvsettings/update$', kvsettingsview.UpdateView.as_view(), name="create"),
     url(r'^settings/kvsettings/(?P<pk>[0-9]+)/$', kvsettingsview.DetailsView.as_view(), name="details"),
     url(r'^settings/search/$', kvsettingsview.SearchView.as_view(), name="byhost"),
 

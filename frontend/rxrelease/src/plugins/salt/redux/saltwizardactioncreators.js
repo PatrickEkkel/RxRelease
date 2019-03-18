@@ -41,8 +41,6 @@ export function saveConfigureHost(current_host,salt_api_creds,ssh_creds) {
     .then(e.execute(settingsPromises.CREATE_CREDENTIAL_SETTINGS_NEW,{logger: swaLogger,salt_api_creds: salt_api_creds}))
     .then(function(response) {
 
-    //  var normalizedData = jsonUtils.normalizeJson(response.data)
-
       swaLogger.trace("current stored state: ")
       swaLogger.traceObject(e.stored_state)
 

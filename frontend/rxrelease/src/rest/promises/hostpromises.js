@@ -31,7 +31,8 @@ export function GET_STATES_FOR_HOST(response,properties) {
 
     return hostsRequests.getHostById(host.getId())
   }
-export function CREATE_HOST_WITH_CONNECTION_CREDENTIALS(response,properties){
+
+export function CREATE_HOST_WITH_CONNECTION_CREDENTIALS(response,properties) {
 
   var host = properties.current_host
   var swaLogger = properties.logger
@@ -45,6 +46,4 @@ export function CREATE_HOST_WITH_CONNECTION_CREDENTIALS(response,properties){
   swaLogger.traceObject(host)
 
   return hostsRequests.postHost(host);
-
-
 }

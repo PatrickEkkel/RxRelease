@@ -1,6 +1,9 @@
 import Axios from 'axios';
 import GlobalSettings from '../../config/global';
+import LogFactory from '../../logging/LogFactory'
 
+var settings = new GlobalSettings();
+var srLogger = new LogFactory().createLogger("SETTINGS","REQUESTS")
 
 
 // TODO: Deze methode hernoemen, verkeerde naam en de methode aanroepen zijn niet consistent
@@ -24,15 +27,6 @@ export function postCredentialSettings(settings) {
   })
 }
 
-
-/*export function getCredentialSettingsByHost(host) {
-
-  var host_id = host.getId();
-  var backend_url = GlobalSettings.getBackendUrl();
-
-  return Axios.get(backend_url + '/rxbackend/')
-}*/
-
 export function postSetting(setting) {
 var backend_url = GlobalSettings.getBackendUrl();
 
@@ -51,10 +45,29 @@ export function postCategory(category) {
     prefix: category.prefix
   })
 }
+export function putSettingByKey(key,value) {
+  srLogger.trace("updating setting with key: " + key + " and value: " + value)
+  var backend_url = GlobalSettings.getBackendUrl();
+  return Axios.put(backend_url + '/rxbackend/settings/kvsettings/update', {
+    key: key,
+    value: value
+    })
+}
+// NOTE: this method does not seem to be used
+export function putSetting(category,key,value) {
+  srLogger.trace("updating setting with key: " + key + " and value: " + value)
+  var backend_url = GlobalSettings.getBackendUrl();
+  return Axios.put(backend_url + '/rxbackend/settings/kvsettings/' + key + '/', {
+    username: settings.getUsername(),
+    password: settings.getPassword(),
+    category: settings.getSettingCategory().getId()
+  })
+
+}
 
 export function putCredentialSettings(settings) {
-  console.log("voordat we de settings opslaan eerst even een kijkje nemen")
-  console.log(settings)
+  srLogger.trace("voordat we de settings opslaan eerst even een kijkje nemen")
+  srLogger.traceObject(settings)
   var backend_url = GlobalSettings.getBackendUrl();
   return Axios.put(backend_url + '/rxbackend/settings/credentials/' + settings.getId() + '/', {
     username: settings.getUsername(),

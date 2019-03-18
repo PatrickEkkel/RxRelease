@@ -33,7 +33,6 @@ saveFormData() {
 }
 saveHost() {
   this.props.dispatch(hostActionCreators.saveNewHost(this.state.hostname,this.state.ipaddress,"Salt Master",this.state.profileTypeId.id))
-  //this.props.dispatch(wizardActionCreators.waitForSave())
 }
 saveSettings() {
   this.getLogger().debug("creating or loading new category from server: " + this.state.hostname)

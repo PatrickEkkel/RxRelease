@@ -5,6 +5,7 @@ import LogFactory from '../logging/LogFactory'
 import HostFactory from '../factories/hostFactory'
 import StateModel from '../models/dbmodels/statemodel'
 import SimpleStateModel from '../models/dbmodels/simplestatemodel'
+import CredentialsModel from '../models/dbmodels/credentialsmodel'
 import StateFactory from '../factories/stateFactory'
 import SettingsFactory from '../factories/settingsFactory'
 import PromiseExecutor from '../lib/promises/promise_executor'
@@ -159,29 +160,26 @@ export function saveNewHost(hostname,ipaddress,description,profiletype) {
   var hostfactory = new HostFactory();
   //var profiletypefactory = new ProfileTypeFactory();
   var errorHandler = new AggregatedFieldsErrorHandler();
+  var settingscategory = null;
 
+  var e = new PromiseExecutor()
+   //.then(e.execute(hostPromises.GET_STATES_FOR_HOST,{logger: haLogger,current_host: host}))
   return function (dispatch) {
     // before we save the host we want to initialize the new SettingsCategory
     // check if it already exists
     var search_string =  encodeURI(settings.SETTING_CATEGORY_HOSTNAME)
-    settingsRequests.getSettingCategoryByName(search_string).then(function(response) {
-      return response;
-    }).then(function(response) {
 
-        var normalizedData = jsonUtils.normalizeJson(response.data)
-        // if the response from getting the category is null, create a new category
-        if(normalizedData == null) {
-          return settingsRequests.postSettingCategory(settings.SETTING_CATEGORY_HOSTNAME);
-        }
-        else {
-          return response;
-        }
-    })
-    .then(function(response) {
-       var settingscategory = settingsfactory.createSettingsCategoryFromJson(jsonUtils.normalizeJson(response.data));
+    var ssh_creds = CredentialsModel.newCredentials('test','test')
+
+    settingsRequests.getSettingCategoryByName(search_string)
+    .then(e.execute(settingsPromises.CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS,{logger: haLogger,}))
+    .then(e.execute(settingsPromises.UPDATE_SETTINGS_WITH_CATEGORY,{logger: haLogger, salt_api_creds: ssh_creds}))
+    .then(e.execute(settingsPromises.CREATE_CREDENTIAL_SETTINGS_NEW,{logger: haLogger, salt_api_creds: ssh_creds }))
+  //  .then(function(response) {
+  //     var settingscategory = settingsfactory.createSettingsCategoryFromJson(jsonUtils.normalizeJson(response.data));
        // TODO: dit is niet goed natuurlijk, hier moeten we settings meegeven vanuit de GUI
-      return settingsRequests.postSettings('test','test,',settingscategory)
-    })
+//      return settingsRequests.postSettings('test','test,',settingscategory)
+//    })
     .then(function(response) {
 
       var connectioncredentials = settingsfactory.createCredentialSettingFromJson(jsonUtils.normalizeJson(response.data))
@@ -201,6 +199,12 @@ export function saveNewHost(hostname,ipaddress,description,profiletype) {
         type: 'SAVE_NEW_HOST',
         saved_host: response.data
       })
+    }).then(function(response) {
+
+
+      // TODO: hier was ik gebleven, ik moet zorgen dat ik een category aanmaak
+      // voor de host die hier aangemaakt wordt.
+      return settingsRequests.putSettingByKey('ssh_port','22')
     }).catch(function(error) {
         errorHandler.addErrorResponse(error)
         errorHandler.handleErrors('SAVE_NEW_HOST_FAILED',dispatch)
