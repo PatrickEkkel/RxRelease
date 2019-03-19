@@ -61,7 +61,8 @@ export function CREATE_CREDENTIAL_SETTINGS_NEW(response,properties) {
   return settingsRequests.postCredentialSettings(creds)
 
 }
-
+// NOTE: give this thing another name, it conflicts
+// TODO: this one can be replaced with CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS_NEW
 export function CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS(response,properties) {
 
   var settings = new GlobalSettings();
@@ -73,5 +74,30 @@ export function CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS(response,properties) {
   }
   else {
     return response;
+  }
+}
+
+export function GET_SETTINGSCATEGORY_FROM_HOST(response, properties) {
+
+  var logger = properties.logger
+  var host = properties.current_host
+  logger.trace('get SettingsCategory for: ' + host.getHostname())
+  logger.traceObject(host)
+  return  settingsRequests.getSettingCategoryByName(host.getHostname())
+
+}
+
+export function CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS_NEW(response,properties) {
+  var logger = properties.logger
+  var host = properties.current_host
+  //var category = properties.category
+  var normalizedData = jsonUtils.normalizeJson(response.data)
+  logger.trace('settingscategory')
+  logger.traceObject(normalizedData)
+  if(normalizedData == null) {
+    return settingsRequests.postSettingCategory(host.getHostname())
+  }
+  else {
+    return response
   }
 }

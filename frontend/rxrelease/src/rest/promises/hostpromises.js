@@ -47,3 +47,17 @@ export function CREATE_HOST_WITH_CONNECTION_CREDENTIALS(response,properties) {
 
   return hostsRequests.postHost(host);
 }
+
+export function DISPATCH_SAVE_HOST(response,properties) {
+
+  var logger = properties.logger
+  var dispatch = properties.dispatch
+  
+  logger.trace("Saved host object:")
+  logger.traceObject(response.data)
+
+  dispatch({
+    type: 'SAVE_NEW_HOST',
+    saved_host: response.data
+  })
+}

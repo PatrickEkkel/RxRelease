@@ -4,6 +4,9 @@ import Host from '../models/host'
 import LogFactory from '../logging/LogFactory'
 import HostFactory from '../factories/hostFactory'
 import StateModel from '../models/dbmodels/statemodel'
+import HostModel from '../models/dbmodels/hostmodel'
+import KVSettingModel from '../models/dbmodels/kvsettingmodel'
+import SettingsCategoryModel from '../models/dbmodels/settingscategorymodel'
 import SimpleStateModel from '../models/dbmodels/simplestatemodel'
 import CredentialsModel from '../models/dbmodels/credentialsmodel'
 import StateFactory from '../factories/stateFactory'
@@ -161,9 +164,8 @@ export function saveNewHost(hostname,ipaddress,description,profiletype) {
   //var profiletypefactory = new ProfileTypeFactory();
   var errorHandler = new AggregatedFieldsErrorHandler();
   var settingscategory = null;
-
+  var host = HostModel.newHost("", hostname, ipaddress, description, profiletype)
   var e = new PromiseExecutor()
-   //.then(e.execute(hostPromises.GET_STATES_FOR_HOST,{logger: haLogger,current_host: host}))
   return function (dispatch) {
     // before we save the host we want to initialize the new SettingsCategory
     // check if it already exists
@@ -175,36 +177,22 @@ export function saveNewHost(hostname,ipaddress,description,profiletype) {
     .then(e.execute(settingsPromises.CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS,{logger: haLogger,}))
     .then(e.execute(settingsPromises.UPDATE_SETTINGS_WITH_CATEGORY,{logger: haLogger, salt_api_creds: ssh_creds}))
     .then(e.execute(settingsPromises.CREATE_CREDENTIAL_SETTINGS_NEW,{logger: haLogger, salt_api_creds: ssh_creds }))
-  //  .then(function(response) {
-  //     var settingscategory = settingsfactory.createSettingsCategoryFromJson(jsonUtils.normalizeJson(response.data));
-       // TODO: dit is niet goed natuurlijk, hier moeten we settings meegeven vanuit de GUI
-//      return settingsRequests.postSettings('test','test,',settingscategory)
-//    })
+    .then(e.execute(hostPromises.CREATE_HOST_WITH_CONNECTION_CREDENTIALS,{logger: haLogger,current_host: host}))
+    .then(e.execute(hostPromises.DISPATCH_SAVE_HOST,{logger: haLogger, dispatch: dispatch}))
+    .then(e.execute(settingsPromises.GET_SETTINGSCATEGORY_FROM_HOST, {logger: haLogger}))
+    .then(e.execute(settingsPromises.CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS_NEW,{logger: haLogger}))
+    //.then(e.execute())
     .then(function(response) {
 
-      var connectioncredentials = settingsfactory.createCredentialSettingFromJson(jsonUtils.normalizeJson(response.data))
+      var normalizedData = jsonUtils.normalizeJson(response.data)
+      haLogger.trace("category response")
+      haLogger.traceObject(normalizedData)
+      var hostCategory = SettingsCategoryModel.newSettingsCategoryModel(normalizedData['id'],['name'],normalizedData['prefix'])
 
-      var host =  hostfactory.createHost(hostname,ipaddress,description,profiletype)
-      haLogger.trace("post new Host")
-      haLogger.traceObject(host)
-
-      host.setConnectionCredentials(connectioncredentials)
-      return hostsRequests.postHost(host);
-    })
-    .then(function(response) {
-
-      haLogger.trace("Saved host object:")
-      haLogger.traceObject(response.data)
-      dispatch({
-        type: 'SAVE_NEW_HOST',
-        saved_host: response.data
-      })
-    }).then(function(response) {
-
-
+      var setting = KVSettingModel.newKVSetting(null,'ssh_port','22',hostCategory)
       // TODO: hier was ik gebleven, ik moet zorgen dat ik een category aanmaak
       // voor de host die hier aangemaakt wordt.
-      return settingsRequests.putSettingByKey('ssh_port','22')
+      return settingsRequests.postSetting(setting)
     }).catch(function(error) {
         errorHandler.addErrorResponse(error)
         errorHandler.handleErrors('SAVE_NEW_HOST_FAILED',dispatch)

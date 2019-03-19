@@ -33,7 +33,7 @@ var backend_url = GlobalSettings.getBackendUrl();
 return Axios.post(backend_url + '/rxbackend/settings/kvsettings',{
   key: setting.getKey(),
   value: setting.getValue() ,
-  category: setting.getCategoryId()
+  category: setting.getCategory().getId()
 })
 }
 
@@ -45,12 +45,13 @@ export function postCategory(category) {
     prefix: category.prefix
   })
 }
-export function putSettingByKey(key,value) {
+export function putSettingByKey(setting) {
   srLogger.trace("updating setting with key: " + key + " and value: " + value)
   var backend_url = GlobalSettings.getBackendUrl();
   return Axios.put(backend_url + '/rxbackend/settings/kvsettings/update', {
     key: key,
-    value: value
+    value: value,
+    category_id: setting.getCategory().getId()
     })
 }
 // NOTE: this method does not seem to be used

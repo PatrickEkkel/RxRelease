@@ -7,7 +7,7 @@ class HostModel {
       ipaddress: _ipaddress,
       description: _description,
       profiletype_id: _profiletype,connectioncredentials: null,
-      setConnectionCredentials:function(connectioncredentials) { this.connectioncredentials = connectioncredentials},
+      setConnectionCredentials: function(connectioncredentials) { this.connectioncredentials = connectioncredentials},
       getHostname: function() { return this.hostname },
       getIpaddress: function() { return this.ipaddress },
       getDescription: function() { return this.description },
