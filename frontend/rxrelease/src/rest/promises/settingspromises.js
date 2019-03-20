@@ -4,6 +4,7 @@ import GlobalSettings from '../../config/global';
 import HostModel from '../../models/dbmodels/hostmodel'
 import SettingsFactory from '../../factories/settingsFactory'
 import SettingsCategoryModel from '../../models/dbmodels/settingscategorymodel'
+import KVSettingModel from '../../models/dbmodels/kvsettingmodel'
 
 export function UPDATE_SETTINGS_WITH_CATEGORY(response,properties) {
   var swaLogger = properties.logger
@@ -77,25 +78,75 @@ export function CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS(response,properties) {
   }
 }
 
-export function GET_SETTINGSCATEGORY_FROM_HOST(response, properties) {
+export function GET_OR_UPDATE_SETTING(response, properties) {
+
+  var key = properties.key
+  var value = properties.value
+  var category = properties.category
+  var logger = properties.logger
+  var normalizedData = null;
+  var settingsCategory = null;
+  var setting = null;
+  logger.trace("category response")
+  logger.traceObject(normalizedData)
+
+  return settingsRequests.getSettingCategoryByName(category).then(function(local_response) {
+      normalizedData = jsonUtils.normalizeJson(local_response.data)
+      if(normalizedData == null) {
+        logger.debug("can't find SettingsCategory: " + category)
+      }
+      else {
+        settingsCategory = SettingsCategoryModel
+        .newSettingsCategoryModel(normalizedData['id'], normalizedData['name'], normalizedData['prefix'])
+        setting = KVSettingModel.newKVSetting(null, key, value,settingsCategory)
+      }
+      return settingsRequests.getSettingByKeyAndCategory(key,settingsCategory)
+  }).then(function(local_response) {
+
+    normalizedData = jsonUtils.normalizeJson(local_response.data)
+
+    if(normalizedData != null) {
+      logger.trace("Recieved setting")
+      logger.traceObject(normalizedData)
+      return local_response
+    }
+    else {
+      return settingsRequests.postSetting(setting)
+    }
+  })
+}
+
+export function GET_OR_CREATE_SETTINGSCATEGORY_FROM_HOST(response, properties) {
 
   var logger = properties.logger
   var host = properties.current_host
+  var category = properties.category
   logger.trace('get SettingsCategory for: ' + host.getHostname())
   logger.traceObject(host)
-  return  settingsRequests.getSettingCategoryByName(host.getHostname())
+  return settingsRequests.getSettingCategoryByName(host.getHostname())
+    .then(function(local_response) {
+        var normalizedData = jsonUtils.normalizeJson(local_response.data)
+
+        if(normalizedData == null) {
+          return settingsRequests.postSettingCategory(category)
+        }
+        else {
+          return local_response
+        }
+    })
 
 }
 
 export function CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS_NEW(response,properties) {
   var logger = properties.logger
   var host = properties.current_host
-  //var category = properties.category
+  var category = properties.category
+  properties.category = null
   var normalizedData = jsonUtils.normalizeJson(response.data)
   logger.trace('settingscategory')
   logger.traceObject(normalizedData)
   if(normalizedData == null) {
-    return settingsRequests.postSettingCategory(host.getHostname())
+    return settingsRequests.postSettingCategory(category)
   }
   else {
     return response

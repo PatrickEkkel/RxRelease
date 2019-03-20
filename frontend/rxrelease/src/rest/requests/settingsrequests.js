@@ -92,9 +92,19 @@ export function getSettingsByCategoryId(id) {
   var backend_url = GlobalSettings.getBackendUrl();
   return Axios.get(backend_url + '/rxbackend/settings/search/?category_id=' + id)
 }
+
 export function getSettingsCategoryById(id) {
   var backend_url = GlobalSettings.getBackendUrl();
   return Axios.get(backend_url + '/rxbackend/settingscategory/' + id )
+}
+
+export function getSettingByKeyAndCategory(key,category) {
+  var backend_url = GlobalSettings.getBackendUrl();
+
+  return Axios.get(backend_url
+     + '/rxbackend/settings/search/?category_name='
+     + category.getName()
+     + '&settings_key=' + key)
 }
 
 export function getSettingCategoryByName(name) {

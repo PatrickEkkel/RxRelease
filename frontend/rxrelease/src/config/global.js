@@ -8,6 +8,7 @@ constructor() {
   this.BACKEND_PORT = '8080'
   this.BACKEND_PROTOCOL = 'http'
   this.SETTING_CATEGORY_HOSTNAME = "Host Settings"
+  this.SETTING_CATEGORY_GLOBAL = "Global Settings"
   // TODO: this is a workaround, because the backend is lacking a proper API for this information
   this.LOCAL_SALT_STORE = 'salt-formulas'
   this.LOGLEVEL = "TRACE"

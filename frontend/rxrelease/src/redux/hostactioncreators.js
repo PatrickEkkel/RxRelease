@@ -169,31 +169,20 @@ export function saveNewHost(hostname,ipaddress,description,profiletype) {
   return function (dispatch) {
     // before we save the host we want to initialize the new SettingsCategory
     // check if it already exists
+    var settings = new GlobalSettings();
     var search_string =  encodeURI(settings.SETTING_CATEGORY_HOSTNAME)
 
     var ssh_creds = CredentialsModel.newCredentials('test','test')
 
     settingsRequests.getSettingCategoryByName(search_string)
-    .then(e.execute(settingsPromises.CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS,{logger: haLogger,}))
+    .then(e.execute(settingsPromises.CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS_NEW,{logger: haLogger,category: settings.SETTING_CATEGORY_HOSTNAME}))
     .then(e.execute(settingsPromises.UPDATE_SETTINGS_WITH_CATEGORY,{logger: haLogger, salt_api_creds: ssh_creds}))
     .then(e.execute(settingsPromises.CREATE_CREDENTIAL_SETTINGS_NEW,{logger: haLogger, salt_api_creds: ssh_creds }))
     .then(e.execute(hostPromises.CREATE_HOST_WITH_CONNECTION_CREDENTIALS,{logger: haLogger,current_host: host}))
     .then(e.execute(hostPromises.DISPATCH_SAVE_HOST,{logger: haLogger, dispatch: dispatch}))
-    .then(e.execute(settingsPromises.GET_SETTINGSCATEGORY_FROM_HOST, {logger: haLogger}))
-    .then(e.execute(settingsPromises.CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS_NEW,{logger: haLogger}))
-    //.then(e.execute())
-    .then(function(response) {
-
-      var normalizedData = jsonUtils.normalizeJson(response.data)
-      haLogger.trace("category response")
-      haLogger.traceObject(normalizedData)
-      var hostCategory = SettingsCategoryModel.newSettingsCategoryModel(normalizedData['id'],['name'],normalizedData['prefix'])
-
-      var setting = KVSettingModel.newKVSetting(null,'ssh_port','22',hostCategory)
-      // TODO: hier was ik gebleven, ik moet zorgen dat ik een category aanmaak
-      // voor de host die hier aangemaakt wordt.
-      return settingsRequests.postSetting(setting)
-    }).catch(function(error) {
+    .then(e.execute(settingsPromises.GET_OR_CREATE_SETTINGSCATEGORY_FROM_HOST, {logger: haLogger, category: host.getHostname()}))
+    .then(e.execute(settingsPromises.GET_OR_UPDATE_SETTING,{ logger: haLogger, category: settings.SETTING_CATEGORY_GLOBAL,key: 'ssh_port',value: '22' }))
+    .catch(function(error) {
         errorHandler.addErrorResponse(error)
         errorHandler.handleErrors('SAVE_NEW_HOST_FAILED',dispatch)
     });

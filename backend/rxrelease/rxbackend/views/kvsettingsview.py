@@ -45,7 +45,11 @@ class SearchView(generics.ListAPIView):
     def get_queryset(self):
         category_id =  self.request.query_params.get('category_id', None)
         category_name = self.request.query_params.get('category_name',None)
-        if category_name is not None:
+        setting_key = self.request.query_params.get('settings_key',None)
+        if setting_key is not None and category_name is not None:
+            result_queryset = KVSetting.objects.filter(category__name=category_name,key=setting_key)
+            return result_queryset
+        elif category_name is not None:
          result_queryset = KVSetting.objects.filter(category__name=category_name)
          return result_queryset
         elif category_id is not None:
