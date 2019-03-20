@@ -13,7 +13,7 @@ ch.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
 
-
+# TODO: remove the entire custom ssh implementation from the project and replace it with the fabric library
 class SSHWrapper:
 
     def __init__(self, connection_details):
