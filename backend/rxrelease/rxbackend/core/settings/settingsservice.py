@@ -24,3 +24,14 @@ class SettingsService:
     settings =  settingsDao.getSettingsByCategory(statetype.SettingsCategory)
     return settings
     # turn the kv pair into a dict, because we need easy access for searching an matching
+
+def getHostSetting(self,key,host):
+    # First see if the settings are available for the host
+    settingsDao = SettingsDao()
+    settings =  self.getHostSettingsByHost(host)
+    if  key in settings:
+        return settings[key]
+    else:
+        # fallback on global settings
+        settings = self.getSettingsByCategoryname('Global Settings')
+        return settings[key]

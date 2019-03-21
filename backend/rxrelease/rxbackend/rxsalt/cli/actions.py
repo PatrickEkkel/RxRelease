@@ -18,6 +18,10 @@ def send_salt_ping(minion_id):
     action = connection.action_factory.create_action_from_host(salt_master, settings_dict, statetype)
     connection.scheduler_service.schedule_state(action)
 
+def reset_saltwizard():
+    connection.module_cli_api.update_wizard('rxsalt_wizard','NEW')
+    connection.module_cli_api.delete_host('Salt Master')
+
 
 def enable_salt_dockertest():
     global SALT_API_MODE

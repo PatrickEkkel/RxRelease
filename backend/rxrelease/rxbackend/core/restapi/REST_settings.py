@@ -28,7 +28,19 @@ class REST_settings(REST_base):
   result = response.json()
   return result
 
- def kv_settings_byname(self,category_name):
+ def get_kv_settings_by_key(self,key):
+     serverAddress = self.backendlocation + '/rxbackend/settings/credentials/search/?key=' + key
+     result = response.json()
+     return result
+ def get_kv_settings(self,category_name,key):
+     serverAddress = self.backendlocation + '/rxbackend/settings/credentials/search/?category_name='
+        + str(category_name)
+        + '&settings_key='
+        + key
+        response = requests.get(serverAddress,headers=self.getAuthTokenHeader())
+        result = response.json()
+        return result
+ def get_kv_settingscategory_byname(self,category_name):
   serverAddress = self.backendlocation + '/rxbackend/settings/search/?category_name=' + str(category_name)
   response = requests.get(serverAddress,headers=self.getAuthTokenHeader())
   result = response.json()

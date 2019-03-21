@@ -48,9 +48,7 @@ def list_modules():
  print("Listing modules")
  for module in module_cli_api.listModules():
   print('name: ' + str(module['name']) + ' active: ' + str(module['active']))
-def reset_saltwizard():
- module_cli_api.updateWizard('rxsalt_wizard','NEW')
- module_cli_api.deleteHost('Salt Master')
+
 
 
 # TODO: deze methode is niet geschrevn op de testset

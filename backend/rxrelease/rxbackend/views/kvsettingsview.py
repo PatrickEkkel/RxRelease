@@ -46,7 +46,16 @@ class SearchView(generics.ListAPIView):
         category_id =  self.request.query_params.get('category_id', None)
         category_name = self.request.query_params.get('category_name',None)
         setting_key = self.request.query_params.get('settings_key',None)
-        if setting_key is not None and category_name is not None:
+        hostname = self.request.query_params.get('hostname',None)
+
+        if hostname is not None and setting_key is not None:
+            settingscount = KVSetting.objects.filter(category__name=hostname,key=setting_key).count()
+            print(setting_key)
+            if settingscount > 0:
+                return  KVSetting.objects.filter(category__name=hostname,key=setting_key)
+            else:
+                return KVSetting.objects.filter(category__name='Global Settings',key=setting_key)
+        elif setting_key is not None and category_name is not None:
             result_queryset = KVSetting.objects.filter(category__name=category_name,key=setting_key)
             return result_queryset
         elif category_name is not None:

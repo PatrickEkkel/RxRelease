@@ -63,8 +63,6 @@ class RequestBuilder:
      logger.debug("globalHostSettings: " + str(globalHostSettings))
      logger.debug("selectedSettings: " + str(selectedSettings))
 
-     #for setting in selectedSettings:
-        # print("current settings: " + setting)
      # keyvalue pairs moeten dus opgehaald worden aan de hand van de statetype,
      # maar omdat we zitten met een configuratie per host moeten we de werkelijke settings uit de host halen
 

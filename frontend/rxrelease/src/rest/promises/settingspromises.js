@@ -78,7 +78,7 @@ export function CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS(response,properties) {
   }
 }
 
-export function GET_OR_UPDATE_SETTING(response, properties) {
+export function GET_OR_CREATE_SETTING(response, properties) {
 
   var key = properties.key
   var value = properties.value

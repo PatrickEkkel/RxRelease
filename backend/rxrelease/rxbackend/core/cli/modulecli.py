@@ -50,7 +50,7 @@ class ModuleCLI:
           return None
 
       # get global settings
-      global_kv_settings = settings_api.kv_settings_byname('Global Settings')
+      global_kv_settings = settings_api.get_kv_settingscategory_byname('Global Settings')
       # assuming we have a result we pick the first itemi in the index
 
       credentials_settings = settings_api.kv_credentials(host[0]['connectioncredentials'])
@@ -127,7 +127,7 @@ class ModuleCLI:
     def createWizard(self,name,status):
      wizard_api = REST_wizard(self.auth_token)
      wizard_api.postWizard(name,status)
-    def updateWizard(self,name,status):
+    def update_wizard(self,name,status):
       wizard_api = REST_wizard(self.auth_token)
       wizard_api.putWizard(name,status)
 
@@ -159,7 +159,7 @@ class ModuleCLI:
      host = hosts_api.get_host_by_hostname(hostname)
      return host
 
-    def deleteHost(self,profiletype_name):
+    def delete_host(self,profiletype_name):
         hosts_api = REST_hosts(self.auth_token)
         host =   hosts_api.getHostByProfileType(profiletype_name)
         states_api = REST_states(self.auth_token)
