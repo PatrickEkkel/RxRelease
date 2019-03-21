@@ -7,6 +7,7 @@ from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
 from rxbackend.core.jobs.statehandlers.statemanager import StateManager
 from rxbackend.core.restapi.REST_authentication import REST_authentication
 from rxbackend.core.restapi.REST_hosts import REST_hosts
+from rxbackend.core.restapi.REST_settings import REST_settings
 from rxbackend.rxsalt.api.salt_api import SaltApi
 from rxbackend.rxsalt.api.salt_command import SaltCommandMapper
 from rxbackend.rxsalt.api.salt_service import SaltService
@@ -35,7 +36,7 @@ formulas_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '
 
 reststates_api = REST_states(auth_token)
 resthosts_api = REST_hosts(auth_token)
-
+restsettings_api = REST_settings(auth_token)
 
 state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(), inputmapping.getStateId())
 # update state to ready
@@ -49,6 +50,11 @@ data = json.loads(inputmapping.getKeyvalList())
 salt_mapping = SaltCommandMapper.create_from_dict(data)
 
 host = resthosts_api.get_host_by_id(inputmapping.host_id)
+hostname = host['hostname']
+setting = restsettings_api.get_host_kv_settings_by_key('ssh_port',hostname)
+ssh_port = setting[0]['value']
+
+
 
 host_username = 'root'
 host_password = 'test'
@@ -74,7 +80,7 @@ if salt_mapping.api_mode == 'SALTTESTDOCKER':
     sh.ssh_keygen("-t", "rsa", "-f", id_rsa, _in="\n")
     rx_localstore = RxLocalStore()
     # TODO: portnumber for ssh needs to come from globalsettings
-    connection_details = ConnectionDetails(host_username,host_password, salt_master, False, 2222)
+    connection_details = ConnectionDetails(host_username,host_password, salt_master, False, ssh_port)
     ssh_login = SSHWrapper.with_connection_details(connection_details)
     ssh_login.send_blocking_command('mkdir /root/.ssh')
     ssh_login.send_file(id_rsa_pub,'/root/.ssh/authorized_keys')
@@ -85,7 +91,8 @@ if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTEST
     salt_password = 'salt'
 
     ssh_connection_details = ConnectionDetails.\
-        new_connection_with_custom_key(host_username, host_password, salt_master, id_rsa, 2222)
+        new_connection_with_custom_key(host_username, host_password, salt_master, id_rsa, ssh_port)
+        
     # TODO: port number for the salt-master should be stored in the database
     salt_connection_details = SaltConnectionDetails(salt_username, salt_password, salt_master,8082)
     salt_service = SaltService(ssh_connection_details,salt_connection_details,auth_token)

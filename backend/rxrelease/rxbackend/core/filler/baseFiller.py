@@ -83,6 +83,7 @@ class BaseFiller:
         salt_master_capability.statetypes.add(salt_master_state)
         salt_master_capability.statetypes.add(salt_minion_master_state)
         salt_master_capability.statetypes.add(salt_api_state)
+        salt_master_capability.statetypes.add(salt_run_state)
 
         salt_master_capability.dependentOn = standard_capability
 

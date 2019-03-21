@@ -47,7 +47,7 @@ class SaltService:
                     minion_api.post_minion(minion_dict)
                     return True
                 else:
-                    logger.debug("accepting minion " + minion  + "failed")
+                    logger.debug("accepting minion " + minion  + " failed")
                     # TODO: schrijf dit weg in de uniforme logger (die nog niet bestaat)
                     # Op een later tijdstip willen we misschien het object updaten met een rejected status
                     return False

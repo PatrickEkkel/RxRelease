@@ -61,7 +61,8 @@ def apply_salt_state(state):
     connection.scheduler_service.schedule_state(action)
 
 def accept_minion(hostname):
-    global connection
+    connection = Connection.get_connection()
+    
     global SALT_API_MODE
     salt_master = connection.module_cli_api.getHostByName(hostname)
     statetype = connection.module_cli_api.getStatetypeByName('Salt-Run-State')

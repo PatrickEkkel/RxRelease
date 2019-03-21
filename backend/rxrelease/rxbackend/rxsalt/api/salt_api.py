@@ -41,7 +41,7 @@ class SaltApi:
 
     def accept_minion(self,minion_id):
          api = self._connect()
-         result = api.low([{'client': 'wheel', 'tgt': '*', 'fun': 'key.accept','match': minion_id}])
+         result = api.low([{'client': 'wheel', 'fun': 'key.accept','match': minion_id}])
          logger.debug(result)
          return result
     def list_all_unaccepted_minions(self):
