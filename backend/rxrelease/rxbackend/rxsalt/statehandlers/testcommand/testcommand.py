@@ -31,7 +31,7 @@ inputmapping = InputMapper().getInputFromCLI()
 token_result = REST_authentication().postCredentials(ApiUserSettings.username,ApiUserSettings.password)
 auth_token = token_result['token']
 
-formulas_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '..','formulas'))
+formulas_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '..', 'formulas'))
 # print(formulas_dir)
 
 reststates_api = REST_states(auth_token)
@@ -51,10 +51,10 @@ salt_mapping = SaltCommandMapper.create_from_dict(data)
 
 host = resthosts_api.get_host_by_id(inputmapping.host_id)
 hostname = host['hostname']
-setting = restsettings_api.get_host_kv_settings_by_key('ssh_port',hostname)
-ssh_port = setting[0]['value']
-
-
+ssh_port = data['sshport']
+salt_api_port = data['saltapiport']
+#setting = restsettings_api.get_host_kv_settings_by_key('ssh_port',hostname)
+#ssh_port = setting[0]['value']
 
 host_username = 'root'
 host_password = 'test'
@@ -92,9 +92,9 @@ if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTEST
 
     ssh_connection_details = ConnectionDetails.\
         new_connection_with_custom_key(host_username, host_password, salt_master, id_rsa, ssh_port)
-        
+
     # TODO: port number for the salt-master should be stored in the database
-    salt_connection_details = SaltConnectionDetails(salt_username, salt_password, salt_master,8082)
+    salt_connection_details = SaltConnectionDetails(salt_username, salt_password, salt_master, 8082)
     salt_service = SaltService(ssh_connection_details,salt_connection_details,auth_token)
     salt_api = SaltApi(ssh_connection_details, salt_connection_details)
 

@@ -18,6 +18,7 @@ def send_salt_ping(minion_id):
     action = connection.action_factory.create_action_from_host(salt_master, settings_dict, statetype)
     connection.scheduler_service.schedule_state(action)
 
+
 def reset_saltwizard():
     connection.module_cli_api.update_wizard('rxsalt_wizard','NEW')
     connection.module_cli_api.delete_host('Salt Master')
@@ -44,6 +45,7 @@ def send_salt_dryrun_command(minion_id, command):
     global SALT_API_MODE
     send_salt_command(minion_id, command, SALT_API_MODE)
 
+
 def apply_salt_state(state):
     global connection
     global SALT_API_MODE
@@ -57,13 +59,17 @@ def apply_salt_state(state):
         , 'salt-formula': state
     }
     action = connection.action_factory\
-            .create_action_from_host(salt_master, settings_dict, statetype)
+        .create_action_from_host(salt_master, settings_dict, statetype)
     connection.scheduler_service.schedule_state(action)
 
+
 def accept_minion(hostname):
-    connection = Connection.get_connection()
-    
     global SALT_API_MODE
+    
+    connection = Connection.get_connection()
+    sshport = connection.module_cli_api.get_setting_from_host(hostname, 'sshport')[0]['value']
+    saltapiport = connection.module_cli_api.get_setting_from_host(hostname, 'saltapiport')[0]['value']
+    print('connection to: ' + hostname + ' at port: ' + sshport)
     salt_master = connection.module_cli_api.getHostByName(hostname)
     statetype = connection.module_cli_api.getStatetypeByName('Salt-Run-State')
     settings_dict = {
@@ -71,10 +77,13 @@ def accept_minion(hostname):
         , 'salt-minion-id': 'None'
         , 'api-mode': SALT_API_MODE
         , 'salt-function': 'ACCEPTMINION'
+        , 'sshport': sshport
+        , 'saltapiport': saltapiport
     }
     action = connection.action_factory\
             .create_action_from_host(salt_master, settings_dict, statetype)
     connection.scheduler_service.schedule_state(action)
+
 
 def accept_minions():
     global connection

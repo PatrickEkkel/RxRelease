@@ -14,7 +14,7 @@ from ..core.jobs.statetypes.handlerrequest import HandlerRequest
 from ..core.jobs.statetypes.requestbuilder import RequestBuilder
 from ..core.jobs.api.utils import Utils
 from ..core.datastructures.tree.dependencytreemap import DependencyTreeMap
-from ..core.jobs.zmq.scheduler_service import SchedulerService,ActionFactory
+from ..core.jobs.zmq.scheduler_service import SchedulerService, ActionFactory
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -34,11 +34,15 @@ class CreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         """Save the post data when creating a new bucketlist."""
         serializer.save()
+
+
 class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
     queryset = State.objects.all()
     serializer_class = StateSerializer
 # Everything is configured, now only thing that leaves us is to test this piece of entangled code
+
+
 class InstallHostView(generics.UpdateAPIView):
     serializer_class = InstallHostSerializer
     def get_queryset(self):

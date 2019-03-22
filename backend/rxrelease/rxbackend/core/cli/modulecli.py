@@ -159,6 +159,11 @@ class ModuleCLI:
      host = hosts_api.get_host_by_hostname(hostname)
      return host
 
+    def get_setting_from_host(self,hostname, key):
+        settings_api = REST_settings(self.auth_token)
+        setting = settings_api.get_host_kv_settings_by_key(key,hostname)
+        return setting
+
     def delete_host(self,profiletype_name):
         hosts_api = REST_hosts(self.auth_token)
         host =   hosts_api.getHostByProfileType(profiletype_name)

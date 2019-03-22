@@ -33,14 +33,23 @@ export function saveConfigureHost(current_host,salt_api_creds,ssh_creds) {
     swaLogger.trace("Current host object to be processed")
     swaLogger.traceObject(current_host)
     settingsRequests.getSettingCategoryByName(category.name)
-    .then(e.execute(settingsPromises.CREATE_OR_UPDATE_SETTINGSCATEGORY,{ category: category}))
-    .then(e.execute(settingsPromises.UPDATE_SETTINGS_WITH_CATEGORY,{logger: swaLogger,salt_api_creds: salt_api_creds,search_string: search_string}))
+    .then(e.execute(settingsPromises.CREATE_OR_UPDATE_SETTINGSCATEGORY,
+      { category: category}))
+    .then(e.execute(settingsPromises.UPDATE_SETTINGS_WITH_CATEGORY,
+      {logger: swaLogger,salt_api_creds: salt_api_creds,search_string: search_string}))
     .then(e.execute(settingsPromises.CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS,{}))
-    .then(e.execute(settingsPromises.CREATE_CREDENTIAL_SETTINGS,{logger: swaLogger,ssh_creds: ssh_creds}))
-    .then(e.execute(hostsPromises.CREATE_HOST_WITH_CONNECTION_CREDENTIALS,{logger: swaLogger,current_host: current_host}))
-    .then(e.execute(settingsPromises.CREATE_CREDENTIAL_SETTINGS_NEW,{logger: swaLogger,salt_api_creds: salt_api_creds}))
-    .then(e.execute(settingsPromises.GET_OR_CREATE_SETTINGSCATEGORY_FROM_HOST, {logger: swaLogger, category: current_host.getHostname()}))
-    .then(e.execute(settingsPromises.GET_OR_CREATE_SETTING,{ logger: swaLogger, category: settings.SETTING_CATEGORY_GLOBAL,key: 'ssh_port',value: '22' }))
+    .then(e.execute(settingsPromises.CREATE_CREDENTIAL_SETTINGS,
+      {logger: swaLogger,ssh_creds: ssh_creds}))
+    .then(e.execute(hostsPromises.CREATE_HOST_WITH_CONNECTION_CREDENTIALS,
+      {logger: swaLogger,current_host: current_host}))
+    .then(e.execute(settingsPromises.CREATE_CREDENTIAL_SETTINGS_NEW,
+      {logger: swaLogger,salt_api_creds: salt_api_creds}))
+    .then(e.execute(settingsPromises.GET_OR_CREATE_SETTINGSCATEGORY_FROM_HOST,
+       {logger: swaLogger, category: current_host.getHostname()}))
+    .then(e.execute(settingsPromises.GET_OR_CREATE_SETTING,
+       { logger: swaLogger, category: settings.SETTING_CATEGORY_GLOBAL,key: 'sshport',value: '22' }))
+    .then(e.execute(settingsPromises.GET_OR_CREATE_SETTING,
+       { logger: swaLogger, category: settings.SETTING_CATEGORY_GLOBAL,key: 'saltapiport',value: '8082' }))
     .then(function(response) {
 
       swaLogger.trace("current stored state: ")
