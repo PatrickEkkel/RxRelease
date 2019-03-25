@@ -10,46 +10,49 @@ from ...models import Profile
 from ...models import Configuration
 from ...models import KVSetting
 from ...models import Module
+
+
 class BaseFiller:
+
+    def __init__(self):
+        pass
+
     def createBaseFillForSalt(self):
 
         # 2 superusers aanmaken met de standaard BaseFiller
-        User.objects.create_superuser(username='superuser',password='changeit',email='')
-        User.objects.create_superuser(username=ApiUserSettings.username,password=ApiUserSettings.password,email='')
+        User.objects.create_superuser(username='superuser', password='changeit', email='')
+        User.objects.create_superuser(username=ApiUserSettings.username, password=ApiUserSettings.password, email='')
 
         # Dit is hoe token authentication werkt voor als we willen weten hoe we een nieuwe user willen maken of willen weten hoe het zaakje geconfigureerd
         # http://cheng.logdown.com/posts/2015/10/27/how-to-use-django-rest-frameworks-token-based-authentication
 
-        salt_module = Module.objects.create(name="rxsalt",active=False,menuoptionname="Salt",configurationPanel="SALT_CONFIGURATION_PANEL")
+        salt_module = Module.objects.create(name="rxsalt", active=False, menuoptionname="Salt", configurationPanel="SALT_CONFIGURATION_PANEL")
         salt_module.save()
-
-
 
         # Built in profiletypes
         buildin_default_rxrelease_profiletype = ProfileType.objects.create(name="Default")
         buildin_default_profile = Profile.objects.create(name="Default")
         buildin_default_profile.profiletype = buildin_default_rxrelease_profiletype
-        buildin_default_configuration = Configuration.objects.create(name="Default Configuration",profile=buildin_default_profile)
+        buildin_default_configuration = Configuration.objects.create(name="Default Configuration", profile=buildin_default_profile)
 
         buildin_saltmaster_profiletype = ProfileType.objects.create(name="Salt Master")
         buildin_saltmaster_profile = Profile.objects.create(name="RxRelease Salt Master")
         buildin_saltmaster_profile.profiletype = buildin_saltmaster_profiletype
-        buildin_saltmaster_configuration = Configuration.objects.create(name="Salt master default Configuration",profile=buildin_saltmaster_profile)
+        buildin_saltmaster_configuration = Configuration.objects.create(name="Salt master default Configuration", profile=buildin_saltmaster_profile)
         #buildin_saltmaster_configuration.profile = buildin_saltmaster_profile
 
         # Salt settings category maken
-
-        salt_settings_category = SettingsCategory.objects.create(name="Salt Settings",prefix="salt")
+        salt_settings_category = SettingsCategory.objects.create(name="Salt Settings", prefix="salt")
         salt_settings_category.save()
 
         # Settings category maken
         global_category = SettingsCategory.objects.create(name="Global Settings")
         global_category.save()
 
-        kvsetting_os = KVSetting.objects.create(key="os",value="CentOS",category=global_category)
+        kvsetting_os = KVSetting.objects.create(key="os", value="CentOS", category=global_category)
         kvsetting_os.save()
         # Standard settings applyen
-        kvsetting_saltmaster = KVSetting.objects.create(key="saltmaster",value="",category=global_category)
+        kvsetting_saltmaster = KVSetting.objects.create(key="saltmaster", value="", category=global_category)
         kvsetting_saltmaster.category = global_category
         kvsetting_saltmaster.save()
 
@@ -86,14 +89,9 @@ class BaseFiller:
         salt_master_capability.statetypes.add(salt_run_state)
 
         salt_master_capability.dependentOn = standard_capability
-
-
-        #buildin_saltmaster_profiletype.capabilities.add(salt_minion_capability)
         buildin_saltmaster_profiletype.capabilities.add(standard_capability)
         buildin_saltmaster_profiletype.capabilities.add(salt_master_capability)
-
         buildin_default_rxrelease_profiletype.capabilities.add(standard_capability)
-
 
         standard_capability.save()
         salt_minion_capability.save()

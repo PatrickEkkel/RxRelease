@@ -38,7 +38,7 @@ class TestFiller:
         buildin_saltmaster_profile.profiletype = buildin_saltmaster_profiletype
         buildin_saltmaster_configuration = Configuration.objects.create(name="Salt master default Configuration",profile=buildin_saltmaster_profile)
 
-        #buildin_saltmaster_configuration.profile = buildin_saltmaster_profile
+        # buildin_saltmaster_configuration.profile = buildin_saltmaster_profile
 
         # Salt settings category maken
         salt_settings_category = SettingsCategory.objects.create(name="Salt Settings",prefix="salt")

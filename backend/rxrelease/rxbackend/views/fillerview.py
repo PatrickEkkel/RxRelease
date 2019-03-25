@@ -16,17 +16,17 @@ def testFill(request):
 
     userFiller.fillStandardUserSet()
     testFiller.createFillerForTest()
-    #3baseFiller.createBaseFillForSalt()
 
     # TODO: hier willen we dus alle code kwijt die de database initialiseert.
     response = "TestFiller"
     return HttpResponse(response)
 
-def saltFill(request):
+def salt_fill(request):
     response = 'Saltfiller'
     saltFiller = SaltFiller()
     saltFiller.createFillerForTest()
     return HttpResponse(response)
+
 
 def fill(request):
     userFiller = UserFiller()

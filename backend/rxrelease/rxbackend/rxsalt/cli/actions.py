@@ -47,7 +47,7 @@ def send_salt_dryrun_command(minion_id, command):
 
 
 def apply_salt_state(state):
-    global connection
+    connection = Connection.get_connection()
     global SALT_API_MODE
     salt_master = connection.module_cli_api.getHostByName('salt-master')
     statetype = connection.module_cli_api.getStatetypeByName('Salt-Run-State')
@@ -65,7 +65,7 @@ def apply_salt_state(state):
 
 def accept_minion(hostname):
     global SALT_API_MODE
-    
+
     connection = Connection.get_connection()
     sshport = connection.module_cli_api.get_setting_from_host(hostname, 'sshport')[0]['value']
     saltapiport = connection.module_cli_api.get_setting_from_host(hostname, 'saltapiport')[0]['value']
@@ -117,6 +117,30 @@ def list_all_accepted_salt_minions():
     connection.scheduler_service.schedule_state(action)
 
 
+def sync_salt_formula(salt_formula):
+    connection = Connection.get_connection()
+    global SALT_API_MODE
+    hostname = 'salt-master'
+    sshport = connection.module_cli_api.get_setting_from_host(hostname, 'sshport')[0]['value']
+    saltapiport = connection.module_cli_api.get_setting_from_host(hostname, 'saltapiport')[0]['value']
+
+    settings_dict = {
+        'dryrun': 'False'
+        , 'salt-command': ''
+        , 'salt-minion-id': ''
+        , 'api-mode': SALT_API_MODE
+        , 'salt-formula': salt_formula
+        , 'salt-function': 'SYNCFORMULA'
+        , 'sshport': sshport
+        , 'saltapiport': saltapiport
+    }
+    salt_master = connection.module_cli_api.getHostByName('salt-master')
+    statetype = connection.module_cli_api.getStatetypeByName('Salt-Run-State')
+    action = connection.action_factory\
+        .create_action_from_host(salt_master, settings_dict, statetype)
+    connection.scheduler_service.schedule_state(action)
+
+
 def send_salt_command(minion_id, command, salt_api_mode):
     # we need to get the saltmaster host object so we know where to send our commands
     global connection
@@ -143,10 +167,11 @@ def create_salt_formula(name,salt_state_path):
         result = connection.module_cli_api.upload_file(file)
         print(result)
         file_refs.append(result)
-    formula = {'name': name,'status': 'NEW','files': file_refs}
+    formula = {'name': name, 'status': 'NEW', 'files': file_refs}
     connection.module_cli_api.create_salt_formula(formula)
     # do a call to the backend to create a formula
     # upload all the files associated with the formula
+
 
 def enable_salt():
     print("Enabling salt module")

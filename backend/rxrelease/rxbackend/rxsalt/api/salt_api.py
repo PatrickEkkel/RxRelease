@@ -1,10 +1,12 @@
-import ntpath,os,logging,sys
+import ntpath, os, logging, sys
 from pepper import Pepper
 from rxbackend.core.io.rxfilestore import RxFileStore
 from rxbackend.ssh.sshwrapper import SSHWrapper
 from rxbackend.ssh.connectiondetails import ConnectionDetails
 from rxbackend.rxsalt.api.salt_command import SaltDataRoot
-from rxbackend.configuration.globalsettings import NetworkSettings,LocalSettings,ApiUserSettings
+from rxbackend.configuration.globalsettings import NetworkSettings, LocalSettings, ApiUserSettings
+from rxbackend.core.io.rxlocalstore import RxLocalStore
+from rxbackend.rxsalt.configuration.saltsettings import SaltSettings
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -32,18 +34,19 @@ class SaltApi:
 
     def apply_state(self, state):
         api = self._connect()
-        result = api.low([{'client': 'local', 'tgt': '*', 'fun': 'state.apply','arg': state}])
+        result = api.low([{'client': 'local', 'tgt': '*', 'fun': 'state.apply', 'arg': state}])
         logger.debug(result)
         return result
+
     def high_state(self, minion_id):
         pass
 
+    def accept_minion(self, minion_id):
+        api = self._connect()
+        result = api.low([{'client': 'wheel', 'fun': 'key.accept', 'match': minion_id}])
+        logger.debug(result)
+        return result
 
-    def accept_minion(self,minion_id):
-         api = self._connect()
-         result = api.low([{'client': 'wheel', 'fun': 'key.accept','match': minion_id}])
-         logger.debug(result)
-         return result
     def list_all_unaccepted_minions(self):
         api = self._connect()
         result = api.low([{'client': 'wheel', 'fun': 'key.list_all'}])
@@ -53,30 +56,45 @@ class SaltApi:
     def sync_formula(self, formula_name):
         remoteuser = self.ssh_connectiondetails.username
         localuser = LocalSettings.localuser
-        # get the parent dir
-        parent_dir = formula_name.split('/')[-2:][0]
-
-        filestorelocation = '/home/' + localuser + '/.rxrelease/'
-        rxfilestore = RxFileStore(filestorelocation)
-        # eigenlijk willen we 2 directories aanmaken, eentje is niet genoeg
-        rxfilestore.create_dir(parent_dir)
-        rxfilestore.set_context(parent_dir)
-        copied_file = rxfilestore.copy_file(formula_name)
-
-        client = SSHWrapper.with_connection_details(self.ssh_connectiondetails)
-        textfile = rxfilestore.open_text_file(ntpath.basename(copied_file))
-        file_handle = rxfilestore.get_filestore_location_with_context() + textfile.getFilename()
-        # TODO: gebruik laten maken van de localstore API
-        localstore_formula_dir = '~/.localstore/' + parent_dir
-        localstore_formula_init_file = localstore_formula_dir + '/' + ntpath.basename(formula_name)
 
         salt_home_dir = '/srv/salt/'
-        formula_home_dir = salt_home_dir  + parent_dir + '/'
-        client.send_blocking_command('mkdir -p ' + localstore_formula_dir)
 
-        client.send_file(file_handle, localstore_formula_init_file)
-        client.send_blocking_command('mkdir -p ' + formula_home_dir )
-        client.send_blocking_command('cp ' + localstore_formula_init_file + ' ' + formula_home_dir  )
+        localstore = RxLocalStore.get_localstore()
+        print('show this info!!!')
+        print(localstore.get_context())
+        localstore.set_context(localstore.get_context()
+                               + SaltSettings.FORMULAS_DIR
+                               + '/'
+                               + formula_name)
+        print('show this info!!!')
+        print(localstore.get_filestore_location_with_context())
+        print(localstore.list_all_files_in_directory())
+        client = SSHWrapper.with_connection_details(self.ssh_connectiondetails)
+
+
+        # get the parent dir
+        # parent_dir = formula_name.split('/')[-2:][0]
+
+        # filestorelocation = '/home/' + localuser + '/.rxrelease/'
+        # rxfilestore = RxFileStore(filestorelocation)
+        # eigenlijk willen we 2 directories aanmaken, eentje is niet genoeg
+        # rxfilestore.create_dir(parent_dir)
+        # rxfilestore.set_context(parent_dir)
+        # copied_file = rxfilestore.copy_file(formula_name)
+
+        c
+        # textfile = rxfilestore.open_text_file(ntpath.basename(copied_file))
+        # file_handle = rxfilestore.get_filestore_location_with_context() + textfile.getFilename()
+        # TODO: gebruik laten maken van de localstore API
+        # localstore_formula_dir = '~/.localstore/' + parent_dir
+        # localstore_formula_init_file = localstore_formula_dir + '/' + ntpath.basename(formula_name)
+
+
+        # client.send_blocking_command('mkdir -p ' + localstore_formula_dir)
+
+        # client.send_file(file_handle, localstore_formula_init_file)
+        # client.send_blocking_command('mkdir -p ' + formula_home_dir )
+        # client.send_blocking_command('cp ' + localstore_formula_init_file + ' ' + formula_home_dir  )
 
     def ping(self, target):
         api = self._connect()

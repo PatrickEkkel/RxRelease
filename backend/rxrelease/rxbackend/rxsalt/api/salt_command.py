@@ -2,6 +2,7 @@
 class SaltCommandMapper:
     def __init__(self):
         pass
+
     @classmethod
     def create_from_dict(self, dict):
         result = SaltCommand()
@@ -20,7 +21,7 @@ class SaltCommandMapper:
 
 
 class SaltDataChild:
-    def __init__(self,_data):
+    def __init__(self, _data):
         self._data = _data['data']
 
     def get_minions_pre(self):
@@ -31,15 +32,17 @@ class SaltDataChild:
     def get_return(self):
         return self._data['return']
 
+
 class SaltDataRoot:
-    def __init__(self,_data):
+    def __init__(self, _data):
         self._root = _data['return']
         self._children = []
         for child in self._root:
             self._children.append(SaltDataChild(child))
 
-    def get_data(self,index):
+    def get_data(self, index):
         return self._children[index]
+
 
 class SaltCommand:
     def __init__(self):

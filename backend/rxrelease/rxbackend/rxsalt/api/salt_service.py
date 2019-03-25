@@ -15,17 +15,16 @@ logger.addHandler(ch)
 
 class SaltService:
 
-    def __init__(self, ssh_connection, salt_connection,auth_token):
+    def __init__(self, ssh_connection, salt_connection, auth_token):
         self.salt_api = SaltApi(ssh_connection, salt_connection)
         self._auth_token = auth_token
 
-    def execute_formula(self,formula_name):
+    def execute_formula(self, formula_name):
 
         formulas_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..','formulas'))
         # first get the state we want to apply and sync it to the master
         self.salt_api.sync_formula(formulas_dir + "/" + formula_name + "/init.sls")
         self.salt_api.apply_state(formula_name)
-
 
     def accept_minion(self, host):
         minions = self.salt_api.list_all_unaccepted_minions()

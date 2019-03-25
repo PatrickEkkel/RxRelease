@@ -14,6 +14,9 @@ logger.addHandler(ch)
 
 class RxLocalStore:
 
+    def __init__(self):
+        pass
+
     localstore = '.localstore/'
 
     @staticmethod
@@ -22,10 +25,14 @@ class RxLocalStore:
         result.set_context(RxLocalStore.localstore)
         #result.create_dir(localstore)
         return result
+
+    @staticmethod
     def get_location():
-        return RxFileStore.get_filestore_location()
-        + '/'
-        + RxLocalStore.localstore
+        return RxFileStore.get_filestore_location()\
+               + '/'\
+               + RxLocalStore.localstore
+
+    @staticmethod
     def get_or_create_dir_from_localstore(dir):
         result = RxFileStore.get_instance()
         result.set_context(RxLocalStore.localstore)

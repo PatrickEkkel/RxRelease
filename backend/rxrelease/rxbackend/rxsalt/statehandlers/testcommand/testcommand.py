@@ -1,6 +1,6 @@
-import sys,json,sh,os,logging
+import sys, json, sh, os, logging
 from pepper import Pepper
-from rxbackend.configuration.globalsettings import LocalSettings,RemoteSettings,ApiUserSettings
+from rxbackend.configuration.globalsettings import LocalSettings, RemoteSettings, ApiUserSettings
 from rxbackend.core.restapi.REST_states import REST_states
 from rxbackend.configuration.globalsettings import NetworkSettings
 from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
@@ -96,12 +96,12 @@ if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTEST
     # TODO: port number for the salt-master should be stored in the database
     salt_connection_details = SaltConnectionDetails(salt_username, salt_password, salt_master, 8082)
     salt_service = SaltService(ssh_connection_details,salt_connection_details,auth_token)
+
     salt_api = SaltApi(ssh_connection_details, salt_connection_details)
 
     if salt_mapping.salt_function == 'SALTCOMMAND':
         # TODO: deze directe call naar de salt-api eruit slopen
         salt_api.cmd_run(salt_mapping.command)
-        #salt_api.sync_formula(formulas_dir + "/docker_ce/init.sls")
     elif salt_mapping.salt_function == 'APPLYSTATE':
         salt_service.execute_formula(salt_mapping.formula)
     elif salt_mapping.salt_function == 'LISTALLACCEPTEDMINIONS':
@@ -111,6 +111,8 @@ if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTEST
         salt_service.accept_unaccepted_minions()
     elif salt_mapping.salt_function == 'ACCEPTMINION':
         salt_service.accept_minion(host)
+    elif salt_mapping.salt_function == 'SYNCFORMULA':
+        salt_api.sync_formula(salt_mapping.formula)
 
 elif salt_mapping.api_mode == 'SALTTESTDRYRUN':
     print("don't invoke the salt api, print this string to let you know we are in testing mode")
