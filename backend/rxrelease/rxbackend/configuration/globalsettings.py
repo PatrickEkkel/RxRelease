@@ -5,6 +5,7 @@ class ApiUserSettings:
 class LocalSettings:
     localuser = "patrick"
     localconfig = '/home/' + localuser + '/.rxrelease'
+    localcache = localconfig + '/.cache'
 
 class RemoteSettings:
     remoteuser = "rxrelease"

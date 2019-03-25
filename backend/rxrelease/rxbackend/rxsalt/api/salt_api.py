@@ -1,4 +1,5 @@
 import ntpath, os, logging, sys
+import zipfile
 from pepper import Pepper
 from rxbackend.core.io.rxfilestore import RxFileStore
 from rxbackend.ssh.sshwrapper import SSHWrapper
@@ -6,6 +7,7 @@ from rxbackend.ssh.connectiondetails import ConnectionDetails
 from rxbackend.rxsalt.api.salt_command import SaltDataRoot
 from rxbackend.configuration.globalsettings import NetworkSettings, LocalSettings, ApiUserSettings
 from rxbackend.core.io.rxlocalstore import RxLocalStore
+from rxbackend.core.io.rxlocalcache import RxLocalCache
 from rxbackend.rxsalt.configuration.saltsettings import SaltSettings
 
 logger = logging.getLogger(__name__)
@@ -58,18 +60,42 @@ class SaltApi:
         localuser = LocalSettings.localuser
 
         salt_home_dir = '/srv/salt/'
+        formula_dir = '/srv/salt/' + formula_name
 
         localstore = RxLocalStore.get_localstore()
-        print('show this info!!!')
-        print(localstore.get_context())
+        localcache = RxLocalCache.get_localcache()
         localstore.set_context(localstore.get_context()
                                + SaltSettings.FORMULAS_DIR
                                + '/'
                                + formula_name)
-        print('show this info!!!')
-        print(localstore.get_filestore_location_with_context())
-        print(localstore.list_all_files_in_directory())
+
+        filelist = localstore.list_all_files_in_directory()
+
         client = SSHWrapper.with_connection_details(self.ssh_connectiondetails)
+        client.send_blocking_command('mkdir -p ' + salt_home_dir)
+        client.send_blocking_command('mkdir -p ' + formula_dir)
+
+        zf = RxLocalCache.create_temp_archive(formula_name)
+        for root, dirs, files in os.walk(localstore.get_filestore_location_with_context()):
+            for file in files:
+                zf.write(os.path.join(root, file))
+        zf.close()
+
+
+         #for file in filelist:
+        #    print(file)
+        #    if os.path.isdir(file):
+        #        pass
+        #        # print(localstore.get_location())
+        #        #client.send_blocking_command('mkdir -p ')
+        #    else:
+        #        # strip off the local part
+        #        print(localstore.get_filestore_location())
+        #
+        #        # client.send_file(file,)
+
+
+
 
 
         # get the parent dir
@@ -82,7 +108,7 @@ class SaltApi:
         # rxfilestore.set_context(parent_dir)
         # copied_file = rxfilestore.copy_file(formula_name)
 
-        c
+
         # textfile = rxfilestore.open_text_file(ntpath.basename(copied_file))
         # file_handle = rxfilestore.get_filestore_location_with_context() + textfile.getFilename()
         # TODO: gebruik laten maken van de localstore API

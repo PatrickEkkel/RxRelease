@@ -22,9 +22,11 @@ class RxLocalStore:
     @staticmethod
     def get_localstore():
         result = RxFileStore.get_instance()
+        result.create_dir(RxLocalStore.localstore)
+
         result.set_context(RxLocalStore.localstore)
-        #result.create_dir(localstore)
         return result
+
 
     @staticmethod
     def get_location():
