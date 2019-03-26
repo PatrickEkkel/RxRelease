@@ -53,74 +53,33 @@ class SaltApi:
         api = self._connect()
         result = api.low([{'client': 'wheel', 'fun': 'key.list_all'}])
         return SaltDataRoot(result).get_data(0).get_minions_pre()
-        # return result['return'][0]['data']['return']['minions_pre']
 
     def sync_formula(self, formula_name):
-        remoteuser = self.ssh_connectiondetails.username
-        localuser = LocalSettings.localuser
-
         salt_home_dir = '/srv/salt/'
-        formula_dir = '/srv/salt/' + formula_name
+        formula_dir = salt_home_dir + formula_name
 
         localstore = RxLocalStore.get_localstore()
-        localcache = RxLocalCache.get_localcache()
         localstore.set_context(localstore.get_context()
                                + SaltSettings.FORMULAS_DIR
                                + '/'
                                + formula_name)
 
-        filelist = localstore.list_all_files_in_directory()
-
         client = SSHWrapper.with_connection_details(self.ssh_connectiondetails)
         client.send_blocking_command('mkdir -p ' + salt_home_dir)
         client.send_blocking_command('mkdir -p ' + formula_dir)
+        # client.send_blocking_command('rm -rf ' + formula_dir)
 
         zf = RxLocalCache.create_temp_archive(formula_name)
         for root, dirs, files in os.walk(localstore.get_filestore_location_with_context()):
             for file in files:
-                zf.write(os.path.join(root, file))
+                zip_root = os.path.relpath(os.path.join(root, file),
+                                      localstore.get_filestore_location_with_context())
+                zf.write(os.path.join(root, file), zip_root)
+
         zf.close()
-
-
-         #for file in filelist:
-        #    print(file)
-        #    if os.path.isdir(file):
-        #        pass
-        #        # print(localstore.get_location())
-        #        #client.send_blocking_command('mkdir -p ')
-        #    else:
-        #        # strip off the local part
-        #        print(localstore.get_filestore_location())
-        #
-        #        # client.send_file(file,)
-
-
-
-
-
-        # get the parent dir
-        # parent_dir = formula_name.split('/')[-2:][0]
-
-        # filestorelocation = '/home/' + localuser + '/.rxrelease/'
-        # rxfilestore = RxFileStore(filestorelocation)
-        # eigenlijk willen we 2 directories aanmaken, eentje is niet genoeg
-        # rxfilestore.create_dir(parent_dir)
-        # rxfilestore.set_context(parent_dir)
-        # copied_file = rxfilestore.copy_file(formula_name)
-
-
-        # textfile = rxfilestore.open_text_file(ntpath.basename(copied_file))
-        # file_handle = rxfilestore.get_filestore_location_with_context() + textfile.getFilename()
-        # TODO: gebruik laten maken van de localstore API
-        # localstore_formula_dir = '~/.localstore/' + parent_dir
-        # localstore_formula_init_file = localstore_formula_dir + '/' + ntpath.basename(formula_name)
-
-
-        # client.send_blocking_command('mkdir -p ' + localstore_formula_dir)
-
-        # client.send_file(file_handle, localstore_formula_init_file)
-        # client.send_blocking_command('mkdir -p ' + formula_home_dir )
-        # client.send_blocking_command('cp ' + localstore_formula_init_file + ' ' + formula_home_dir  )
+        client.send_file(zf.filename, formula_dir)
+        client.send_blocking_command('cd ' + formula_dir + ' && unzip -o ' + ntpath.basename(zf.filename))
+        client.send_blocking_command('cd ' + formula_dir + '&& rm ' +  ntpath.basename(zf.filename))
 
     def ping(self, target):
         api = self._connect()
