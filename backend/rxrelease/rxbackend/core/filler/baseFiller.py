@@ -49,17 +49,11 @@ class BaseFiller:
         global_category = SettingsCategory.objects.create(name="Global Settings")
         global_category.save()
 
-        kvsetting_sshport = KVSetting.objects.create(key='sshport',value='2222',category=global_category)
+        # Standard settings applyen
+        kvsetting_sshport = KVSetting.objects.create(key='sshport', value='2222', category=global_category)
         kvsetting_os = KVSetting.objects.create(key="os", value="CentOS", category=global_category)
         kvsetting_os.save()
         kvsetting_sshport.save()
-        # Standard settings applyen
-        kvsetting_saltmaster = KVSetting.objects.create(
-            key="saltmaster"
-            , value=""
-            , category=global_category)
-        kvsetting_saltmaster.category = global_category
-        kvsetting_saltmaster.save()
 
 
         # De verschillende basis states maken

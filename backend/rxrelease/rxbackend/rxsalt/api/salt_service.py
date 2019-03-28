@@ -21,9 +21,8 @@ class SaltService:
 
     def execute_formula(self, formula_name):
 
-        formulas_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..','formulas'))
         # first get the state we want to apply and sync it to the master
-        self.salt_api.sync_formula(formulas_dir + "/" + formula_name + "/init.sls")
+        self.salt_api.sync_formula(formula_name)
         self.salt_api.apply_state(formula_name)
 
     def accept_minion(self, host):

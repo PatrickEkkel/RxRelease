@@ -50,6 +50,8 @@ export function saveConfigureHost(current_host,salt_api_creds,ssh_creds) {
        { logger: swaLogger, category: settings.SETTING_CATEGORY_GLOBAL,key: 'sshport',value: '22' }))
     .then(e.execute(settingsPromises.GET_OR_CREATE_SETTING,
        { logger: swaLogger, category: settings.SETTING_CATEGORY_GLOBAL,key: 'saltapiport',value: '8082' }))
+    .then(e.execute(settingsPromises.GET_OR_CREATE_SETTING,
+      { logger: swaLogger, category: settings.SETTING_CATEGORY_GLOBAL,key: 'saltmaster',value: current_host.hostname}))
     .then(function(response) {
 
       swaLogger.trace("current stored state: ")

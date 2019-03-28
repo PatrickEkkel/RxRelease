@@ -47,9 +47,13 @@ def send_salt_dryrun_command(minion_id, command):
 
 
 def apply_salt_state(state):
-    connection = Connection.get_connection()
     global SALT_API_MODE
-    salt_master = connection.module_cli_api.getHostByName('salt-master')
+    connection = Connection.get_connection()
+    salt_master = 'salt-master'
+    sshport = connection.module_cli_api.get_setting_from_host(salt_master, 'sshport')[0]['value']
+    saltapiport = connection.module_cli_api.get_setting_from_host(salt_master, 'saltapiport')[0]['value']
+
+    salt_master = connection.module_cli_api.getHostByName(salt_master)
     statetype = connection.module_cli_api.getStatetypeByName('Salt-Run-State')
     settings_dict = {
         'dryrun': 'False'
@@ -57,6 +61,8 @@ def apply_salt_state(state):
         , 'api-mode': SALT_API_MODE
         , 'salt-function': 'APPLYSTATE'
         , 'salt-formula': state
+        , 'sshport': sshport
+        , 'saltapiport': saltapiport
     }
     action = connection.action_factory\
         .create_action_from_host(salt_master, settings_dict, statetype)
