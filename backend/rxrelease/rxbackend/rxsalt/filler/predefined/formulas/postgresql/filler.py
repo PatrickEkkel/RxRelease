@@ -21,7 +21,13 @@ class PostgresFormula(Formula):
         service_filehandle = localstore.new_text_file(service_filename)
 
         init_file = File.objects.create(filename=init_filename, path=localstore.get_current_context())
+        service_file = File.objects.create(filename=service_filename, path=localstore.get_current_context())
+
         init_file.save()
+        service_file.save()
+        postgres_formula.files.add(init_file)
+        postgres_formula.files.add(service_file)
+
         head, tail = ntpath.split(__file__)
 
         predef_init = head + '/formula/init.sls'

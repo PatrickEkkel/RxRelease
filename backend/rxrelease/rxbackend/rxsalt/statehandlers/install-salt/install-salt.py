@@ -6,7 +6,8 @@ from rxbackend.core.restapi.REST_states import REST_states
 from rxbackend.configuration.globalsettings import ApiUserSettings
 from rxbackend.core.restapi.REST_authentication import REST_authentication
 from rxbackend.core.jobs.statehandlers.statemanager import StateManager
-import logging,paramiko,sh,sys,json
+import logging, paramiko, sh, sys, json
+
 # we gaan er even vanuit dat passwordless_sshlogin vanaf deze locatie nu geregeld is
 
 logger = logging.getLogger(__name__)
@@ -20,32 +21,33 @@ logger.addHandler(ch)
 
 # before we start lets do some authentication
 
-token_result = REST_authentication().postCredentials(ApiUserSettings.username,ApiUserSettings.password)
+token_result = REST_authentication().postCredentials(ApiUserSettings.username,
+                                                     ApiUserSettings.password)
 auth_token = token_result['token']
 inputmapping = InputMapper().getInputFromCLI()
 data = json.loads(inputmapping.getKeyvalList())
 
 logger.info("Installing Salt minion for " + data['os'] + " under useraccount " + data['username'])
 currenthost = data['saltmaster']
-client = SSHWrapper.with_keys(data['remoteuser'],inputmapping.getIpAddress())
+client = SSHWrapper.with_keys(data['remoteuser'], inputmapping.getIpAddress())
 
 try:
- #client.loginWithKeys(data['remoteuser'])
- logging_dir = '/var/log/rxrelease'
- if data['os'] == "CentOS":
-  #client.sendCommandWithOutput('ls -al')
-  # first remove salt, if it was already installed
-  client.send_blocking_command('sudo yum remove -y salt-minion')
-  client.send_blocking_command('sudo rm -rf /etc/salt')
-  client.send_blocking_command('sudo yum install -y salt-minion')
-  client.send_command('sudo sed -i \'s|#master: salt|master:\ \'' + currenthost + '\'|g\' /etc/salt/minion')
-  client.send_blocking_command('sudo systemctl start salt-minion')
+    logging_dir = '/var/log/rxrelease'
+    if data['os'] == "CentOS":
+        # first remove salt, if it was already installed
+        client.send_blocking_command('sudo yum remove -y salt-minion')
+        client.send_blocking_command('sudo rm -rf /etc/salt')
+        client.send_blocking_command('sudo yum install -y salt-minion')
+        client.send_command(
+            'sudo sed -i \'s|#master: salt|master:\ \'' + currenthost + '\'|g\' /etc/salt/minion')
+        client.send_blocking_command('sudo systemctl start salt-minion')
 
-  reststates_api = REST_states(auth_token)
-  state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),inputmapping.getStateId())
-  state =  state[0]
-  statemanager = StateManager(auth_token)
-  statemanager.setSimpleStateInstalled(state)
+        reststates_api = REST_states(auth_token)
+        state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),
+                                                        inputmapping.getStateId())
+        state = state[0]
+        statemanager = StateManager(auth_token)
+        statemanager.setSimpleStateInstalled(state)
 except paramiko.AuthenticationException:
- print("oops")
- raise
+    print("oops")
+    raise
