@@ -11,6 +11,12 @@ def init_salt_db():
         module_cli_api.initSaltDb()
 
 
+def salt_help():
+    print("enable_salt() -> enables salt module")
+    print("reset_saltwizard() -> DEVELOPER, resets the state of the saltwizard, easy for testing")
+    print("send_salt_command() -> N.A")
+    print('init_salt_db() -> initializes the salt portion of the database ')
+
 def send_salt_ping(minion_id):
     settings_dict = {'dryrun': 'False', 'salt-command': '', 'salt-minion-id': minion_id, 'use-salt-api': 'True', 'salt-function': 'SALTPING'}
     salt_master = connection.module_cli_api.getHostByName('salt-master')

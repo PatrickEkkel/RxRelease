@@ -69,6 +69,14 @@ class BaseFiller:
                                                        , module="default"
                                                        , dependentOn=passwordless_login_state
                                                        , jobtype="SIMPLE_STATE")
+
+        sethostname_state = StateType.objects.create(name='Set-hostname'
+                                                    ,handler='set-hostname.py'
+                                                    ,SettingsCategory=global_category
+                                                    ,module='default'
+                                                    ,dependentOn=passwordless_login_state
+                                                    ,jobtype="SIMPLE_STATE")
+
         salt_minion_state = StateType.objects.create(name="Salt-minion"
                                                      , handler="install-salt.py"
                                                      , SettingsCategory=global_category
@@ -86,6 +94,7 @@ class BaseFiller:
                                                   jobtype="REPEATABLE_STATE")
 
         passwordless_login_state.save()
+        sethostname_state.save()
         prerequisites_state.save()
         salt_minion_state.save()
         salt_master_state.save()
@@ -99,6 +108,7 @@ class BaseFiller:
         salt_master_capability = Capability.objects.create(name="salt-master")
 
         standard_capability.statetypes.add(passwordless_login_state)
+        standard_capability.statetypes.add(sethostname_state)
         standard_capability.statetypes.add(prerequisites_state)
         salt_minion_capability.statetypes.add(salt_minion_state)
         salt_minion_capability.dependentOn = standard_capability

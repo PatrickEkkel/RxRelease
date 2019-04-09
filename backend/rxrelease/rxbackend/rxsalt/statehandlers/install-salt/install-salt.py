@@ -3,6 +3,7 @@ from rxbackend.ssh.ssh import SSHClient
 from rxbackend.ssh.sshwrapper import SSHWrapper
 from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
 from rxbackend.core.restapi.REST_states import REST_states
+from rxbackend.core.restapi.REST_hosts import REST_hosts
 from rxbackend.configuration.globalsettings import ApiUserSettings
 from rxbackend.core.restapi.REST_authentication import REST_authentication
 from rxbackend.core.jobs.statehandlers.statemanager import StateManager
@@ -23,12 +24,22 @@ logger.addHandler(ch)
 
 token_result = REST_authentication().postCredentials(ApiUserSettings.username,
                                                      ApiUserSettings.password)
+
+
 auth_token = token_result['token']
+
+resthosts_api = REST_hosts(auth_token)
 inputmapping = InputMapper().getInputFromCLI()
+
+host = resthosts_api.get_host_by_id(inputmapping.host_id)
+
+hostname = host['hostname']
 data = json.loads(inputmapping.getKeyvalList())
 
 logger.info("Installing Salt minion for " + data['os'] + " under useraccount " + data['username'])
 currenthost = data['saltmaster']
+
+
 client = SSHWrapper.with_keys(data['remoteuser'], inputmapping.getIpAddress())
 
 try:
