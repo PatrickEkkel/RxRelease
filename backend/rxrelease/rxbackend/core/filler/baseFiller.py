@@ -55,6 +55,9 @@ class BaseFiller:
         kvsetting_os.save()
         kvsetting_sshport.save()
 
+        kvsetting_saltapiport = KVSetting.objects.create(key='saltapiport', value='8888', category=global_category)
+        kvsetting_saltapiport.save()
+
 
         # De verschillende basis states maken
         passwordless_login_state = StateType.objects.create(name="SSH passwordless login"
@@ -71,16 +74,16 @@ class BaseFiller:
                                                        , jobtype="SIMPLE_STATE")
 
         sethostname_state = StateType.objects.create(name='Set-hostname'
-                                                    ,handler='set-hostname.py'
-                                                    ,SettingsCategory=global_category
-                                                    ,module='default'
-                                                    ,dependentOn=passwordless_login_state
-                                                    ,jobtype="SIMPLE_STATE")
+                                                    , handler='set-hostname.py'
+                                                    , SettingsCategory=global_category
+                                                    , module='default'
+                                                    , dependentOn=passwordless_login_state
+                                                    , jobtype="SIMPLE_STATE")
 
         salt_minion_state = StateType.objects.create(name="Salt-minion"
                                                      , handler="install-salt.py"
                                                      , SettingsCategory=global_category
-                                                     , dependentOn=prerequisites_state
+                                                     , dependentOn=sethostname_state
                                                      , module="rxsalt"
                                                      , jobtype="SIMPLE_STATE")
         salt_master_state = StateType.objects.create(name="Salt-master",handler="install-salt-master.py",dependentOn=prerequisites_state,SettingsCategory=global_category,module="rxsalt",jobtype="SIMPLE_STATE")

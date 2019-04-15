@@ -166,6 +166,11 @@ class ModuleCLI:
         host = hosts_api.get_host_by_hostname(hostname)
         return host
 
+    def get_credentials_by_category(self,category):
+        settings_api = REST_settings(self.auth_token)
+        setting = settings_api.kv_credentials_bycategory_id(category)
+        return setting
+
     def get_setting_from_host(self, hostname, key):
         settings_api = REST_settings(self.auth_token)
         setting = settings_api.get_host_kv_settings_by_key(key, hostname)

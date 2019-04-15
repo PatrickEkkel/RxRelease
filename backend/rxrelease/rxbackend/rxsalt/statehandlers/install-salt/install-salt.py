@@ -49,6 +49,7 @@ try:
         client.send_blocking_command('sudo yum remove -y salt-minion')
         client.send_blocking_command('sudo rm -rf /etc/salt')
         client.send_blocking_command('sudo yum install -y salt-minion')
+        client.send_blocking_command("sudo echo '" + hostname + "' | sudo tee /etc/salt/minion_id")
         client.send_command(
             'sudo sed -i \'s|#master: salt|master:\ \'' + currenthost + '\'|g\' /etc/salt/minion')
         client.send_blocking_command('sudo systemctl start salt-minion')

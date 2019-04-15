@@ -16,6 +16,7 @@ def salt_help():
     print("reset_saltwizard() -> DEVELOPER, resets the state of the saltwizard, easy for testing")
     print("send_salt_command() -> N.A")
     print('init_salt_db() -> initializes the salt portion of the database ')
+    print("accept_minion('minion-id') -> accepts minion to the salt-master")
 
 def send_salt_ping(minion_id):
     settings_dict = {'dryrun': 'False', 'salt-command': '', 'salt-minion-id': minion_id, 'use-salt-api': 'True', 'salt-function': 'SALTPING'}
@@ -81,7 +82,7 @@ def accept_minion(hostname):
     connection = Connection.get_connection()
     sshport = connection.module_cli_api.get_setting_from_host(hostname, 'sshport')[0]['value']
     saltapiport = connection.module_cli_api.get_setting_from_host(hostname, 'saltapiport')[0]['value']
-    print('connection to: ' + hostname + ' at port: ' + sshport)
+    print('salt connection to: ' + hostname + ' at port: ' + saltapiport)
     salt_master = connection.module_cli_api.getHostByName(hostname)
     statetype = connection.module_cli_api.getStatetypeByName('Salt-Run-State')
     settings_dict = {

@@ -93,8 +93,7 @@ if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTEST
     ssh_connection_details = ConnectionDetails.\
         new_connection_with_custom_key(host_username, host_password, salt_master, id_rsa, ssh_port)
 
-    # TODO: port number for the salt-master should be stored in the database
-    salt_connection_details = SaltConnectionDetails(salt_username, salt_password, salt_master, 8082)
+    salt_connection_details = SaltConnectionDetails(salt_username, salt_password, salt_master, salt_api_port)
     salt_service = SaltService(ssh_connection_details, salt_connection_details, auth_token)
 
     salt_api = SaltApi(ssh_connection_details, salt_connection_details)

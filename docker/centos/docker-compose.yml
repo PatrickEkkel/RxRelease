@@ -4,4 +4,5 @@ saltmaster:
  privileged: true
  ports:
   - "2222:22" 
+  - "8888:8080"
 
