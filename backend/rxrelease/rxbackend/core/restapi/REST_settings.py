@@ -23,6 +23,13 @@ class REST_settings(REST_base):
         result = response.json()
         return result
 
+    def get_category_byname(self,name):
+        serverAddress = self.backendlocation + '/rxbackend/settingscategory/search/?category_name=' + str(name)
+        response = requests.get(serverAddress, headers=self.getAuthTokenHeader())
+        result = response.json()
+        return result
+
+
     def category_by_id(self, category_id):
         serverAddress = self.backendlocation + '/rxbackend/settingscategory/' + str(category_id)
         response = requests.get(serverAddress, headers=self.getAuthTokenHeader())

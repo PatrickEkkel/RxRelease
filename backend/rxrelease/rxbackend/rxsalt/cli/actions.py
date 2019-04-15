@@ -80,6 +80,9 @@ def accept_minion(hostname):
     global SALT_API_MODE
 
     connection = Connection.get_connection()
+    salt_username = connection.module_cli_api.get_credentials_by_category('Salt Settings')[0]['username']
+    salt_password = connection.module_cli_api.get_credentials_by_category('Salt Settings')[0]['password']
+
     sshport = connection.module_cli_api.get_setting_from_host(hostname, 'sshport')[0]['value']
     saltapiport = connection.module_cli_api.get_setting_from_host(hostname, 'saltapiport')[0]['value']
     print('salt connection to: ' + hostname + ' at port: ' + saltapiport)
@@ -92,6 +95,8 @@ def accept_minion(hostname):
         , 'salt-function': 'ACCEPTMINION'
         , 'sshport': sshport
         , 'saltapiport': saltapiport
+        , 'salt-username': salt_username
+        , 'salt-password': salt_password
     }
     action = connection.action_factory\
             .create_action_from_host(salt_master, settings_dict, statetype)

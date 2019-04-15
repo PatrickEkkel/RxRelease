@@ -168,8 +168,9 @@ class ModuleCLI:
 
     def get_credentials_by_category(self,category):
         settings_api = REST_settings(self.auth_token)
-        setting = settings_api.kv_credentials_bycategory_id(category)
-        return setting
+        category_id = settings_api.get_category_byname(category)[0]['id']
+        settings = settings_api.kv_credentials_bycategory_id(category_id)
+        return settings
 
     def get_setting_from_host(self, hostname, key):
         settings_api = REST_settings(self.auth_token)

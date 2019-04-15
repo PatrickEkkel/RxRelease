@@ -32,7 +32,6 @@ token_result = REST_authentication().postCredentials(ApiUserSettings.username,Ap
 auth_token = token_result['token']
 
 formulas_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '..', 'formulas'))
-# print(formulas_dir)
 
 reststates_api = REST_states(auth_token)
 resthosts_api = REST_hosts(auth_token)
@@ -53,8 +52,8 @@ host = resthosts_api.get_host_by_id(inputmapping.host_id)
 hostname = host['hostname']
 ssh_port = data['sshport']
 salt_api_port = data['saltapiport']
-#setting = restsettings_api.get_host_kv_settings_by_key('ssh_port',hostname)
-#ssh_port = setting[0]['value']
+salt_username = data['salt-username']
+salt_password = data['salt-password']
 
 host_username = 'root'
 host_password = 'test'
@@ -79,7 +78,6 @@ if salt_mapping.api_mode == 'SALTTESTDOCKER':
 
     sh.ssh_keygen("-t", "rsa", "-f", id_rsa, _in="\n")
     rx_localstore = RxLocalStore()
-    # TODO: portnumber for ssh needs to come from globalsettings
     connection_details = ConnectionDetails(host_username,host_password, salt_master, False, ssh_port)
     ssh_login = SSHWrapper.with_connection_details(connection_details)
     ssh_login.send_blocking_command('mkdir /root/.ssh')
@@ -87,8 +85,7 @@ if salt_mapping.api_mode == 'SALTTESTDOCKER':
 
 
 if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTESTDOCKER':
-    salt_username = 'salt'
-    salt_password = 'salt'
+
 
     ssh_connection_details = ConnectionDetails.\
         new_connection_with_custom_key(host_username, host_password, salt_master, id_rsa, ssh_port)
