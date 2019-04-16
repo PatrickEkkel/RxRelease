@@ -22,6 +22,7 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
+
 class CreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
     queryset = File.objects.all()
@@ -39,27 +40,30 @@ class DetailsView(generics.RetrieveUpdateDestroyAPIView):
 
 class FileUpdateView(views.APIView):
 
-    def put(self,request,*args,**kwargs):
+    def put(self, request, *args, **kwargs):
         data = self.request.data
         content = data['content']
         path = data['path']
         filename = data['filename']
         storage = RxLocalStore.get_or_create_dir_from_localstore(path)
         file_handle = storage.open_text_file(filename)
-        file_handle.write(content,overwrite=True)
+        file_handle.write(content, overwrite=True)
 
         return Response({'data': content})
+
+
 class FileDownloadView(views.APIView):
 
     def get(self, request, format=None):
-
         path = self.request.query_params.get('path')
         filename = self.request.query_params.get('filename')
         logger.debug('retrieving file from: ' + path + filename)
         storage = RxLocalStore.get_or_create_dir_from_localstore(path)
         textfile = storage.open_text_file(filename)
+
         content = textfile.getContent()
         return Response({'data': content})
+
 
 class FileUploadView(views.APIView):
     parser_classes = (FileUploadParser,)
@@ -81,10 +85,11 @@ class FileUploadView(views.APIView):
         for line in file_obj:
             decoded_string = line.decode('utf-8')
             if not decoded_string.startswith('--' + boundary_id) \
-            and not decoded_string.startswith('Content-Disposition'):
+                    and not decoded_string.startswith('Content-Disposition'):
                 file_handle.write(str(line.decode('utf-8')))
 
         file_record = File.objects.create(filename=file_handle.getFilename(),
-        path=file_handle.get_location())
+                                          path=file_handle.get_location())
         file_record.save()
-        return Response({'id': file_record.id,'filename': file_record.filename,'path': file_record.path})
+        return Response(
+            {'id': file_record.id, 'filename': file_record.filename, 'path': file_record.path})

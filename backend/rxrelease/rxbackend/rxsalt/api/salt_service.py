@@ -27,6 +27,7 @@ class SaltService:
 
     def accept_minion(self, host):
         minions = self.salt_api.list_all_unaccepted_minions()
+        result = None
         for minion in minions:
             if minion == host['hostname']:
                 logger.debug("found minion with id " + host['hostname'] + ' accepting key')
@@ -45,7 +46,7 @@ class SaltService:
                     minion_api.post_minion(minion_dict)
                     return True
                 else:
-                    logger.debug("accepting minion " + minion  + " failed")
+                    logger.debug("accepting minion " + minion + " failed")
                     # TODO: schrijf dit weg in de uniforme logger (die nog niet bestaat)
                     # Op een later tijdstip willen we misschien het object updaten met een rejected status
                     return False

@@ -20,8 +20,9 @@ class PostgresFormula(Formula):
         init_filehandle = localstore.new_text_file(init_filename)
         service_filehandle = localstore.new_text_file(service_filename)
 
-        init_file = File.objects.create(filename=init_filename, path=localstore.get_current_context())
-        service_file = File.objects.create(filename=service_filename, path=localstore.get_current_context())
+        local_context = localstore.get_context().replace('.localstore/', '')
+        init_file = File.objects.create(filename=init_filename, path=local_context)
+        service_file = File.objects.create(filename=service_filename, path=local_context)
 
         init_file.save()
         service_file.save()
