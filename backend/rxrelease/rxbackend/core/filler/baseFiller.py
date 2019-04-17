@@ -94,7 +94,8 @@ class BaseFiller:
         salt_run_state = StateType.objects.create(name="Salt-Run-State",
                                                   handler="testcommand.py",
                                                   dependentOn=None, module="rxsalt",
-                                                  jobtype="REPEATABLE_STATE")
+                                                  jobtype="REPEATABLE_STATE",
+                                                  SettingsCategory=global_category)
 
         passwordless_login_state.save()
         sethostname_state.save()

@@ -18,6 +18,87 @@ logger.addHandler(ch)
 class RequestBuilder:
     def __init__(self):
         pass
+
+    def build_request_with_state(self, state):
+        hostDao = HostDao()
+        host = hostDao.getHostById(state.host_id)
+        return build_request_with_host_and_statetype(host,state.statetype)
+
+    def build_request_with_host_and_statetype(self, host,statetype):
+        settingsDao = SettingsDao()
+        settingsService = SettingsService()
+
+        credentials = settingsDao.getCredentialSettingsById(host.connectioncredentials_id)
+
+        handlerRequest = HandlerRequest()
+
+        handlerRequest.setIpAddress(host.ipaddress)
+        handlerRequest.setHostId(host.id)
+        handlerRequest.setStateTypeId(statetype.id)
+        handlerRequest.setHandlerCommand(statetype.handler)
+
+        statetypeSettingsCategory =  statetype.SettingsCategory
+
+        globalHostSettings = settingsService.getSettingsByCategoryname('Global Settings')
+
+        statetypeSettings = settingsService.getHostSettingsByStatetype(statetype)
+        state_credentials = settingsService.getHostCredentialSettingsByStatetype(statetype)
+        logger.debug("State credentials: " + str(state_credentials))
+        logger.debug("prefix: " + str(statetypeSettingsCategory.prefix))
+        logger.debug("statetypeSettings: " + str(statetypeSettings))
+        hostOnlySettings = settingsService.getHostSettingsByHost(host)
+
+        # the host settings that will be selected
+        # problem because we still need a list of host settings that are expected for this type of host call
+        selectedSettings = {}
+
+        if globalHostSettings is not None:
+            # first go through the list of global settings
+            for globalSetting in globalHostSettings:
+                if hostOnlySettings is not None and hostOnlySettings.get(globalSetting.key) is not None:
+                    selectedSettings[globalSetting.key] = hostOnlySettings[globalSetting.key]
+                else:
+                    selectedSettings[globalSetting.key] = globalSetting.value
+        else:
+            logger.error("No global settings found")
+
+        if statetypeSettings is not None:
+            for statetypeSetting in statetypeSettings:
+                selectedSettings[statetypeSetting.key] = statetypeSetting.value
+
+        logger.debug("globalHostSettings: " + str(globalHostSettings))
+        logger.debug("selectedSettings: " + str(selectedSettings))
+
+        # keyvalue pairs moeten dus opgehaald worden aan de hand van de statetype,
+        # maar omdat we zitten met een configuratie per host moeten we de werkelijke settings uit de host halen
+
+        # We maken hierbij een onderscheid tussen host data (specefiek voor de host die we afhandelen) en global data,
+        # Om het systeem zo eenvoudig mogelijk te maken gaan we er altijd  van globale gedefinieerde uit TENZIJ we dit lokaal op de host gedefinieerd hebben
+
+        # om te weten welke variabelen we moeten ophalen moeten we een lijstje van variabelen ophalen uit de variabelen lisrt uit de StateType
+
+        # TODO: new type definen voor variabelen van state
+        # Dit is specefiek aan de statetype
+        kvbuilder  = KeyValListBuilder()
+        kvbuilder.addKeyValPair("remoteuser",RemoteSettings.remoteuser)
+        kvbuilder.addKeyValPair("username",credentials.username)
+        kvbuilder.addKeyValPair("password",credentials.password)
+        kvbuilder.addKeyValPair("dryrun","False")
+        if state_credentials is not None:
+            logger.debug("state credentials found")
+            kvbuilder.addKeyValPair(statetypeSettingsCategory.prefix + 'username',state_credentials.username)
+            kvbuilder.addKeyValPair(statetypeSettingsCategory.prefix + 'password',state_credentials.password)
+
+        for key, value in selectedSettings.items():
+            kvbuilder.addKeyValPair(key,value)
+
+        handlerRequest.setKeyValList(kvbuilder.build())
+        return handlerRequest
+
+
+
+    # decprecated, marked for removal
+    # TODO: before we merge this method should be removed from the codebase!!!
     def buildRequest(self,state):
         hostDao = HostDao()
         settingsDao = SettingsDao()
