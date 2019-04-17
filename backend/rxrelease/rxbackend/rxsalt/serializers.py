@@ -4,12 +4,12 @@ from rest_framework import serializers
 from .models import SaltSettings
 from .models import SaltFormula
 from .models import SaltMinion
+from .viewmodels import SaltAction
 from ..models import Host
 from ..models import File
 from ..serializers import HostTestSerializer
 from ..serializers import FileMTMSerializer
 from ..serializers import FileSerializer
-
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -21,13 +21,21 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 
+class SaltActionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SaltAction
+        fields = ('action', 'minion', 'test')
+
+
 class SaltFormulasSerializer(serializers.ModelSerializer):
-    #files  = serializers.SlugRelatedField(
+    # files  = serializers.SlugRelatedField(
     # many=True,
     # slug_field='filename',
     # queryset=File.objects.all())
-    #files = FileMTMSerializer(many=True, queryset=File.objects.all())
+    # files = FileMTMSerializer(many=True, queryset=File.objects.all())
     files = FileSerializer(many=True)
+
     class Meta:
         model = SaltFormula
         fields = ('id', 'name', 'status', 'files')
@@ -45,7 +53,6 @@ class SaltFormulasSerializer(serializers.ModelSerializer):
             newSaltFormula.files.set(newFile)
         return newSaltFormula
 
-
     def update(self, instance, validated_data):
         files_data = validated_data.pop('files')
 
@@ -61,22 +68,20 @@ class SaltFormulasSerializer(serializers.ModelSerializer):
                 logger.debug('new file')
                 logger.debug(file_data)
                 newFile = File.objects.create(
-                filename=file_data['filename'],
-                path=file_data['path'])
+                    filename=file_data['filename'],
+                    path=file_data['path'])
                 instance.files.add(newFile)
         instance.save()
         return instance
 
 
 class SaltMinionSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = SaltMinion
         fields = ('id', 'minion_id', 'accepted', 'host')
 
 
 class SaltSettingsSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = SaltSettings
         fields = ('id', 'saltmaster')

@@ -4,6 +4,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from .views import saltsettingsview
 from .views import saltformulasview
 from .views import saltminionsview
+from .views import saltactionviews
 
 
 urlpatterns = [
@@ -14,5 +15,6 @@ urlpatterns = [
     url(r'^formulas/(?P<pk>[0-9]+)/$', saltformulasview.DetailsView.as_view(), name="details"),
     url(r'^minions/$', saltminionsview.CreateView.as_view(), name="create"),
     url(r'^minions/(?P<pk>[0-9]+)/$', saltminionsview.DetailsView.as_view(), name="details"),
+    url(r'^actions/run/$', saltactionviews.CreateView.as_view(), name="create"),
 
 ]

@@ -86,9 +86,14 @@ class SaltConfigurationPanel  extends BasicRxPanel {
       this.props.dispatch(fileActionCreators.putFileContent(this.state.selected_file,this.state.contents))
   }
 
-    testSaltFormula() {
-      alert('test!')
-    }
+  testSaltFormula() {
+
+      this.getLogger().trace('selected formula to test')
+      this.getLogger().traceObject(this.state.selected_formula)
+      var selected_formula = this.state.selected_formula
+      this.props.dispatch(saltconfigurationActionCreators.testSaltFormula(selected_formula))
+
+  }
 
   componentWillMount() {
 
@@ -156,6 +161,8 @@ class SaltConfigurationPanel  extends BasicRxPanel {
           var formula_files = StandardListConverters.convertListToMap(files,function(item) {
               return [item.getId(),item.getFilename(),item.getPath()]
           });
+          this.getLogger().trace('selected formula: ')
+          this.getLogger().traceObject(nextProps.selected_formula)
           this.setState({selected_formula: nextProps.selected_formula,salt_file_tabledata: formula_files})
 
 

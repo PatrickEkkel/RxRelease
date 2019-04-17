@@ -56,6 +56,7 @@ return function(dispatch) {
 }
 }
 
+
 export function formulaTested() {
   return {
     type: 'FORMULA_TESTED'
