@@ -117,7 +117,7 @@ class InstallHostView(generics.UpdateAPIView):
          if simple_state.installed == False:
              print("state: " + str(state))
              if base_state.statetype.handler is not None:
-              handlerRequest = RequestBuilder().buildRequest(base_state)
+              handlerRequest = RequestBuilder().build_request_with_state(base_state)
               logger.debug(str(handlerRequest))
               logger.debug("dit is het request in string formaat")
               # encode the request for transport

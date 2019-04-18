@@ -33,6 +33,7 @@ export function postSaltFormulaTest(saltformula) {
   return Axios.post(backend_url + '/rxbackend/rxsalt/actions/run/',{
     action: 'state.apply',
     minion: 'salt-master',
+    formula: saltformula.name,
     test: true
   })
 

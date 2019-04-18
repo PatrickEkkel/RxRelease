@@ -84,7 +84,7 @@ if salt_mapping.api_mode == 'SALTTESTDOCKER':
     ssh_login.send_file(id_rsa_pub,'/root/.ssh/authorized_keys')
 
 
-if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTESTDOCKER':
+if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTESTDOCKER' or salt_mapping.api_mode == 'PRODUCTION':
 
 
     ssh_connection_details = ConnectionDetails.\

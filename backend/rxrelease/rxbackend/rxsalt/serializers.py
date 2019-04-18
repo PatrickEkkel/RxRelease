@@ -25,7 +25,7 @@ class SaltActionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SaltAction
-        fields = ('action', 'minion', 'test')
+        fields = ('action', 'minion','formula', 'test')
 
 
 class SaltFormulasSerializer(serializers.ModelSerializer):
