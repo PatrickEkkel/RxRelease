@@ -51,6 +51,7 @@ salt_mapping = SaltCommandMapper.create_from_dict(data)
 host = resthosts_api.get_host_by_id(inputmapping.host_id)
 hostname = host['hostname']
 ssh_port = data['sshport']
+salt_minion_id = data['salt-minion-id']
 salt_api_port = data['saltapiport']
 salt_username = data['salt-username']
 salt_password = data['salt-password']
@@ -99,7 +100,7 @@ if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTEST
         # TODO: deze directe call naar de salt-api eruit slopen
         salt_api.cmd_run(salt_mapping.command)
     elif salt_mapping.salt_function == 'APPLYSTATE':
-        salt_service.execute_formula(salt_mapping.formula)
+        salt_service.execute_formula(salt_mapping.formula, salt_minion_id)
     elif salt_mapping.salt_function == 'LISTALLACCEPTEDMINIONS':
         minions = salt_api.list_all_unaccepted_minions()
         print(minions)

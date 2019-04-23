@@ -34,9 +34,9 @@ class SaltApi:
         api.login(self.salt_connection_details.username, self.salt_connection_details.password, 'pam')
         return api
 
-    def apply_state(self, state):
+    def apply_state(self, state, target):
         api = self._connect()
-        result = api.low([{'client': 'local', 'tgt': '*', 'fun': 'state.apply', 'arg': state}])
+        result = api.low([{'client': 'local', 'tgt': target, 'fun': 'state.apply', 'arg': state}])
         logger.debug(result)
         return result
 

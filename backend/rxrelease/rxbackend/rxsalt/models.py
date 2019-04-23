@@ -16,6 +16,16 @@ class SaltFormula(models.Model):
     files = models.ManyToManyField(File, blank=True)
 
 
+class SaltStateLog(models.Model):
+    minion = models.ForeignKey(SaltMinion, default=None, on_delete=models.PROTECT)
+    saltstate = models.CharField(max_length=255)
+    duration = models.TimeField()
+    comment = models.CharField(max_length=255)
+    start_date = models.DateTimeField()
+    sls = models.CharField(max_length=255)
+    result = models.BooleanField()
+
+
 class SaltSettings(models.Model):
     username = models.CharField(max_length=255)
     saltmaster = models.CharField(max_length=255, default=0)
