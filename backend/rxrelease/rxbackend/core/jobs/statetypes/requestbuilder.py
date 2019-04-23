@@ -28,7 +28,7 @@ class RequestBuilder:
     def build_request_with_state(self, state):
         host_dao = HostDao()
         host = host_dao.getHostById(state.host_id)
-        return build_request_with_host_and_statetype(host, state.statetype)
+        return self.build_request_with_host_and_statetype(host, state.statetype)
 
     def build_request_with_host_and_statetype(self, host, statetype):
 

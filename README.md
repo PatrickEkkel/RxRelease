@@ -3,6 +3,10 @@ external tools that are used by the various statehandlers
 
 apt-get install sshpass
 
+Arch linux 
+
+pacman -S sshpass
+
 
 To run the scheduler you need to install the following packages 
 

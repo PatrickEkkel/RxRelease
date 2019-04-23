@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from rxbackend.ssh.ssh import SSHClient
 from rxbackend.ssh.sshwrapper import SSHWrapper
+from rxbackend.ssh.connectiondetails import ConnectionDetails
 from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
 from rxbackend.core.restapi.REST_states import REST_states
 from rxbackend.core.templateparser import TemplateParser
@@ -30,7 +31,7 @@ data = json.loads(inputmapping.getKeyvalList())
 
 logger.info("Installing Salt api for " + data['os'] + " under useraccount " + data['username'])
 currenthost = data['saltmaster']
-client = SSHWrapper.with_keys(data['remoteuser'], inputmapping.getIpAddress())
+client = SSHWrapper.with_keys(data['remoteuser'], inputmapping.getIpAddress(), data['sshport'])
 current_working_dir = dir_path = os.path.dirname(os.path.realpath(__file__))
 
 logger.info('Current working dir: ' + current_working_dir)

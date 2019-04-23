@@ -27,19 +27,18 @@ class SSHWrapper:
 
 
     @classmethod
-    def with_password(self, address, username, password):
+    def with_password(self, address, username, password, port):
      connection_details = ConnectionDetails(username, password, address)
      # TODO: dit instelbaar maken op het host object
-     connection_details.port = 2222
+     connection_details.port = port
      return SSHWrapper(connection_details)
 
-
     @classmethod
-    def with_keys(self,username,address):
+    def with_keys(self,username,address,port):
      # TODO: dit instelbaar maken op het host object
      # TODO: same for the key, that is being used
      id_rsa = LocalSettings.localconfig + '/id_rsa'
-     connection_details = ConnectionDetails.new_connection_with_custom_key(username,'',address,id_rsa,2222)
+     connection_details = ConnectionDetails.new_connection_with_custom_key(username,'',address,id_rsa, port)
      return SSHWrapper(connection_details)
 
 

@@ -40,7 +40,7 @@ logger.info("Installing Salt minion for " + data['os'] + " under useraccount " +
 currenthost = data['saltmaster']
 
 
-client = SSHWrapper.with_keys(data['remoteuser'], inputmapping.getIpAddress())
+client = SSHWrapper.with_keys(data['remoteuser'], inputmapping.getIpAddress(),data['sshport'])
 
 try:
     logging_dir = '/var/log/rxrelease'

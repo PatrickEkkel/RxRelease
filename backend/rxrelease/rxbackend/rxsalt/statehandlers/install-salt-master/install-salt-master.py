@@ -30,7 +30,7 @@ logger.info("Installing Salt master for " + data['os'] + " under useraccount " +
 #client.loginWithKeys(data['remoteuser'])
 
 try:
-  client = SSHWrapper.with_keys(data['remoteuser'],inputmapping.getIpAddress())
+  client = SSHWrapper.with_keys(data['remoteuser'],inputmapping.getIpAddress(), data['sshport'])
 
   if data['os'] == "CentOS":
   # first remove salt, if it was already installed

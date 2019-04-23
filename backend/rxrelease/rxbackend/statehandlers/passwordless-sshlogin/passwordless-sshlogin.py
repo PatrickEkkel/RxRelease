@@ -13,6 +13,7 @@ from rxbackend.core.restapi.REST_states import REST_states
 from rxbackend.core.restapi.REST_authentication import REST_authentication
 from rxbackend.ssh.ssh import SSHClient
 from rxbackend.ssh.sshwrapper import SSHWrapper
+from rxbackend.ssh.connectiondetails import ConnectionDetails
 from rxbackend.core.io.rxfilestore import RxFileStore
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -48,7 +49,7 @@ if Utils.str2bool(dryrun):
 logger.info("connecting with : " + inputmapping.getIpAddress())
 # TODO: code toevoegen die connectieproblemen afvangt
 
-client = SSHWrapper.with_password(inputmapping.getIpAddress(), data["username"], data["password"])
+client = SSHWrapper.with_password(inputmapping.getIpAddress(), data["username"], data["password"], data['sshport'])
 
 # user creation on remote machine
 if client.send_command('id -u ' + remoteuser) == 1:
@@ -107,7 +108,9 @@ if client.send_command("echo '" + remoteuser + " ALL=(ALL) NOPASSWD:ALL' | sudo 
     exit(0)
 
 # on my ubuntu i need to call ssh-add to get the authentication working..
-sh.ssh_add()
+# if this file exists, we are on ubuntu, so we need to run a
+if os.path.isfile('/etc/osrelease'):
+    sh.ssh_add()
 
 reststates_api = REST_states(auth_token)
 state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(), inputmapping.getStateId())

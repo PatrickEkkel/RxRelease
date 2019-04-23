@@ -28,7 +28,7 @@ data = json.loads(inputmapping.getKeyvalList())
 resthosts_api = REST_hosts(auth_token)
 host = resthosts_api.get_host_by_id(inputmapping.host_id)
 hostname = host['hostname']
-client = SSHWrapper.with_password(inputmapping.getIpAddress(), data["username"], data["password"])
+client = SSHWrapper.with_password(inputmapping.getIpAddress(), data["username"], data["password"], data['sshport'])
 client.send_blocking_command("hostname " + hostname)
 client.send_blocking_command("echo '" + hostname + "' > /etc/hostname")
 
