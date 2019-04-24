@@ -50,6 +50,7 @@ salt_mapping = SaltCommandMapper.create_from_dict(data)
 
 host = resthosts_api.get_host_by_id(inputmapping.host_id)
 hostname = host['hostname']
+remote_user = data['remoteuser']
 ssh_port = data['sshport']
 salt_minion_id = data['salt-minion-id']
 salt_api_port = data['saltapiport']
@@ -63,6 +64,8 @@ salt_master = inputmapping.ipaddress
 tmp_dir = '/tmp/saltmock/'
 id_rsa = tmp_dir + 'id_rsa'
 
+
+ssh_connection_details = None
 # TODO: zmq berichten underscores laten ondersteunen, dit begint vervelend te worden
 if salt_mapping.api_mode == 'SALTTESTDOCKER':
     logger.debug("Creating intermediate SSH key for accessing the mock salt-master")
@@ -84,13 +87,14 @@ if salt_mapping.api_mode == 'SALTTESTDOCKER':
     ssh_login = SSHWrapper.with_connection_details(connection_details)
     ssh_login.send_blocking_command('mkdir /root/.ssh')
     ssh_login.send_file(id_rsa_pub,'/root/.ssh/authorized_keys')
+    ssh_connection_details = ConnectionDetails.\
+        new_connection_with_custom_key(host_username, host_password, salt_master, id_rsa, ssh_port)
+elif salt_mapping.api_mode == 'PRODUCTION':
+    id_rsa = LocalSettings.localconfig + '/id_rsa'
+    ssh_connection_details = ConnectionDetails.new_connection_with_custom_key(remote_user,'',salt_master, id_rsa, ssh_port)
 
 
 if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTESTDOCKER' or salt_mapping.api_mode == 'PRODUCTION':
-
-
-    ssh_connection_details = ConnectionDetails.\
-        new_connection_with_custom_key(host_username, host_password, salt_master, id_rsa, ssh_port)
 
     salt_connection_details = SaltConnectionDetails(salt_username, salt_password, salt_master, salt_api_port)
     salt_service = SaltService(ssh_connection_details, salt_connection_details, auth_token)

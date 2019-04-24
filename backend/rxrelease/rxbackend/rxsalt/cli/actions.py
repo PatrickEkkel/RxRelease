@@ -1,6 +1,7 @@
 import glob
 from backend.rxrelease.rxbackend.core.cli.connection import Connection
 from backend.rxrelease.rxbackend.core.cli.modulecli import ModuleCLI
+from backend.rxrelease.rxbackend.configuration.globalsettings import RemoteSettings
 
 SALT_API_MODE = 'SALTTESTDOCKER'
 
@@ -17,6 +18,7 @@ def salt_help():
     print("send_salt_command() -> N.A")
     print('init_salt_db() -> initializes the salt portion of the database ')
     print("accept_minion('minion-id') -> accepts minion to the salt-master")
+    print("apply_state('statename', 'salt-master', True) -> apply a salt state to a salt minion")
 
 
 def send_salt_ping(minion_id):
@@ -55,7 +57,8 @@ def send_salt_dryrun_command(minion_id, command):
 
 
 def apply_state(state, minion_id, test):
-    global SALT_API_MODE
+    #global SALT_API_MODE
+    #SALT_API_MODE = 'PRODUCTION'
     connection = Connection.get_connection()
     salt_master = 'salt-master'
     sshport = connection.module_cli_api.get_setting_from_host(salt_master, 'sshport')[0]['value']
@@ -70,7 +73,7 @@ def apply_state(state, minion_id, test):
     settings_dict = {
         'dryrun': 'False'
         , 'salt-minion-id': minion_id
-        , 'api-mode': SALT_API_MODE
+        , 'api-mode': 'PRODUCTION'
         , 'salt-function': 'APPLYSTATE'
         , 'salt-formula': state
         , 'sshport': sshport
@@ -78,6 +81,7 @@ def apply_state(state, minion_id, test):
         , 'salt-username': salt_username
         , 'salt-password': salt_password
         , 'test': test
+        , 'remoteuser': RemoteSettings.remoteuser
     }
     action = connection.action_factory\
         .create_action_from_host(salt_master, settings_dict, statetype)
@@ -99,14 +103,15 @@ def accept_minion(hostname):
     settings_dict = {
         'dryrun': 'False'
         , 'salt-minion-id': 'None'
-        , 'api-mode': SALT_API_MODE
+        , 'api-mode': 'PRODUCTION'
         , 'salt-function': 'ACCEPTMINION'
         , 'sshport': sshport
         , 'saltapiport': saltapiport
         , 'salt-username': salt_username
         , 'salt-password': salt_password
         , 'test': 'False'
-        }
+        , 'remoteuser': RemoteSettings.remoteuser
+    }
     action = connection.action_factory\
             .create_action_from_host(salt_master, settings_dict, statetype)
     connection.scheduler_service.schedule_state(action)

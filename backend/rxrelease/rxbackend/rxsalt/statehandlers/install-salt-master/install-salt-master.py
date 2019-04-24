@@ -2,7 +2,7 @@ from rxbackend.ssh.ssh import SSHClient
 from rxbackend.ssh.sshwrapper import SSHWrapper
 from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
 from rxbackend.core.restapi.REST_states import REST_states
-from rxbackend.configuration.globalsettings import ApiUserSettings
+from rxbackend.configuration.globalsettings import ApiUserSettings,RemoteSettings
 from rxbackend.core.restapi.REST_authentication import REST_authentication
 from rxbackend.core.jobs.statehandlers.statemanager import StateManager
 import logging,paramiko,sh,sys,json
@@ -39,6 +39,7 @@ try:
    client.send_blocking_command('sudo rm -rf /etc/salt')
    client.send_blocking_command('sudo yum install -y salt-master')
    client.send_blocking_command('sudo systemctl start salt-master')
+   client.send_blocking_command('sudo chown -R ' + RemoteSettings.remoteuser + ':users' + ' /srv/salt')
 
    reststates_api = REST_states(auth_token)
    state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),inputmapping.getStateId())
