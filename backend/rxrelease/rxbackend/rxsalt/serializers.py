@@ -4,6 +4,7 @@ from rest_framework import serializers
 from .models import SaltSettings
 from .models import SaltFormula
 from .models import SaltMinion
+from .models import SaltStateLog
 from .viewmodels import SaltAction
 from ..models import Host
 from ..models import File
@@ -22,18 +23,18 @@ logger.addHandler(ch)
 
 
 class SaltActionSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = SaltAction
-        fields = ('action', 'minion','formula', 'test')
+        fields = ('action', 'minion', 'formula', 'test')
+
+
+class SaltStateLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SaltStateLog
+        fields = ('minion', 'saltstate', 'duration', 'comment', 'start_date', 'sls', 'result')
 
 
 class SaltFormulasSerializer(serializers.ModelSerializer):
-    # files  = serializers.SlugRelatedField(
-    # many=True,
-    # slug_field='filename',
-    # queryset=File.objects.all())
-    # files = FileMTMSerializer(many=True, queryset=File.objects.all())
     files = FileSerializer(many=True)
 
     class Meta:

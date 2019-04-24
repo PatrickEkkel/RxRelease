@@ -21,7 +21,7 @@ class SaltStateLog(models.Model):
     saltstate = models.CharField(max_length=255)
     duration = models.TimeField()
     comment = models.CharField(max_length=255)
-    start_date = models.DateTimeField()
+    start_date = models.DateField()
     sls = models.CharField(max_length=255)
     result = models.BooleanField()
 

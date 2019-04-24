@@ -3,6 +3,7 @@ import sys
 import os
 from rxbackend.rxsalt.api.salt_api import SaltApi
 from rxbackend.rxsalt.restapi.REST_minions import REST_minions
+from rxbackend.rxsalt.restapi.REST_saltlogs import REST_saltlogs
 from rxbackend.rxsalt.api.salt_command import SaltDataRoot
 from rxbackend.rxsalt.api.salt_logservice import SaltLogService
 
@@ -29,12 +30,18 @@ class SaltService:
         self.salt_api.sync_formula(formula_name)
         salt_response = self.salt_api.apply_state(formula_name, target)
         salt_data = SaltDataRoot(salt_response)
-
+        saltlogs_api = REST_saltlogs(self._auth_token)
         for i in range(salt_data.get_size()):
-            print('show me some info')
-            print(salt_data.get_data(i).get_states(0).get_comment())
-            print(salt_data.get_data(i).get_states(0).get_name())
-            print(salt_data.get_data(i).get_states(0).get_start_time())
+            # print('show me some info')
+            # print(salt_data.get_data(i).get_states(0).get_comment())
+            # print(salt_data.get_data(i).get_states(0).get_name())
+            # print(salt_data.get_data(i).get_states(0).get_start_time())
+
+            salt_log = {'comment': salt_data.get_data(i).get_states(0).get_comment(),
+                        'saltstate': salt_data.get_data(i).get_states(0).get_name(),
+                        'sls': salt_data.get_data(i).get_states(0).get_sls()
+                        }
+            saltlogs_api.post_log(salt_log)
 
         salt_logservice.write_apply_state()
 
