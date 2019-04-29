@@ -18,6 +18,8 @@ urlpatterns = [
     url(r'^formulas/(?P<pk>[0-9]+)/$', saltformulasview.DetailsView.as_view(), name="details"),
     url(r'^minions/$', saltminionsview.CreateView.as_view(), name="create"),
     url(r'^minions/(?P<pk>[0-9]+)/$', saltminionsview.DetailsView.as_view(), name="details"),
+    url(r'^minions/search/$', saltminionsview.SearchView.as_view(), name="byname"),
+
     url(r'^actions/run/$', saltactionviews.CreateView.as_view(), name="create"),
 
 

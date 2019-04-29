@@ -29,6 +29,9 @@ class SaltMinionChild:
         for key in self._data.keys():
             self._children.append(SaltStateChild(self._data[key]))
 
+    def get_states_size(self):
+        return len(self._children)
+
     def get_states(self, index):
         return self._children[index]
 
@@ -41,14 +44,25 @@ class SaltStateChild:
     def get_comment(self):
         return self._data['comment']
 
+    def get_duration(self):
+        return self._data['duration']
+
     def get_start_time(self):
         return self._data['start_time']
 
     def get_sls(self):
-        return self._data['sls']
+        return self._data['__sls__']
 
     def get_name(self):
         return self._data['name']
+
+    def get_run_num(self):
+        return self._data['__run_num__']
+    def get_changes(self):
+        return self._data['changes']
+
+    def get_result(self):
+        return self._data['result']
 
 class SaltDataChild:
     def __init__(self, _data):

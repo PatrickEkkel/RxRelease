@@ -11,6 +11,14 @@ class REST_minions(REST_base):
      super().__init__(auth_token)
      self.backendlocation = NetworkSettings.protocol + "://" + NetworkSettings.servername + ":" + NetworkSettings.port
 
+
+    def get_minion_by_name(self,name):
+        serverAddress = self.backendlocation + '/rxbackend/rxsalt/minions/search/?minion_id=' + str(name)
+        response = requests.get(serverAddress, headers=self.getAuthTokenHeader())
+        result = response.json()
+        return result
+
+
     def post_minion(self,minion):
           serverAddress= self.backendlocation +  '/rxbackend/rxsalt/minions/'
           headers = {'content-type': 'application/json'}

@@ -1,11 +1,11 @@
 import logging
 import sys
 import os
+from datetime import datetime
 from rxbackend.rxsalt.api.salt_api import SaltApi
 from rxbackend.rxsalt.restapi.REST_minions import REST_minions
 from rxbackend.rxsalt.restapi.REST_saltlogs import REST_saltlogs
 from rxbackend.rxsalt.api.salt_command import SaltDataRoot
-from rxbackend.rxsalt.api.salt_logservice import SaltLogService
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -22,7 +22,6 @@ class SaltService:
     def __init__(self, ssh_connection, salt_connection, auth_token):
         self.salt_api = SaltApi(ssh_connection, salt_connection)
         self._auth_token = auth_token
-        self.salt_logservice = SaltLogService()
 
     def execute_formula(self, formula_name, target):
 
@@ -31,19 +30,25 @@ class SaltService:
         salt_response = self.salt_api.apply_state(formula_name, target)
         salt_data = SaltDataRoot(salt_response)
         saltlogs_api = REST_saltlogs(self._auth_token)
+        saltminion_api = REST_minions(self._auth_token)
+        targeted_minion = saltminion_api.get_minion_by_name(target)
         for i in range(salt_data.get_size()):
-            # print('show me some info')
-            # print(salt_data.get_data(i).get_states(0).get_comment())
-            # print(salt_data.get_data(i).get_states(0).get_name())
-            # print(salt_data.get_data(i).get_states(0).get_start_time())
+            current_data_element = salt_data.get_data(i)
+            for x in range(current_data_element.get_states_size()):
 
-            salt_log = {'comment': salt_data.get_data(i).get_states(0).get_comment(),
-                        'saltstate': salt_data.get_data(i).get_states(0).get_name(),
-                        'sls': salt_data.get_data(i).get_states(0).get_sls()
-                        }
-            saltlogs_api.post_log(salt_log)
+                salt_log = {'comment': current_data_element.get_states(x).get_comment(),
+                'saltstate': current_data_element.get_states(x).get_name(),
+                'sls': current_data_element.get_states(x).get_sls(),
+                'duration': current_data_element.get_states(x).get_duration(),
+                'start_date': str(datetime.now().strftime('%Y-%m-%d')),
+                'start_time': current_data_element.get_states(x).get_start_time(),
+                'result': str(current_data_element.get_states(x).get_result()),
+                'run_num': current_data_element.get_states(x).get_run_num(),
+                'changes': '',
+                'minion': targeted_minion[0]['id']
+                }
+                saltlogs_api.post_log(salt_log)
 
-        salt_logservice.write_apply_state()
 
     def accept_minion(self, host):
         minions = self.salt_api.list_all_unaccepted_minions()
