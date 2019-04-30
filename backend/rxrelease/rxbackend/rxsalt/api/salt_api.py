@@ -28,10 +28,11 @@ class SaltApi:
 
     def _connect(self):
         api = Pepper(('http://'
-         + self.salt_connection_details.salt_master
-         + ':'
-         + str(self.salt_connection_details.port)))
-        api.login(self.salt_connection_details.username, self.salt_connection_details.password, 'pam')
+                      + self.salt_connection_details.salt_master
+                      + ':'
+                      + str(self.salt_connection_details.port)))
+        api.login(self.salt_connection_details.username, self.salt_connection_details.password,
+                  'pam')
         return api
 
     def apply_state(self, state, target):
@@ -72,13 +73,14 @@ class SaltApi:
         for root, dirs, files in os.walk(localstore.get_filestore_location_with_context()):
             for file in files:
                 zip_root = os.path.relpath(os.path.join(root, file),
-                                      localstore.get_filestore_location_with_context())
+                                           localstore.get_filestore_location_with_context())
                 zf.write(os.path.join(root, file), zip_root)
 
         zf.close()
         client.send_file(zf.filename, formula_dir)
-        client.send_blocking_command('cd ' + formula_dir + ' && unzip -o ' + ntpath.basename(zf.filename))
-        client.send_blocking_command('cd ' + formula_dir + '&& rm ' +  ntpath.basename(zf.filename))
+        client.send_blocking_command(
+            'cd ' + formula_dir + ' && unzip -o ' + ntpath.basename(zf.filename))
+        client.send_blocking_command('cd ' + formula_dir + '&& rm ' + ntpath.basename(zf.filename))
 
     def ping(self, target):
         api = self._connect()

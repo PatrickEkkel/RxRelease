@@ -11,7 +11,6 @@ class SaltMinion(models.Model):
 
 class SaltFormula(models.Model):
     name = models.CharField(max_length=255)
-    # file = models.CharField(max_length=8000)
     status = models.CharField(max_length=255, default=0)
     files = models.ManyToManyField(File, blank=True)
 
@@ -19,12 +18,14 @@ class SaltFormula(models.Model):
 class SaltStateLog(models.Model):
     minion = models.ForeignKey(SaltMinion, default=None, on_delete=models.PROTECT)
     saltstate = models.CharField(max_length=255)
+    test = models.BooleanField(default=None)
+    type = models.CharField(max_length=255, default='')
     duration = models.CharField(max_length=255)
     comment = models.CharField(max_length=255)
     start_date = models.DateField()
-    start_time = models.CharField(max_length=255,default=None)
+    start_time = models.CharField(max_length=255, default=None)
     run_num = models.IntegerField(default=0)
-    changes = models.CharField(max_length=4000,default='',blank=True)
+    changes = models.CharField(max_length=4000, default='', blank=True)
     sls = models.CharField(max_length=255)
     result = models.BooleanField()
 

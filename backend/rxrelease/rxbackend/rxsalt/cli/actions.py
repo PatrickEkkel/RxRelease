@@ -53,7 +53,7 @@ def send_salt_dryrun_command(minion_id, command):
     send_salt_command(minion_id, command, SALT_API_MODE)
 
 
-def apply_state(state, minion_id):
+def apply_state(state, minion_id, test):
     global SALT_API_MODE
     connection = Connection.get_connection()
     salt_master = 'salt-master'
@@ -76,6 +76,7 @@ def apply_state(state, minion_id):
         , 'saltapiport': saltapiport
         , 'salt-username': salt_username
         , 'salt-password': salt_password
+        , 'test': test
     }
     action = connection.action_factory\
         .create_action_from_host(salt_master, settings_dict, statetype)

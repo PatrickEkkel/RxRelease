@@ -10,7 +10,7 @@ api = Pepper('http://localhost:8888')
 # print(api)
 
 
-api.login('test', 'test', 'pam')
+api.login('gekkehenkie', 'gekkehenkie', 'pam')
 
 
 # run a command on the minion
@@ -25,4 +25,4 @@ api.login('test', 'test', 'pam')
 # print(api.low([{'client': 'wheel', 'tgt': '*', 'fun': 'key.accept', 'match': 'b9840e25adfd'}]))
 
 
-print(api.low([{'client': 'local','tgt': '*','fun': 'state.apply','arg': 'utils'}]))
+print(api.low([{'client': 'local','tgt': 'salt-master','fun': 'state.apply','arg': 'utils','dryrun': 'True'}]))

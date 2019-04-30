@@ -18,12 +18,14 @@ logger.addHandler(ch)
 
 
 class SaltService:
-
+    APPLY_STATE = 'APPLY_STATE'
+    ACCEPT_MINION = 'ACCEPT_MINION'
+    
     def __init__(self, ssh_connection, salt_connection, auth_token):
         self.salt_api = SaltApi(ssh_connection, salt_connection)
         self._auth_token = auth_token
 
-    def execute_formula(self, formula_name, target):
+    def execute_formula(self, formula_name, target,test):
 
         # first get the state we want to apply and sync it to the master
         self.salt_api.sync_formula(formula_name)
@@ -35,20 +37,20 @@ class SaltService:
         for i in range(salt_data.get_size()):
             current_data_element = salt_data.get_data(i)
             for x in range(current_data_element.get_states_size()):
-
                 salt_log = {'comment': current_data_element.get_states(x).get_comment(),
-                'saltstate': current_data_element.get_states(x).get_name(),
-                'sls': current_data_element.get_states(x).get_sls(),
-                'duration': current_data_element.get_states(x).get_duration(),
-                'start_date': str(datetime.now().strftime('%Y-%m-%d')),
-                'start_time': current_data_element.get_states(x).get_start_time(),
-                'result': str(current_data_element.get_states(x).get_result()),
-                'run_num': current_data_element.get_states(x).get_run_num(),
-                'changes': '',
-                'minion': targeted_minion[0]['id']
-                }
+                            'saltstate': current_data_element.get_states(x).get_name(),
+                            'sls': current_data_element.get_states(x).get_sls(),
+                            'duration': current_data_element.get_states(x).get_duration(),
+                            'start_date': str(datetime.now().strftime('%Y-%m-%d')),
+                            'start_time': current_data_element.get_states(x).get_start_time(),
+                            'result': str(current_data_element.get_states(x).get_result()),
+                            'run_num': current_data_element.get_states(x).get_run_num(),
+                            'changes': '',
+                            'type': self.APPLY_STATE,
+                            'test': test,
+                            'minion': targeted_minion[0]['id']
+                            }
                 saltlogs_api.post_log(salt_log)
-
 
     def accept_minion(self, host):
         minions = self.salt_api.list_all_unaccepted_minions()
@@ -60,7 +62,8 @@ class SaltService:
 
                 salt_result = SaltDataRoot(result)
                 if salt_result.get_data(0).get_success() == True:
-                    logger.debug("accepting minion succesfull register minion  " + minion + " in the backend")
+                    logger.debug(
+                        "accepting minion succesfull register minion  " + minion + " in the backend")
 
                     minion_api = REST_minions(self._auth_token)
                     # This is the first time we post an object from a statehandler context,
@@ -77,7 +80,8 @@ class SaltService:
                     return False
 
         if result is None:
-            logger.error('no salt-minion found with hostname: ' + host['hostname'] + ' that has unaccepted keys')
+            logger.error('no salt-minion found with hostname: ' + host[
+                'hostname'] + ' that has unaccepted keys')
             return False
 
     def accept_unaccepted_minions(self):

@@ -55,6 +55,7 @@ salt_minion_id = data['salt-minion-id']
 salt_api_port = data['saltapiport']
 salt_username = data['salt-username']
 salt_password = data['salt-password']
+test = data['test']
 
 host_username = 'root'
 host_password = 'test'
