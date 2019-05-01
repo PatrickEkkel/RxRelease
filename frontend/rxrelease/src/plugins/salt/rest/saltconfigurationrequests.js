@@ -26,6 +26,9 @@ export function putSaltFormula(saltformula) {
   })
 }
 
+export function getLastSaltLogByFormulaname(saltformula) {
+  return Axios.get(GlobalSettings.getBackendUrl() + '/rxbackend/rxsalt/logs/latest/?name=' + saltformula.getName());
+}
 
 export function postSaltFormulaTest(saltformula) {
 

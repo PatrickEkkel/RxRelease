@@ -11,6 +11,7 @@ from .views import saltactionviews
 urlpatterns = [
     url(r'^logs/$', saltstatelogviews.CreateView.as_view(), name="create"),
     url(r'^logs/(?P<pk>[0-9]+)/$', saltstatelogviews.DetailsView.as_view(), name="details"),
+    url(r'^logs/latest/$', saltstatelogviews.LastResultView.as_view(), name="byname"),
 
     url(r'^settings/$', saltsettingsview.CreateView.as_view(), name="create"),
     url(r'^settings/(?P<pk>[0-9]+)/$', saltsettingsview.DetailsView.as_view(), name="details"),

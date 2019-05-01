@@ -211,6 +211,8 @@ class SaltConfigurationPanel  extends BasicRxPanel {
     var formulaHeaders = ['','','']
     var fileHeaders = ['']
 
+    var saltlogHeaders = ['Minion','Saltstate','Type','Duration','Comment','Start date','Start time','SLS']
+    var saltlogrows = []
     var formulas = this.state.saltformulas_tabledata
     var files = this.state.salt_file_tabledata
     var selected_formula = this.state.selected_formula
@@ -218,6 +220,8 @@ class SaltConfigurationPanel  extends BasicRxPanel {
 
     this.getLogger().trace("Selected formula: ")
     this.getLogger().traceObject(selected_formula)
+
+
     return <div className="tab-content container form-group row">
               <div className="container" >
                         <Modal title="New Salt Formula" saveAndClose={() => this.saveAndCloseNewSaltFormula()} close={() => this.close()} showModal={this.state.showSaltModal}>
@@ -272,8 +276,25 @@ class SaltConfigurationPanel  extends BasicRxPanel {
                   <Button title="New Formula" onClick={() => this.createFormula()}/>&nbsp;
                   <Button title="Save Formula" onClick={() => this.saveFormula()}/>  </div>
                </div>
+             <br/>
              </div>
-            </div>
+
+             <div className="row"><div className='col-md-9'>&nbsp;</div></div>
+             <div className="row">
+               <div className="col-md-2"></div>
+               <div className="col-md-3 text-left"><h4><b>Test results</b></h4></div>
+
+               <div className='col-md-9'>&nbsp; </div>
+             </div>
+
+             <div className="row">
+               <div className="col-md-2 text-right"></div>
+
+               <div className="col-md-9 text-left">
+                <Table headers = {saltlogHeaders} data={saltlogrows} onRowClick={(entry) => this.onFileRowClick(entry)}/>
+              </div>
+             </div>
+          </div>
   }
 }
 
