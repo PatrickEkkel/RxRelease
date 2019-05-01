@@ -6,4 +6,4 @@ class SaltAction(models.Model):
     action = models.CharField(max_length=255)
     minion = models.CharField(max_length=255)
     formula = models.CharField(max_length=255)
-    test = models.BooleanField()
+    test = models.CharField(max_length=10)

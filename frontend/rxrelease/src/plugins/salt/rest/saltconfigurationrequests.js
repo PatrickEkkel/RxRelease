@@ -34,7 +34,7 @@ export function postSaltFormulaTest(saltformula) {
     action: 'state.apply',
     minion: 'salt-master',
     formula: saltformula.name,
-    test: true
+    test: 'True'
   })
 
 }

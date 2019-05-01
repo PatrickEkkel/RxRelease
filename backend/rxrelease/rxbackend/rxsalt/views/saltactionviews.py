@@ -35,7 +35,7 @@ class CreateView(views.APIView):
         data = self.request.data
         minion = data['minion']
         formula = data['formula']
-
+        test = data['test']
         host = Host.objects.filter(hostname=minion).get()
         statetype = StateType.objects.filter(name='Salt-Run-State').get()
         credential_settings = CredentialsSetting.objects.filter(category__name='Salt Settings').get()
@@ -46,6 +46,8 @@ class CreateView(views.APIView):
         request_builder.kvbuilder.addKeyValPair('salt-password',credential_settings.password)
         request_builder.kvbuilder.addKeyValPair('salt-function','APPLYSTATE')
         request_builder.kvbuilder.addKeyValPair('api-mode','SALTTESTDOCKER')
+        request_builder.kvbuilder.addKeyValPair('salt-minion-id','salt-master')
+        request_builder.kvbuilder.addKeyValPair('test',test)
         request_builder.kvbuilder.addKeyValPair('salt-formula',formula)
         logger.debug('kvbuilder contents')
         logger.debug(request_builder.kvbuilder.build())
