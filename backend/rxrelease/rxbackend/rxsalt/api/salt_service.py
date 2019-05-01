@@ -20,16 +20,16 @@ logger.addHandler(ch)
 class SaltService:
     APPLY_STATE = 'APPLY_STATE'
     ACCEPT_MINION = 'ACCEPT_MINION'
-    
+
     def __init__(self, ssh_connection, salt_connection, auth_token):
         self.salt_api = SaltApi(ssh_connection, salt_connection)
         self._auth_token = auth_token
 
-    def execute_formula(self, formula_name, target,test):
+    def execute_formula(self, formula_name, target, test):
 
         # first get the state we want to apply and sync it to the master
         self.salt_api.sync_formula(formula_name)
-        salt_response = self.salt_api.apply_state(formula_name, target)
+        salt_response = self.salt_api.apply_state(formula_name, target, test)
         salt_data = SaltDataRoot(salt_response)
         saltlogs_api = REST_saltlogs(self._auth_token)
         saltminion_api = REST_minions(self._auth_token)

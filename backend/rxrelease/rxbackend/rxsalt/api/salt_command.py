@@ -58,11 +58,16 @@ class SaltStateChild:
 
     def get_run_num(self):
         return self._data['__run_num__']
+
     def get_changes(self):
         return self._data['changes']
 
     def get_result(self):
-        return self._data['result']
+        if self._data['result'] is not None:
+            return self._data['result']
+        else:
+            return True
+
 
 class SaltDataChild:
     def __init__(self, _data):
@@ -86,8 +91,6 @@ class SaltDataRoot:
             if 'data' in child:
                 self._children.append(SaltDataChild(child))
             else:
-                print('show me all the keys')
-                print(child.keys())
                 for minion in child.keys():
                     self._children.append(SaltMinionChild(child[minion]))
 

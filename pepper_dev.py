@@ -14,7 +14,7 @@ api.login('gekkehenkie', 'gekkehenkie', 'pam')
 
 
 # run a command on the minion
-# print(api.low([{'client': 'local','tgt': '*','fun': 'cmd.run','arg': 'cd / && ls -al'}]))
+#print(api.low([{'client': 'local','tgt': 'salt-master','fun': 'cmd.run','arg': 'salt state.apply utils test=True'}]))
 
 # run connectivy test
 # print(api.low([{'client': 'local', 'tgt': 'test-minion', 'fun': 'test.ping'}]))
@@ -25,4 +25,4 @@ api.login('gekkehenkie', 'gekkehenkie', 'pam')
 # print(api.low([{'client': 'wheel', 'tgt': '*', 'fun': 'key.accept', 'match': 'b9840e25adfd'}]))
 
 
-print(api.low([{'client': 'local','tgt': 'salt-master','fun': 'state.apply','arg': 'utils','dryrun': 'True'}]))
+print(api.low([{'client': 'local','tgt': 'salt-master','fun': 'state.apply','arg': ["utils","test=True"]}]))

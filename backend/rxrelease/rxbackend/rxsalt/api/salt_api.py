@@ -35,9 +35,10 @@ class SaltApi:
                   'pam')
         return api
 
-    def apply_state(self, state, target):
+    def apply_state(self, state, target, test):
         api = self._connect()
-        result = api.low([{'client': 'local', 'tgt': target, 'fun': 'state.apply', 'arg': state}])
+        result = api.low([{'client': 'local', 'tgt': target, 'fun': 'state.apply',
+                           'arg': [state, 'test=' + test]}])
         logger.debug(result)
         return result
 

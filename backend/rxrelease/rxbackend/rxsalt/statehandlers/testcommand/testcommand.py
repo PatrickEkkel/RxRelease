@@ -101,7 +101,7 @@ if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTEST
         # TODO: deze directe call naar de salt-api eruit slopen
         salt_api.cmd_run(salt_mapping.command)
     elif salt_mapping.salt_function == 'APPLYSTATE':
-        salt_service.execute_formula(salt_mapping.formula, salt_minion_id)
+        salt_service.execute_formula(salt_mapping.formula, salt_minion_id, test)
     elif salt_mapping.salt_function == 'LISTALLACCEPTEDMINIONS':
         minions = salt_api.list_all_unaccepted_minions()
         print(minions)
