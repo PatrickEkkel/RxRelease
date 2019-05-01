@@ -104,7 +104,8 @@ def accept_minion(hostname):
         , 'saltapiport': saltapiport
         , 'salt-username': salt_username
         , 'salt-password': salt_password
-    }
+        , 'test': 'False' 
+        }
     action = connection.action_factory\
             .create_action_from_host(salt_master, settings_dict, statetype)
     connection.scheduler_service.schedule_state(action)

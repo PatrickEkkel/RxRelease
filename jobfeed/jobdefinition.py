@@ -68,6 +68,7 @@ class JobDefinition:
          time.sleep(polling_frequenty)
          logger.info("checking task  " + self.jobName + " for completion")
          state = statesApi.getStateByHostAndStateTypeId(statetypeRequest.getHostId(),statetypeRequest.getStateTypeId())
+         logger.debug('state info: ' + str(state))
          # NOTE: dit wordt wel weer anders gedaan straks als we de complex state moeten gaan ondersteunen
          job_state = self.check_job_for_completion(state[0])
          if job_state == 'STATE_INSTALLED' or job_state == 'REPEATABLE_STATE':
