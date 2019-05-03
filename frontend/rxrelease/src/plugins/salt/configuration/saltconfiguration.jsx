@@ -164,9 +164,6 @@ class SaltConfigurationPanel  extends BasicRxPanel {
           this.getLogger().trace('selected formula: ')
           this.getLogger().traceObject(nextProps.selected_formula)
           this.setState({selected_formula: nextProps.selected_formula,salt_file_tabledata: formula_files})
-
-
-
        break;
       case 'OPEN_NEW_SALTFORMULA':
           this.setState({showSaltModal: nextProps.showModal})
@@ -208,7 +205,7 @@ class SaltConfigurationPanel  extends BasicRxPanel {
   }
 
   render() {
-    var formulaHeaders = ['','','']
+    var formulaHeaders = ['']
     var fileHeaders = ['']
 
     var saltlogHeaders = ['Minion','Saltstate','Type','Duration','Comment','Start date','Start time','SLS']
@@ -233,33 +230,25 @@ class SaltConfigurationPanel  extends BasicRxPanel {
                 <div className="row">
                   <div className="col-md-1">&nbsp;</div>
                 </div>
-                <div className="row">
-                 <div className="col-md-2">
-                  <span className="pull-right">
-                   <Button title="-" onClick={() => this.testSaltFormula()}/>&nbsp;
-                   <Button title="+" onClick={() => this.createFile()}/>&nbsp;
-                  </span>
-                 </div>
-                </div>
-                <div className="row">
-                 <div className="col-md-2">
-                  &nbsp;
-                 </div>
 
-                 <div className="col-md-6"><h5><b>salt-formula</b>:&nbsp; <i>{this.state.selected_formula.getName()}</i></h5></div>
-                 <div className="col-md-2"></div>
+                <div className="row">
+                 <div className="col-md-5"><h5><b>salt-formula</b>:&nbsp; <i>{this.state.selected_formula.getName()}</i></h5></div>
+                 <div className="col-md-3"></div>
                  <div className="col-md-2"><b><span className="pull-left">Formulas</span></b></div>
+                 <div className="col-md-2"><b><span className="pull-left">Files</span></b></div>
+
                 </div>
-                <div className="row h-100">
-                  <div className="col-md-2">
-                      <Table headers = {fileHeaders} data={files} onRowClick={(entry) => this.onFileRowClick(entry)}/>
-                  </div>
+                <div className="row h-100 ">
                   <div className="col-md-8 h-100">
                       <YAMLEditor code={code} changeAttr={(e) => this.changeYml(e)}/>
                   </div>
-                  <div className="col">
+                  <div className="col-md-2">
                       <Table headers = {formulaHeaders} data={formulas} onRowClick={(entry) => this.onFormulaRowClick(entry)}/>
                   </div>
+                  <div className="col-md-2">
+                      <Table headers = {fileHeaders} data={files} onRowClick={(entry) => this.onFileRowClick(entry)}/>
+                  </div>
+
                 </div>
                 <div className="row">
                 <div className="col-md-1"></div>
@@ -269,9 +258,13 @@ class SaltConfigurationPanel  extends BasicRxPanel {
              <div className="container no-gutters">
                <div className="row"><div className="col-md-1">&nbsp;</div></div>
                <div className="row ">
-                <div className="col-md-2 text-right"></div>
-                <div className="col-md-3 text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                <div className="col-md-4 text-right">
+                <div className="col-md-2 text-right">         <span className="pull-left">
+                   <Button title="-" onClick={() => this.testSaltFormula()}/>&nbsp;
+                   <Button title="+" onClick={() => this.createFile()}/>&nbsp;
+                </span></div>
+                <div className="col-md-1 text-left">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                <div className="col-md-5 text-right">
+
                   <Button title="Test Formula" css="btn btn-success" onClick={() => this.testSaltFormula()}/>&nbsp;
                   <Button title="New Formula" onClick={() => this.createFormula()}/>&nbsp;
                   <Button title="Save Formula" onClick={() => this.saveFormula()}/>  </div>
@@ -281,16 +274,13 @@ class SaltConfigurationPanel  extends BasicRxPanel {
 
              <div className="row"><div className='col-md-9'>&nbsp;</div></div>
              <div className="row">
-               <div className="col-md-2"></div>
                <div className="col-md-3 text-left"><h4><b>Test results</b></h4></div>
 
                <div className='col-md-9'>&nbsp; </div>
              </div>
 
              <div className="row">
-               <div className="col-md-2 text-right"></div>
-
-               <div className="col-md-9 text-left">
+                 <div className="col-md-9 text-left">
                 <Table headers = {saltlogHeaders} data={saltlogrows} onRowClick={(entry) => this.onFileRowClick(entry)}/>
               </div>
              </div>
