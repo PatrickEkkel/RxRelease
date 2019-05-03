@@ -26,6 +26,6 @@ class LastResultView(generics.ListAPIView):
 
 
         if name is not None:
-            return SaltStateLog.objects.filter(saltstate=name).order_by('-start_date','-start_time')[:5]
+            return SaltStateLog.objects.filter(sls=name).order_by('-start_date','-start_time')[:5]
         else:
             return SaltStateLog.objects.all()

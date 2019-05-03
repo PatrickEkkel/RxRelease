@@ -158,12 +158,21 @@ class SaltConfigurationPanel  extends BasicRxPanel {
           break;
       case 'SELECT_SALT_FORMULA':
           var files = nextProps.selected_formula.getFiles()
+          var formula_logs = nextProps.selected_formula.getSaltlogs()
+
+
           var formula_files = StandardListConverters.convertListToMap(files,function(item) {
               return [item.getId(),item.getFilename(),item.getPath()]
           });
+
+          formula_logs = StandardListConverters.convertListToMap(formula_logs, function(item) {
+            return [item.getId(),item.getMinion(),item.getSaltState(),item.getType(),item.getComment(),item.getStartdate(),item.getStartTime(),item.getSls()]
+
+          })
+
           this.getLogger().trace('selected formula: ')
           this.getLogger().traceObject(nextProps.selected_formula)
-          this.setState({selected_formula: nextProps.selected_formula,salt_file_tabledata: formula_files})
+          this.setState({selected_formula: nextProps.selected_formula,salt_file_tabledata: formula_files, formula_logs: formula_logs})
        break;
       case 'OPEN_NEW_SALTFORMULA':
           this.setState({showSaltModal: nextProps.showModal})
@@ -211,6 +220,7 @@ class SaltConfigurationPanel  extends BasicRxPanel {
     var saltlogHeaders = ['Minion','Saltstate','Type','Duration','Comment','Start date','Start time','SLS']
     var saltlogrows = []
     var formulas = this.state.saltformulas_tabledata
+    var formula_logs = this.state.formula_logs
     var files = this.state.salt_file_tabledata
     var selected_formula = this.state.selected_formula
     var code = selected_formula.file
@@ -281,7 +291,7 @@ class SaltConfigurationPanel  extends BasicRxPanel {
 
              <div className="row">
                  <div className="col-md-9 text-left">
-                <Table headers = {saltlogHeaders} data={saltlogrows} onRowClick={(entry) => this.onFileRowClick(entry)}/>
+                <Table headers = {saltlogHeaders} data={formula_logs} onRowClick={(entry) => this.onFileRowClick(entry)}/>
               </div>
              </div>
           </div>

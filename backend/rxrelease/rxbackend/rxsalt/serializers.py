@@ -31,7 +31,7 @@ class SaltActionSerializer(serializers.ModelSerializer):
 class SaltStateLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = SaltStateLog
-        fields = (
+        fields = ('id',
         'minion', 'saltstate', 'duration', 'comment', 'start_date', 'start_time', 'run_num',
         'changes', 'sls', 'result', 'test', 'type')
 

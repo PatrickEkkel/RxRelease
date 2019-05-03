@@ -1,9 +1,13 @@
-import  * as saltConfigurationRequests from '../rest/saltconfigurationrequests'
+import  * as saltConfigurationRequests from '../rest/requests/saltconfigurationrequests'
 import  * as fileRequests from '../../../rest/requests/filerequests'
 import  * as jsonUtils from '../../../lib/json/utils'
+import  * as saltpromises from '../../../plugins/salt/rest/promises/saltpromises'
 import GlobalSettings from '../../../config/global'
 import LogFactory from '../../../logging/LogFactory'
+import PromiseExecutor from '../../../lib/promises/promise_executor'
 import SaltFormulaModel from '../models/dbmodels/saltformulamodel'
+import SaltLogModel from '../models/dbmodels/saltlogmodel';
+
 import FileModel from '../../../models/dbmodels/filemodel'
 var settings = new GlobalSettings();
 var scaLogger = new LogFactory().createLogger("SALT_CONFIGURATION","ACTIONCREATOR")
@@ -17,10 +21,10 @@ return {
 
 }
 export function switchSaltformula(saltformula) {
-  return {
-    type: 'SELECT_SALT_FORMULA',
-    selected_formula: saltformula
-  }
+  scaLogger.trace("selected saltformula: ")
+  scaLogger.traceObject(saltformula)
+
+  return loadSaltformulaLogs(saltformula)
 }
 export function formulaSaved(_saltformula) {
   return {
@@ -123,33 +127,58 @@ export function saveNewFormula(saltformula) {
   }
 }
 
+export function loadSaltformulaLogs(saltformula) {
+  return function(dispatch) {
+    saltConfigurationRequests.getLastSaltLogByFormulaname(saltformula).then(function(response) {
+
+      var data = response.data
+
+      for(var i=0;i<data.length;i++) {
+
+        saltformula.addSaltLog(SaltLogModel.newSaltLogModel(data[i]['id'],
+        data[i]['minion'],
+        data[i]['saltstate'],
+        data[i]['duration'],
+        data[i]['comment'],
+        data[i]['start_date'],
+        data[i]['start_time'],
+        data[i]['run_num'],
+        data[i]['changes'],
+        data[i]['sls'],
+        data[i]['result'],
+        data[i]['test'],
+        data[i]['type']))
+      }
+
+      dispatch(selectSaltFormula(saltformula))
+    }).catch(function(err) {
+      scaLogger.debug("loadSaltformulaLogs: " + err)
+    })
+  }
+}
+
+export function selectSaltFormula(saltformula) {
+
+  return {
+    type: 'SELECT_SALT_FORMULA',
+    selected_formula: saltformula
+  }
+
+}
+
 export function loadAllSaltFormulas() {
   return function (dispatch) {
-
-  saltConfigurationRequests.GetAllFormulas()
-  .then(function(response) {
-
-     var saltFormulas = []
-     scaLogger.trace("recieved response for salt-configuration request")
-     scaLogger.traceObject(response.data)
-     var data = response.data
-     for (var i=0;i<response.data.length;i++) {
-       var dataElement = data[i]
-       var files  = dataElement['files']
-
-
-       var newSaltFormula = SaltFormulaModel.newSaltFormula(dataElement['id'],dataElement['name'],dataElement['file'],dataElement['status'])
-       for (var a=0;a<files.length;a++) {
-            var fileDataElement = files[a]
-            var newFile =  FileModel.newFile(fileDataElement['id'], fileDataElement['filename'],fileDataElement['path'])
-            newSaltFormula.addFile(newFile)
-        }
-       saltFormulas.push(newSaltFormula)
-     }
-     scaLogger.trace('loaded saltformulas')
-     scaLogger.traceObject(saltFormulas)
-     dispatch(saltConfigurationLoaded(saltFormulas))
-  });
+      var e = new PromiseExecutor()
+      try {
+   saltpromises.GET_SALTFORMULAS(null,{logger: scaLogger})
+  .then(e.execute(saltpromises.CREATE_SALTFORMULA_OBJECTS, {logger: scaLogger}))
+  .then(e.execute(saltpromises.GET_SALTFORMULA_LOGS, { logger: scaLogger,
+     dispatch: dispatch,
+     configuration_loaded: saltConfigurationLoaded}));
+  }
+  catch(err) {
+    console.log(err)
+  }
 }
 
 }
