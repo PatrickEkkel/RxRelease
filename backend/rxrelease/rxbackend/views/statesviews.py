@@ -1,4 +1,4 @@
-import logging,sys,os.path
+import logging, sys, os.path
 from rest_framework import generics
 from ..serializers import StateSerializer
 from ..serializers import InstallHostSerializer
@@ -40,11 +40,14 @@ class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
     queryset = State.objects.all()
     serializer_class = StateSerializer
+
+
 # Everything is configured, now only thing that leaves us is to test this piece of entangled code
 
 
 class InstallHostView(generics.UpdateAPIView):
     serializer_class = InstallHostSerializer
+
     def get_queryset(self):
         logger.info("installing host")
         host_id = self.kwargs['pk']
@@ -63,7 +66,7 @@ class InstallHostView(generics.UpdateAPIView):
                 parent_id = -1
             else:
                 parent_id = parent.id
-            capability_treemap.addItem(capability.id,capability,parent_id)
+            capability_treemap.addItem(capability.id, capability, parent_id)
 
         capability_treemap.merge()
         capabilityList = capability_treemap.toList()
@@ -76,7 +79,8 @@ class InstallHostView(generics.UpdateAPIView):
 
             statetypes = capability.statetypes.all()
             # filter out repeatable states, they are not scheduled via the dependency tree
-            capability_states = State.objects.filter(host_id=host_id).filter(statetype_id__in=statetypes,repeatable_state__isnull=True).all()
+            capability_states = State.objects.filter(host_id=host_id).filter(
+                statetype_id__in=statetypes, repeatable_state__isnull=True).all()
 
             sorted_capability_statesmap[capability.id] = []
             for state in capability_states:
@@ -94,55 +98,61 @@ class InstallHostView(generics.UpdateAPIView):
         treemap = DependencyTreeMap()
         logger.debug("found capabilities: " + str(len(sorted_capability_statesmap)))
         for key in sorted_capability_statesmap:
-         logger.debug("how many states are being found: " + str(len(sorted_capability_statesmap[key])))
-         logger.debug("current capability: " + str(key))
-         for state in sorted_capability_statesmap[key]:
-          logger.info("state: " + str(state))
-          parent = state.statetype.dependentOn
-          parent_id = None
-          if parent == None:
-           parent_id  = -1
-          else:
-           parent_id = parent.id
-          treemap.addItem(state.statetype.id,state,parent_id)
+            logger.debug(
+                "how many states are being found: " + str(len(sorted_capability_statesmap[key])))
+            logger.debug("current capability: " + str(key))
+            for state in sorted_capability_statesmap[key]:
+                logger.info("state: " + str(state))
+                parent = state.statetype.dependentOn
+                parent_id = None
+                if parent == None:
+                    parent_id = -1
+                else:
+                    parent_id = parent.id
+                treemap.addItem(state.statetype.id, state, parent_id)
 
         treemap.merge()
-        statesList =  treemap.toList()
+        statesList = treemap.toList()
 
         scheduler_service = SchedulerService()
         for kv in statesList:
-         # TODO: this is problematic for complex states,
-         base_state = kv[1]
-         simple_state = base_state.simple_state
-         if simple_state.installed == False:
-             print("state: " + str(state))
-             if base_state.statetype.handler is not None:
-              handlerRequest = RequestBuilder().build_request_with_state(base_state)
-              logger.debug(str(handlerRequest))
-              logger.debug("dit is het request in string formaat")
-              # encode the request for transport
-              handlerRequest.setKeyValList(Utils.escapeJsonForTransport(handlerRequest.getKeyValList()))
-              action = actionFactory.createAction('INSTALL',state.name,handlerRequest.getAsPayload())
-              scheduler_service.schedule_state(action)
-             # call jobfeed, with the correct parameters
-        return   Host.objects.filter(id=host_id)
+            # TODO: this is problematic for complex states,
+            base_state = kv[1]
+            simple_state = base_state.simple_state
+            if simple_state.installed == False:
+                print("state: " + str(state))
+                if base_state.statetype.handler is not None:
+                    handlerRequest = RequestBuilder().build_request_with_state(base_state)
+                    logger.debug(str(handlerRequest))
+                    logger.debug("dit is het request in string formaat")
+                    # encode the request for transport
+                    handlerRequest.setKeyValList(
+                        Utils.escapeJsonForTransport(handlerRequest.getKeyValList()))
+                    action = actionFactory.createAction('INSTALL', state.name,
+                                                        handlerRequest.getAsPayload())
+                    scheduler_service.schedule_state(action)
+                # call jobfeed, with the correct parameters
+        return Host.objects.filter(id=host_id)
+
 
 class HostView(generics.ListAPIView):
     serializer_class = StateSerializer
+
     def get_queryset(self):
-        host_id =  self.request.query_params.get('host_id', None)
+        host_id = self.request.query_params.get('host_id', None)
         state_id = self.request.query_params.get('state_id', None)
-        statetype_id = self.request.query_params.get('statetype_id',None)
+        statetype_id = self.request.query_params.get('statetype_id', None)
 
         result_queryset = None
         # alleen host id
         if host_id is not None and state_id is None and statetype_id is None:
-         result_queryset = State.objects.filter(host_id=host_id)
+            result_queryset = State.objects.filter(host_id=host_id)
         # state_id,host_id
         if state_id is not None and host_id is not None:
-         result_queryset = State.objects.filter(id=state_id).filter(host_id=host_id)
+            result_queryset = State.objects.filter(id=state_id).filter(host_id=host_id)
         # statetype_id,host_id
         if statetype_id is not None and host_id is not None:
-         result_queryset = State.objects.filter(statetype_id=statetype_id).filter(host_id=host_id)
+            result_queryset = State.objects.filter(statetype_id=statetype_id).filter(
+                host_id=host_id)
 
         return result_queryset

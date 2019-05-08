@@ -84,6 +84,10 @@ class  HostManagementPanel  extends BasicRxPanel {
         else if(entry[2] == "REPEATABLE") {
           return "label-info label"
         }
+        else if(entry[2] == "COMPLEX") {
+          return "label-info label"
+        }
+
 
     }
     var headers = ['#','name'];

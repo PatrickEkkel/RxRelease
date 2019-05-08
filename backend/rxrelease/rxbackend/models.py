@@ -104,10 +104,12 @@ class Host(models.Model):
 
 class SimpleState(models.Model):
     installed = models.BooleanField(default=False)
+    last_successfull_run = models.DateTimeField(auto_now=True)
 
 
 class ComplexState(models.Model):
     status = models.CharField(max_length=255, default="NOT_APPLIED")
+    last_successfull_run = models.DateTimeField(auto_now=True)
 
 
 class RepeatableState(models.Model):

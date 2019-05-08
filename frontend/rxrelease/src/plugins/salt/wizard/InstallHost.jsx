@@ -118,6 +118,10 @@ render() {
       else if(entry[2] == "REPEATABLE") {
         return "label-info label"
       }
+      else if (entry[2] == "COMPLEX") {
+        return "label-info label"
+
+      }
 
   }
   return <div className="container">

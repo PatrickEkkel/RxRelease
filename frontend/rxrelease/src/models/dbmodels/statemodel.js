@@ -16,6 +16,9 @@ class StateModel {
     static newSimpleState(_id,_name,_simple_state) {
       return StateModel.newState(_id,_name,_simple_state,null,null,'SIMPLE')
     }
+    static newComplexState(_id,_name,_complex_state) {
+      return StateModel.newState(_id,_name,null,_complex_state,null,'COMPLEX')
+    }
   }
 
 export default StateModel;

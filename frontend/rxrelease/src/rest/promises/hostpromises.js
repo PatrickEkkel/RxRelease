@@ -23,6 +23,12 @@ export function GET_STATES_FOR_HOST(response,properties) {
             var state_response  = response.data[i]
             states.push(StateModel.newRepeatableState(state_response.id,state_response.name,state_response.repeatable_state))
      }
+     else if(response.data[i].complex_state != null) {
+            logger.trace("complex_state applied")
+            var state_response  = response.data[i]
+            states.push(StateModel.newComplexState(state_response.id,state_response.name,state_response.complex_state))
+            //states.push(StateModel.newRepeatableState(state_response.id,state_response.name,state_response.repeatable_state))
+     }
 
         logger.trace("states are loaded")
         logger.traceObject(states)
@@ -52,7 +58,7 @@ export function DISPATCH_SAVE_HOST(response,properties) {
 
   var logger = properties.logger
   var dispatch = properties.dispatch
-  
+
   logger.trace("Saved host object:")
   logger.traceObject(response.data)
 

@@ -84,11 +84,13 @@ export function loadHostManagement(hostentry) {
         var data = jsonUtils.normalizeJson(response.data);
         var settingscategory = settingsfactory.createSettingsCategoryFromJson(data);
        host.getConnectionCredentials().setSettingCategory(settingscategory)
+
        haLogger.trace('dispatch LOAD_HOST_MANAGEMENT_FROM_HOSTS')
        haLogger.traceObject(host)
        dispatch(hostManagementLoaded(host));
 
      }).catch(function(error) {
+       console.log(error)
        haLogger.debug(error)
      });
   }

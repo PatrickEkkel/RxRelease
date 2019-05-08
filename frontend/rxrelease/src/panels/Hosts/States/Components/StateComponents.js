@@ -12,5 +12,8 @@ export function renderStateAsString(item) {
   else if(item.type == "REPEATABLE") {
     result = [item.id,item.name,"REPEATABLE"]
   }
+  else if(item.type == "COMPLEX"){
+        result = [item.id,item.name,"COMPLEX"]
+  }
   return result
 }

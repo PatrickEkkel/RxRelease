@@ -1,6 +1,7 @@
 from django.db import models
 from ..models import Host
 from ..models import File
+from ..models import ComplexState
 
 
 class SaltMinion(models.Model):
@@ -17,6 +18,7 @@ class SaltFormula(models.Model):
 
 class SaltStateLog(models.Model):
     minion = models.ForeignKey(SaltMinion, default=None, on_delete=models.PROTECT)
+    complexState = models.ForeignKey(ComplexState, blank=True, default=None, null=True, on_delete=models.PROTECT)
     saltstate = models.CharField(max_length=255)
     test = models.BooleanField(default=None)
     type = models.CharField(max_length=255, default='')

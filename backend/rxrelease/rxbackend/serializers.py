@@ -147,22 +147,23 @@ class RepeatableStateSerializer(serializers.ModelSerializer):
 class ComplexStateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComplexState
-        fields = ('id')
+        fields = ('status', 'last_successfull_run')
 
 
 class SimpleStateSerializer(serializers.ModelSerializer):
     class Meta:
         model = SimpleState
-        fields = ('id', 'installed')
+        fields = ('id', 'installed', 'last_successfull_run')
 
 
 class StateSerializer(serializers.ModelSerializer):
     simple_state = SimpleStateSerializer(required=False, read_only=True)
     repeatable_state = RepeatableStateSerializer(required=False, read_only=True)
+    complex_state = ComplexStateSerializer(required=False, read_only=True)
 
     class Meta:
         model = State
-        fields = ('id', 'name', 'host', 'statetype', 'simple_state', 'repeatable_state')
+        fields = ('id', 'name', 'host', 'statetype', 'simple_state', 'repeatable_state','complex_state')
 
 
 class SettingsCategorySerializer(serializers.ModelSerializer):
