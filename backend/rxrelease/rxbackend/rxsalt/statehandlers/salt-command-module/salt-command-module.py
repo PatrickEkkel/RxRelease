@@ -41,7 +41,8 @@ state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(), inp
 # update state to ready
 state = state[0]
 statemanager = StateManager(auth_token)
-statemanager.setRepeatableStateDone(state)
+if statemanager.isRepeatableState(state):
+    statemanager.setRepeatableStateDone(state)
 data = json.loads(inputmapping.getKeyvalList())
 
 # TODO: saltpassword uit de database halen via het statetype
@@ -51,10 +52,13 @@ salt_mapping = SaltCommandMapper.create_from_dict(data)
 host = resthosts_api.get_host_by_id(inputmapping.host_id)
 hostname = host['hostname']
 ssh_port = data['sshport']
-salt_minion_id = data['salt-minion-id']
+
+
 salt_api_port = data['saltapiport']
 salt_username = data['salt-username']
 salt_password = data['salt-password']
+# TODO: deze moeten we ophalen via de API
+salt_minion_id = data['salt-minion-id']
 test = data['test']
 
 host_username = 'root'

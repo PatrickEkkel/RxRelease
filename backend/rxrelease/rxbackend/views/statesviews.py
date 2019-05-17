@@ -118,19 +118,34 @@ class InstallHostView(generics.UpdateAPIView):
         for kv in statesList:
             # TODO: this is problematic for complex states,
             base_state = kv[1]
-            simple_state = base_state.simple_state
-            if simple_state.installed == False:
-                print("state: " + str(state))
-                if base_state.statetype.handler is not None:
-                    handlerRequest = RequestBuilder().build_request_with_state(base_state)
-                    logger.debug(str(handlerRequest))
-                    logger.debug("dit is het request in string formaat")
-                    # encode the request for transport
-                    handlerRequest.setKeyValList(
-                        Utils.escapeJsonForTransport(handlerRequest.getKeyValList()))
-                    action = actionFactory.createAction('INSTALL', state.name,
+            if base_state.simple_state is not None:
+                simple_state = base_state.simple_state
+                if simple_state.installed == False:
+                    print("state: " + str(state))
+                    if base_state.statetype.handler is not None:
+                        handlerRequest = RequestBuilder().build_request_with_state(base_state)
+                        logger.debug(str(handlerRequest))
+                        logger.debug("dit is het request in string formaat")
+                        # encode the request for transport
+                        handlerRequest.setKeyValList(
+                            Utils.escapeJsonForTransport(handlerRequest.getKeyValList()))
+                        action = actionFactory.createAction('INSTALL', state.name,
                                                         handlerRequest.getAsPayload())
-                    scheduler_service.schedule_state(action)
+                        scheduler_service.schedule_state(action)
+            elif base_state.complex_state is not None:
+
+                complex_state = base_state.complex_state
+                logger.debug('loading complex state with status: ' + complex_state.status)
+                if complex_state.status == 'NOT_APPLIED':
+                    if base_state.statetype.handler is not None:
+                        handlerRequest = RequestBuilder().build_request_with_state(base_state)
+                        logger.debug(str(handlerRequest))
+                        logger.debug("dit is het request in string formaat")
+                        handlerRequest.setKeyValList(
+                            Utils.escapeJsonForTransport(handlerRequest.getKeyValList()))
+                        action = actionFactory.createAction('INSTALL', state.name,
+                                                            handlerRequest.getAsPayload())
+                        scheduler_service.schedule_state(action)
                 # call jobfeed, with the correct parameters
         return Host.objects.filter(id=host_id)
 

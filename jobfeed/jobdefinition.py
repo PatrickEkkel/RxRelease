@@ -27,6 +27,13 @@ class JobDefinition:
      if state['simple_state']['installed']:
       result = True
      return result
+    def is_complex_state(self,state):
+        result = False
+        if state['complex_state'] != None:
+            logger.debug("COMPLEX_STATE detected")
+            result = True
+        return result
+
     def is_repeatable_state(self,state):
      result = False
      if state['repeatable_state'] != None:
@@ -50,6 +57,8 @@ class JobDefinition:
        logger.debug("task " + self.jobName + " succesfully installed")
      elif self.is_repeatable_state(state):
         result = 'REPEATABLE_STATE'
+     elif self.is_complex_state(state):
+        result = 'COMPLEX_STATE'
      else:
       logger.debug("state not recognized")
      return result

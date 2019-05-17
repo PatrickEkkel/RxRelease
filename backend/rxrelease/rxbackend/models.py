@@ -18,13 +18,6 @@ class Module(models.Model):
     configurationPanel = models.CharField(max_length=255, default=None)
 
 
-# dbStatus verteld ons meer over of de filler al gedraaid is
-# Tevens slaan we de huidige versie van de filler ook op in de db, kan later handig zijn als we een versie ergens hebben draaien en we moeten upgraden naar een nieuwere versie
-class SystemConfig(models.Model):
-    buildversion = models.CharField(max_length=150)
-    dbStatus = models.CharField(max_length=255)
-
-
 class SettingsCategory(models.Model):
     name = models.CharField(max_length=255)
     prefix = models.CharField(max_length=255, default=None, null=True)
@@ -33,9 +26,27 @@ class SettingsCategory(models.Model):
         return self.name
 
 
+class CredentialsSetting(models.Model):
+    username = models.CharField(max_length=255)
+    password = models.CharField(max_length=255)
+    category = models.ForeignKey(SettingsCategory, on_delete=models.PROTECT)
+
+
+# dbStatus verteld ons meer over of de filler al gedraaid is
+# Tevens slaan we de huidige versie van de filler ook op in de db, kan
+# later handig zijn als we een versie ergens hebben draaien en we moeten upgraden
+# naar een nieuwere versie
+class SystemConfig(models.Model):
+    buildversion = models.CharField(max_length=150)
+    dbStatus = models.CharField(max_length=255)
+
+
 class StateType(models.Model):
     name = models.CharField(max_length=255)
-    SettingsCategory = models.ForeignKey(SettingsCategory, default=None, null=True,
+    state_settings = models.ForeignKey(SettingsCategory, default=None, null=True,
+                                         on_delete=models.PROTECT)
+
+    connection_credentials = models.ForeignKey(CredentialsSetting, default=None, null=True,
                                          on_delete=models.PROTECT)
     handler = models.CharField(max_length=255, null=True)
     module = models.CharField(max_length=255, null=True, default=None)
@@ -75,13 +86,6 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class CredentialsSetting(models.Model):
-    username = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
-    category = models.ForeignKey(SettingsCategory, on_delete=models.PROTECT)
-
 
 class KVSetting(models.Model):
     key = models.CharField(max_length=255)
