@@ -37,16 +37,6 @@ reststates_api = REST_states(auth_token)
 resthosts_api = REST_hosts(auth_token)
 restsettings_api = REST_settings(auth_token)
 
-state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(), inputmapping.getStateId())
-# update state to ready
-state = state[0]
-statemanager = StateManager(auth_token)
-if statemanager.isRepeatableState(state):
-    statemanager.setRepeatableStateDone(state)
-data = json.loads(inputmapping.getKeyvalList())
-
-# TODO: saltpassword uit de database halen via het statetype
-
 salt_mapping = SaltCommandMapper.create_from_dict(data)
 
 host = resthosts_api.get_host_by_id(inputmapping.host_id)
@@ -57,12 +47,12 @@ ssh_port = data['sshport']
 salt_api_port = data['saltapiport']
 salt_username = data['salt-username']
 salt_password = data['salt-password']
-# TODO: deze moeten we ophalen via de API
-salt_minion_id = data['salt-minion-id']
+salt_minion_id = host['hostname']
 test = data['test']
 
 host_username = 'root'
 host_password = 'test'
+
 salt_master = inputmapping.ipaddress
 tmp_dir = '/tmp/saltmock/'
 id_rsa = tmp_dir + 'id_rsa'
@@ -119,3 +109,15 @@ if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTEST
 elif salt_mapping.api_mode == 'SALTTESTDRYRUN':
     print("don't invoke the salt api, print this string to let you know we are in testing mode")
     print(salt_command.command)
+
+
+state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(), inputmapping.getStateId())
+# update state to ready
+state = state[0]
+statemanager = StateManager(auth_token)
+if statemanager.isRepeatableState(state):
+    statemanager.setRepeatableStateDone(state)
+
+elif statemanager.isComplexState(state):
+    statemanager.setComplexStateStatus(state, 'APPLIED')
+data = json.loads(inputmapping.getKeyvalList())
