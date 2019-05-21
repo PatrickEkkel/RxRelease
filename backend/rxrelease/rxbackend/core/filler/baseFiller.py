@@ -51,14 +51,17 @@ class BaseFiller:
 
         # Settings category maken
         global_category = SettingsCategory.objects.create(name="Global Settings")
-        global_category.save()
 
+
+        salt_accept_master_category = SettingsCategory.objects.create(name="Salt Accept Master")
+
+        kvsettting_testflag = KVSetting.objects.create(key='test',value='False',category=salt_accept_master_category)
+        kvsetting_apimode = KVSetting.objects.create(key='api-mode',value='PRODUCTION',category=salt_accept_master_category)
+        kvsetting_saltfunction = KVSetting.objects.create(key='salt-function',value='ACCEPTMINION',category=salt_accept_master_category)
         # Standard settings applyen
         kvsetting_sshport = KVSetting.objects.create(key='sshport', value='2222',
                                                      category=global_category)
         kvsetting_os = KVSetting.objects.create(key="os", value="CentOS", category=global_category)
-        kvsetting_os.save()
-        kvsetting_sshport.save()
 
         kvsetting_saltapiport = KVSetting.objects.create(key='saltapiport', value='8888',
                                                          category=global_category)
@@ -68,42 +71,42 @@ class BaseFiller:
         # De verschillende basis states maken
         passwordless_login_state = StateType.objects.create(name="SSH passwordless login"
                                                             , handler="passwordless-sshlogin.py"
-                                                            , SettingsCategory=global_category
+                                                            , state_settings=global_category
                                                             , module="default"
                                                             , jobtype="SIMPLE_STATE")
 
         prerequisites_state = StateType.objects.create(name="Prerequisites"
                                                        , handler="prerequisites.py"
-                                                       , SettingsCategory=global_category
+                                                       , state_settings=global_category
                                                        , module="default"
                                                        , dependentOn=passwordless_login_state
                                                        , jobtype="SIMPLE_STATE")
 
         sethostname_state = StateType.objects.create(name='Set-hostname'
                                                      , handler='set-hostname.py'
-                                                     , SettingsCategory=global_category
+                                                     , state_settings=global_category
                                                      , module='default'
                                                      , dependentOn=passwordless_login_state
                                                      , jobtype="SIMPLE_STATE")
 
         salt_minion_state = StateType.objects.create(name="Salt-minion"
                                                      , handler="install-salt.py"
-                                                     , SettingsCategory=global_category
+                                                     , state_settings=global_category
                                                      , dependentOn=sethostname_state
                                                      , module="rxsalt"
                                                      , jobtype="SIMPLE_STATE")
         salt_master_state = StateType.objects.create(name="Salt-master",
                                                      handler="install-salt-master.py",
                                                      dependentOn=prerequisites_state,
-                                                     SettingsCategory=global_category,
+                                                     state_settings=global_category,
                                                      module="rxsalt", jobtype="SIMPLE_STATE")
         salt_minion_master_state = StateType.objects.create(name="Salt-minion-master",
                                                             handler="install-salt.py",
-                                                            SettingsCategory=global_category,
+                                                            state_settings=global_category,
                                                             dependentOn=salt_master_state,
                                                             module="rxsalt", jobtype="SIMPLE_STATE")
         salt_api_state = StateType.objects.create(name="Salt-Api", handler="install-salt-api.py",
-                                                  SettingsCategory=salt_settings_category,
+                                                  state_settings=salt_settings_category,
                                                   dependentOn=salt_minion_master_state,
                                                   module="rxsalt", jobtype="SIMPLE_STATE")
         # salt_run_state = StateType.objects.create(name="Salt-Run-State", handler="salt-command-module.py", dependentOn=None,module="rxsalt", jobtype="REPEATABLE_STATE")
@@ -112,13 +115,20 @@ class BaseFiller:
                                                   handler="salt-command-module.py",
                                                   dependentOn=None, module="rxsalt",
                                                   jobtype="REPEATABLE_STATE",
-                                                  SettingsCategory=global_category)
+                                                  state_settings=global_category)
+
+
+        accept_salt_master_state = StateType.objects.create(name="Accept-Salt-Master",
+                                                                    handler='salt-command-module.py',
+                                                                    dependentOn=salt_api_state, module="rxsalt",
+                                                                    jobtype="COMPLEX_STATE",
+                                                                    state_settings=salt_accept_master_category)
 
         salt_utils = StateType.objects.create(name="Salt-Utils",
                                                   handler="salt-command-module.py",
-                                                  dependentOn=None, module="rxsalt",
+                                                  dependentOn=accept_salt_master_state, module="rxsalt",
                                                   jobtype="COMPLEX_STATE",
-                                                  SettingsCategory=global_category)
+                                                  state_settings=global_category)
 
 
 
