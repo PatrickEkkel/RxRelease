@@ -147,7 +147,7 @@ class RepeatableStateSerializer(serializers.ModelSerializer):
 class ComplexStateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComplexState
-        fields = ('status', 'last_successfull_run')
+        fields = ('id', 'status', 'last_successfull_run')
 
 
 class SimpleStateSerializer(serializers.ModelSerializer):

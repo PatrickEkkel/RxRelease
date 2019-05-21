@@ -135,8 +135,9 @@ class InstallHostView(generics.UpdateAPIView):
             elif base_state.complex_state is not None:
 
                 complex_state = base_state.complex_state
+                complex_state_status = complex_state.status
                 logger.debug('loading complex state with status: ' + complex_state.status)
-                if complex_state.status == 'NOT_APPLIED':
+                if complex_state_status == 'NOT_APPLIED':
                     if base_state.statetype.handler is not None:
                         handlerRequest = RequestBuilder().build_request_with_state(base_state)
                         logger.debug(str(handlerRequest))
@@ -146,6 +147,8 @@ class InstallHostView(generics.UpdateAPIView):
                         action = actionFactory.createAction('INSTALL', state.name,
                                                             handlerRequest.getAsPayload())
                         scheduler_service.schedule_state(action)
+                else:
+                    logger.debug(f'complex state has state {complex_state_status}, state will be ignored for this run ')
                 # call jobfeed, with the correct parameters
         return Host.objects.filter(id=host_id)
 

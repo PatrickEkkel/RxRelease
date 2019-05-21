@@ -27,6 +27,7 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 inputmapping = InputMapper().getInputFromCLI()
+data = json.loads(inputmapping.getKeyvalList())
 
 token_result = REST_authentication().postCredentials(ApiUserSettings.username,ApiUserSettings.password)
 auth_token = token_result['token']
@@ -108,7 +109,9 @@ if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTEST
 
 elif salt_mapping.api_mode == 'SALTTESTDRYRUN':
     print("don't invoke the salt api, print this string to let you know we are in testing mode")
-    print(salt_command.command)
+    print(salt_mapping.command)
+
+
 
 
 state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(), inputmapping.getStateId())
@@ -119,5 +122,4 @@ if statemanager.isRepeatableState(state):
     statemanager.setRepeatableStateDone(state)
 
 elif statemanager.isComplexState(state):
-    statemanager.setComplexStateStatus(state, 'APPLIED')
-data = json.loads(inputmapping.getKeyvalList())
+    statemanager.setComplexStateStatus(state)

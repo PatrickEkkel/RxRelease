@@ -80,7 +80,6 @@ class RequestBuilder:
         self.kvbuilder.addKeyValPair("username", credentials.username)
         self.kvbuilder.addKeyValPair("password", credentials.password)
 
-        # TODO: dit moet iets anders gemaakt worden, gaat niet werken met complex_states
         state_credentials = self.settingsService.get_credentials_by_settings_id(statetype.connection_credentials.id)
         #state_credentials = self.settingsService.getHostCredentialSettingsByStatetype(statetype)
         prefix = state_credentials.category.prefix

@@ -25,7 +25,8 @@ class StateManager:
      simple_state['installed'] = True
      self.rest_states_api.putSimpleState(state['simple_state'])
 
-    def setComplexStateStatus(self, status):
+    def setComplexStateStatus(self,state, status):
         complex_state = state['complex_state']
         print(complex_state)
         complex_state['status'] = status
+        self.rest_states_api.putComplexState(state['complex_state'])
