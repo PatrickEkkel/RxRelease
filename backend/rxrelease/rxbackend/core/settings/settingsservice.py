@@ -22,10 +22,10 @@ class SettingsService:
         settings = settingsDao.getCredentialsByCategory(statetype.SettingsCategory)
         return settings
 
-    def get_credentials_by_settings_id(self, id):
+    def get_credentials_by_category_id(self, id):
         settingsDao = SettingsDao()
 
-        return settingsDao.getCredentialSettingsById(id)
+        return settingsDao.get_credentials_by_category_id(id)
 
     def getHostSettingsByStatetype(self, statetype):
         settingsDao = SettingsDao()

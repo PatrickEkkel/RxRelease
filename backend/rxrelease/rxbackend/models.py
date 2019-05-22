@@ -46,8 +46,8 @@ class StateType(models.Model):
     state_settings = models.ForeignKey(SettingsCategory, default=None, null=True,
                                          on_delete=models.PROTECT)
 
-    connection_credentials = models.ForeignKey(CredentialsSetting, default=None, null=True,
-                                         on_delete=models.PROTECT)
+    connection_credentials = models.ForeignKey(SettingsCategory, default=None, null=True,
+                                         on_delete=models.PROTECT,related_name='connection_credentials_category')
     handler = models.CharField(max_length=255, null=True)
     module = models.CharField(max_length=255, null=True, default=None)
     jobtype = models.CharField(max_length=255, null=True, default="SIMPLE_STATE")

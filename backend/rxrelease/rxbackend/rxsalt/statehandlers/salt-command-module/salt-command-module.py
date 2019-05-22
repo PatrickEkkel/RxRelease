@@ -111,9 +111,6 @@ elif salt_mapping.api_mode == 'SALTTESTDRYRUN':
     print("don't invoke the salt api, print this string to let you know we are in testing mode")
     print(salt_mapping.command)
 
-
-
-
 state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(), inputmapping.getStateId())
 # update state to ready
 state = state[0]

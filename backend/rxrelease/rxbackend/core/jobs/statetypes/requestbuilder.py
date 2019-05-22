@@ -80,8 +80,7 @@ class RequestBuilder:
         self.kvbuilder.addKeyValPair("username", credentials.username)
         self.kvbuilder.addKeyValPair("password", credentials.password)
 
-        state_credentials = self.settingsService.get_credentials_by_settings_id(statetype.connection_credentials.id)
-        #state_credentials = self.settingsService.getHostCredentialSettingsByStatetype(statetype)
+        state_credentials = self.settingsService.get_credentials_by_category_id(statetype.connection_credentials.id)
         prefix = state_credentials.category.prefix
         logger.debug(f"state credentials {state_credentials}")
         logger.debug(f"prefix: {prefix}")
