@@ -79,16 +79,18 @@ class RequestBuilder:
 
         self.kvbuilder.addKeyValPair("username", credentials.username)
         self.kvbuilder.addKeyValPair("password", credentials.password)
+        state_credentials = None
+        if statetype.connection_credentials is not None:
+            state_credentials = self.settingsService.get_credentials_by_category_id(statetype.connection_credentials.id)
+            prefix = state_credentials.category.prefix
+            logger.debug(f"state credentials {state_credentials}")
+            logger.debug(f"prefix: {prefix}")
 
-        state_credentials = self.settingsService.get_credentials_by_category_id(statetype.connection_credentials.id)
-        prefix = state_credentials.category.prefix
-        logger.debug(f"state credentials {state_credentials}")
-        logger.debug(f"prefix: {prefix}")
-        if state_credentials is not None:
-            logger.debug("state credentials found")
-            self.kvbuilder.addKeyValPair(state_credentials.category.prefix + '-username',
-                                    state_credentials.username)
-            self.kvbuilder.addKeyValPair(state_credentials.category.prefix + '-password',
+            if state_credentials is not None:
+                logger.debug("state credentials found")
+                self.kvbuilder.addKeyValPair(state_credentials.category.prefix + '-username',
+                                        state_credentials.username)
+                self.kvbuilder.addKeyValPair(state_credentials.category.prefix + '-password',
                                     state_credentials.password)
 
         for key, value in selected_settings.items():

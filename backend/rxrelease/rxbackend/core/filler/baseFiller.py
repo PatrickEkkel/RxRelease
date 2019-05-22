@@ -89,26 +89,26 @@ class BaseFiller:
                                                      , dependentOn=passwordless_login_state
                                                      , jobtype="SIMPLE_STATE")
 
-        salt_minion_state = StateType.objects.create(name="Salt-minion"
-                                                     , handler="install-salt.py"
-                                                     , state_settings=global_category
-                                                     , dependentOn=sethostname_state
-                                                     , module="rxsalt"
-                                                     , jobtype="SIMPLE_STATE")
+        #salt_minion_state = StateType.objects.create(name="Salt-minion"
+        #                                             , handler="install-salt.py"
+        #                                             , state_settings=global_category
+        #                                             , dependentOn=sethostname_state
+        #                                             , module="rxsalt"
+        #                                             , jobtype="SIMPLE_STATE")
         salt_master_state = StateType.objects.create(name="Salt-master",
                                                      handler="install-salt-master.py",
-                                                     dependentOn=prerequisites_state,
+                                                     dependentOn=None,
                                                      state_settings=global_category,
                                                      module="rxsalt", jobtype="SIMPLE_STATE")
-        salt_minion_master_state = StateType.objects.create(name="Salt-minion-master",
-                                                            handler="install-salt.py",
-                                                            state_settings=global_category,
-                                                            dependentOn=salt_master_state,
-                                                            module="rxsalt", jobtype="SIMPLE_STATE")
-        salt_api_state = StateType.objects.create(name="Salt-Api", handler="install-salt-api.py",
-                                                  state_settings=salt_settings_category,
-                                                  dependentOn=salt_minion_master_state,
-                                                  module="rxsalt", jobtype="SIMPLE_STATE")
+        #salt_minion_master_state = StateType.objects.create(name="Salt-minion-master",
+        #                                                    handler="install-salt.py",
+        #                                                    state_settings=global_category,
+        #                                                    dependentOn=salt_master_state,
+        #                                                    module="rxsalt", jobtype="SIMPLE_STATE")
+        #salt_api_state = StateType.objects.create(name="Salt-Api", handler="install-salt-api.py",
+        #                                          state_settings=salt_settings_category,
+        #                                          dependentOn=salt_minion_master_state,
+        #                                          module="rxsalt", jobtype="SIMPLE_STATE")
         # salt_run_state = StateType.objects.create(name="Salt-Run-State", handler="salt-command-module.py", dependentOn=None,module="rxsalt", jobtype="REPEATABLE_STATE")
 
         #salt_run_state = StateType.objects.create(name="Salt-Run-State",
@@ -119,8 +119,8 @@ class BaseFiller:
 
 
         #accept_salt_master_state = StateType.objects.create(name="Accept-Salt-Master",
-    #                                                                handler='salt-command-module.py',
-    #                                                                dependentOn=salt_api_state, module="rxsalt",
+        #                                                            handler='salt-command-module.py',
+        #                                                            dependentOn=salt_api_state, module="rxsalt",
         #                                                            jobtype="COMPLEX_STATE",
         #                                                            state_settings=salt_accept_master_category)
 
@@ -154,24 +154,23 @@ class BaseFiller:
         standard_capability.statetypes.add(passwordless_login_state)
         standard_capability.statetypes.add(sethostname_state)
         standard_capability.statetypes.add(prerequisites_state)
-        salt_minion_capability.statetypes.add(salt_minion_state)
-        salt_minion_capability.dependentOn = standard_capability
+        #salt_minion_capability.statetypes.add(salt_minion_state)
+        #salt_minion_capability.dependentOn = standard_capability
         salt_master_capability.statetypes.add(salt_master_state)
-        salt_master_capability.statetypes.add(salt_minion_master_state)
-        salt_master_capability.statetypes.add(salt_api_state)
+        #salt_master_capability.statetypes.add(salt_minion_master_state)
+        #salt_master_capability.statetypes.add(salt_api_state)
         #salt_master_capability.statetypes.add(salt_run_state)
-        #salt_master_capability.statetypes.add(accept_salt_master_state)
 
         salt_master_capability.dependentOn = standard_capability
         buildin_saltmaster_profiletype.capabilities.add(standard_capability)
-        buildin_saltmaster_profiletype.capabilities.add(salt_master_capability)
-        buildin_saltmaster_profiletype.capabilities.add(utils_capability)
-        buildin_default_rxrelease_profiletype.capabilities.add(standard_capability)
+        #buildin_saltmaster_profiletype.capabilities.add(salt_master_capability)
+        #buildin_saltmaster_profiletype.capabilities.add(utils_capability)
+        #buildin_default_rxrelease_profiletype.capabilities.add(standard_capability)
         # TODO: dit kan in principe weggehaald worden 'capabilities saven'
 
         standard_capability.save()
-        salt_minion_capability.save()
-        salt_master_capability.save()
+        #salt_minion_capability.save()
+        #salt_master_capability.save()
         #utils_capability.save()
 
         buildin_saltmaster_profiletype.save()
