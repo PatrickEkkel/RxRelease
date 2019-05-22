@@ -163,14 +163,14 @@ class BaseFiller:
 
         salt_master_capability.dependentOn = standard_capability
         buildin_saltmaster_profiletype.capabilities.add(standard_capability)
-        #buildin_saltmaster_profiletype.capabilities.add(salt_master_capability)
+        buildin_saltmaster_profiletype.capabilities.add(salt_master_capability)
         #buildin_saltmaster_profiletype.capabilities.add(utils_capability)
         #buildin_default_rxrelease_profiletype.capabilities.add(standard_capability)
         # TODO: dit kan in principe weggehaald worden 'capabilities saven'
 
         standard_capability.save()
         #salt_minion_capability.save()
-        #salt_master_capability.save()
+        salt_master_capability.save()
         #utils_capability.save()
 
         buildin_saltmaster_profiletype.save()
