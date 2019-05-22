@@ -38,8 +38,8 @@ logger.info('Current working dir: ' + current_working_dir)
 try:
     # client.loginWithKeys(data['remoteuser'])
     logging_dir = '/var/log/rxrelease'
-    salt_username = data['saltusername']
-    salt_password = data['saltpassword']
+    salt_username = data['salt-username']
+    salt_password = data['salt-password']
     if data['os'] == "CentOS":
         salt_api_config_txt = current_working_dir + '/salt_api_config.txt'
         template_parser = TemplateParser(salt_api_config_txt)

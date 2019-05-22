@@ -119,4 +119,4 @@ if statemanager.isRepeatableState(state):
     statemanager.setRepeatableStateDone(state)
 
 elif statemanager.isComplexState(state):
-    statemanager.setComplexStateStatus(state)
+    statemanager.setComplexStateStatus(state,'APPLIED')
