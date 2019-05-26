@@ -58,6 +58,8 @@ salt_master = inputmapping.ipaddress
 tmp_dir = '/tmp/saltmock/'
 id_rsa = tmp_dir + 'id_rsa'
 
+execution_state = 'NOT_EXECUTED'
+
 # TODO: zmq berichten underscores laten ondersteunen, dit begint vervelend te worden
 if salt_mapping.api_mode == 'SALTTESTDOCKER':
     logger.debug("Creating intermediate SSH key for accessing the mock salt-master")
@@ -103,7 +105,13 @@ if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTEST
     elif salt_mapping.salt_function == 'ACCEPTMINIONS':
         salt_service.accept_unaccepted_minions()
     elif salt_mapping.salt_function == 'ACCEPTMINION':
-        salt_service.accept_minion(host)
+        # after a fresh install, the system does not pickup the minion directly,
+        # therefore we need a retry mechanism
+        if not salt_service.accept_minion(host):
+            execution_state = 'APPLIED_BUT_FAILED_RETRYABLE'
+        else:
+            execution_state = 'APPLIED'
+
     elif salt_mapping.salt_function == 'SYNCFORMULA':
         salt_api.sync_formula(salt_mapping.formula)
 
@@ -119,4 +127,4 @@ if statemanager.isRepeatableState(state):
     statemanager.setRepeatableStateDone(state)
 
 elif statemanager.isComplexState(state):
-    statemanager.setComplexStateStatus(state,'APPLIED')
+    statemanager.setComplexStateStatus(state,execution_state)
