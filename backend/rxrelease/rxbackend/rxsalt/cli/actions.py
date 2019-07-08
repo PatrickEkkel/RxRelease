@@ -18,6 +18,7 @@ def salt_help():
     print('init_salt_db() -> initializes the salt portion of the database ')
     print("accept_minion('minion-id') -> accepts minion to the salt-master")
 
+
 def send_salt_ping(minion_id):
     settings_dict = {'dryrun': 'False', 'salt-command': '', 'salt-minion-id': minion_id, 'use-salt-api': 'True', 'salt-function': 'SALTPING'}
     salt_master = connection.module_cli_api.getHostByName('salt-master')
@@ -104,7 +105,7 @@ def accept_minion(hostname):
         , 'saltapiport': saltapiport
         , 'salt-username': salt_username
         , 'salt-password': salt_password
-        , 'test': 'False' 
+        , 'test': 'False'
         }
     action = connection.action_factory\
             .create_action_from_host(salt_master, settings_dict, statetype)

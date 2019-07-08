@@ -1,17 +1,17 @@
 import ntpath
 import os
 import time
-import logging,sys
+import logging, sys
 from dateutil.parser import parse
 from jobfeed.dispatcher import Dispatcher
 from jobfeed.sessionmanager import SessionManager
-from jobfeed.jobdefinition import JobDefinition
+from jobfeed.jobdefinition import DefaultJobDefinition, TimedJobDefinition
 from backend.rxrelease.rxbackend.core.jobs.api.jobfactory import JobFactory
-from backend.rxrelease.rxbackend.configuration.globalsettings import NetworkSettings,LocalSettings,ApiUserSettings
+from backend.rxrelease.rxbackend.configuration.globalsettings import NetworkSettings, LocalSettings, \
+    ApiUserSettings
 from backend.rxrelease.rxbackend.core.jobs.api.jobActionFactory import JobActionFactory
 from backend.rxrelease.rxbackend.core.jobs.statetypes.handlerfactory import HandlerFactory
 from backend.rxrelease.rxbackend.core.restapi.REST_statetypes import REST_statetypes
-
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -32,17 +32,16 @@ if len(sys.argv) > 1:
     api_user_settings_username = sys.argv[1]
     api_user_settings_password = sys.argv[2]
 
-localuser=LocalSettings.localuser
+localuser = LocalSettings.localuser
 
-
-sessionmanager = SessionManager(api_user_settings_username,api_user_settings_password)
+sessionmanager = SessionManager(api_user_settings_username, api_user_settings_password)
 sessionmanager.login()
 
 dispatcher = Dispatcher(sessionmanager)
-# TODO: these job definitions should not be defined here, but in a more central place, for example in the database, therefore we should aim at making a few API calls that support this idea
-stateHandlerDefinition = JobDefinition("StateHandlerJob")
-saltStateHandlerDefinition = JobDefinition("SaltHandlerJob")
-
-dispatcher.registerJob(stateHandlerDefinition)
-dispatcher.registerJob(saltStateHandlerDefinition)
+# TODO: these job definitions should not be defined here,
+#  but in a more central place, for example in the database,
+#  therefore we should aim at making a few API calls that support this idea
+dispatcher.register_job(DefaultJobDefinition("StateHandlerJob"))
+dispatcher.register_job(DefaultJobDefinition("SaltHandlerJob"))
+dispatcher.register_job(TimedJobDefinition('TimedStateHandlerJob'))
 dispatcher.run()

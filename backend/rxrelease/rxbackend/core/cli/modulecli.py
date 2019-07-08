@@ -60,16 +60,16 @@ class ModuleCLI:
         # get the first
         # print(statetype[0]["SettingsCategory"])
         state_credentials_settingsCategory = settings_api.kv_credentials_bycategory_id(
-            statetype[0]["SettingsCategory"])
+            statetype[0]["state_settings"])
         # print(state_credentials_settingsCategory)
         if len(state_credentials_settingsCategory) > 0:
             state_credentials_settings = state_credentials_settingsCategory[0]
         else:
             state_credentials_settings = None
 
-        statetype_category = settings_api.category_by_id(statetype[0]["SettingsCategory"])
+        statetype_category = settings_api.category_by_id(statetype[0]["state_settings"])
 
-        kv_settings = settings_api.kv_settings(statetype[0]['SettingsCategory'])
+        kv_settings = settings_api.kv_settings(statetype[0]['state_settings'])
         module = statetype[0]['module']
         settings_dict = {}
         settings_dict['dryrun'] = 'False'
