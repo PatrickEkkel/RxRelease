@@ -3,8 +3,15 @@ import Axios from 'axios';
 import Host from '../models/host'
 import LogFactory from '../logging/LogFactory'
 import HostFactory from '../factories/hostFactory'
+import StateModel from '../models/dbmodels/statemodel'
+import HostModel from '../models/dbmodels/hostmodel'
+import KVSettingModel from '../models/dbmodels/kvsettingmodel'
+import SettingsCategoryModel from '../models/dbmodels/settingscategorymodel'
+import SimpleStateModel from '../models/dbmodels/simplestatemodel'
+import CredentialsModel from '../models/dbmodels/credentialsmodel'
 import StateFactory from '../factories/stateFactory'
 import SettingsFactory from '../factories/settingsFactory'
+import PromiseExecutor from '../lib/promises/promise_executor'
 import ProfileTypeFactory from '../factories/profiletypeFactory'
 import GlobalSettings from '../config/global'
 import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
@@ -14,6 +21,7 @@ import  * as hostsRequests from '../rest/requests/hostrequests'
 import  * as statesRequests from '../rest/requests/statesrequests'
 import  * as settingsPromises from '../rest/promises/settingspromises'
 import  * as jsonUtils from '../lib/json/utils'
+import  * as hostPromises from '../rest/promises/hostpromises'
 
 
 var settings = new GlobalSettings();
@@ -58,24 +66,15 @@ export function loadHostManagement(hostentry) {
   var host = HostFactory.convertMapToHost(hostentry)
   var settingsfactory = new SettingsFactory()
   var factory = new StateFactory()
-
+  var e = new PromiseExecutor()
   return function (dispatch) {
       statesRequests.getStatesByHost(host)
+      .then(e.execute(hostPromises.GET_STATES_FOR_HOST,{logger: haLogger,current_host: host}))
       .then(function(response) {
-        var states = factory.convertJsonList(response.data)
-        host.setStates(states);
-
-      }).then(function(response) {
-        // we don't have the credentials id available so we need to do a call to the backend to retrieve it
-          return hostsRequests.getHostById(host.getId())
-        // load the credentials
-      }).then(function(response) {
-
         var data = jsonUtils.normalizeJson(response.data);
         var connectioncredentials_id =  data.connectioncredentials
         return settingsRequests.getCredentialSettingsByHostById(connectioncredentials_id);
       }).then(function(response) {
-
         var data = jsonUtils.normalizeJson(response.data);
 
         var connectioncredentials =  settingsfactory.createCredentialSettingFromJson(data);
@@ -85,10 +84,15 @@ export function loadHostManagement(hostentry) {
         var data = jsonUtils.normalizeJson(response.data);
         var settingscategory = settingsfactory.createSettingsCategoryFromJson(data);
        host.getConnectionCredentials().setSettingCategory(settingscategory)
-       haLogger.debug('dispatch LOAD_HOST_MANAGEMENT_FROM_HOSTS')
+
+       haLogger.trace('dispatch LOAD_HOST_MANAGEMENT_FROM_HOSTS')
+       haLogger.traceObject(host)
        dispatch(hostManagementLoaded(host));
 
-      });
+     }).catch(function(error) {
+       console.log(error)
+       haLogger.debug(error)
+     });
   }
 }
 export function hostManagementLoaded(host) {
@@ -161,49 +165,26 @@ export function saveNewHost(hostname,ipaddress,description,profiletype) {
   var hostfactory = new HostFactory();
   //var profiletypefactory = new ProfileTypeFactory();
   var errorHandler = new AggregatedFieldsErrorHandler();
-
+  var settingscategory = null;
+  var host = HostModel.newHost("", hostname, ipaddress, description, profiletype)
+  var e = new PromiseExecutor()
   return function (dispatch) {
     // before we save the host we want to initialize the new SettingsCategory
     // check if it already exists
+    var settings = new GlobalSettings();
     var search_string =  encodeURI(settings.SETTING_CATEGORY_HOSTNAME)
-    settingsRequests.getSettingCategoryByName(search_string).then(function(response) {
-      return response;
-    }).then(function(response) {
 
-        var normalizedData = jsonUtils.normalizeJson(response.data)
-        // if the response from getting the category is null, create a new category
-        if(normalizedData == null) {
-          return settingsRequests.postSettingCategory(settings.SETTING_CATEGORY_HOSTNAME);
-        }
-        else {
-          return response;
-        }
-    })
-    .then(function(response) {
-       var settingscategory = settingsfactory.createSettingsCategoryFromJson(jsonUtils.normalizeJson(response.data));
-       // TODO: dit is niet goed natuurlijk, hier moeten we settings meegeven vanuit de GUI
-      return settingsRequests.postSettings('test','test,',settingscategory)
-    })
-    .then(function(response) {
+    var ssh_creds = CredentialsModel.newCredentials('test','test')
 
-      var connectioncredentials = settingsfactory.createCredentialSettingFromJson(jsonUtils.normalizeJson(response.data))
-
-      var host =  hostfactory.createHost(hostname,ipaddress,description,profiletype)
-      haLogger.trace("post new Host")
-      haLogger.traceObject(host)
-
-      host.setConnectionCredentials(connectioncredentials)
-      return hostsRequests.postHost(host);
-    })
-    .then(function(response) {
-
-      haLogger.trace("Saved host object:")
-      haLogger.traceObject(response.data)
-      dispatch({
-        type: 'SAVE_NEW_HOST',
-        saved_host: response.data
-      })
-    }).catch(function(error) {
+    settingsRequests.getSettingCategoryByName(search_string)
+    .then(e.execute(settingsPromises.CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS_NEW,{logger: haLogger,category: settings.SETTING_CATEGORY_HOSTNAME}))
+    .then(e.execute(settingsPromises.UPDATE_SETTINGS_WITH_CATEGORY,{logger: haLogger, salt_api_creds: ssh_creds}))
+    .then(e.execute(settingsPromises.CREATE_CREDENTIAL_SETTINGS_NEW,{logger: haLogger, salt_api_creds: ssh_creds }))
+    .then(e.execute(hostPromises.CREATE_HOST_WITH_CONNECTION_CREDENTIALS,{logger: haLogger,current_host: host}))
+    .then(e.execute(hostPromises.DISPATCH_SAVE_HOST,{logger: haLogger, dispatch: dispatch}))
+    .then(e.execute(settingsPromises.GET_OR_CREATE_SETTINGSCATEGORY_FROM_HOST, {logger: haLogger, category: host.getHostname()}))
+    .then(e.execute(settingsPromises.GET_OR_CREATE_SETTING,{ logger: haLogger, category: settings.SETTING_CATEGORY_GLOBAL,key: 'sshport',value: '22' }))
+    .catch(function(error) {
         errorHandler.addErrorResponse(error)
         errorHandler.handleErrors('SAVE_NEW_HOST_FAILED',dispatch)
     });

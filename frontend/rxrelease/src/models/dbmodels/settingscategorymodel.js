@@ -7,7 +7,9 @@ class SettingsCategoryModel {
       id: _id,
       name: _name,
       prefix: _prefix,
-      getId: function() { return this.id }
+      getId: function() { return this.id },
+      getName: function() { return this.name },
+      getPrefix: function() { return this.prefix }
       }
   }
   static mapSettingsCategoryModel(_model) {

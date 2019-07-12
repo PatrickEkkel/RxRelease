@@ -8,6 +8,9 @@ from .views import hostviews
 from .views import capabilityviews
 from .views import wizardviews
 from .views import statesviews
+from .views import simplestatesviews
+from .views import complexstatesviews
+from .views import repeatablestatesviews
 from .views import configurationviews
 from .views import statetypeviews
 from .views import userviews
@@ -18,6 +21,7 @@ from .views import moduleviews
 from .views import testview
 from .views import fillerview
 from .views import configurationtabview
+from .views import filesviews
 
 urlpatterns = [
 
@@ -25,8 +29,9 @@ urlpatterns = [
     url(r'^$', testview.index, name='index'),
     url(r'^(?P<profile_id>[0-9]+)/test/$', testview.test, name='results'),
     url(r'^profiles/$', profileviews.CreateView.as_view(), name="create"),
-    url(r'^filler/$',fillerview.fill, name="filler"),
-    url(r'^testfiller/$',fillerview.testFill, name="filler"),
+    url(r'^filler/$', fillerview.fill, name="filler"),
+    url(r'^testfiller/$', fillerview.testFill, name="filler"),
+    url(r'^saltfiller/$', fillerview.salt_fill, name="filler"),
     url(r'^profiles/(?P<pk>[0-9]+)/$', profileviews.DetailsView.as_view(), name="details"),
 
     url(r'^(?P<configuration_id>[0-9]+)/test/$', testview.test, name='results'),
@@ -53,6 +58,23 @@ urlpatterns = [
     url(r'^capabilities/$', capabilityviews.CreateView.as_view(), name="create"),
     url(r'^capabilities/(?P<pk>[0-9]+)/$', capabilityviews.DetailsView.as_view(), name="details"),
 
+    url(r'^simplestates/$',simplestatesviews.CreateView.as_view(),name="details"),
+    url(r'^simplestates/(?P<pk>[0-9]+)/$', simplestatesviews.DetailsView.as_view(), name="details"),
+
+    url(r'^complexstates/$', complexstatesviews.CreateView.as_view(), name="details"),
+    url(r'^complexstates/(?P<pk>[0-9]+)/$', complexstatesviews.DetailsView.as_view(), name="details"),
+
+    url(r'^repeatablestates/$',repeatablestatesviews.CreateView.as_view(),name="details"),
+    url(r'^repeatablestates/(?P<pk>[0-9]+)/$', repeatablestatesviews.DetailsView.as_view(), name="details"),
+
+    url(r'^files/$',filesviews.CreateView.as_view(),name="details"),
+    url(r'^files/(?P<pk>[0-9]+)/$', filesviews.DetailsView.as_view(), name="details"),
+    url(r'^files/upload/$', filesviews.FileUploadView.as_view(), name="details"),
+    url(r'^files/download/$', filesviews.FileDownloadView.as_view(), name="details"),
+    url(r'^files/update/$', filesviews.FileUpdateView.as_view(), name="details"),
+
+
+
     url(r'^states/$', statesviews.CreateView.as_view(), name="create"),
     url(r'^states/(?P<pk>[0-9]+)/$', statesviews.DetailsView.as_view(), name="details"),
     url(r'^states/host/install/(?P<pk>[0-9]+)/$', statesviews.InstallHostView.as_view(), name="byhost"),
@@ -64,6 +86,8 @@ urlpatterns = [
     url(r'^profiletypes/(?P<pk>[0-9]+)/$', profiletypeviews.DetailsView.as_view(), name="details"),
 
     url(r'^settings/kvsettings$', kvsettingsview.CreateView.as_view(), name="create"),
+    url(r'^settings/kvsettings$', kvsettingsview.CreateView.as_view(), name="create"),
+    url(r'^settings/kvsettings/update$', kvsettingsview.UpdateView.as_view(), name="create"),
     url(r'^settings/kvsettings/(?P<pk>[0-9]+)/$', kvsettingsview.DetailsView.as_view(), name="details"),
     url(r'^settings/search/$', kvsettingsview.SearchView.as_view(), name="byhost"),
 

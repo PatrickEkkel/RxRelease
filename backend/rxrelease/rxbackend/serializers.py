@@ -1,10 +1,14 @@
-import logging,sys,socket
+import logging, sys, socket
 from rest_framework import serializers
 from .models import Profile
 from .models import Host
+from .models import File
 from .models import Configuration
 from .models import Capability
 from .models import State
+from .models import SimpleState
+from .models import ComplexState
+from .models import RepeatableState
 from .models import ProfileType
 from .models import StateType
 from .models import KVSetting
@@ -26,35 +30,54 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-class CapabilityMTMSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
+
+class FileMTMSerializer(serializers.PrimaryKeyRelatedField, serializers.ModelSerializer):
+    class Meta:
+        model = File
+        fields = ('id', 'filename', 'path')
+
+
+class CapabilityMTMSerializer(serializers.PrimaryKeyRelatedField, serializers.ModelSerializer):
     class Meta:
         model = Capability
-        fields = ('id','name',)
+        fields = ('id', 'name',)
 
-class HostTestSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
 
+class HostTestSerializer(serializers.PrimaryKeyRelatedField, serializers.ModelSerializer):
     class Meta:
         model = Host
-        fields = ('id','hostname','ipaddress','description')
+        fields = ('id', 'hostname', 'ipaddress', 'description')
+
 
 class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Module
-        fields = ('id','name','active','menuoptionname','configurationPanel')
+        fields = ('id', 'name', 'active', 'menuoptionname', 'configurationPanel')
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id','username')
+        fields = ('id', 'username')
+
 
 class ProfileTypeSerializer(serializers.ModelSerializer):
-    capabilities = CapabilityMTMSerializer(many=True,queryset=Capability.objects.all())
+    capabilities = CapabilityMTMSerializer(many=True, queryset=Capability.objects.all())
+
     class Meta:
         model = ProfileType
-        fields  = ('id','name','system','capabilities')
+        fields = ('id', 'name', 'system', 'capabilities')
+
+
+class FileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = File
+        fields = ('id', 'filename', 'path')
+
 
 class HostSerializer(serializers.ModelSerializer):
-    def validate_ipaddress(self,value):
+
+    def validate_ipaddress(self, value):
         try:
             socket.inet_aton(value)
         except socket.error:
@@ -65,80 +88,111 @@ class HostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Host
-        fields = ('id','hostname','ipaddress','description','status','profileType','connectioncredentials','hostSettings')
+        fields = ('id', 'hostname', 'ipaddress', 'description', 'status', 'profileType',
+                  'connectioncredentials', 'hostSettings')
+
 
 class ConfigurationSerializer(serializers.ModelSerializer):
-    hosts = HostTestSerializer(many=True,queryset=Host.objects.all())
+    hosts = HostTestSerializer(many=True, queryset=Host.objects.all())
 
     class Meta:
         model = Configuration
-        fields = ('id','name','profile','hosts')
-    
-class HostStateHandlerSerializer(serializers.ModelSerializer):
+        fields = ('id', 'name', 'profile', 'hosts')
 
+
+class HostStateHandlerSerializer(serializers.ModelSerializer):
     class Meta:
         model = StateTypeHandler
-        fields = ("host_id","statetype_id","keyvalList","handlerType","handlerCommand")
+        fields = ("host_id", "statetype_id", "keyvalList", "handlerType", "handlerCommand")
+
 
 class WizardStatusSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = WizardStatus
-        fields = ('id','wizard_id','wizard_status')
-class StateTypeMTMSerializer(serializers.PrimaryKeyRelatedField,serializers.ModelSerializer):
+        fields = ('id', 'wizard_id', 'wizard_status')
 
+
+class StateTypeMTMSerializer(serializers.PrimaryKeyRelatedField, serializers.ModelSerializer):
     class Meta:
         model = StateType
-        fields = ('id','name')
+        fields = ('id', 'name')
+
 
 class StateTypeSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = StateType
-        fields = ('id','name','handler','module','dependentOn','SettingsCategory')
+        fields = ('id', 'name', 'handler', 'module', 'dependentOn', 'state_settings', 'jobtype')
+
 
 class CapabilitySerializer(serializers.ModelSerializer):
-    statetypes = StateTypeMTMSerializer(many=True,queryset=StateType.objects.all())
+    statetypes = StateTypeMTMSerializer(many=True, queryset=StateType.objects.all())
+
     class Meta:
         model = Capability
-        fields = ('id','name','statetypes','dependentOn')
+        fields = ('id', 'name', 'statetypes', 'dependentOn')
+
 
 class InstallHostSerializer(serializers.ModelSerializer):
     class Meta:
         model = InstallHost
-        fields = ('id','host_id')
-class StateSerializer(serializers.ModelSerializer):
-    #capabilities = CapabilityMTMSerializer(many=True,queryset=Capability.objects.all())
-    class Meta:
+        fields = ('id', 'host_id')
 
+
+class RepeatableStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RepeatableState
+        fields = ('id', 'last_successfull_run')
+
+
+class ComplexStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ComplexState
+        fields = ('id', 'status', 'last_successfull_run')
+
+
+class SimpleStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SimpleState
+        fields = ('id', 'installed', 'last_successfull_run')
+
+
+class StateSerializer(serializers.ModelSerializer):
+    simple_state = SimpleStateSerializer(required=False, read_only=True)
+    repeatable_state = RepeatableStateSerializer(required=False, read_only=True)
+    complex_state = ComplexStateSerializer(required=False, read_only=True)
+
+    class Meta:
         model = State
-        fields = ('id','name','installed','host','statetype')
+        fields = ('id', 'name', 'host', 'statetype', 'simple_state', 'repeatable_state','complex_state')
+
 
 class SettingsCategorySerializer(serializers.ModelSerializer):
     class Meta:
-
         model = SettingsCategory
-        fields = ('id','name','prefix')
+        fields = ('id', 'name', 'prefix')
+
+
 class KVSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         category = SettingsCategorySerializer
         model = KVSetting
-        fields = ('id','key','value','category')
+        fields = ('id', 'key', 'value', 'category')
+
 
 class CredentialsSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         category = SettingsCategorySerializer
         model = CredentialsSetting
-        fields = ('id','username','password','category')
+        fields = ('id', 'username', 'password', 'category')
+
 
 class ProfileSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Profile
-        fields = ('name','profiletype','id')
+        fields = ('name', 'profiletype', 'id')
+
 
 class ConfigurationTabSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = ConfigurationTab
-        fields = ('id','tabname','component_tag','module')
+        fields = ('id', 'tabname', 'component_tag', 'module')

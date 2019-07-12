@@ -25,7 +25,7 @@ current_working_dir = dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
 logger.info("Running saltmaster setup")
-client = SSHWrapper.withKeys(data['remoteuser'],inputmapping.getIpAddress())
+client = SSHWrapper.withKeys(data['remoteuser'],inputmapping.getIpAddress(), data['sshport'])
 
 
 if data['os'] == "CentOS":

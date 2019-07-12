@@ -22,6 +22,18 @@ export default function _saltconfiguration(state = initialSettingsState,action) 
        showModal: false,
        selected_formula: action.selected_formula
      }
+    case 'OPEN_NEW_SALTFILE':
+     return {
+       type: action.type,
+       showModal: action.showModal
+     }
+    case 'SALT_FILE_SAVED':
+    return {
+      type: action.type,
+      showModal: action.showModal,
+      selected_formula: action.selected_formula,
+      file: action.file
+    }
     case 'OPEN_NEW_SALTFORMULA':
       return {
         type: action.type,
@@ -32,12 +44,24 @@ export default function _saltconfiguration(state = initialSettingsState,action) 
         type: action.type,
         yaml_contents: action.yaml_contents
       }
+    case 'SALT_FORMULA_UPDATED':
+      return {
+        type: action.type,
+        showModal: action.showModal,
+        updated_formula: action.updated_formula
+      }
     case 'SALT_FORMULA_SAVED':
       return {
         type: action.type,
         showModal: action.showModal,
         saltformula: action.saltformula
       }
+    case 'FILE_CONTENTS_LOADED':
+    return {
+      type: action.type,
+      contents: action.contents,
+      selected_file: action.selected_file
+    }
     default:
     return state;
   }

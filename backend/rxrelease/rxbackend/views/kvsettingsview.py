@@ -1,6 +1,29 @@
+import logging,paramiko,sh,sys,json
 from rest_framework import generics
+from rest_framework.response import Response
 from ..serializers import KVSettingsSerializer
 from ..models import KVSetting
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+class UpdateView(generics.UpdateAPIView):
+    def put(self, request, *args, **kwargs):
+
+        data = self.request.data
+        _key = data['key']
+        kv_setting = KVSetting.objects.get_or_create(key=_key)
+        kv_setting.value = data['value']
+        kv_setting.save()
+        return Response(kv_setting)
+
 
 class CreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
@@ -15,12 +38,27 @@ class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = KVSetting.objects.all()
     serializer_class = KVSettingsSerializer
 
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 class SearchView(generics.ListAPIView):
     serializer_class = KVSettingsSerializer
     def get_queryset(self):
         category_id =  self.request.query_params.get('category_id', None)
         category_name = self.request.query_params.get('category_name',None)
-        if category_name is not None:
+        setting_key = self.request.query_params.get('settings_key',None)
+        hostname = self.request.query_params.get('hostname',None)
+
+        if hostname is not None and setting_key is not None:
+            settingscount = KVSetting.objects.filter(category__name=hostname,key=setting_key).count()
+            print(setting_key)
+            if settingscount > 0:
+                return  KVSetting.objects.filter(category__name=hostname,key=setting_key)
+            else:
+                return KVSetting.objects.filter(category__name='Global Settings',key=setting_key)
+        elif setting_key is not None and category_name is not None:
+            result_queryset = KVSetting.objects.filter(category__name=category_name,key=setting_key)
+            return result_queryset
+        elif category_name is not None:
          result_queryset = KVSetting.objects.filter(category__name=category_name)
          return result_queryset
         elif category_id is not None:

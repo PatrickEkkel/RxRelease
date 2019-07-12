@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class StateTypeHandler(models.Model):
     managed = False
     host_id = models.IntegerField()
@@ -8,6 +9,7 @@ class StateTypeHandler(models.Model):
     handlerType = models.CharField(max_length=255)
     handlerCommand = models.CharField(max_length=255)
 
+
 class InstallHost(models.Model):
     managed = False
-    host_id = models.IntegerField(null=True,default=None)
+    host_id = models.IntegerField(null=True, default=None)

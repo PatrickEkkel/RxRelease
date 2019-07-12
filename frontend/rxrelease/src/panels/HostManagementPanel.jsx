@@ -1,5 +1,6 @@
 import React from 'react';
 import  * as hostActionCreators from '../redux/hostactioncreators'
+import * as stateComponents from '../panels/Hosts/States/Components/StateComponents'
 import BasicRxPanel from '../components/panels/BasicRxPanel';
 import Button from '../components/Button'
 import Utils from '../lib/react/utils'
@@ -35,6 +36,7 @@ class  HostManagementPanel  extends BasicRxPanel {
   componentWillMount() {
     var {type,selected_host} = this.props;
     if(type == 'LOAD_HOST_MANAGEMENT_FROM_HOSTS') {
+      this.getLogger().traceObject(selected_host)
       this.setState({selected_host: selected_host})
     }
   }
@@ -68,25 +70,24 @@ class  HostManagementPanel  extends BasicRxPanel {
     var currentContext = this;
     var { type } = this.props
 
-
     var states = StandardListConverters.convertListToMap(this.state.selected_host.getStates(),function(item) {
-      var installed = item.getInstalled()
-
-      var installedDisplayString = "NOT INSTALLED"
-      if(installed) {
-        installedDisplayString =  "INSTALLED"
-      }
-      var result = [item.getId(),item.getName(),installedDisplayString];
-      return result;
-
+      return stateComponents.renderStateAsString(item)
     });
 
     function handleLabelLoad(entry) {
         if(entry[2] == "NOT INSTALLED") {
           return "label-important label"
-        }else {
+        }
+        else if (entry[2] == "INSTALLED") {
           return "label-success label"
         }
+        else if(entry[2] == "REPEATABLE") {
+          return "label-info label"
+        }
+        else if(entry[2] == "COMPLEX") {
+          return "label-info label"
+        }
+
 
     }
     var headers = ['#','name'];

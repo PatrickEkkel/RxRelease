@@ -2,6 +2,8 @@
 #import importlib.util
 import logging,sys,os,importlib
 import zmq
+from backend.rxrelease.rxbackend.core.cli.actions import *
+from backend.rxrelease.rxbackend.rxsalt.cli.actions import *
 from backend.rxrelease.rxbackend.configuration.globalsettings import ApiUserSettings,NetworkSettings,RemoteSettings
 from backend.rxrelease.rxbackend.core.restapi.REST_authentication import REST_authentication
 from backend.rxrelease.rxbackend.core.jobs.zmq.scheduler_service import SchedulerService,ActionFactory
@@ -12,6 +14,13 @@ from backend.rxrelease.rxbackend.ssh.shell import Shell
 from backend.rxrelease.rxbackend.ssh.connectiondetails import ConnectionDetails
 from backend.rxrelease.rxbackend.statehandlers.statehandler_console_runner import ConsoleRunner
 from backend.rxrelease.rxbackend.rxsalt.statehandlers.statehandler_saltconsole_runner import SaltConsoleRunner
+from backend.rxrelease.rxbackend.core.cli.connection import Connection
+
+def __init():
+    connection = Connection.get_connection()
+    connection.connect()
+__init()
+
 
 module_cli_api = None
 api_user_settings_username = ApiUserSettings.username
@@ -35,43 +44,15 @@ def load_settings_from_path(path):
  api_user_settings_password = ApiUserSettings.password
  print('settings changed')
 
-
-def help():
- print("list_modules() -> Lists modules that are available")
- print("enable_salt() -> enables salt module")
- print("reset_saltwizard() -> DEVELOPER, resets the state of the saltwizard, easy for testing")
- print("env = module_cli_api.getEnvironment(<hostname>,<statetype_name>) -> DEVELOPER, get an environment for a particular host,statetype combination, call runner.runStateHandlerJob(<statehandlername>,env)")
- print("example voor getEnvironment:  env = module_cli_api.getEnvironment('salt-master','Salt-Api')")
- print("execute statehandler without the scheduler, call runner.runStateHandlerJob('install-salt-api',env) ")
-
 def list_modules():
  print("Listing modules")
  for module in module_cli_api.listModules():
   print('name: ' + str(module['name']) + ' active: ' + str(module['active']))
-def reset_saltwizard():
- module_cli_api.updateWizard('rxsalt_wizard','NEW')
- module_cli_api.deleteHost('Salt Master')
 
 
-def init_test_db():
- global module_cli_api
- if module_cli_api is None:
-    module_cli_api = ModuleCLI(None)
- print("Running initial database package for basic usage")
- module_cli_api.initTestDb()
 
-def init_rxrelease_db():
- global module_cli_api
- if module_cli_api is None:
-     module_cli_api = ModuleCLI(None)
- print("Running initial database package for basic usage")
- module_cli_api.initDb()
-
-def send_workload(host,statetype):
- env = module_cli_api.getEnvironment(host,statetype)
- action = action_factory.create_action_from_environment(env)
- scheduler_service.schedule_state(action)
-def send_test_workload():
+# TODO: deze methode is niet geschrevn op de testset
+def _send_test_workload():
  salt_api_env = module_cli_api.getEnvironment('salt-master','Salt-Api')
  ssh_passwordless_login_env = module_cli_api.getEnvironment('salt-master','SSH passwordless login')
  salt_master_env = module_cli_api.getEnvironment('salt-master','Salt-master')
@@ -85,13 +66,6 @@ def send_test_workload():
  scheduler_service.schedule_state(second_action)
  scheduler_service.schedule_state(third_action)
  scheduler_service.schedule_state(fourth_action)
-
-def enable_salt():
- print("Enabling salt module")
- # uitbreiden met een lamba waarmee we erdoorheen kunnen zoeken
- #module_cli_api.listModules()
- module_cli_api.activateModule('rxsalt')
- module_cli_api.createWizard('rxsalt_wizard','NEW')
 
 
 def auth_token():
@@ -112,7 +86,7 @@ def connect():
  except:
   print('CLI connection with backend could not be established')
  if auth_token is not None:
-  print("CLI connection with backend successfull")
+  print("Legacy CLI connection with backend successfull")
 
   # shortcut for the activating Salt
 
@@ -126,4 +100,4 @@ def print_networksettings():
     print("ApiUserSettings username: " + api_user_settings_username)
     print("ApiUserSettings password: " + api_user_settings_password)
 
-connect()
+#connect()

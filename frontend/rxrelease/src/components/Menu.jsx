@@ -33,6 +33,16 @@ class Menu extends BasicRxPanel {
 
   }
 
+  getSelectedMenu() {
+
+    if(this.state.selectedMenu != null) {
+      return this.state.selectedMenu
+    }
+    else {
+      return "Profiles"
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
 
     var type = nextProps.type;
@@ -48,14 +58,14 @@ class Menu extends BasicRxPanel {
       // TODO: centrale plek maken waar we de landing page kunnen configureren
       this.props.dispatch(pluginsactionCreators.loadEnabledPlugins())
       this.getLogger().debug("authentication success")
-      this.setState({mode: "LOGGED_IN",selectedMenu: "Profiles"})
+      this.setState({mode: "LOGGED_IN",selectedMenu: this.getSelectedMenu()})
     }
     else if(type == 'CHANGE_SELECTED_MENU') {
       this.setState({selectedMenu: selectedMenu })
     }
     else if(type == 'PLUGINS_LOADED') {
       this.getLogger().debug("plugins loaded")
-      this.setState({loadedPlugins: plugins,selectedMenu: "Profiles",mode: "LOGGED_IN"})
+      this.setState({loadedPlugins: plugins,selectedMenu: this.getSelectedMenu(),mode: "LOGGED_IN"})
       //alert('plugins seem to be loaded')
     }
   }

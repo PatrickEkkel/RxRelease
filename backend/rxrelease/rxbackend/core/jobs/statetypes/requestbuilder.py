@@ -1,4 +1,4 @@
-import logging,sys
+import logging, sys
 from .handlerrequest import HandlerRequest
 from ...dao.hostdao import HostDao
 from ...dao.settingsdao import SettingsDao
@@ -15,79 +15,87 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
+
 class RequestBuilder:
+    def __init__(self):
+        self.kvbuilder = KeyValListBuilder()
+        self.settingsDao = SettingsDao()
+        self.settingsService = SettingsService()
 
-    def buildRequest(self,state):
-     hostDao = HostDao()
-     settingsDao = SettingsDao()
-     settingsService = SettingsService()
-     host = hostDao.getHostById(state.host_id)
-     # TODO: dit moeten we via de service laten lopen
-     credentials = settingsDao.getCredentialSettingsById(host.connectioncredentials_id)
+        self.kvbuilder.addKeyValPair("remoteuser", RemoteSettings.remoteuser)
+        self.kvbuilder.addKeyValPair("dryrun", "False")
 
-     # Dit stukje is generiek
-     handlerRequest = HandlerRequest()
-     handlerRequest.setIpAddress(state.host.ipaddress)
-     handlerRequest.setHostId(state.host_id)
-     handlerRequest.setStateTypeId(state.statetype_id)
-     handlerRequest.setHandlerCommand(state.statetype.handler)
-     # first get the global setting for this statetype by getting the vars defined in the specific category
-     statetypeSettingsCategory =  state.statetype.SettingsCategory
-     # this should always yield results, the filler that will be provided with the installer should always provide a set of default keyvalue pairs
-     globalHostSettings = settingsService.getSettingsByCategoryname('Global Settings')
+    def build_request_with_state(self, state):
+        host_dao = HostDao()
+        host = host_dao.getHostById(state.host_id)
+        return self.build_request_with_host_and_statetype(host, state.statetype)
 
-     statetypeSettings = settingsService.getHostSettingsByStatetype(state.statetype)
-     state_credentials = settingsService.getHostCredentialSettingsByStatetype(state.statetype)
-     logger.debug("State credentials: " + str(state_credentials))
-     logger.debug("prefix: " + str(statetypeSettingsCategory.prefix))
-     logger.debug("statetypeSettings: " + str(statetypeSettings))
-     hostOnlySettings = settingsService.getHostSettingsByHost(state.host)
+    def build_request_with_host_and_statetype(self, host, statetype):
 
-     # the host settings that will be selected
-     # problem because we still need a list of host settings that are expected for this type of host call
-     selectedSettings = {}
-     if globalHostSettings is not None:
-     # first go through the list of global settings
-      for globalSetting in globalHostSettings:
-         if hostOnlySettings is not None and hostOnlySettings.get(globalSetting.key) is not None:
-          selectedSettings[globalSetting.key] = hostOnlySettings[globalSetting.key]
-         else:
-          selectedSettings[globalSetting.key] = globalSetting.value
-     else:
-      logger.error("No global settings found")
+        handler_request = HandlerRequest()
 
-     if statetypeSettings is not None:
-      for statetypeSetting in statetypeSettings:
-          print("dikke test jongen.....")
-          selectedSettings[statetypeSetting.key] = statetypeSetting.value
+        handler_request.setIpAddress(host.ipaddress)
+        handler_request.setHostId(host.id)
+        handler_request.setStateTypeId(statetype.id)
+        handler_request.setHandlerCommand(statetype.handler)
 
-     logger.debug("globalHostSettings: " + str(globalHostSettings))
-     logger.debug("selectedSettings: " + str(selectedSettings))
+        statetype_settings_category = statetype.state_settings
 
-     #for setting in selectedSettings:
-        # print("current settings: " + setting)
-     # keyvalue pairs moeten dus opgehaald worden aan de hand van de statetype,
-     # maar omdat we zitten met een configuratie per host moeten we de werkelijke settings uit de host halen
+        global_host_settings = self.settingsService.getSettingsByCategoryname('Global Settings')
 
-     # We maken hierbij een onderscheid tussen host data (specefiek voor de host die we afhandelen) en global data,
-     # Om het systeem zo eenvoudig mogelijk te maken gaan we er altijd  van globale gedefinieerde uit TENZIJ we dit lokaal op de host gedefinieerd hebben
+        statetype_settings = self.settingsService.getHostSettingsByStatetype(statetype)
+        logger.debug("prefix: " + str(statetype_settings_category.prefix))
+        logger.debug("statetypeSettings: " + str(statetype_settings))
+        host_only_settings = self.settingsService.getHostSettingsByHost(host)
 
-     # om te weten welke variabelen we moeten ophalen moeten we een lijstje van variabelen ophalen uit de variabelen lisrt uit de StateType
+        # the host settings that will be selected
+        # problem because we still need a list of host settings that are expected for this
+        # type of host call
+        selected_settings = {}
 
-     # TODO: new type definen voor variabelen van state
-     # Dit is specefiek aan de statetype
-     kvbuilder  = KeyValListBuilder()
-     kvbuilder.addKeyValPair("remoteuser",RemoteSettings.remoteuser)
-     kvbuilder.addKeyValPair("username",credentials.username)
-     kvbuilder.addKeyValPair("password",credentials.password)
-     kvbuilder.addKeyValPair("dryrun","False")
-     if state_credentials is not None:
-      logger.debug("state credentials found")
-      kvbuilder.addKeyValPair(statetypeSettingsCategory.prefix + 'username',state_credentials.username)
-      kvbuilder.addKeyValPair(statetypeSettingsCategory.prefix + 'password',state_credentials.password)
+        if global_host_settings is not None:
+            # first go through the list of global settings
+            for globalSetting in global_host_settings:
+                if host_only_settings is not None and host_only_settings.get(
+                        globalSetting.key) is not None:
+                    selected_settings[globalSetting.key] = host_only_settings[globalSetting.key]
+                else:
+                    selected_settings[globalSetting.key] = globalSetting.value
+        else:
+            logger.error("No global settings found")
 
-     for key, value in selectedSettings.items():
-      kvbuilder.addKeyValPair(key,value)
-      
-     handlerRequest.setKeyValList(kvbuilder.build())
-     return handlerRequest
+        if statetype_settings is not None:
+            for statetypeSetting in statetype_settings:
+                logger.debug(f"adding statetype setting with key: {statetypeSetting.key}")
+                selected_settings[statetypeSetting.key] = statetypeSetting.value
+
+        logger.debug("globalHostSettings: " + str(global_host_settings))
+        logger.debug("selectedSettings: " + str(selected_settings))
+
+        # TODO: new type definen voor variabelen van state
+        # Dit is specefiek aan de statetype
+
+        credentials = self.settingsDao.getCredentialSettingsById(host.connectioncredentials_id)
+
+        self.kvbuilder.addKeyValPair("username", credentials.username)
+        self.kvbuilder.addKeyValPair("password", credentials.password)
+        state_credentials = None
+        logger.debug("loaded statetype" + str(statetype.__dict__))
+        if statetype.connection_credentials is not None:
+            state_credentials = self.settingsService.get_credentials_by_category_id(statetype.connection_credentials.id)
+            prefix = state_credentials.category.prefix
+            logger.debug(f"state credentials {state_credentials}")
+            logger.debug(f"prefix: {prefix}")
+
+            if state_credentials is not None:
+                logger.debug("state credentials found")
+                self.kvbuilder.addKeyValPair(state_credentials.category.prefix + '-username',
+                                        state_credentials.username)
+                self.kvbuilder.addKeyValPair(state_credentials.category.prefix + '-password',
+                                    state_credentials.password)
+
+        for key, value in selected_settings.items():
+            self.kvbuilder.addKeyValPair(key, value)
+
+        handler_request.setKeyValList(self.kvbuilder.build())
+        return handler_request

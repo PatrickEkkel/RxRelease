@@ -9,7 +9,7 @@ import SaltFormulaModel from '../models/dbmodels/saltformulamodel'
 import  * as saltconfigurationActionCreators from '../redux/saltconfigurationactioncreators'
 
 
-class NewFormulaPanel  extends BasicRxPanel {
+class NewFormulaPanel extends BasicRxPanel {
 
   constructor() {
     super('SALT','NEW_FORMULA_PANEL')
@@ -20,7 +20,7 @@ class NewFormulaPanel  extends BasicRxPanel {
   changeAttr(e) {
     this.props.changeAttr(e);
   }
-  
+
   componentWillMount() {
 
     var {type} = this.props;

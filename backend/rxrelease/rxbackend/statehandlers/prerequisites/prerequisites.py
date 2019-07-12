@@ -8,6 +8,7 @@ from rxbackend.core.jobs.api.utils import Utils
 from rxbackend.core.restapi.REST_states import REST_states
 from rxbackend.core.restapi.REST_authentication import REST_authentication
 from rxbackend.ssh.ssh import SSHClient
+from rxbackend.core.jobs.statehandlers.statemanager import StateManager
 from rxbackend.ssh.sshwrapper import SSHWrapper
 
 
@@ -32,17 +33,16 @@ data = json.loads(inputmapping.getKeyvalList())
 
 
 
-client = SSHWrapper.withKeys(data['remoteuser'],inputmapping.getIpAddress())
+client = SSHWrapper.with_keys(data['remoteuser'],inputmapping.getIpAddress(), data['sshport'])
 
 if data['os'] == "CentOS":
  # first remove salt, if it was already installed
- client.sendBlockingCommand('sudo yum install -y wget')
- client.sendBlockingCommand('wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm')
- client.sendBlockingCommand('sudo rpm -ivh epel-release-latest-7.noarch.rpm')
-
+ client.send_blocking_command('sudo yum install -y wget')
+ client.send_blocking_command('wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm')
+ client.send_blocking_command('sudo rpm -ivh epel-release-latest-7.noarch.rpm')
 
  reststates_api = REST_states(auth_token)
  state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),inputmapping.getStateId())
- state =  state[0]
- state['installed'] = True
- reststates_api.putState(state)
+ state = state[0]
+ statemanager = StateManager(auth_token)
+ statemanager.setSimpleStateInstalled(state)

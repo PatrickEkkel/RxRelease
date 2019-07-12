@@ -16,7 +16,7 @@ class StateHandler:
         pass
     def handlePythonState(self,state,host,handlerCommand,keyvalList):
         handlerPackage  = handlerCommand.replace('.py','')
-        shell_command = "python3 -m " + self.rootdir + "." + handlerPackage + "." + handlerPackage + " " + str(host.id) + " " + str(host.ipaddress) +  " " +  str(state.id) +  " \"" + keyvalList + "\" >> /var/log/rxrelease/" + handlerCommand +  ".log"
+        shell_command = "python3 -m " + self.rootdir + "." + handlerPackage + "." + handlerPackage + " " + str(host.id) + " " + str(host.ipaddress) +  " " +  str(state.id) +  " \"" + keyvalList + "\" >> /var/log/rxrelease/" + handlerCommand +  ".log 2>&1"
 
         logger.debug("statehandler context: " + self.rootdir)
         logger.debug("executing statehandler: " + shell_command)

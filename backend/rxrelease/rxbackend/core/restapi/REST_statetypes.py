@@ -18,11 +18,7 @@ class REST_statetypes(REST_base):
 
  def postHandleHostState(self,request):
   serverAddress= self.backendlocation +  '/rxbackend/statetypes/handlehoststate'
-  print("wat sturen we nu naar de server")
-  print(str(request))
-  #json.loads(str(request))
   headers = {'content-type': 'application/json'}
   headers.update(self.getAuthTokenHeader())
   response =  requests.post(serverAddress,data=str(request),headers=headers)
-  print(response.text)
-  print(response.status_code, response.reason)
+ 
