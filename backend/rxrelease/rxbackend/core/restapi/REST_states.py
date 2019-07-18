@@ -15,7 +15,7 @@ logger.addHandler(ch)
 
 
 class REST_states(REST_base):
-
+    # TODO: methode naamgeving is niet pythonesque
     def __init__(self, auth_token):
         super().__init__(auth_token)
         self.backendlocation = NetworkSettings.protocol + "://" + NetworkSettings.servername + ":" + NetworkSettings.port
@@ -77,6 +77,12 @@ class REST_states(REST_base):
         result = response.json()
         return result
 
+    def getStateByHostnameAndStateId(self,hostname,state_id):
+        serverAddress = self.backendlocation + '/rxbackend/states/search/?hostname=' + str(
+            host_id) + "&" + "state_id=" + str(state_id)
+        response = requests.get(serverAddress, headers=self.getAuthTokenHeader())
+        result = response.json()
+        return result
 
     def getStateByHostAndStateId(self, host_id, state_id):
         serverAddress = self.backendlocation + '/rxbackend/states/search/?host_id=' + str(
