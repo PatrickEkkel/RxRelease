@@ -33,6 +33,16 @@ class ActionFactory:
 
         return action_builder.build()
 
+    def create_action_from_inputmapping(self, mapping):
+        job_factory = JobFactory()
+        newJob = jobfactory.createNewJob('StateHandlerJob')
+        job_actionfactory = jobActionFactory(newJob)
+        return job_actionfactory.createActionFromInputMapping(mapping)
+
+
+        job_actionfactory.createActionFromString()
+        return None
+
     def create_action_from_environment(self, env):
         action_builder = ActionBuilder()
 

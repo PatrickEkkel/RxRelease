@@ -175,13 +175,22 @@ def sync_salt_formula(salt_formula):
 
 def send_salt_command(minion_id, command, salt_api_mode):
     # we need to get the saltmaster host object so we know where to send our commands
-    global connection
+    connection = Connection.get_connection()
+    salt_username = connection.module_cli_api.get_credentials_by_category('Salt Settings')[0]['username']
+    salt_password = connection.module_cli_api.get_credentials_by_category('Salt Settings')[0]['password']
+
     settings_dict = {
         'dryrun': 'False'
         , 'salt-command': command
         , 'salt-minion-id': minion_id
         , 'api-mode': salt_api_mode
         , 'salt-function': 'SALTCOMMAND'
+        , 'sshport': '22'
+        , 'saltapiport': '8080'
+        , 'salt-username': salt_username
+        , 'salt-password': salt_password
+        , 'test': 'False'
+        , 'remoteuser': RemoteSettings.remoteuser
     }
     salt_master = connection.module_cli_api.getHostByName('salt-master')
     statetype = connection.module_cli_api.getStatetypeByName('Salt-Run-State')

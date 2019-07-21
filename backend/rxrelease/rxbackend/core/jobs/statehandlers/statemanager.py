@@ -1,5 +1,6 @@
 import datetime
 from rxbackend.core.restapi.REST_states import REST_states
+from rxbackend.core.restapi.REST_statetypes import REST_statetypes
 
 
 class StateManager:
@@ -7,6 +8,7 @@ class StateManager:
     def __init__(self, auth_token):
         self.auth_token = auth_token
         self.rest_states_api = REST_states(auth_token)
+        self.rest_statetypes_api = REST_statetypes(auth_token)
 
     def setRepeatableStateDone(self, state):
         repeatable_state = state['repeatable_state']
@@ -32,5 +34,7 @@ class StateManager:
         complex_state['status'] = status
         self.rest_states_api.putComplexState(state['complex_state'])
 
-    def schedule_state(self, state, host_id, payload):
-        statetypeRequest = HandlerFactory().createRequest(payload)
+    #def schedule_state(self, state, host_id, payload):
+#        statetypeRequest = HandlerFactory().createRequest(payload)
+#        print('request: ' + statetypeRequest)
+#        self.rest_statetypes_api.postHandleHostState(statetypeRequest)

@@ -15,10 +15,11 @@ logger.addHandler(ch)
 class HandlerFactory:
     def __init__(self):
         pass
+
     def createRequest(self,payload):
         payloadElements =  payload.split(',')
         if len(payloadElements) < 5:
-         logger.debug("Amount of elements found: " + str(len(payloadElements)) + " expected 5, probable causes could be illigal chars in handlerscriptname (_,;)")     
+         logger.debug("Amount of elements found: " + str(len(payloadElements)) + " expected 5, probable causes could be illigal chars in handlerscriptname (_,;)")
         #
         print("string consists out of: " + str(payload))
         host_id = payloadElements[0].split('=')[1]

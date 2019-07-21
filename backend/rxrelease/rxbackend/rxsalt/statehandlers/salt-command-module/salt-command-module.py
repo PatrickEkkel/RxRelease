@@ -96,7 +96,7 @@ if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTEST
 
     if salt_mapping.salt_function == 'SALTCOMMAND':
         # TODO: deze directe call naar de salt-api eruit slopen
-        salt_api.cmd_run(salt_mapping.command)
+        salt_api.cmd_run(salt_mapping.salt_minion_id, salt_mapping.command)
     elif salt_mapping.salt_function == 'APPLYSTATE':
         salt_service.execute_formula(salt_mapping.formula, salt_minion_id, test)
     elif salt_mapping.salt_function == 'LISTALLACCEPTEDMINIONS':
@@ -105,9 +105,18 @@ if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTEST
     elif salt_mapping.salt_function == 'ACCEPTMINIONS':
         salt_service.accept_unaccepted_minions()
     elif salt_mapping.salt_function == 'ACCEPTMINION':
+
+        # choose the current host if salt_mapping.minion_id is None
+        minion_to_accept = None
+        print('salt_minion_id: ' + salt_mapping.salt_minion_id)
+        if salt_mapping.salt_minion_id is None:
+            minion_to_accept = host
+        else:
+            minion_to_accept = resthosts_api.get_host_by_hostname(salt_mapping.salt_minion_id)[0]
         # after a fresh install, the system does not pickup the minion directly,
         # therefore we need a retry mechanism
-        if not salt_service.accept_minion(host):
+        print(minion_to_accept)
+        if not salt_service.accept_minion(minion_to_accept):
             execution_state = 'APPLIED_BUT_FAILED_RETRYABLE'
         else:
             execution_state = 'APPLIED'

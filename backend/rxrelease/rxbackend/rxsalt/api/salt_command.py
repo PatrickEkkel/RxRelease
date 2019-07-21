@@ -105,3 +105,4 @@ class SaltCommand:
     def __init__(self):
         self.command = ''
         self.api_mode = ''
+        self.salt_minion_id = None

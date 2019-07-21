@@ -6,6 +6,14 @@ class JobActionFactory:
     def __init__(self, job):
         self.job = job
 
+    def createActionFromInputMapping(self, input_mapping):
+         mapping.host_id
+         mapping.ipaddress
+         mapping.state_id
+         result = Action()
+
+         return result
+
     def createActionFromString(self, line):
         jobname = line.split('_')[2]
         job = Job(jobname)

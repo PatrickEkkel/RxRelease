@@ -18,6 +18,7 @@ class Task:
         self.handler = handler
         self.action = action
 
+
 class Worker:
 
     def __init__(self, session, scheduler):
