@@ -6,6 +6,7 @@ from .modulecli import ModuleCLI
 class Connection:
 
     c = None
+    
     def __init__(self):
         self.module_cli_api = None
         self.action_factory = ActionFactory()

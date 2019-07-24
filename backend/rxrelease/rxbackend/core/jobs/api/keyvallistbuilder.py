@@ -17,15 +17,10 @@ class KeyValListBuilder:
     def addKeyValPair(self,key,value):
         self.items.append({key : value})
     def build(self):
-        #result = "{"
-        #result = "{"
         result = ""
         for item in self.items:
          for key,value in item.items():
-          #result += '\\\"' + key + '\\\":\\\"' +  value + '\\\",'
           result += key + ":" + value + ","
 
         result = result[:-1]
-        #result += ""
-        #result += "}"
         return result

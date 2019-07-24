@@ -121,7 +121,7 @@ class StateTypeMTMSerializer(serializers.PrimaryKeyRelatedField, serializers.Mod
 class StateTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = StateType
-        fields = ('id', 'name', 'handler', 'module', 'dependentOn', 'state_settings', 'jobtype')
+        fields = ('id', 'name', 'handler', 'module', 'dependentOn', 'state_settings', 'jobtype','connection_credentials_id')
 
 
 class CapabilitySerializer(serializers.ModelSerializer):

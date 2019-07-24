@@ -15,10 +15,12 @@ from rxbackend.core.restapi.REST_authentication import REST_authentication
 from rxbackend.core.jobs.zmq.scheduler_service import SchedulerService
 
 
-inputmapping = InputMapper().getInputFromCLI()
-
 token_result = REST_authentication().postCredentials(ApiUserSettings.username, ApiUserSettings.password)
 auth_token = token_result['token']
+
+inputmapping = InputMapper().getInputFromCLI(auth_token)
+data = json.loads(inputmapping.getKeyvalList())
+
 
 reststates_api = REST_states(auth_token)
 rest_hosts = REST_hosts(auth_token)
@@ -31,40 +33,20 @@ state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),
                                                 inputmapping.getStateId())
 
 payload = inputmapping.keyvallist
-print('laat maar eens zien wat hier inzit')
-print(payload)
 
 statetype_to_trigger = 'Salt-Run-State'
 current_host = rest_hosts.get_host_by_id(inputmapping.host_id)
-
-
 statetype = statetypes_api.getStatetypeByName(statetype_to_trigger)
-
-
-settings_dict = {
-    'dryrun': 'False'
-    , 'salt-minion-id': current_host['hostname']
-    , 'api-mode': 'PRODUCTION'
-    , 'salt-function': 'ACCEPTMINION'
-    , 'sshport': '22'
-    , 'saltapiport': '8080'
-    , 'salt-username': 'test'
-    , 'salt-password': 'test'
-    , 'test': 'False'
-    , 'remoteuser': 'rxrelease'
-}
-
+print('print the dict and see if we are getting the stuff we are supposed to get')
+for key, value in data.items():
+    print(key, ":", value)
 
 scheduler_service = SchedulerService()
 
-#current_host = [current_host]
+salt_master = rest_hosts.get_host_by_hostname('salt-master')
+action = action_factory.create_action_from_host(salt_master, data, statetype)
 
-salt_master =  rest_hosts.get_host_by_hostname('salt-master')
-action = action_factory.create_action_from_host(salt_master, settings_dict, statetype)
-
-scheduler_service.schedule_state(action)
-
-
+#scheduler_service.schedule_state(action)
 statemanager = StateManager(auth_token)
 state = state[0]
 # TODO: get the Host object from the backend

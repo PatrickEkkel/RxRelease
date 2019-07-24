@@ -29,7 +29,7 @@ logger.addHandler(ch)
 inputmapping = InputMapper().getInputFromCLI()
 data = json.loads(inputmapping.getKeyvalList())
 
-token_result = REST_authentication().postCredentials(ApiUserSettings.username,ApiUserSettings.password)
+token_result = REST_authentication().postCredentials(ApiUserSettings.username, ApiUserSettings.password)
 auth_token = token_result['token']
 
 formulas_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '..', 'formulas'))
