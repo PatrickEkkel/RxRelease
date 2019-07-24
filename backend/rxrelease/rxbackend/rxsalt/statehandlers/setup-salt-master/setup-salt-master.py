@@ -19,7 +19,7 @@ logger.addHandler(ch)
 
 token_result = REST_authentication().postCredentials(ApiUserSettings.username,ApiUserSettings.password)
 auth_token = token_result['token']
-inputmapping = InputMapper().getInputFromCLI()
+inputmapping = InputMapper().getInputFromCLI(auth_token)
 data = json.loads(inputmapping.getKeyvalList())
 current_working_dir = dir_path = os.path.dirname(os.path.realpath(__file__))
 

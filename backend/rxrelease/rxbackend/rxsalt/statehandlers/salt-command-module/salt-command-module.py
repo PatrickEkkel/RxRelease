@@ -33,8 +33,6 @@ auth_token = token_result['token']
 inputmapping = InputMapper().getInputFromCLI(auth_token)
 data = json.loads(inputmapping.getKeyvalList())
 
-
-
 formulas_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '..', 'formulas'))
 
 reststates_api = REST_states(auth_token)

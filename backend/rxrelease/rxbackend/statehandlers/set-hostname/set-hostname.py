@@ -18,12 +18,10 @@ logger.addHandler(ch)
 
 token_result = REST_authentication().postCredentials(ApiUserSettings.username,
                                                      ApiUserSettings.password)
-
-
 auth_token = token_result['token']
 
 
-inputmapping = InputMapper().getInputFromCLI()
+inputmapping = InputMapper().getInputFromCLI(auth_token)
 data = json.loads(inputmapping.getKeyvalList())
 resthosts_api = REST_hosts(auth_token)
 host = resthosts_api.get_host_by_id(inputmapping.host_id)

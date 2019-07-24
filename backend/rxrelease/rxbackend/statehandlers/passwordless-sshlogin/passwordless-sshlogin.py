@@ -26,12 +26,13 @@ logger.addHandler(ch)
 
 localuser = LocalSettings.localuser
 remoteuser = RemoteSettings.remoteuser
-
-inputmapping = InputMapper().getInputFromCLI()
-
 # retrieve the authentication token
 token_result = REST_authentication().postCredentials(ApiUserSettings.username, ApiUserSettings.password)
 auth_token = token_result['token']
+
+inputmapping = InputMapper().getInputFromCLI(auth_token)
+
+
 data = json.loads(inputmapping.getKeyvalList())
 dryrun = data["dryrun"]
 filestore = RxFileStore('/home/' + localuser + '/.rxrelease')

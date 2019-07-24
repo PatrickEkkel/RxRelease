@@ -26,7 +26,7 @@ logger.addHandler(ch)
 token_result = REST_authentication().postCredentials(ApiUserSettings.username,
                                                      ApiUserSettings.password)
 auth_token = token_result['token']
-inputmapping = InputMapper().getInputFromCLI()
+inputmapping = InputMapper().getInputFromCLI(auth_token)
 data = json.loads(inputmapping.getKeyvalList())
 
 logger.info("Installing Salt api for " + data['os'] + " under useraccount " + data['username'])
@@ -57,6 +57,7 @@ try:
         client.send_blocking_command('sudo cp /home/rxrelease/'
                                    '.localstore/salt_api_config.txt /etc/salt/master')
     client.send_blocking_command('sudo systemctl start salt-api')
+    client.send_blocking_command('sudo systemctl enable salt-api')
     client.send_blocking_command('sudo firewall-cmd --permanent --add-port=8080/tcp')
     client.send_blocking_command('sudo firewall-cmd --reload')
     client.send_blocking_command('sudo systemctl restart salt-master')

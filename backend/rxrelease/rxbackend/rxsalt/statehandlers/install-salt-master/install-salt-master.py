@@ -20,7 +20,7 @@ logger.addHandler(ch)
 token_result = REST_authentication().postCredentials(ApiUserSettings.username,ApiUserSettings.password)
 auth_token = token_result['token']
 print(token_result["token"])
-inputmapping = InputMapper().getInputFromCLI()
+inputmapping = InputMapper().getInputFromCLI(auth_token)
 data = json.loads(inputmapping.getKeyvalList())
 print(data["username"])
 
@@ -39,6 +39,7 @@ try:
    client.send_blocking_command('sudo rm -rf /etc/salt')
    client.send_blocking_command('sudo yum install -y salt-master')
    client.send_blocking_command('sudo systemctl start salt-master')
+   client.send_blocking_command('sudo systecmtl enable salt-master')
    client.send_blocking_command('sudo chown -R ' + RemoteSettings.remoteuser + ':users' + ' /srv/salt')
 
    reststates_api = REST_states(auth_token)

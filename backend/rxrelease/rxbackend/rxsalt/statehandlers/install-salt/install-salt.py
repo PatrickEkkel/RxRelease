@@ -29,7 +29,7 @@ token_result = REST_authentication().postCredentials(ApiUserSettings.username,
 auth_token = token_result['token']
 
 resthosts_api = REST_hosts(auth_token)
-inputmapping = InputMapper().getInputFromCLI()
+inputmapping = InputMapper().getInputFromCLI(auth_token)
 
 host = resthosts_api.get_host_by_id(inputmapping.host_id)
 
@@ -53,6 +53,7 @@ try:
         client.send_command(
             'sudo sed -i \'s|#master: salt|master:\ \'' + currenthost + '\'|g\' /etc/salt/minion')
         client.send_blocking_command('sudo systemctl start salt-minion')
+        client.send_blocking_command('sudo systemctl enable salt-minion')
 
         reststates_api = REST_states(auth_token)
         state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),
