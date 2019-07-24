@@ -34,19 +34,22 @@ state = reststates_api.getStateByHostAndStateId(inputmapping.getGetHostId(),
 
 payload = inputmapping.keyvallist
 
-statetype_to_trigger = 'Salt-Run-State'
+trigger_statetype = data['trigger-statetype']
+trigger_host = data['trigger-host']
+
 current_host = rest_hosts.get_host_by_id(inputmapping.host_id)
-statetype = statetypes_api.getStatetypeByName(statetype_to_trigger)
+statetype = statetypes_api.getStatetypeByName(trigger_statetype)
+
 print('print the dict and see if we are getting the stuff we are supposed to get')
 for key, value in data.items():
     print(key, ":", value)
 
 scheduler_service = SchedulerService()
 
-salt_master = rest_hosts.get_host_by_hostname('salt-master')
+salt_master = rest_hosts.get_host_by_hostname(trigger_host)
 action = action_factory.create_action_from_host(salt_master, data, statetype)
 
-#scheduler_service.schedule_state(action)
+scheduler_service.schedule_state(action)
 statemanager = StateManager(auth_token)
 state = state[0]
 # TODO: get the Host object from the backend

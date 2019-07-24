@@ -26,11 +26,14 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-inputmapping = InputMapper().getInputFromCLI()
-data = json.loads(inputmapping.getKeyvalList())
 
 token_result = REST_authentication().postCredentials(ApiUserSettings.username, ApiUserSettings.password)
 auth_token = token_result['token']
+
+inputmapping = InputMapper().getInputFromCLI(auth_token)
+data = json.loads(inputmapping.getKeyvalList())
+
+
 
 formulas_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '..', 'formulas'))
 
