@@ -42,12 +42,16 @@ class BaseFiller:
         buildin_saltmaster_profile.profiletype = buildin_saltmaster_profiletype
         buildin_saltmaster_configuration = Configuration.objects.create(
             name="Salt master default Configuration", profile=buildin_saltmaster_profile)
-        # buildin_saltmaster_configuration.profile = buildin_saltmaster_profile
+
+        buildin_saltminion_profiletype = ProfileType.objects.create(name="Salt Minion", system=True)
+        buildin_saltminion_profile = Profile.objects.create(name="Salt Minion")
+        buildin_saltminion_profile.profiletype = buildin_saltminion_profiletype
 
         # Salt settings category maken
         salt_settings_category = SettingsCategory.objects.create(name="Salt Settings",
                                                                  prefix="salt")
-        salt_settings_category.save()
+        accept_minion_settings_category = SettingsCategory.objects.create(name="Salt Accept Minion",
+                                                                          prefix="salt")
 
         # Settings category maken
         global_category = SettingsCategory.objects.create(name="Global Settings")
@@ -55,9 +59,19 @@ class BaseFiller:
 
         salt_accept_master_category = SettingsCategory.objects.create(name="Salt Accept Master")
 
-        kvsettting_testflag = KVSetting.objects.create(key='test',value='False',category=salt_accept_master_category)
-        kvsetting_apimode = KVSetting.objects.create(key='api-mode',value='PRODUCTION',category=salt_accept_master_category)
-        kvsetting_saltfunction = KVSetting.objects.create(key='salt-function',value='ACCEPTMINION',category=salt_accept_master_category)
+        kvsettting_testflag = KVSetting.objects.create(key='test', value='False',
+                                                       category=salt_accept_master_category)
+        kvsetting_apimode = KVSetting.objects.create(key='api-mode', value='PRODUCTION',
+                                                     category=salt_accept_master_category)
+        kvsetting_saltfunction = KVSetting.objects.create(key='salt-function', value='ACCEPTMINION',
+                                                          category=salt_accept_master_category)
+
+        kvsettting_testflag_accept_minion = KVSetting.objects.create(key='test',value='False', category=accept_minion_settings_category)
+        kvsetting_apimode_accept_minion = KVSetting.objects.create(key='api-mode', value='PRODUCTION', category=accept_minion_settings_category)
+        kvsetting_saltfunction = KVSetting.objects.create(key='salt-function', value='ACCEPTMINION', category=accept_minion_settings_category)
+        kvsetting_minion_id = KVSetting.objects.create(key='salt-minion-id', value='"{CCHOSTNAME}"', category=accept_minion_settings_category)
+        kv_setting_trigger_host = KVSetting.objects.create(key="trigger-host", value="salt-master", category=accept_minion_settings_category)
+        kv_settin_trigger_statetype = KVSetting.objects.create(key="trigger-statetype", value="Salt-Run-State", category=accept_minion_settings_category)
         # Standard settings applyen
 
 
@@ -114,7 +128,6 @@ class BaseFiller:
                                                   state_settings=salt_settings_category,
                                                   dependentOn=salt_minion_master_state,
                                                   module="rxsalt", jobtype="SIMPLE_STATE",connection_credentials=salt_settings_category)
-        # salt_run_state = StateType.objects.create(name="Salt-Run-State", handler="salt-command-module.py", dependentOn=None,module="rxsalt", jobtype="REPEATABLE_STATE")
 
         salt_run_state = StateType.objects.create(name="Salt-Run-State",
                                                   handler="salt-command-module.py",
@@ -127,6 +140,13 @@ class BaseFiller:
                                                                     dependentOn=salt_api_state, module="rxsalt",
                                                                     jobtype="COMPLEX_STATE",
                                                                     state_settings=salt_accept_master_category,
+                                                                    connection_credentials=salt_settings_category)
+
+        accept_salt_minion_state = StateType.objects.create(name="Accept-Salt-Minion",
+                                                                    handler='task-schedule.py',
+                                                                    dependentOn=salt_minion_state, module="default",
+                                                                    jobtype="REPEATABLE_STATE",
+                                                                    state_settings=accept_minion_settings_category,
                                                                     connection_credentials=salt_settings_category)
 
 
@@ -148,6 +168,7 @@ class BaseFiller:
         standard_capability.statetypes.add(sethostname_state)
         standard_capability.statetypes.add(prerequisites_state)
         salt_minion_capability.statetypes.add(salt_minion_state)
+        salt_minion_capability.statetypes.add(accept_salt_minion_state)
         salt_minion_capability.dependentOn = standard_capability
         salt_master_capability.statetypes.add(salt_master_state)
         salt_master_capability.statetypes.add(salt_minion_master_state)
