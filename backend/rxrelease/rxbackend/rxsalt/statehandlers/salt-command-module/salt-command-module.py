@@ -40,7 +40,6 @@ resthosts_api = REST_hosts(auth_token)
 restsettings_api = REST_settings(auth_token)
 
 salt_mapping = SaltCommandMapper.create_from_dict(data)
-
 host = resthosts_api.get_host_by_id(inputmapping.host_id)
 hostname = host['hostname']
 ssh_port = data['sshport']
@@ -54,6 +53,8 @@ test = data['test']
 
 host_username = 'root'
 host_password = 'test'
+
+
 
 salt_master = inputmapping.ipaddress
 tmp_dir = '/tmp/saltmock/'
@@ -116,7 +117,6 @@ if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTEST
             minion_to_accept = resthosts_api.get_host_by_hostname(salt_mapping.salt_minion_id)[0]
         # after a fresh install, the system does not pickup the minion directly,
         # therefore we need a retry mechanism
-        print(minion_to_accept)
         if not salt_service.accept_minion(minion_to_accept):
             execution_state = 'APPLIED_BUT_FAILED_RETRYABLE'
         else:

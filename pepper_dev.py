@@ -2,7 +2,7 @@
 from pepper import Pepper
 
 
-api = Pepper('http://localhost:8888')
+api = Pepper('http://192.168.122.198:8080')
 
 # api = Pepper('http://192.168.178.92:8080')
 
@@ -10,7 +10,7 @@ api = Pepper('http://localhost:8888')
 # print(api)
 
 
-api.login('gekkehenkie', 'gekkehenkie', 'pam')
+api.login('test', 'test', 'pam')
 
 
 # run a command on the minion

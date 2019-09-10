@@ -13,6 +13,7 @@ class SaltCommandMapper:
         if 'api-mode' in dict:
             result.api_mode = dict['api-mode']
         if 'salt-minion-id' in dict:
+            # salt-minion-id is a field that supports variables
             result.salt_minion_id = dict['salt-minion-id']
         if 'salt-function' in dict:
             result.salt_function = dict['salt-function']

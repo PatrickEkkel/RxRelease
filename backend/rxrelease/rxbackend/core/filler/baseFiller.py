@@ -66,23 +66,24 @@ class BaseFiller:
         kvsetting_saltfunction = KVSetting.objects.create(key='salt-function', value='ACCEPTMINION',
                                                           category=salt_accept_master_category)
 
+        kvsetting_minion_id = KVSetting.objects.create(key='salt-minion-id', value='{CCHOSTNAME}', category=salt_accept_master_category)
         kvsettting_testflag_accept_minion = KVSetting.objects.create(key='test',value='False', category=accept_minion_settings_category)
         kvsetting_apimode_accept_minion = KVSetting.objects.create(key='api-mode', value='PRODUCTION', category=accept_minion_settings_category)
         kvsetting_saltfunction = KVSetting.objects.create(key='salt-function', value='ACCEPTMINION', category=accept_minion_settings_category)
-        kvsetting_minion_id = KVSetting.objects.create(key='salt-minion-id', value='"{CCHOSTNAME}"', category=accept_minion_settings_category)
+        kvsetting_minion_id = KVSetting.objects.create(key='salt-minion-id', value='{CCHOSTNAME}', category=accept_minion_settings_category)
         kv_setting_trigger_host = KVSetting.objects.create(key="trigger-host", value="salt-master", category=accept_minion_settings_category)
         kv_settin_trigger_statetype = KVSetting.objects.create(key="trigger-statetype", value="Salt-Run-State", category=accept_minion_settings_category)
         # Standard settings applyen
 
 
         # Standard settings applyen
-        kvsetting_sshport = KVSetting.objects.create(key='sshport', value='2222',
+        kvsetting_sshport = KVSetting.objects.create(key='sshport', value='22',
                                                      category=global_category)
         kvsetting_os = KVSetting.objects.create(key="os", value="CentOS", category=global_category)
         kvsetting_os.save()
         kvsetting_sshport.save()
 
-        kvsetting_saltapiport = KVSetting.objects.create(key='saltapiport', value='8888',
+        kvsetting_saltapiport = KVSetting.objects.create(key='saltapiport', value='8080',
                                                          category=global_category)
         kvsetting_saltapiport.save()
         # TODO: split the "base stuff" from the "salt stuff"

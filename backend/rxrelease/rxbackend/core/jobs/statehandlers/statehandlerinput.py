@@ -34,7 +34,6 @@ class StateHandlerInput:
                 print(kv_array[0] + " contains empty value, skipping.. ")
             else:
                 key = kv_array[0]
-
                 # this is point where we want to interface with the valueresolver
                 value = kv_array[1]
                 value = self.value_resolver.resolve_value(value)
