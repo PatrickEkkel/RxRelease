@@ -46,11 +46,14 @@ for key, value in data.items():
 
 scheduler_service = SchedulerService()
 
-salt_master = rest_hosts.get_host_by_hostname(trigger_host)
-action = action_factory.create_action_from_host(salt_master, data, statetype)
+target = rest_hosts.get_host_by_hostname(trigger_host)
+
+print('target host')
+print(target)
+action = action_factory.create_action_from_host(target, data, statetype)
 
 scheduler_service.schedule_state(action)
 statemanager = StateManager(auth_token)
 state = state[0]
 # TODO: get the Host object from the backend
-statemanager.setRepeatableStateDone(state)
+statemanager.setComplexStateStatus(state,'APPLIED')

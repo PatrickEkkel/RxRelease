@@ -40,6 +40,8 @@ class Worker:
             logger.debug("Waiting for workitems")
             item = self.q.get()
             result = item.handler.process_message(item.action, self.session)
+
+            logger.debug('task handled with result: ' + result)
             if result == "STATE_FAILED":
                 logger.debug("state apply failed clearing worker queue")
                 self.q.queue.clear()
@@ -50,6 +52,7 @@ class Worker:
                 self.q.queue.clear()
                 self.do_task(item)
             else:
+                logger.debug('state completed, remove task from queue')
                 self.q.task_done()
 
 

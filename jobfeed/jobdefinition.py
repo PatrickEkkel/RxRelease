@@ -81,7 +81,10 @@ class DefaultJobDefinition:
                                                            statetypeRequest.getStateTypeId())
             logger.debug('state info: ' + str(state))
             job_state = self.check_job_for_completion(state[0])
-            if job_state == 'SIMPLE_STATE_INSTALLED' or job_state == 'REPEATABLE_STATE':
+
+            logger.debug('job state: ' + job_state)
+
+            if job_state == 'SIMPLE_STATE_INSTALLED' or job_state == 'REPEATABLE_STATE' or job_state == 'COMPLEX_STATE_INSTALLED':
                 break
             elif job_state == 'COMPLEX_STATE_RETRY':
                 logger.info("retryable job state detected, interrupt polling")

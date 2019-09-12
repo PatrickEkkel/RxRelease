@@ -146,7 +146,7 @@ class BaseFiller:
         accept_salt_minion_state = StateType.objects.create(name="Accept-Salt-Minion",
                                                                     handler='task-schedule.py',
                                                                     dependentOn=salt_minion_state, module="default",
-                                                                    jobtype="REPEATABLE_STATE",
+                                                                    jobtype="COMPLEX_STATE",
                                                                     state_settings=accept_minion_settings_category,
                                                                     connection_credentials=salt_settings_category)
 
@@ -171,6 +171,7 @@ class BaseFiller:
         salt_minion_capability.statetypes.add(salt_minion_state)
         salt_minion_capability.statetypes.add(accept_salt_minion_state)
         salt_minion_capability.dependentOn = standard_capability
+
         salt_master_capability.statetypes.add(salt_master_state)
         salt_master_capability.statetypes.add(salt_minion_master_state)
         salt_master_capability.statetypes.add(salt_api_state)
@@ -181,6 +182,9 @@ class BaseFiller:
         buildin_saltmaster_profiletype.capabilities.add(standard_capability)
         buildin_saltmaster_profiletype.capabilities.add(salt_master_capability)
         buildin_default_rxrelease_profiletype.capabilities.add(standard_capability)
+
+        buildin_saltminion_profiletype.capabilities.add(standard_capability)
+        buildin_saltminion_profiletype.capabilities.add(salt_minion_capability)
         # TODO: dit kan in principe weggehaald worden 'capabilities saven'
 
         standard_capability.save()

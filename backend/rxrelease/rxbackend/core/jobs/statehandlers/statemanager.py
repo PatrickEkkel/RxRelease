@@ -33,8 +33,3 @@ class StateManager:
         print(complex_state)
         complex_state['status'] = status
         self.rest_states_api.putComplexState(state['complex_state'])
-
-    #def schedule_state(self, state, host_id, payload):
-#        statetypeRequest = HandlerFactory().createRequest(payload)
-#        print('request: ' + statetypeRequest)
-#        self.rest_statetypes_api.postHandleHostState(statetypeRequest)
