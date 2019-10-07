@@ -109,6 +109,7 @@ class DefaultJobDefinition:
         statetypeRequest = HandlerFactory().createRequest(payload)
 
         statetypesApi.postHandleHostState(statetypeRequest)
+        logger.debug('message dispatched to backend')
         return self.pollJobCompleted(session.auth_token, statetypeRequest)
 
     def is_message_reciever(self, message):

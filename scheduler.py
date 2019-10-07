@@ -4,6 +4,7 @@ import time
 import logging, sys
 from dateutil.parser import parse
 from jobfeed.dispatcher import Dispatcher
+from backend.rxrelease.rxbackend.core.jobs.zmq.messagebus import MessageBusBroker, MessageBusClient
 from jobfeed.sessionmanager import SessionManager
 from jobfeed.jobdefinition import DefaultJobDefinition, TimedJobDefinition
 from backend.rxrelease.rxbackend.core.jobs.api.jobfactory import JobFactory
@@ -38,6 +39,7 @@ sessionmanager = SessionManager(api_user_settings_username, api_user_settings_pa
 sessionmanager.login()
 
 dispatcher = Dispatcher(sessionmanager)
+mbb = MessageBusBroker()
 # TODO: these job definitions should not be defined here,
 #  but in a more central place, for example in the database,
 #  therefore we should aim at making a few API calls that support this idea

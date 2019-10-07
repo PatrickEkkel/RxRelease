@@ -23,6 +23,8 @@ def help():
         "init_test_db() -> fills the database with mock statetypes that can be used to test functionality without having a VM ")
     print("send_salt_command() -> N.A")
 
+    print("send_workload(hostname, statetype_name) -> starts a statehandler with the correct context")
+
 
 def connect():
     global connection

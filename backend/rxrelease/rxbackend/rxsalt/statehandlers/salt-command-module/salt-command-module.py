@@ -15,6 +15,7 @@ from rxbackend.rxsalt.api.salt_connection_details import SaltConnectionDetails
 from rxbackend.core.io.rxlocalstore import RxLocalStore
 from rxbackend.ssh.sshwrapper import SSHWrapper
 from rxbackend.ssh.connectiondetails import ConnectionDetails
+from rxbackend.core.jobs.zmq.messagebus import MessageBusClient
 
 
 logger = logging.getLogger(__name__)
@@ -121,7 +122,9 @@ if salt_mapping.api_mode == 'SALTTESTVIRT' or salt_mapping.api_mode == 'SALTTEST
             execution_state = 'APPLIED_BUT_FAILED_RETRYABLE'
         else:
             execution_state = 'APPLIED'
-
+            mbc = MessageBusClient()
+            mbc.connect('127.0.0.1')
+            mbc.send_message_to_all('MINION ACCEPTED')
     elif salt_mapping.salt_function == 'SYNCFORMULA':
         salt_api.sync_formula(salt_mapping.formula)
 

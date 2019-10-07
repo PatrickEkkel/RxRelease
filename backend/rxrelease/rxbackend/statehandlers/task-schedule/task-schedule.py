@@ -2,6 +2,7 @@
 import sys
 import json
 import sh
+import random
 from rxbackend.configuration.globalsettings import LocalSettings,RemoteSettings,ApiUserSettings
 from rxbackend.core.restapi.REST_states import REST_states
 from rxbackend.core.restapi.REST_hosts import REST_hosts
@@ -11,6 +12,7 @@ from rxbackend.configuration.globalsettings import NetworkSettings
 from rxbackend.core.jobs.statehandlers.inputmapper import InputMapper
 from rxbackend.core.jobs.statehandlers.statemanager import StateManager
 from rxbackend.core.jobs.zmq.scheduler_service import ActionFactory
+from rxbackend.core.jobs.zmq.messagebus import MessageBusReceiver, MessageBusClient
 from rxbackend.core.restapi.REST_authentication import REST_authentication
 from rxbackend.core.jobs.zmq.scheduler_service import SchedulerService
 
@@ -53,6 +55,21 @@ print(target)
 action = action_factory.create_action_from_host(target, data, statetype)
 
 scheduler_service.schedule_state(action)
+
+def callback(payload):
+    print('function called!!!')
+    print(payload)
+
+messagebus_client = MessageBusClient()
+# TODO: source these kind of connection information from a central source.
+messagebus_client.connect('127.0.0.1')
+listener_id = 'TASK_SCHEDULE_' + str(random.randint(1,100))
+listener_info = messagebus_client.advertise_listener('127.0.0.1',listener_id)
+listener_info = json.loads(listener_info)
+messagebus_receiver = MessageBusReceiver(listener_info)
+
+messagebus_receiver.listen_once(callback)
+
 statemanager = StateManager(auth_token)
 state = state[0]
 # TODO: get the Host object from the backend

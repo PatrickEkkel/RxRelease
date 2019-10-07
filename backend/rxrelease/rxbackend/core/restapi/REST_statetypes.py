@@ -7,18 +7,17 @@ from ...core.restapi.REST_base import REST_base
 class REST_statetypes(REST_base):
 
  def __init__(self,auth_token):
-  super().__init__(auth_token)
-  self.backendlocation = NetworkSettings.protocol + "://" + NetworkSettings.servername + ":" + NetworkSettings.port
+     super().__init__(auth_token)
+     self.backendlocation = NetworkSettings.protocol + "://" + NetworkSettings.servername + ":" + NetworkSettings.port
 
  def getStatetypeByName(self,statetype_name):
-  serverAddress = self.backendlocation + '/rxbackend/statetypes/search/byname/?name=' + statetype_name
-  response = requests.get(serverAddress,headers=self.getAuthTokenHeader())
-  result = response.json()
-  return result
+     serverAddress = self.backendlocation + '/rxbackend/statetypes/search/byname/?name=' + statetype_name
+     response = requests.get(serverAddress,headers=self.getAuthTokenHeader())
+     result = response.json()
+     return result
 
  def postHandleHostState(self,request):
-  serverAddress= self.backendlocation +  '/rxbackend/statetypes/handlehoststate'
-  headers = {'content-type': 'application/json'}
-  headers.update(self.getAuthTokenHeader())
-  response =  requests.post(serverAddress,data=str(request),headers=headers)
- 
+     serverAddress= self.backendlocation +  '/rxbackend/statetypes/handlehoststate'
+     headers = {'content-type': 'application/json'}
+     headers.update(self.getAuthTokenHeader())
+     response =  requests.post(serverAddress,data=str(request),headers=headers)
