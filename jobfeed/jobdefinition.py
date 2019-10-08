@@ -73,7 +73,7 @@ class DefaultJobDefinition:
 
         pollingState = True
         polling_frequenty = 5
-        max_pollingtime = 4
+        max_pollingtime = 20
         polling_counter = 0
         job_failed = False
         while pollingState:
