@@ -49,17 +49,19 @@ class DefaultJobDefinition:
         logger.debug(state)
         if self._is_simple_state(state):
             if self._is_simple_state_installed(state):
-                print("task " + self.jobName + " succesfully installed")
+                logger.debug("task " + self.jobName + " succesfully installed")
                 result = "SIMPLE_STATE_INSTALLED"
                 logger.debug("task " + self.jobName + " succesfully installed")
         elif self._is_repeatable_state(state):
             result = 'REPEATABLE_STATE'
         elif self._is_complex_state(state):
             if self._is_complex_state_installed(state):
-                print("task " + self.jobName + " succesfully installed")
+                logger.debug("task " + self.jobName + " succesfully installed")
                 result = "COMPLEX_STATE_INSTALLED"
             elif self._is_complex_state_retryable(state):
                 result = "COMPLEX_STATE_RETRY"
+            elif self._is_complex_state_pending(state):
+                result = "COMPLEX_STATE_PENDING"
         else:
             logger.debug("state not recognized")
         return result
@@ -85,7 +87,11 @@ class DefaultJobDefinition:
             logger.debug('job state: ' + job_state)
 
             if job_state == 'SIMPLE_STATE_INSTALLED' or job_state == 'REPEATABLE_STATE' or job_state == 'COMPLEX_STATE_INSTALLED':
+                logger.debug('statehandler is marked completed')
                 break
+            elif job_state == 'COMPLEX_STATE_PENDING':
+                logger.debug('statehandler is marked pending, update of the state is being handled by the statehandler itself')
+                break;
             elif job_state == 'COMPLEX_STATE_RETRY':
                 logger.info("retryable job state detected, interrupt polling")
                 result = 'RETRY_STATE'
@@ -134,6 +140,12 @@ class DefaultJobDefinition:
     def _is_simple_state_installed(self, state):
         result = False
         if state['simple_state']['installed']:
+            result = True
+        return result
+
+    def _is_complex_state_pending(self, state):
+        result = False
+        if state['complex_state']['status'] == 'PENDING':
             result = True
         return result
 

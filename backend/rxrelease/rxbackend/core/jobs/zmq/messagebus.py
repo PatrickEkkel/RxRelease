@@ -34,12 +34,18 @@ class MessageBusBroker:
                 logger.debug('reciever ' + j['ident'] + ' announced in routing table')
                 self.routing_entries[j['ident']] = json_result
                 self.socket.send_string(json_result)
+
+            elif j['message_type'] == 'DELIST':
+                logger.debug('received DELIST request for ' + str(j['ident']))
+                del self.routing_entries[j['ident']]
+                self.socket.send_string(json_result)
+
             elif j['message_type'] == 'BROADCAST':
                 logger.debug('recieved broadcast message')
                 self.socket.send_string('MESSAGE OK')
                 for entry in self.routing_entries.values():
                     self._relay_message(entry,j['payload'])
-                self.socket.send_string('MESSAGE OK')
+                #self.socket.send_string('MESSAGE OK')
 
             elif j['message_type'] == 'DATA':
                 logger.debug('recieved data message')
@@ -80,15 +86,16 @@ class MessageBusBroker:
         t.start()
 
 class MessageBusReceiver:
-    def __init__(self,receiver_info):
+    def __init__(self,receiver_info, local_context):
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REP)
         self.port = receiver_info['port']
         self.socket.bind("tcp://*:%s" % self.port)
+        self.local_context = local_context
 
     def listen_once(self, action):
         result = self.socket.recv()
-        action(result)
+        action(result, self.local_context, self)
 
 class MessageBusClient:
 
@@ -102,6 +109,12 @@ class MessageBusClient:
 
     def advertise_listener(self, location, ident):
         message = {"location": location,"ident": ident,"message_type": 'ANNOUNCE'}
+        self.socket.send_string(str(message))
+        message = self.socket.recv()
+        return message
+
+    def delist_listener(self,ident):
+        message = {"ident": ident, "message_type": 'DELIST'}
         self.socket.send_string(str(message))
         message = self.socket.recv()
         return message

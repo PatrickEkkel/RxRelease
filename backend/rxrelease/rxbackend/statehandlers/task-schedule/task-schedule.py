@@ -42,7 +42,7 @@ trigger_host = data['trigger-host']
 current_host = rest_hosts.get_host_by_id(inputmapping.host_id)
 statetype = statetypes_api.getStatetypeByName(trigger_statetype)
 
-print('print the dict and see if we are getting the stuff we are supposed to get')
+print('executing taks-schedule with the following context')
 for key, value in data.items():
     print(key, ":", value)
 
@@ -50,15 +50,22 @@ scheduler_service = SchedulerService()
 
 target = rest_hosts.get_host_by_hostname(trigger_host)
 
-print('target host')
-print(target)
 action = action_factory.create_action_from_host(target, data, statetype)
 
 scheduler_service.schedule_state(action)
 
-def callback(payload):
-    print('function called!!!')
-    print(payload)
+def callback(status, local_context, receiver):
+    print('recieved callback from remote task')
+    print('payload: ' + str(status))
+
+    statemanager = StateManager(local_context['auth_token'])
+    state = local_context['state'][0]
+    # in the case of task-schedule.py we expect the payload to be the state status
+    statemanager.setComplexStateStatus(state, str(status.decode()))
+    client = MessageBusClient()
+    client.connect('127.0.0.1')
+    client.delist_listener(local_context['listener_id'])
+
 
 messagebus_client = MessageBusClient()
 # TODO: source these kind of connection information from a central source.
@@ -66,11 +73,11 @@ messagebus_client.connect('127.0.0.1')
 listener_id = 'TASK_SCHEDULE_' + str(random.randint(1,100))
 listener_info = messagebus_client.advertise_listener('127.0.0.1',listener_id)
 listener_info = json.loads(listener_info)
-messagebus_receiver = MessageBusReceiver(listener_info)
-
-messagebus_receiver.listen_once(callback)
+messagebus_receiver = MessageBusReceiver(listener_info,{'auth_token': auth_token,'state': state,'listener_id': listener_id})
 
 statemanager = StateManager(auth_token)
 state = state[0]
-# TODO: get the Host object from the backend
-statemanager.setComplexStateStatus(state,'APPLIED')
+# in the case of task-schedule.py we expect the payload to be the state status
+statemanager.setComplexStateStatus(state, 'PENDING')
+
+messagebus_receiver.listen_once(callback)
