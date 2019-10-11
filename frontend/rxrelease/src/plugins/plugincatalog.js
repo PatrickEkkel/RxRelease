@@ -10,9 +10,6 @@ var m = [];
 var salt_module = new SaltModule()
 m[salt_module.name()] = salt_module
 
-
-
-
 return m[module_name]
 
 }

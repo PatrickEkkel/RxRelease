@@ -1,7 +1,7 @@
 import React from 'react';
 import BreadCrumb from '../components/BreadCrumb'
 import ProfilesPanel from './ProfilesPanel';
-import RecipePanel from './RecipePanel';
+import ProfileConfigurationPluginPanel from './ProfileConfigurationPluginPanel';
 import ProfileConfigurationPanel from './ProfileConfigurationPanel';
 import Modal from '../components/Modal';
 import  * as profileActionCreators from '../redux/profileactioncreators'
@@ -81,7 +81,7 @@ switch(type) {
     currentPanel = <ProfileConfigurationPanel/>
   break;
   case 'LOAD_RECIPE_FROM_CONFIGURATION':
-    currentPanel = <RecipePanel/>
+    currentPanel = <ProfileConfigurationPluginPanel/>
 }
 return <div><BreadCrumb items={this.state.breadcrumbItems} onClick={(clickedItem) => currentContext.breadCrumbOnClick(clickedItem) } ref={(container) => {currentContext.breadcrumbHandle = container}}/>{currentPanel}</div>
 }

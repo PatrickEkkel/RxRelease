@@ -139,7 +139,7 @@ class Configuration(models.Model):
     name = models.CharField(max_length=200)
     hosts = models.ManyToManyField(Host)
     profile = models.ForeignKey(Profile, on_delete=models.PROTECT)
-
+    capability = models.ForeignKey(Capability, on_delete=models.PROTECT, default=None, blank=True, null=True)
     def __str__(self):
         return self.name
 

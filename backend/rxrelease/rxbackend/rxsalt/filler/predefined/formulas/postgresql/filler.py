@@ -41,8 +41,3 @@ class PostgresFormula(Formula):
             init_filehandle.write(line)
         for line in predef_postgresql_filehandle.readlines():
             service_filehandle.write(line)
-
-        # init_filehandle.write(''.join(predef_init_filehandle.readlines()))
-        # get the file from the predefined directory
-
-        # postgres_formula.files.set([init_file])

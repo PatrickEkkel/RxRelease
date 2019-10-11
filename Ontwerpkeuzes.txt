@@ -1,13 +1,5 @@
 
 
-RxRelease release screen
-
-Koppeling met Jenkins
-Koppeling met Nexus
-Koppeling met machine waar de deployment plaatsvind
-Koppeling met git
-
-
 Lijstje met "scheduled releases"
 Lijstje met "afgelopen schedules releases"
 Knopje schedule new release
@@ -40,7 +32,10 @@ Er is een module 'Salt' en die heeft zijn eigen kopje, wellicht is het een beter
 Het 'Configuration' scherm is wellicht interessanter om te gebruiken voor het configureren van integraties, nu is salt ook een integratie natuurlijk. 
 
 In het salt scherm willen we een salt state kunnen definieren. Hiervoor hebben we een editor nodig. Deze editor moet in staat zijn om een yml file te kunnen parsen, moet zo gelayout zijn dat het fijn is om mee te werken. Je moet de salt-state 
-een naampje kunnen geven. en je moet een pillar configuratie hieraan kunnen koppelen, de pillar moet je in 'Settings' scherm kunnen definieren, of via een shortcut in de saltstate editor
+een naampje kunnen geven. en je moet een pillar configuratie hieraan kunnen koppelen, de pillar moet je in 'Settings' scherm kunnen definieren, of via een shortcut in de saltstate editor. 
+
+
+Om software op een host te kunnen installeren moeten we in staat zijn statetypes en states te kunnen toevoegen, In RxRelease is het maken van statetypes nog niet echt mogelijk, dit moet via rest backend schermen gebeuren. Je kan al wel salt configuraties toevoegen in de frontend, echter kun je die nog niet koppelen aan een statetype. Dus we willen salt formulas kunnen koppelen aan statetypes. Hiervoor moeten we statetypes kunnen toevoegen 
 
 
 

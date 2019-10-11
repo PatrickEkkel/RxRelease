@@ -86,6 +86,8 @@ class  RecipePanel  extends React.Component {
 
 
     return <div className="container">
+
+            <div className="clearfix"></div>
       <div className="row">
         <fieldset>
           <div className="col-xs-1">
