@@ -11,7 +11,16 @@ name()  {
   return "Salt"
 }
 
-getPanel(name) {
+hasConfigurationTab() {
+  return true;
+}
+
+getProfileConfigurationPanel(name) {
+  var panels = []
+  return panels['SALT_CONFIGURATION_PANEL'] = <SaltConfigurationPanel/>
+}
+
+getConfigurationPanel(name) {
 
 var panels = []
 return panels['SALT_CONFIGURATION_PANEL'] = <SaltConfigurationPanel/>

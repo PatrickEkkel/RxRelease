@@ -4,13 +4,14 @@ import * as plugincatalog from '../plugins/plugincatalog'
 import * as pluginsactionCreators from '../redux/pluginactioncreators'
 import * as configurationpluginactionCreators from '../redux/configuration_pluginpanelactioncreator'
 import BasicRxPanel from '../components/panels/BasicRxPanel';
+import StatetypesPanel from '../panels/StatetypesPanel';
 
 class ProfileConfigurationPluginPanel  extends BasicRxPanel {
 
 
   constructor() {
     super('PROFILECONFIGURATION','TABPANEL')
-      this.state  = {selectedTab: 'Salt',plugins: []}
+      this.state  = {selectedTab: 'Statetypes',plugins: []}
   }
   changeAttr(e) {
     this.props.changeAttr(e);
@@ -77,17 +78,23 @@ class ProfileConfigurationPluginPanel  extends BasicRxPanel {
   }
 
   render() {
-      var tabs = ['RxRelease']
+      var tabs = ['Statetypes',]
       var tabContent = []
 
       var plugins = this.state.plugins
+      this.getLogger().trace('loaded plugins')
+      this.getLogger().traceObject(plugins)
 
+      // First load Buildin tabs
+      tabContent.push(this.renderContents("Statetypes",<StatetypesPanel/>))
       for(var i=0;i<plugins.length;i++) {
         this.getLogger().trace("render tab")
         this.getLogger().traceObject(plugins[i])
        if(plugins[i].active) {
          tabs.push(plugins[i].menuoptionname)
          var module = plugincatalog._modules(plugins[i].menuoptionname)
+         this.getLogger().trace("Load module")
+         this.getLogger().traceObject(module)
          tabContent.push(this.renderContents(module.name(),module.getPanel(plugins[i].configurationPanel)))
        }
       }
