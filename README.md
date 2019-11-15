@@ -41,3 +41,8 @@ pip3 install salt-pepper
 
 # clean dir from pyc files
 sudo find . -name "*.pyc" -exec rm -f {} \;
+
+Boostrap salt-master easy way 
+
+curl -L https://bootstrap.saltstack.com -o install_salt.sh
+sudo sh install_salt.sh -P -M
