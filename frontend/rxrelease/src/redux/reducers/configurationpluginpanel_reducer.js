@@ -12,6 +12,7 @@ export default function _configuration_plugin_panel(state = initialConfiguration
       case 'PLUGIN_INFO_OBTAINED':
       return {
         type: action.type,
+        plugins: action.plugins
 
       }
       case 'PLUGINS_LOADED':

@@ -78,7 +78,7 @@ class ProfileConfigurationPluginPanel  extends BasicRxPanel {
   }
 
   render() {
-      var tabs = ['Statetypes',]
+      var tabs = ['RxRelease','Statetypes']
       var tabContent = []
 
       var plugins = this.state.plugins

@@ -54,6 +54,7 @@ class ConfigurationPanel  extends BasicRxPanel {
       case 'PLUGINS_LOADED':
         this.setState({plugins: loaded_plugins})
         this.props.dispatch(configurationpluginactionCreators.pluginInfoObtained(loaded_plugins))
+
         break;
       default:
         break;
@@ -66,20 +67,13 @@ class ConfigurationPanel  extends BasicRxPanel {
           this.props.dispatch(pluginsactionCreators.loadEnabledPlugins())
           break;
         case 'PLUGIN_INFO_OBTAINED':
-          this.setState({plugins: nextProps.obtained_plugins})
-          this.props.dispatch(configurationpluginactionCreators.pluginTabsLoaded())
+          this.props.dispatch(configurationpluginactionCreators.pluginTabsLoaded(nextProps.plugins))
           break;
         default:
 
       }
       this.getLogger().debug(nextProps.menuType)
       this.getLogger().debug(nextProps.type)
-      if(nextProps.menuType == 'PLUGINS_LOADED' && nextProps.type == 'INITIAL_CONFIGURATION_PLUGINPANEL_STATE') {
-        this.getLogger().trace("plugin information recieved")
-        this.getLogger().traceObject(nextProps.plugins)
-        this.setState({plugins: nextProps.plugins})
-        this.props.dispatch(configurationpluginactionCreators.pluginInfoObtained(nextProps.plugins))
-        }
   }
 
   render() {
@@ -92,6 +86,7 @@ class ConfigurationPanel  extends BasicRxPanel {
         this.getLogger().trace("render tab")
         this.getLogger().traceObject(plugins[i])
        if(plugins[i].active) {
+
          var module = plugincatalog._modules(plugins[i].menuoptionname)
          if(module.hasConfigurationTab()) {
            tabs.push(plugins[i].menuoptionname)

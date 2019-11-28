@@ -4,30 +4,29 @@ import LabeledTextField from '../components/LabeledTextField';
 import LabeledDropdown from '../components/LabeledDropdown';
 import Button from '../components/Button';
 import BasicRxPanel from '../components/panels/BasicRxPanel';
-import  * as actionCreators from '../redux/actioncreators'
-import  * as profileActionCreators from '../redux/profileactioncreators'
 import Axios from 'axios';
 import { connect } from 'react-redux'
 
-class  HostPanel  extends BasicRxPanel {
+class StatetypePanel extends BasicRxPanel {
   constructor() {
-    super('HOSTS','HOSTPANEL');
-    this.state = { profiletypes: [] }
+    super('STATETYPES','STATETYPE_PANEL');
+    this.state = {}
   }
   changeAttr(e) {
     this.props.changeAttr(e);
   }
+
   componentWillMount() {
-    this.getLogger().debug("curernt received state: " + type)
-
     var {type} = this.props;
+    alert(type)
+    this.getLogger().debug("current received state: " + type)
     switch(type) {
-
-      case 'OPEN_NEW_HOST':
-        this.props.dispatch(profileActionCreators.loadProfiletypes())
-      break;
+      case 'OPEN_NEW_STATETYPE':
+        alert('message received')
+        break;
     }
   }
+
   componentWillReceiveProps(nextProps) {
 
     var type = nextProps.type;
@@ -35,13 +34,11 @@ class  HostPanel  extends BasicRxPanel {
 
     this.getLogger().debug("current received state: " + type)
     switch(type) {
-      case 'SAVE_NEW_HOST_FAILED':
-          this.setState({error_fields: error_fields,success: false});
-        break;
-      case 'PROFILE_TYPES_LOADED':
-          this.setState({profiletypes: nextProps.profiletypes})
+      case 'OPEN_NEW_STATETYPE':
+        alert('message received')
         break;
     }
+
   }
 
   render() {
@@ -58,9 +55,6 @@ class  HostPanel  extends BasicRxPanel {
       <div className="form-group">
        <LabeledTextField id="description" errorHandler={(id,callee) => this.handleError(id,callee)} placeholder="Description" label="Description" col="col-md-4" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
       </div>
-      <div className="form-group">
-        <LabeledDropdown id="profiletype" errorHandler={(id,callee) => this.handleError(id,callee)} items={StandardListConverters.convertObjectListToDDS(this.state.profiletypes)} label="Type" col="col-md-2" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
-      </div>
       </form>
    </div>
   }
@@ -68,13 +62,10 @@ class  HostPanel  extends BasicRxPanel {
 
 const mapStateToProps = (state/*, props*/) => {
   return {
-    type: state._host.type,
+    type: state._statetypes.type,
     reduxState: state,
-    error_fields: state._host.error_fields,
-    profiletypes: state._host.profiletypes,
-
   }
 }
 
-const ConnectedHostPanel = connect(mapStateToProps)(HostPanel)
-export default ConnectedHostPanel;
+const ConnectedStatetypePanel = connect(mapStateToProps)(StatetypePanel)
+export default ConnectedStatetypePanel;
