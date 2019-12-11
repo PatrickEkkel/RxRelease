@@ -1,5 +1,7 @@
 import React from 'react';
 import StandardListConverters from '../converters/StandardListConverters'
+import JobType from '../models/jobtype'
+import ModuleType from '../models/moduletype'
 import LabeledTextField from '../components/LabeledTextField';
 import LabeledDropdown from '../components/LabeledDropdown';
 import Button from '../components/Button';
@@ -10,7 +12,12 @@ import { connect } from 'react-redux'
 class StatetypePanel extends BasicRxPanel {
   constructor() {
     super('STATETYPES','STATETYPE_PANEL');
-    this.state = {}
+
+    // objectlist that can be handled by LabeledDropdown
+    this.state = {
+       jobtypes: [new JobType('SIMPLE_STATE','Simple'),new JobType('REPEATABLE_STATE','Repeatable'),new JobType('COMPLEX_STATE','Complex')],
+       moduletypes: [new ModuleType('rxdockercompose','Docker compose'), new ModuleType('rxsalt','Salt')]
+     }
   }
   changeAttr(e) {
     this.props.changeAttr(e);
@@ -18,11 +25,9 @@ class StatetypePanel extends BasicRxPanel {
 
   componentWillMount() {
     var {type} = this.props;
-    alert(type)
     this.getLogger().debug("current received state: " + type)
     switch(type) {
       case 'OPEN_NEW_STATETYPE':
-        alert('message received')
         break;
     }
   }
@@ -35,7 +40,6 @@ class StatetypePanel extends BasicRxPanel {
     this.getLogger().debug("current received state: " + type)
     switch(type) {
       case 'OPEN_NEW_STATETYPE':
-        alert('message received')
         break;
     }
 
@@ -47,13 +51,13 @@ class StatetypePanel extends BasicRxPanel {
     return <div className="container">
       <form className="form-horizontal">
       <div className="form-group row">
-       <LabeledTextField id="hostname" errorHandler={(id,callee) => this.handleError(id,callee)} placeholder="Hostname" label="Hostname" col="col-md-2" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
+       <LabeledTextField id="name" errorHandler={(id,callee) => this.handleError(id,callee)} placeholder="Name" label="name" col="col-md-2" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
       </div>
       <div className="form-group">
-       <LabeledTextField id="ipaddress" errorHandler={(id,callee) => this.handleError(id,callee)}  placeholder="IP Address" label="IP Address" col="col-md-2" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
+       <LabeledDropdown id="jobtype" errorHandler={(id,callee) => this.handleError(id,callee)} items={StandardListConverters.convertObjectListToDDS(this.state.jobtypes)} label="Job Type" col="col-md-3" labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
       </div>
       <div className="form-group">
-       <LabeledTextField id="description" errorHandler={(id,callee) => this.handleError(id,callee)} placeholder="Description" label="Description" col="col-md-4" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
+       <LabeledDropdown id="module" errorHandler={(id,callee) => this.handleError(id,callee)} items={StandardListConverters.convertObjectListToDDS(this.state.moduletypes)} label="Module Type" col="col-md-3" labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
       </div>
       </form>
    </div>
