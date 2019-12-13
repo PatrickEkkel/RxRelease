@@ -5,6 +5,7 @@ import * as pluginsactionCreators from '../redux/pluginactioncreators'
 import * as configurationpluginactionCreators from '../redux/configuration_pluginpanelactioncreator'
 import BasicRxPanel from '../components/panels/BasicRxPanel';
 import StatetypesPanel from '../panels/StatetypesPanel';
+import StatetypesParentPanel from '../panels/StatetypesParentPanel'
 
 class ProfileConfigurationPluginPanel  extends BasicRxPanel {
 
@@ -86,7 +87,7 @@ class ProfileConfigurationPluginPanel  extends BasicRxPanel {
       this.getLogger().traceObject(plugins)
 
       // First load Buildin tabs
-      tabContent.push(this.renderContents("Statetypes",<StatetypesPanel/>))
+      tabContent.push(this.renderContents("Statetypes",<StatetypesParentPanel/>))
       for(var i=0;i<plugins.length;i++) {
         this.getLogger().trace("render tab")
         this.getLogger().traceObject(plugins[i])

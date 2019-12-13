@@ -71,7 +71,7 @@ class LabeledDropdown extends BasicRxComponentPanel {
         <select id={this.getId()} name={this.getId()} className="form-control" onChange={this.getOnchange()}>
          {rows}
         </select>
-        { error ? <span class="help-block">{this.getErrorText()}</span> : null}
+        { error ? <span className="help-block">{this.getErrorText()}</span> : null}
       </div>
     </fieldset>
   }

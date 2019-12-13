@@ -10,18 +10,38 @@ import LogFactory from '../logging/LogFactory'
 var settings = new GlobalSettings();
 var stLogger = new LogFactory().createLogger("STATETYPES","ACTIONCREATOR")
 
-
 export function initialStatetypeState() {
   return {
     type: 'INITIAL_STATETYPE_STATE'
   }
 }
+
+
+export function loadStatetypeManagement() {
+  return {
+    type: 'LOAD_STATETYPE_MANAGEMENT_FROM_STATETYPES'
+  }
+}
+
 export function statetypesLoaded(statetypes) {
   return {
     type: 'STATETYPES_LOADED',
     statetypes: statetypes
   }
 }
+
+export function statetypeLoaded() {
+  return {
+    type: 'STATETYPE_LOADED'
+  }
+}
+
+export function loadStatetype() {
+  return function(dispatch) {
+    dispatch(statetypeLoaded())
+  }
+}
+
 export function loadStatetypes() {
 
   return function (dispatch) {

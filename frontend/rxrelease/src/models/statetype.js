@@ -7,10 +7,26 @@ class StateType {
     this.module = module
     this.jobtype = jobtype
     this.handler = handler
+    this.dependence = 'nan'
   }
 
   getId() {
     return this.id
+  }
+  getName() {
+    return this.name
+  }
+  getModule() {
+    return this.module
+  }
+  getHandler() {
+    return this.handler
+  }
+  getJobtype() {
+    return this.jobtype
+  }
+  getDependence() {
+    return this.dependence
   }
 }
 

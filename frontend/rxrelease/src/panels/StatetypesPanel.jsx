@@ -66,6 +66,11 @@ class StatetypesPanel extends BasicRxPanel {
 
   }
 
+  onRowClick(entry) {
+    //this.getLogger().trace
+    this.getLogger().traceObject(entry)
+    this.props.dispatch(statetypeActionCreators.loadStatetypeManagement(entry));
+  }
 
   render() {
 
@@ -77,7 +82,7 @@ class StatetypesPanel extends BasicRxPanel {
     this.getLogger().traceObject(this.state.statetypes)
 
     var statetypes = StandardListConverters.convertListToMap(this.state.statetypes,function(item) {
-      return [item.getId()]
+      return [item.getId(),item.getName(),item.getHandler(),item.getModule(),item.getDependence(),item.getJobtype() ]
     });
 
 
@@ -87,7 +92,7 @@ class StatetypesPanel extends BasicRxPanel {
         <Modal title="New Statetype" saveAndClose={() => currentContext.saveAndClose()} close={() => currentContext.close()} showModal={showModal}>
             <StatetypePanel changeAttr={(e) => currentContext.changeAttr(e)}/>
         </Modal>
-        <Table headers = {headers} data={statetypes} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
+        <Table headers = {headers} data={statetypes} onRowClick={(entry) => currentContext.onRowClick(entry)} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
         <Button title="New Statetype"  onClick={() => currentContext.createStateType()}/>
    </div>
   }
