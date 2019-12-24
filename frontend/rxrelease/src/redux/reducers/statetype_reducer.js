@@ -12,6 +12,16 @@ export default function _statetype(state = initialHostState,action) {
       type: action.type,
       showModal: false
     }
+    case 'UPDATE_EXISTING_STATETYPE':
+    return {
+      type: action.type,
+      updated_statetype: action.statetype
+    }
+    case 'UPDATE_EXISTING_STATETYPE_FAILED':
+    return {
+      type: action.type,
+      updated_statetype: action.statetype
+    }
     case 'OPEN_NEW_STATETYPE':
     return {
       type: action.type,
@@ -34,7 +44,8 @@ export default function _statetype(state = initialHostState,action) {
     }
     case 'LOAD_STATETYPE_MANAGEMENT_FROM_STATETYPES':
     return {
-      type: action.type
+      type: action.type,
+      statetype: action.statetype,
     }
     default:
     return state;

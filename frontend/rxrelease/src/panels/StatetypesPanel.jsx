@@ -6,6 +6,8 @@ import Modal from '../components/Modal';
 import Table from '../components/Table';
 import Button from '../components/Button';
 import StatetypePanel from './StatetypePanel'
+
+
 import  * as statetypeActionCreators from '../redux/statetypeactioncreators'
 
 
@@ -67,7 +69,8 @@ class StatetypesPanel extends BasicRxPanel {
   }
 
   onRowClick(entry) {
-    //this.getLogger().trace
+    this.getLogger().trace('Clicked on statetype')
+    this.getLogger().traceObject(entry)
     this.getLogger().traceObject(entry)
     this.props.dispatch(statetypeActionCreators.loadStatetypeManagement(entry));
   }

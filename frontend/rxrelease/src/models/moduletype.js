@@ -12,6 +12,10 @@ class ModuleType {
   getName() {
     return this.name
   }
+
+  static ModuleTypes() {
+    return  [new ModuleType('rxdockercompose','Docker compose'), new ModuleType('rxsalt','Salt')];
+  }
 }
 
-export default ModuleType
+export default ModuleType;

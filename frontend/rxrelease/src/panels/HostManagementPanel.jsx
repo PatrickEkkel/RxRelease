@@ -22,8 +22,6 @@ class  HostManagementPanel  extends BasicRxPanel {
   }
 
   changeAttr(e) {
-    //var methodName = e.target.id.charAt(0).toUpperCase() + e.target.id.slice(1);
-    //this.state.selected_host["set" + methodName ](e.target.value)
     var host = this.state.selected_host;
     Utils.bindAttr(host,e.target.id,e.target.value)
 

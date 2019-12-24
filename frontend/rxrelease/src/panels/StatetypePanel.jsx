@@ -15,8 +15,8 @@ class StatetypePanel extends BasicRxPanel {
 
     // objectlist that can be handled by LabeledDropdown
     this.state = {
-       jobtypes: [new JobType('SIMPLE_STATE','Simple'),new JobType('REPEATABLE_STATE','Repeatable'),new JobType('COMPLEX_STATE','Complex')],
-       moduletypes: [new ModuleType('rxdockercompose','Docker compose'), new ModuleType('rxsalt','Salt')]
+       jobtypes: JobType.JobTypes(),
+       moduletypes: ModuleType.ModuleTypes()
      }
   }
   changeAttr(e) {

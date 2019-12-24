@@ -9,12 +9,24 @@ class  StatetypesParentPanel  extends BasicRxPanel {
 
 constructor() {
 super('STATES','STATETYPES_PARENT_PANEL')
- this.state = {}
+ this.state = {
+   viewmode: 'overview'
+ }
 }
 
 componentWillReceiveProps(nextProps) {
 
   var type = nextProps.type
+  switch (type) {
+    case 'LOAD_STATETYPE_MANAGEMENT_FROM_STATETYPES':
+      this.setState({viewmode: 'detail'})
+    break;
+    case 'INITIAL_STATETYPE_STATE':
+      this.setState({viewmode: 'overview'})
+    default:
+
+  }
+
 }
 
 componentWillMount() {
@@ -25,18 +37,17 @@ var { type } = this.props;
 
 render() {
 
-var currentContext = this;
-var { type } = this.props;
-var currentPanel = <StatetypesPanel/>
-
-  switch (type) {
-    case 'LOAD_STATETYPE_MANAGEMENT_FROM_STATETYPES':
-      currentPanel = <StatetypeManagementPanel/>
-
-      //this.props.dispatch
+var overviewPanel = <StatetypesPanel/>
+var detailPanel = <StatetypeManagementPanel/>
+var currentPanel = null;
+  switch (this.state.viewmode) {
+    case 'detail':
+      currentPanel = detailPanel;
+    break;
+    case 'overview':
+      currentPanel = overviewPanel;
     break;
     default:
-
   }
 
 return <div>{currentPanel}</div>

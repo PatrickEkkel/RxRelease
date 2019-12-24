@@ -17,9 +17,19 @@ export function initialStatetypeState() {
 }
 
 
-export function loadStatetypeManagement() {
+export function loadStatetypeManagement(entry) {
+
+  stLogger.trace("statetype entry: ")
+
+  stLogger.traceObject(entry)
+  // convert map to Statetype
+  var statetype = new StateType(entry[0],entry[1],entry[3],entry[4],entry[5])
+  //stLogger.trace("statetype: ")
+  //stLogger.traceObject(statetype)
+
   return {
-    type: 'LOAD_STATETYPE_MANAGEMENT_FROM_STATETYPES'
+    type: 'LOAD_STATETYPE_MANAGEMENT_FROM_STATETYPES',
+    statetype: statetype
   }
 }
 
@@ -93,5 +103,24 @@ export function saveNewStateType(statetype_name,statetype_jobtype,statetype_modu
         errorHandler.handleErrors('SAVE_NEW_STATETYPE_FAILED',dispatch)
       });
 
+  }
+}
+
+export function updateStatetype(statetype) {
+  var errorHandler = new AggregatedFieldsErrorHandler();
+
+  return function (dispatch) {
+      statetyperequests.putStatetype(statetype).catch(function(error) {
+        errorHandler.addErrorResponse(error)
+      }).then(function() {
+       if(!errorHandler.handleErrors('UPDATE_EXISTING_STATETYPE_FAILED',dispatch)) {
+       dispatch({
+           type: 'UPDATE_EXISTING_STATETYPE',
+           updated_statetype: statetype,
+       })
+     }}).catch(function(error) {
+        errorHandler.addErrorResponse(error)
+        errorHandler.handleErrors('UPDATE_EXISTING_STATETYPE_FAILED',dispatch)
+     });
   }
 }

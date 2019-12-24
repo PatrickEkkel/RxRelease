@@ -38,6 +38,10 @@ class LabeledDropdown extends BasicRxComponentPanel {
     return this.props.onChange;
   }
 
+  getSelectedValue() {
+    return this.props.selectedValue;
+  }
+
   render() {
 
     var errorHandler = this.getErrorHandler();
@@ -57,9 +61,15 @@ class LabeledDropdown extends BasicRxComponentPanel {
     var rows = [];
 
     rows.push(noneoption)
-
+    var currentContext = this;
     this.getItems().forEach(function(item) {
-      var link = <option key={item['id']} value={item['id']}>{item['name']}</option>
+      var link = null;
+      if(currentContext.getSelectedValue() == item['id']) {
+        link =  <option key={item['id']} value={item['id']} selected>{item['name']}</option>
+      }
+      else {
+        link = <option key={item['id']} value={item['id']}>{item['name']}</option>
+      }
       rows.push(link)
     });
 
