@@ -1,6 +1,8 @@
 import React from 'react';
 import * as stateComponents from '../panels/Hosts/States/Components/StateComponents';
 import  * as statetypeActionCreators from '../redux/statetypeactioncreators';
+import * as plugincatalog from '../plugins/plugincatalog'
+import * as pluginsactionCreators from '../redux/pluginactioncreators'
 import BasicRxPanel from '../components/panels/BasicRxPanel';
 import Button from '../components/Button';
 import Utils from '../lib/react/utils';
@@ -40,20 +42,45 @@ class StatetypeManagementPanel  extends BasicRxPanel {
         this.getLogger().trace('received statetype')
         this.getLogger().traceObject(statetype)
         this.setState({selected_statetype: statetype})
+        this.props.dispatch(pluginsactionCreators.loadEnabledPlugins())
         // load moduletypes
       break;
       }
   }
 
+  loadStateTypePluginsPanel(plugins) {
+    this.getLogger().trace('selected statetype');
+    this.getLogger().traceObject(this.state.selected_statetype);
+    var selected_statetype = this.state.selected_statetype
+    for(var i=0;i<plugins.length;i++) {
 
+      if (selected_statetype.module == plugins[i].name) {
+        var module = plugincatalog._modules(plugins[i].menuoptionname)
+
+        this.getLogger().trace("statetype matched with available modules");
+        this.getLogger().trace("Loading correct panel");
+        this.getLogger().traceObject(module)
+        var selected_panel = module.getStatetypePanel()
+        this.setState({selected_panel: selected_panel})
+      }
+    }
+
+
+  }
   componentWillReceiveProps(nextProps) {
 
     var type = nextProps.type;
     var error_fields = nextProps.error_fields;
+    var plugins = nextProps.plugins
     switch (type) {
       case 'UPDATE_EXISTING_STATETYPE':
         // return to overview
         this.props.dispatch(statetypeActionCreators.initialStatetypeState());
+        break;
+      case 'PLUGINS_LOADED':
+        this.getLogger().trace('plugins loaded');
+        this.getLogger().traceObject(plugins);
+        this.loadStateTypePluginsPanel(plugins);
         break;
       default:
 
@@ -68,6 +95,8 @@ class StatetypeManagementPanel  extends BasicRxPanel {
   render() {
     var currentContext = this;
     var { type } = this.props
+    var modules = this.state.selected_panel
+
     return <div className="container">
     <div className="container">
       <div className="row">
@@ -79,6 +108,7 @@ class StatetypeManagementPanel  extends BasicRxPanel {
       <div className="row">
        <LabeledDropdown id="module" selectedValue={this.state.selected_statetype.getModule()} errorHandler={(id,callee) => this.handleError(id,callee)} items={StandardListConverters.convertObjectListToDDS(this.state.moduletypes)} label="Module Type" col="col-md-3" labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
       </div>
+      {modules}
       <Button title="Save All" onClick={() => this.saveStatetypeDetails()} />
 
    </div>
@@ -89,6 +119,7 @@ const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._statetypes.type,
     statetype: state._statetypes.statetype,
+    plugins: state._statetypes.plugins,
     error_fields: state._statetypes.error_fields
   }
 }

@@ -16,6 +16,7 @@ class Module(models.Model):
     active = models.BooleanField(default=False)
     menuoptionname = models.CharField(max_length=255)
     configurationPanel = models.CharField(max_length=255, default=None)
+    statetypePanel = models.CharField(max_length=255, default=None)
 
 
 class SettingsCategory(models.Model):

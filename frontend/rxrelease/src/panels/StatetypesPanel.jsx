@@ -25,6 +25,7 @@ class StatetypesPanel extends BasicRxPanel {
     var {type} = this.props;
 
     switch (type) {
+      case 'PLUGINS_LOADED':
       case 'INITIAL_STATETYPE_STATE':
         this.props.dispatch(statetypeActionCreators.loadStatetypes())
       break;

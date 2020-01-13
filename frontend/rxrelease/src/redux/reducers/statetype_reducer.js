@@ -12,6 +12,11 @@ export default function _statetype(state = initialHostState,action) {
       type: action.type,
       showModal: false
     }
+    case 'PLUGINS_LOADED':
+    return {
+        type: action.type,
+        plugins: action.plugins
+      }
     case 'UPDATE_EXISTING_STATETYPE':
     return {
       type: action.type,
@@ -32,6 +37,7 @@ export default function _statetype(state = initialHostState,action) {
       type: action.type,
       showModal: false
     }
+
     case 'SAVE_NEW_STATETYPE_FAILED':
     return {
       type: action.type,

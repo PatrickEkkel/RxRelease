@@ -52,7 +52,7 @@ class HostTestSerializer(serializers.PrimaryKeyRelatedField, serializers.ModelSe
 class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Module
-        fields = ('id', 'name', 'active', 'menuoptionname', 'configurationPanel')
+        fields = ('id', 'name', 'active', 'menuoptionname', 'configurationPanel','statetypePanel')
 
 
 class UserSerializer(serializers.ModelSerializer):

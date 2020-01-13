@@ -26,12 +26,12 @@ class BaseFiller:
         # Dit is hoe token authentication werkt voor als we willen weten hoe we een nieuwe user willen maken of willen weten hoe het zaakje geconfigureerd
         # http://cheng.logdown.com/posts/2015/10/27/how-to-use-django-rest-frameworks-token-based-authentication
 
-        dockercompose_module = Module.objects.create(name='rxdockercompose', active=False, menuoptionname="Dockercompose", configurationPanel="DOCKER_COMPOSE_CONFIGURATION_PANEL")
+        dockercompose_module = Module.objects.create(name='rxdockercompose', active=False, menuoptionname="Dockercompose", configurationPanel="DOCKER_COMPOSE_CONFIGURATION_PANEL",statetypePanel="NULL")
 
         dockercompose_module.save()
 
         salt_module = Module.objects.create(name="rxsalt", active=False, menuoptionname="Salt",
-                                            configurationPanel="SALT_CONFIGURATION_PANEL")
+                                            configurationPanel="SALT_CONFIGURATION_PANEL",statetypePanel="SALT_STATETYPE_PANEL")
         salt_module.save()
 
         # Built in profiletypes
@@ -59,20 +59,24 @@ class BaseFiller:
 
         # Settings category maken
         global_category = SettingsCategory.objects.create(name="Global Settings")
-        global_category.save()
+
+        salt_apply_state_category = SettingsCategory.objects.create(name="Apply Salt State",prefix="salt")
+
+        KVSetting.objects.create(key='test', value='False',category=salt_apply_state_category)
+        KVSetting.objects.create(key='api-mode',value='PRODUCTION',category=salt_apply_state_category)
+        KVSetting.objects.create(key='salt-function', value='APPLYSTATE', category=salt_apply_state_category)
+        KVSetting.objects.create(key='salt-minion-id', value='{{CCHOSTNAME}}',category=salt_apply_state_category)
+        KVSetting.objects.create(key="trigger-host", value="salt-master", category=salt_apply_state_category)
 
         salt_accept_master_category = SettingsCategory.objects.create(name="Salt Accept Master")
 
-        kvsettting_testflag = KVSetting.objects.create(key='test', value='False',
-                                                       category=salt_accept_master_category)
-        kvsetting_apimode = KVSetting.objects.create(key='api-mode', value='PRODUCTION',
-                                                     category=salt_accept_master_category)
-        kvsetting_saltfunction = KVSetting.objects.create(key='salt-function', value='ACCEPTMINION',
-                                                          category=salt_accept_master_category)
+        KVSetting.objects.create(key='test', value='False', category=salt_accept_master_category)
+        KVSetting.objects.create(key='api-mode', value='PRODUCTION', category=salt_accept_master_category)
+        KVSetting.objects.create(key='salt-function', value='ACCEPTMINION', category=salt_accept_master_category)
+        KVSetting.objects.create(key='salt-minion-id', value='{CCHOSTNAME}', category=salt_accept_master_category)
+        KVSetting.objects.create(key='api-mode', value='PRODUCTION', category=accept_minion_settings_category)
 
-        kvsetting_minion_id = KVSetting.objects.create(key='salt-minion-id', value='{CCHOSTNAME}', category=salt_accept_master_category)
         kvsettting_testflag_accept_minion = KVSetting.objects.create(key='test',value='False', category=accept_minion_settings_category)
-        kvsetting_apimode_accept_minion = KVSetting.objects.create(key='api-mode', value='PRODUCTION', category=accept_minion_settings_category)
         kvsetting_saltfunction = KVSetting.objects.create(key='salt-function', value='ACCEPTMINION', category=accept_minion_settings_category)
         kvsetting_minion_id = KVSetting.objects.create(key='salt-minion-id', value='{CCHOSTNAME}', category=accept_minion_settings_category)
         kv_setting_trigger_host = KVSetting.objects.create(key="trigger-host", value="salt-master", category=accept_minion_settings_category)
@@ -84,12 +88,12 @@ class BaseFiller:
         kvsetting_sshport = KVSetting.objects.create(key='sshport', value='22',
                                                      category=global_category)
         kvsetting_os = KVSetting.objects.create(key="os", value="CentOS", category=global_category)
-        kvsetting_os.save()
-        kvsetting_sshport.save()
+        #kvsetting_os.save()
+        #kvsetting_sshport.save()
 
         kvsetting_saltapiport = KVSetting.objects.create(key='saltapiport', value='8080',
                                                          category=global_category)
-        kvsetting_saltapiport.save()
+        #kvsetting_saltapiport.save()
         # TODO: split the "base stuff" from the "salt stuff"
 
         # De verschillende basis states maken
