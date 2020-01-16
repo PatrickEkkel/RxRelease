@@ -1,7 +1,11 @@
 import  * as saltConfigurationRequests from '../rest/requests/saltconfigurationrequests'
+import  * as settingsRequests from '../../../rest/requests/settingsrequests'
+import  * as statetypeRequests from '../../../rest/requests/statetyperequests'
 import  * as fileRequests from '../../../rest/requests/filerequests'
 import  * as jsonUtils from '../../../lib/json/utils'
 import  * as saltpromises from '../../../plugins/salt/rest/promises/saltpromises'
+import  * as statetypepromises from '../../../rest/promises/statetypepromises'
+import  * as settingspromises from '../../../rest/promises/settingspromises'
 import GlobalSettings from '../../../config/global'
 import LogFactory from '../../../logging/LogFactory'
 import PromiseExecutor from '../../../lib/promises/promise_executor'
@@ -64,9 +68,41 @@ return function(dispatch) {
 export function formulaTested() {
   return {
     type: 'FORMULA_TESTED'
+
   }
 }
 
+
+export function updateDone(selected_statetype) {
+  return {
+    type: 'UPDATE_STATETYPE_DONE',
+    statetype: selected_statetype,
+    updated_plugin: 'rxsalt'
+  }
+}
+
+export function coupleFormulaToStatetype(saltformula_id, statetype_id) {
+  scaLogger.trace('Couple selected saltformula to statetype')
+  scaLogger.trace('saltformula id: ' + saltformula_id)
+  scaLogger.trace('statetype id: ' + statetype_id)
+
+
+  // first materialize the ids
+  var e = new PromiseExecutor()
+  return function(dispatch) {
+
+     e.execute(statetypepromises.GET_STATETYPE,{logger: scaLogger, statetype_id: statetype_id})()
+    .then(e.execute(saltpromises.GET_SALTFORMULA,{ logger: scaLogger, saltformula_id: saltformula_id }))
+    //.then(e.execute(settingspromises.GET_CATEGORY_BY_ID,{logger: scaLogger}))
+    .then(e.execute(settingspromises.GET_OR_CREATE_SETTING,
+      {logger: scaLogger,key: 'salt-formula',value_store: 'salt_formula_name'}))
+    .then(e.execute(settingspromises.UPDATE_SETTING,{logger: scaLogger, key: 'salt-formula', value_store: 'salt_formula_name'}))
+    .then(function(response) {
+      dispatch(updateDone(e.stored_state.selected_statetype))
+    })
+  }
+
+}
 
 export function updateFormula(saltformula) {
   scaLogger.trace('updated salt formula')

@@ -183,7 +183,7 @@ export function saveNewHost(hostname,ipaddress,description,profiletype) {
     .then(e.execute(hostPromises.CREATE_HOST_WITH_CONNECTION_CREDENTIALS,{logger: haLogger,current_host: host}))
     .then(e.execute(hostPromises.DISPATCH_SAVE_HOST,{logger: haLogger, dispatch: dispatch}))
     .then(e.execute(settingsPromises.GET_OR_CREATE_SETTINGSCATEGORY_FROM_HOST, {logger: haLogger, category: host.getHostname()}))
-    .then(e.execute(settingsPromises.GET_OR_CREATE_SETTING,{ logger: haLogger, category: settings.SETTING_CATEGORY_GLOBAL,key: 'sshport',value: '22' }))
+    .then(e.execute(settingsPromises.GET_OR_CREATE_SETTING,{ logger: haLogger, category_name: settings.SETTING_CATEGORY_GLOBAL,key: 'sshport',value: '22' }))
     .catch(function(error) {
         errorHandler.addErrorResponse(error)
         errorHandler.handleErrors('SAVE_NEW_HOST_FAILED',dispatch)

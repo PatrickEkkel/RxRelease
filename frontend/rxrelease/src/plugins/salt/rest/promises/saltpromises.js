@@ -19,6 +19,21 @@ export function GET_SALTFORMULA_LOGS(response, properties) {
   dispatch(configuration_loaded(response))
 }
 
+
+export function GET_SALTFORMULA(response, properties) {
+  var logger = properties.logger
+  var saltformula_id = properties.saltformula_id
+  var context = properties.context
+  return saltConfigurationRequests.getSaltFormulaById(saltformula_id).then(
+    function(response) {
+
+      var data = response.data
+       // put the saltformula in the value field for the next promise
+       context.addItem('salt_formula_name',SaltFormulaModel.mapSaltFormula(data).getName())
+    }
+  )
+}
+
 export function GET_SALTFORMULAS(response, properties) {
   var logger = properties.logger
 

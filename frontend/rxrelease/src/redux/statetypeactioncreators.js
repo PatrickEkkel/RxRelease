@@ -106,6 +106,13 @@ export function saveNewStateType(statetype_name,statetype_jobtype,statetype_modu
   }
 }
 
+export function updatePlugins(statetype) {
+  return {
+    type: 'UPDATE_STATETYPE_PLUGINS',
+    statetype: statetype
+  }
+}
+
 export function updateStatetype(statetype) {
   var errorHandler = new AggregatedFieldsErrorHandler();
 

@@ -11,8 +11,14 @@ class KVSettingModel {
       getId: function() { return this.id },
       getKey: function() { return this.key },
       getValue: function() { return this.value },
-      getCategory: function() { return this.category }
+      getCategory: function() { return this.category },
+      setCategory: function(category) { this.category = category}
     }
+  }
+
+  static mapKVSetting(_model) {
+
+    return KVSettingModel.newKVSetting(_model['id'],_model['key'], _model['value'], null)
   }
 }
 

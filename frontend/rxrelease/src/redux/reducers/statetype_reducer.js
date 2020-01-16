@@ -53,6 +53,17 @@ export default function _statetype(state = initialHostState,action) {
       type: action.type,
       statetype: action.statetype,
     }
+    case 'UPDATE_STATETYPE_PLUGINS':
+    return {
+      type: action.type,
+      statetype: action.statetype
+    }
+    case 'UPDATE_STATETYPE_DONE':
+    return {
+      type: action.type,
+      statetype: action.statetype,
+      updated_plugin: action.updated_plugin
+    }
     default:
     return state;
 

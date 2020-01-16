@@ -7,6 +7,12 @@ export function getStatetypes() {
   return Axios.get(backend_url + '/rxbackend/statetypes')
 }
 
+export function getStatetypeById(id) {
+  var backend_url = GlobalSettings.getBackendUrl()
+  return Axios.get(backend_url + '/rxbackend/statetypes/' + id + '/')
+
+}
+
 export function putStatetype(statetype) {
   var backend_url = GlobalSettings.getBackendUrl() + '/rxbackend/statetypes/' + statetype.getId() + "/";
   return Axios.put(backend_url,{

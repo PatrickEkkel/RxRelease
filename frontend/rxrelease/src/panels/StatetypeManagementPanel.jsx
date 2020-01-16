@@ -25,7 +25,9 @@ class StatetypeManagementPanel  extends BasicRxPanel {
     this.state = {
       jobtypes:  JobType.JobTypes(),
       moduletypes: ModuleType.ModuleTypes(),
-      selected_statetype: null
+      selected_statetype: null,
+      plugins: [],
+      reloaded_plugins: {}
     }
   }
   changeAttr(e) {
@@ -47,7 +49,31 @@ class StatetypeManagementPanel  extends BasicRxPanel {
       break;
       }
   }
+  reloadScreen(updated_plugin) {
+    var reloaded_plugins = this.state.reloaded_plugins
+    var reload = true;
+    for(var i=0;i<this.state.plugins.length;i++) {
+      if(this.state.plugins[i].name == updated_plugin) {
+        reloaded_plugins[updated_plugin] = true
+      }
 
+      this.getLogger().traceObject(this.state.plugins[i])
+    }
+
+    if(reloaded_plugins.length == this.state.plugins.length) {
+      for(var i=0;i<reloaded_plugins.length;i++) {
+        if(!reloaded_plugins[i]) {
+          reload = false;
+        }
+      }
+    }
+
+    this.setState({ reloaded_plugins: reloaded_plugins})
+
+    if(reload) {
+      this.props.dispatch(statetypeActionCreators.initialStatetypeState());
+    }
+  }
   loadStateTypePluginsPanel(plugins) {
     this.getLogger().trace('selected statetype');
     this.getLogger().traceObject(this.state.selected_statetype);
@@ -72,15 +98,25 @@ class StatetypeManagementPanel  extends BasicRxPanel {
     var type = nextProps.type;
     var error_fields = nextProps.error_fields;
     var plugins = nextProps.plugins
+    var statetype = nextProps.statetype
     switch (type) {
       case 'UPDATE_EXISTING_STATETYPE':
         // return to overview
-        this.props.dispatch(statetypeActionCreators.initialStatetypeState());
+        this.getLogger().trace("Update complete, dispatching update to plugins")
+        this.props.dispatch(statetypeActionCreators.updatePlugins(this.state.selected_statetype))
+        //
         break;
       case 'PLUGINS_LOADED':
         this.getLogger().trace('plugins loaded');
         this.getLogger().traceObject(plugins);
         this.loadStateTypePluginsPanel(plugins);
+        this.setState({plugins: plugins});
+        break;
+      case 'UPDATE_STATETYPE_DONE':
+        this.getLogger().trace('Received update complete');
+        this.getLogger().traceObject(statetype);
+        this.reloadScreen();
+
         break;
       default:
 
@@ -88,6 +124,7 @@ class StatetypeManagementPanel  extends BasicRxPanel {
   }
 
   saveStatetypeDetails() {
+
     this.props.dispatch(statetypeActionCreators.updateStatetype(this.state.selected_statetype));
   }
 
@@ -119,6 +156,7 @@ const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._statetypes.type,
     statetype: state._statetypes.statetype,
+    updated_plugin: state._statetypes.updated_plugin,
     plugins: state._statetypes.plugins,
     error_fields: state._statetypes.error_fields
   }

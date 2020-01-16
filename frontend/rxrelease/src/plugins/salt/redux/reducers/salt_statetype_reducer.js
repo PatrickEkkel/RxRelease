@@ -14,6 +14,11 @@ export default function _saltconfiguration(state = initialSettingsState,action) 
       type: action.type,
       saltformulas: action.saltformulas
     }
+    case 'UPDATE_EXISTING_STATETYPE':
+    return {
+      type: action.type,
+      updated_statetype: action.statetype
+    }
     default:
     return state;
   }
