@@ -103,6 +103,32 @@ export function UPDATE_SETTING(response, properties) {
   return settingsRequests.putSetting(setting);
 
 }
+export function GET_SETTING(response, properties) {
+
+var key = properties.key
+var category_id = properties.category_id
+var context = properties.context
+var logger = properties.logger
+
+// first get the category
+
+return settingsRequests.getSettingsCategoryById(category_id).then(function(response) {
+  var normalizedData = jsonUtils.normalizeJson(local_response.data)
+
+  var settingsCategory = SettingsCategoryModel
+  .newSettingsCategoryModel(normalizedData['id'], normalizedData['name'], normalizedData['prefix'])
+
+  return settingsRequests.getSettingByKeyAndCategory(key,settingsCategory)
+}).then(function(response) {
+  var data = response.data
+  context.addItem('setting_value', data['value'])
+  logger.trace('Retrieving setting value from backend')
+  logger.traceObject(data)
+  return response
+})
+
+
+}
 
 export function GET_OR_CREATE_SETTING(response, properties) {
 

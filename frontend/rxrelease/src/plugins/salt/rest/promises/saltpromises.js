@@ -9,13 +9,6 @@ export function GET_SALTFORMULA_LOGS(response, properties) {
   var logger = properties.logger
   var saltFormulas = response
   var configuration_loaded = properties.configuration_loaded
-  /*for (var i=0;i<saltFormulas.length;i++) {
-    logger.trace("Retrieve logs for saltformula")
-    logger.traceObject(saltConfigurationRequests.getLastSaltLogByFormulaname(saltFormulas[i]))
-
-
-  } */
-
   dispatch(configuration_loaded(response))
 }
 
@@ -23,8 +16,22 @@ export function GET_SALTFORMULA_LOGS(response, properties) {
 export function GET_SALTFORMULA(response, properties) {
   var logger = properties.logger
   var saltformula_id = properties.saltformula_id
+  var saltformula_name = properties.saltformula_name
   var context = properties.context
-  return saltConfigurationRequests.getSaltFormulaById(saltformula_id).then(
+  var value = null;
+  var get_request = null;
+
+  if(typeof saltformula_id !== 'undefined') {
+    get_request = saltConfigurationRequests.getSaltFormulaById
+    value = saltformula_id
+  }
+  else if (typeof saltformula_name !== 'undefined') {
+    get_request = saltConfigurationRequests.getSaltFormulabyName
+    value = saltformula_name
+
+  }
+
+  return get_request(value).then(
     function(response) {
 
       var data = response.data

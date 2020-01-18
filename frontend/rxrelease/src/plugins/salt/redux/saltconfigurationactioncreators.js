@@ -81,6 +81,19 @@ export function updateDone(selected_statetype) {
   }
 }
 
+export function loadCoupledSaltFormula(selected_statetype) {
+  scaLogger.trace('get coupled salt formula')
+
+  var e = new PromiseExecutor();
+
+  return function(dispatch) {
+
+    e.execute(settingspromises.GET_SETTING,{logger: scaLogger,key: 'salt-formula'})()
+    .then(e.execute(saltpromises.GET_SALTFORMULA,{logger: scaLogger, saltformula_name: 'PostgreSQL'}))
+
+  }
+}
+
 export function coupleFormulaToStatetype(saltformula_id, statetype_id) {
   scaLogger.trace('Couple selected saltformula to statetype')
   scaLogger.trace('saltformula id: ' + saltformula_id)

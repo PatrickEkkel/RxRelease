@@ -17,3 +17,13 @@ class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
     queryset = SaltFormula.objects.all()
     serializer_class = SaltFormulasSerializer
+
+class SearchView(generics.ListAPIView):
+    serializer_class = SaltFormulasSerializer
+    def get_queryset(self):
+        formula_name =  self.request.query_params.get('name', None)
+
+        if formula_name is not None:
+            return SaltFormula.objects.filter(name=formula_name)
+        else:
+            return SaltMinion.objects.all()

@@ -44,6 +44,9 @@ class StatetypeConfigurationPanel  extends BasicRxPanel {
         this.getLogger().trace('saltformulas received')
         this.getLogger().traceObject(nextProps.saltformulas)
         this.setState({saltformulas: nextProps.saltformulas})
+        this.props.dispatch(saltconfigurationActionCreator.loadCoupledSaltFormula(this.state.selected_saltformula))
+        // load the selected statetype
+
         break;
       default:
     }
