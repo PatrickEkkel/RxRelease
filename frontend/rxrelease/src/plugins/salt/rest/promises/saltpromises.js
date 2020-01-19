@@ -1,6 +1,7 @@
 import SaltFormulaModel from '../../models/dbmodels/saltformulamodel'
 import FileModel from '../../../../models/dbmodels/filemodel'
 import  * as saltConfigurationRequests from '../../rest/requests/saltconfigurationrequests'
+import  * as jsonUtils from '../../../../lib/json/utils'
 
 
 export function GET_SALTFORMULA_LOGS(response, properties) {
@@ -35,8 +36,13 @@ export function GET_SALTFORMULA(response, properties) {
     function(response) {
 
       var data = response.data
+      logger.trace('recieved Saltformula')
+      var saltformula = jsonUtils.normalizeJson(response.data)
+      logger.traceObject(data)
        // put the saltformula in the value field for the next promise
-       context.addItem('salt_formula_name',SaltFormulaModel.mapSaltFormula(data).getName())
+       var mapped_saltformula = SaltFormulaModel.mapSaltFormula(saltformula)
+       context.addItem('salt_formula_name',mapped_saltformula.getName())
+       context.addItem('selected_saltformula',mapped_saltformula)
     }
   )
 }

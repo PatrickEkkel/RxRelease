@@ -110,10 +110,13 @@ var category_id = properties.category_id
 var context = properties.context
 var logger = properties.logger
 
+logger.trace("get category id: " + category_id)
+if(typeof category_id !== 'undefined') {
+
 // first get the category
 
 return settingsRequests.getSettingsCategoryById(category_id).then(function(response) {
-  var normalizedData = jsonUtils.normalizeJson(local_response.data)
+  var normalizedData = jsonUtils.normalizeJson(response.data)
 
   var settingsCategory = SettingsCategoryModel
   .newSettingsCategoryModel(normalizedData['id'], normalizedData['name'], normalizedData['prefix'])
@@ -126,6 +129,12 @@ return settingsRequests.getSettingsCategoryById(category_id).then(function(respo
   logger.traceObject(data)
   return response
 })
+
+}
+else {
+  logger.trace("category_id undefined, refusing request")
+  return null;
+}
 
 
 }

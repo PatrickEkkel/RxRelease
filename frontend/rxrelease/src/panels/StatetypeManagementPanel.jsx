@@ -86,7 +86,7 @@ class StatetypeManagementPanel  extends BasicRxPanel {
         this.getLogger().trace("statetype matched with available modules");
         this.getLogger().trace("Loading correct panel");
         this.getLogger().traceObject(module)
-        var selected_panel = module.getStatetypePanel()
+        var selected_panel = module.getStatetypePanel(selected_statetype)
         this.setState({selected_panel: selected_panel})
       }
     }
@@ -116,7 +116,6 @@ class StatetypeManagementPanel  extends BasicRxPanel {
         this.getLogger().trace('Received update complete');
         this.getLogger().traceObject(statetype);
         this.reloadScreen();
-
         break;
       default:
 

@@ -32,9 +32,9 @@ return panels['SALT_CONFIGURATION_PANEL'] = <SaltConfigurationPanel/>
 
 }
 
-getStatetypePanel(name) {
+getStatetypePanel(selected_statetype) {
   var panels = []
-  return panels['SALT_STATETYPE_PANEL'] = <StateTypeConfigurationPanel/>
+  return panels['SALT_STATETYPE_PANEL'] = <StateTypeConfigurationPanel selectedStatetype = {selected_statetype}/>
 }
 }
 
