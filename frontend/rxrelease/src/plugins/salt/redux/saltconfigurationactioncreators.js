@@ -88,8 +88,13 @@ export function loadCoupledSaltFormula(selected_statetype) {
 
   return function(dispatch) {
     e.execute(statetypepromises.GET_STATETYPE, {logger: scaLogger,statetype_id: selected_statetype.id})()
-    .then(e.execute(settingspromises.GET_SETTING,{logger: scaLogger,key: 'salt-formula'}))
-    .then(e.execute(saltpromises.GET_SALTFORMULA,{logger: scaLogger, saltformula_name: 'PostgreSQL'}))
+    .then(e.execute(settingspromises.GET_SETTING,{key: 'salt-formula'}))
+    .then(function(r) {
+      scaLogger.traceObject(e.stored_state.selected_setting)
+      var selected_setting = e.stored_state.selected_setting
+      e.addItem('saltformula_name',selected_setting.getValue())
+      return r; })
+    .then(e.execute(saltpromises.GET_SALTFORMULA,{}))
     .then(function(response) {
       dispatch(updateSelectedSaltFormula(e.stored_state.selected_saltformula))
     })
@@ -109,18 +114,15 @@ export function coupleFormulaToStatetype(saltformula_id, statetype_id) {
   scaLogger.trace('Couple selected saltformula to statetype')
   scaLogger.trace('saltformula id: ' + saltformula_id)
   scaLogger.trace('statetype id: ' + statetype_id)
-
-
   // first materialize the ids
   var e = new PromiseExecutor()
   return function(dispatch) {
 
      e.execute(statetypepromises.GET_STATETYPE,{logger: scaLogger, statetype_id: statetype_id})()
-    .then(e.execute(saltpromises.GET_SALTFORMULA,{ logger: scaLogger, saltformula_id: saltformula_id }))
-    //.then(e.execute(settingspromises.GET_CATEGORY_BY_ID,{logger: scaLogger}))
+    .then(e.execute(saltpromises.GET_SALTFORMULA,{ saltformula_id: saltformula_id }))
     .then(e.execute(settingspromises.GET_OR_CREATE_SETTING,
-      {logger: scaLogger,key: 'salt-formula',value_store: 'salt_formula_name'}))
-    .then(e.execute(settingspromises.UPDATE_SETTING,{logger: scaLogger, key: 'salt-formula', value_store: 'salt_formula_name'}))
+      {key: 'salt-formula',value_store: 'salt_formula_name'}))
+    .then(e.execute(settingspromises.UPDATE_SETTING,{ key: 'salt-formula', value_store: 'salt_formula_name'}))
     .then(function(response) {
       dispatch(updateDone(e.stored_state.selected_statetype))
     })

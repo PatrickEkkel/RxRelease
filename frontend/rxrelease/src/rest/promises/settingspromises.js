@@ -104,7 +104,6 @@ export function UPDATE_SETTING(response, properties) {
 
 }
 export function GET_SETTING(response, properties) {
-
 var key = properties.key
 var category_id = properties.category_id
 var context = properties.context
@@ -123,10 +122,11 @@ return settingsRequests.getSettingsCategoryById(category_id).then(function(respo
 
   return settingsRequests.getSettingByKeyAndCategory(key,settingsCategory)
 }).then(function(response) {
-  var data = response.data
-  context.addItem('setting_value', data['value'])
+  var normalizedData = jsonUtils.normalizeJson(response.data)
+  var mapped_setting = KVSettingModel.mapKVSetting(normalizedData)
+  context.addItem('selected_setting', mapped_setting)
   logger.trace('Retrieving setting value from backend')
-  logger.traceObject(data)
+  logger.traceObject(normalizedData)
   return response
 })
 
