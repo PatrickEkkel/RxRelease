@@ -15,10 +15,16 @@ class KVSettingModel {
       setCategory: function(category) { this.category = category}
     }
   }
-
+  static emptyKVSetting() {
+    return KVSettingModel.newKVSetting(null,"","","")
+  }
   static mapKVSetting(_model) {
-
-    return KVSettingModel.newKVSetting(_model['id'],_model['key'], _model['value'], null)
+    if(_model == null) {
+      return KVSettingModel.emptyKVSetting()
+    }
+    else {
+      return KVSettingModel.newKVSetting(_model['id'],_model['key'], _model['value'], null)
+    }
   }
 }
 

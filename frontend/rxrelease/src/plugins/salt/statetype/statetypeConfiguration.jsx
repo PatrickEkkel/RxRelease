@@ -58,16 +58,29 @@ class StatetypeConfigurationPanel  extends BasicRxPanel {
     switch (nextProps.statetype_type) {
       // called when the save button is pressed
       case 'UPDATE_STATETYPE_PLUGINS':
-        var selected_saltformula = this.getSaltFormulabyId(this.state.saltstate)
+        var selected_saltformula = null
+        if(typeof this.state.saltstate !== 'undefined') {
+          selected_saltformula = this.getSaltFormulabyId(this.state.saltstate)
+        }
+        else {
+          selected_saltformula = this.state.selected_saltformula
+        }
+
         var selected_statetype = nextProps.selected_statetype
         this.getLogger().trace('selected formula')
         this.getLogger().traceObject(selected_saltformula)
-
         this.getLogger().trace('selected statetype')
         this.getLogger().traceObject(selected_statetype)
+
+
         this.setState({selected_statetype: selected_statetype, selected_saltformula: selected_saltformula})
-        this.props.dispatch(
-          saltconfigurationActionCreator.coupleFormulaToStatetype(selected_saltformula.getId(),selected_statetype.id))
+
+        if(selected_saltformula.getId() == null) {
+          this.props.dispatch(saltconfigurationActionCreator.updateDone(this.selected_statetype))
+        }
+        else {
+          this.props.dispatch(saltconfigurationActionCreator.coupleFormulaToStatetype(selected_saltformula.getId(),selected_statetype.id))
+        }
         break;
       default:
     }

@@ -22,7 +22,13 @@ class SaltFormulaModel {
       }
     }
   static mapSaltFormula(_model) {
-    return SaltFormulaModel.newSaltFormula(_model['id'],_model['name'],null,_model['status'])
+
+    if(_model == null) {
+      return SaltFormulaModel.emptySaltFormula()
+    }
+    else {
+      return SaltFormulaModel.newSaltFormula(_model['id'],_model['name'],null,_model['status'])
+    }
   }
   static emptySaltFormula() {
     return SaltFormulaModel.newSaltFormula(null,"","","")
