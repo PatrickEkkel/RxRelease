@@ -27,6 +27,10 @@ export function putStatetype(statetype) {
 export function postStatetype(statetype) {
  return  Axios.post(GlobalSettings.getBackendUrl() +  '/rxbackend/statetypes/',
       {
-      name: statetype.getName()
+      name: statetype.getName(),
+      jobtype: statetype.getJobtype(),
+      module: statetype.getModule(),
+      state_settings: statetype.getStateSettings().getId()
+
     })
 }

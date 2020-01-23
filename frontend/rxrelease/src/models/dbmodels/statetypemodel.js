@@ -6,6 +6,7 @@ class StateTypeModel {
     return {
       id: _id,
       name: _name,
+      module: _module,
       handler: _handler,
       dependentOn: _dependentOn,
       state_settings: _state_settings,
@@ -14,9 +15,11 @@ class StateTypeModel {
       getConnectionCredentials() { return this.connection_credentials },
       getJobtype() { return this.jobtype },
       getStateSettings() { return this.state_settings },
+      setStateSettings(state_settings) { this.state_settings = state_settings},
       getDependentOn() { return this.dependentOn },
       getHandler() { return this.handler },
       getName() { return this.name},
+      getModule() { return this.module},
       getId() { return this.id},
 
     }

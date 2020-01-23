@@ -2,8 +2,13 @@ import Axios from 'axios';
 import GlobalSettings from '../config/global'
 import StateTypeModel from '../models/dbmodels/statetypemodel'
 import StateType from '../models/statetype'
+import PromiseExecutor from '../lib/promises/promise_executor'
 import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
 import  * as statetyperequests from '../rest/requests/statetyperequests'
+import  * as statetypepromises from '../rest/promises/statetypepromises'
+import  * as settingspromises from '../rest/promises/settingspromises'
+
+
 import LogFactory from '../logging/LogFactory'
 
 
@@ -92,17 +97,18 @@ export function saveNewStateType(statetype_name,statetype_jobtype,statetype_modu
   return function (dispatch) {
 
     var errorHandler = new AggregatedFieldsErrorHandler();
-    var statetype = StateTypeModel.newStateType(statetype_name, statetype_jobtype)
-
-    statetyperequests.postStatetype(statetype).then(function() {
-        dispatch( {
-            type: 'SAVE_NEW_STATETYPE',
-        })
-      }).catch(function(error) {
-        errorHandler.addErrorResponse(error)
-        errorHandler.handleErrors('SAVE_NEW_STATETYPE_FAILED',dispatch)
-      });
-
+    //var statetype = StateTypeModel.newStateType(statetype_name, statetype_jobtype)
+    var e = new PromiseExecutor();
+     e.execute(settingspromises.CREATE_OR_UPDATE_SETTINGSCATEGORY,{logger: stLogger, category: statetype_name})()
+    .then(e.execute(statetypepromises.CREATE_STATETYPE,{name: statetype_name, jobtype: statetype_jobtype, module: statetype_module}))
+    .then(function(response) {
+      dispatch( {
+          type: 'SAVE_NEW_STATETYPE',
+      })
+    }).catch(function(error) {
+      errorHandler.addErrorResponse(error)
+      errorHandler.handleErrors('SAVE_NEW_STATETYPE_FAILED',dispatch)
+    })
   }
 }
 

@@ -21,14 +21,28 @@ export function UPDATE_SETTINGS_WITH_CATEGORY(response,properties) {
 export function CREATE_OR_UPDATE_SETTINGSCATEGORY(response,properties) {
 
     var category = properties.category
+    var context = properties.context
+    var logger = properties.logger
 
-    var normalizedData = jsonUtils.normalizeJson(response.data)
+    var normalizedData = null;
+    if(typeof response !== 'undefined') {
+      normalizedData = jsonUtils.normalizeJson(response.data)
+    }
     // if the response from getting the category is null, create a new category
     if(normalizedData == null) {
-      return settingsRequests.postSettingCategory(category);
+      return settingsRequests.postSettingCategory(category).then(function(response) {
+        var new_settingscategory = SettingsCategoryModel.mapSettingsCategoryModel(response.data)
+        context.addItem('settings_category',new_settingscategory)
+        return response
+      })
     }
     else {
-      return settingsRequests.getSettingCategoryByName(category.name)
+      return settingsRequests.getSettingCategoryByName(category.name).then(function(response) {
+        var settingscategory = SettingsCategoryModel.mapSettingsCategoryModel(response.data)
+        context.addItem('settings_category',settingscategory)
+
+        return response
+      })
     }
 }
 // NOTE: deze methode is deprecated, neit meer gebruiken, gebruik ipv dit gedrocht CREATE_CREDENTIAL_SETTINGS_NEW
