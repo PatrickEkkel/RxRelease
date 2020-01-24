@@ -1,13 +1,14 @@
 
 class StateType {
 
-  constructor(id, name, mod, handler, jobtype) {
+  constructor(id, name, mod, handler, jobtype, system) {
 
     this.id = id
     this.name = name
     this.module = mod
     this.jobtype = jobtype
     this.handler = handler
+    this.system = system
     this.dependence = 'nan'
   }
 
@@ -34,6 +35,9 @@ class StateType {
   }
   getJobtype() {
     return this.jobtype
+  }
+  getSystem() {
+    return this.system
   }
   getDependence() {
     return this.dependence

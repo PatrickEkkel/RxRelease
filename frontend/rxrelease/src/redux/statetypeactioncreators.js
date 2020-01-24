@@ -57,7 +57,7 @@ export function loadStatetype() {
   }
 }
 
-export function loadStatetypes() {
+export function loadStatetypes(display_system) {
 
   return function (dispatch) {
       var errorHandler = new AggregatedFieldsErrorHandler();
@@ -71,9 +71,11 @@ export function loadStatetypes() {
             statetype.name,
             statetype.module,
             statetype.handler,
-            statetype.jobtype)
+            statetype.jobtype,
+            statetype.system)
           stLogger.trace('statetype:')
           stLogger.traceObject(newStateType)
+          
           statetypes.push(newStateType)
         }
         stLogger.trace('send statetypes')
