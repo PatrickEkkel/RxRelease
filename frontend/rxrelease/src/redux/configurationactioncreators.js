@@ -1,6 +1,14 @@
 import Axios from 'axios';
+import LogFactory from '../logging/LogFactory'
 import PromiseExecutor from '../lib/promises/promise_executor'
-import  * as configurionpromises from '../rest/promises/configurationpromises'
+import GlobalSettings from '../config/global'
+
+import * as configurionpromises from '../rest/promises/configurationpromises'
+import * as capabilitypromises  from '../rest/promises/capabilitypromises'
+
+
+var settings = new GlobalSettings();
+var caLogger = new LogFactory().createLogger("PROFILECONFIGURATION","ACTIONCREATOR")
 
 
 export function openNewConfiguration() {
@@ -50,7 +58,9 @@ export function saveNewConfiguration(configuration_name,selected_profile) {
 
 
     return function (dispatch) {
-      e.execute(configurionpromises.CREATE_CONFIGURATION,{configuration_name: configuration_name, selected_profile: selected_profile})().then(function(response) {
+      e.execute(configurionpromises.CREATE_CONFIGURATION,{logger: caLogger, configuration_name: configuration_name, selected_profile: selected_profile})()
+      .then(e.execute(capabilitypromises.CREATE_CAPABILITY,{name: configuration_name}))
+      .then(function(response) {
         dispatch( {
             type: 'SAVE_NEW_CONFIGURATION',
         })
