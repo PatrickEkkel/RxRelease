@@ -22,6 +22,7 @@ export default function _configuration(state = initialConfigurationState,action)
     return {
       type: action.type,
       showModal: false,
+      selected_capability: action.selected_capability,
       configurations: action.configurations
     }
     case 'CONFIGURATION_LOADING':

@@ -12,6 +12,12 @@ class CapabilityModel {
       },
       getStatetypes() {
         return this.statetypes;
+      },
+      getId() {
+        return this.id;
+      },
+      setId(value) {
+        this.id = value;
       }
     }
   }

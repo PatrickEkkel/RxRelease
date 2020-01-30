@@ -97,7 +97,7 @@ class ConfigurationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Configuration
-        fields = ('id', 'name', 'profile', 'hosts')
+        fields = ('id', 'name', 'profile', 'hosts','capability')
 
 
 class HostStateHandlerSerializer(serializers.ModelSerializer):

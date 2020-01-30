@@ -29,8 +29,6 @@ export function loadStatetypeManagement(entry) {
   stLogger.traceObject(entry)
   // convert map to Statetype
   var statetype = new StateType(entry[0],entry[1],entry[3],entry[4],entry[5])
-  //stLogger.trace("statetype: ")
-  //stLogger.traceObject(statetype)
 
   return {
     type: 'LOAD_STATETYPE_MANAGEMENT_FROM_STATETYPES',
@@ -61,7 +59,7 @@ export function loadStatetypes(display_system) {
 
   return function (dispatch) {
       var errorHandler = new AggregatedFieldsErrorHandler();
-      statetyperequests.getStatetypes()
+      statetyperequests.getFilteredStatetypes(false)
       .then(function(response){
         var statetypes = []
         var data = response.data
@@ -75,7 +73,7 @@ export function loadStatetypes(display_system) {
             statetype.system)
           stLogger.trace('statetype:')
           stLogger.traceObject(newStateType)
-          
+
           statetypes.push(newStateType)
         }
         stLogger.trace('send statetypes')

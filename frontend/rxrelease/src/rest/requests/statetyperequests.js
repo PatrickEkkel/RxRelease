@@ -1,6 +1,14 @@
 import Axios from 'axios';
 import GlobalSettings from '../../config/global';
+import  * as jsonUtils from '../../lib/json/utils'
 
+
+export function getFilteredStatetypes(system) {
+  var backend_url = GlobalSettings.getBackendUrl()
+
+  return Axios.get(backend_url + '/rxbackend/statetypes/search/?system=' + jsonUtils.convertToPythonBool(system))
+
+}
 
 export function getStatetypes() {
   var backend_url = GlobalSettings.getBackendUrl()

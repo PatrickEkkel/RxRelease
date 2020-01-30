@@ -3,6 +3,9 @@ import GlobalSettings from '../../config/global';
 import LogFactory from '../../logging/LogFactory'
 import  * as sessionUtils from '../../lib/session/utils'
 
+export function getCapability() {
+  
+}
 
 export function postCapability(capability) {
   var backend_url = GlobalSettings.getBackendUrl();

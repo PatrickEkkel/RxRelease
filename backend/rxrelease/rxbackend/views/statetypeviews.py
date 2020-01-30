@@ -83,3 +83,25 @@ class SearchbyNameView(generics.ListAPIView):
         name = self.request.query_params.get('name', None)
         statetype_queryset = StateType.objects.filter(name=name)
         return statetype_queryset
+
+class SearchView(generics.ListAPIView):
+    serializer_class = StateTypeSerializer
+
+    def get_queryset(self):
+        system_statetypes =  self.request.query_params.get('system', None)
+        capability =    self.request.query_params.get('capability', None)
+        system_statetypes = system_statetypes == 'True'
+        filter = False
+        if system_statetypes is not None:
+            result_queryset = StateType.objects.filter(system=system_statetypes)
+            filter = True
+
+        if capability is not None and system_statetypes is not None:
+            filter = True
+            result_queryset = Capability.objects.filter(id=capability).get().statetypes.filter(system=system_statetypes)#.statetypes
+                #.filter(system=system_statetypes)
+
+        if not filter:
+            return StateType.objects.all
+        else:
+            return result_queryset

@@ -58,23 +58,17 @@ export function saveNewConfiguration(configuration_name,selected_profile) {
 
 
     return function (dispatch) {
-      e.execute(configurionpromises.CREATE_CONFIGURATION,{logger: caLogger, configuration_name: configuration_name, selected_profile: selected_profile})()
-      .then(e.execute(capabilitypromises.CREATE_CAPABILITY,{name: configuration_name}))
-      .then(function(response) {
+      e.execute(capabilitypromises.CREATE_CAPABILITY,{name: configuration_name, logger: caLogger})()
+      .then(e.execute(configurionpromises.CREATE_CONFIGURATION,{configuration_name: configuration_name, selected_profile: selected_profile}))
+      .then(e.execute(function(response, properties) {
+        var selected_capability =  properties.selected_capability
+        var logger = properties.logger
+        logger.trace("Selected capability")
+        logger.traceObject(selected_capability)
         dispatch( {
             type: 'SAVE_NEW_CONFIGURATION',
+            selected_capability: selected_capability
         })
-      })
-
-      /*Axios.post('http://localhost:8080/rxbackend/configurations/',
-          {
-          name: configuration_name,
-          profile: selected_profile[0],
-          hosts: []
-        }).then(function() {
-          dispatch( {
-              type: 'SAVE_NEW_CONFIGURATION',
-          })
-        });*/
+      }));
     }
   }

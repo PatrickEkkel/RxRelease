@@ -159,14 +159,14 @@ class BaseFiller:
                                                                     connection_credentials=salt_settings_category, system=True)
 
 
-        passwordless_login_state.save()
-        sethostname_state.save()
-        prerequisites_state.save()
-        salt_minion_state.save()
-        salt_master_state.save()
-        salt_minion_master_state.save()
-        salt_api_state.save()
-        salt_run_state.save()
+        #passwordless_login_state.save()
+        #sethostname_state.save()
+        #prerequisites_state.save()
+        #salt_minion_state.save()
+        #salt_master_state.save()
+        #salt_minion_master_state.save()
+        #salt_api_state.save()
+        #salt_run_state.save()
 
         # capabilities
         standard_capability = Capability.objects.create(name="standard")
@@ -198,7 +198,6 @@ class BaseFiller:
         standard_capability.save()
         salt_minion_capability.save()
         salt_master_capability.save()
-
         buildin_saltmaster_profiletype.save()
         buildin_saltmaster_profile.save()
         buildin_saltmaster_configuration.save()

@@ -3,11 +3,12 @@ import GlobalSettings from '../../config/global';
 
 
 
-export function postConfiguration(configuration_name, selected_profile) {
+export function postConfiguration(configuration) {
     return Axios.post(GlobalSettings.getBackendUrl() + '/rxbackend/configurations/',
         {
-        name: configuration_name,
-        profile: selected_profile[0],
-        hosts: []
+        name: configuration.getName(),
+        profile: configuration.getProfileId(),
+        hosts: configuration.getHosts(),
+        capability: configuration.getCapability().getId()
       });
 }
