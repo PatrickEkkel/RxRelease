@@ -3,10 +3,10 @@ import GlobalSettings from '../../config/global';
 import  * as jsonUtils from '../../lib/json/utils'
 
 
-export function getFilteredStatetypes(system) {
+export function getFilteredStatetypes(system, capability_id) {
   var backend_url = GlobalSettings.getBackendUrl()
 
-  return Axios.get(backend_url + '/rxbackend/statetypes/search/?system=' + jsonUtils.convertToPythonBool(system))
+  return Axios.get(backend_url + '/rxbackend/statetypes/search/?system=' + jsonUtils.convertToPythonBool(system) + '&capability=' + capability_id)
 
 }
 

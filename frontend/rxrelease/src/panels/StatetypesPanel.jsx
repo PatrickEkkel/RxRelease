@@ -5,10 +5,8 @@ import StandardListConverters from '../converters/StandardListConverters'
 import Modal from '../components/Modal';
 import Table from '../components/Table';
 import Button from '../components/Button';
-import StatetypePanel from './StatetypePanel'
-
-
-import  * as statetypeActionCreators from '../redux/statetypeactioncreators'
+import StatetypePanel from './StatetypePanel';
+import  * as statetypeActionCreators from '../redux/statetypeactioncreators';
 
 
 class StatetypesPanel extends BasicRxPanel {
@@ -16,18 +14,22 @@ class StatetypesPanel extends BasicRxPanel {
   constructor() {
     super('STATES','STATETYPES_PANEL')
     this.state = {
-      statetypes: []
+      statetypes: [],
+      selected_configuration: null
     }
   }
 
   componentWillMount() {
+
 
     var {type} = this.props;
 
     switch (type) {
       case 'PLUGINS_LOADED':
       case 'INITIAL_STATETYPE_STATE':
-        this.props.dispatch(statetypeActionCreators.loadStatetypes())
+        var configuration_id = this.props.selectedConfiguration[0];
+        this.getLogger().trace('selected configuration id: ' + configuration_id);
+        this.props.dispatch(statetypeActionCreators.loadStatetypes(configuration_id));
       break;
       default:
 
@@ -49,10 +51,10 @@ class StatetypesPanel extends BasicRxPanel {
       this.props.dispatch(statetypeActionCreators.initialStatetypeState())
       break;
       case 'STATETYPES_LOADED':
-      this.getLogger().trace('statetypes Loaded')
-      this.getLogger().trace('retrieved statetypes')
-      this.getLogger().traceObject(nextProps.statetypes)
-      this.setState({statetypes: nextProps.statetypes})
+        this.getLogger().trace('statetypes Loaded')
+        this.getLogger().trace('retrieved statetypes')
+        this.getLogger().traceObject(nextProps.statetypes)
+        this.setState({statetypes: nextProps.statetypes,selected_configuration: nextProps.selected_configuration })
       break;
       case 'SAVE_NEW_STATETYPE_FAILED':
         alert('error!')
@@ -61,7 +63,7 @@ class StatetypesPanel extends BasicRxPanel {
   }
 
   saveAndClose() {
-    this.props.dispatch(statetypeActionCreators.saveNewStateType(this.state.name,this.state.jobtype, this.state.module))
+    this.props.dispatch(statetypeActionCreators.saveNewStateType(this.state.name,this.state.jobtype, this.state.module,this.state.selected_configuration.getCapabilityId()))
   }
 
   createStateType() {
@@ -106,7 +108,8 @@ class StatetypesPanel extends BasicRxPanel {
     return {
       type: state._statetypes.type,
       showModal: state._statetypes.showModal,
-      statetypes: state._statetypes.statetypes
+      statetypes: state._statetypes.statetypes,
+      selected_configuration: state._statetypes.selected_configuration
     }
   }
 

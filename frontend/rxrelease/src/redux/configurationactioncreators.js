@@ -16,15 +16,11 @@ export function openNewConfiguration() {
       type: 'OPEN_NEW_CONFIGURATION',
   }
 }
-/*export function configurationComplete() {
-  return {
-    type: 'CONFIGURATION_COMPLETE'
-  }
-}*/
-export function initialConfigurationState(selected_profile) {
+export function initialConfigurationState(selected_profile, selected_configuration) {
   return {
     type: 'INITIAL_CONFIGURATION_STATE',
     selected_profile: selected_profile,
+    selected_configuration: selected_configuration,
     showModal: false
   }
 }
@@ -34,7 +30,10 @@ export function loadConfigurations(selected_profile) {
       if (selected_profile != null) {
       Axios.get('http://localhost:8080/rxbackend/configurations/profile/' + selected_profile[0]).then(function(response){
         for(var i=0;i<response.data.length;i++) {
-        retrievedData[i] = [response.data[i].id,response.data[i].name,response.data[i].type];
+        retrievedData[i] = [response.data[i].id,
+         response.data[i].name,
+         response.data[i].type,
+         response.data[i].capability];
         }
           dispatch(configurationLoaded(retrievedData,selected_profile));
       });

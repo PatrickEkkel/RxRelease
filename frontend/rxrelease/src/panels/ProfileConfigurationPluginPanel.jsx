@@ -49,7 +49,6 @@ class ProfileConfigurationPluginPanel  extends BasicRxPanel {
   componentWillMount() {
 
     var {type} = this.props;
-
     if(type == 'INITIAL_CONFIGURATION_PLUGINPANEL_STATE') {
       this.props.dispatch(pluginsactionCreators.loadEnabledPlugins())
     }
@@ -87,7 +86,7 @@ class ProfileConfigurationPluginPanel  extends BasicRxPanel {
       this.getLogger().traceObject(plugins)
 
       // First load Buildin tabs
-      tabContent.push(this.renderContents("Statetypes",<StatetypesParentPanel/>))
+      tabContent.push(this.renderContents("Statetypes",<StatetypesParentPanel selectedConfiguration={this.props.selectedConfiguration} />))
       for(var i=0;i<plugins.length;i++) {
         this.getLogger().trace("render tab")
         this.getLogger().traceObject(plugins[i])

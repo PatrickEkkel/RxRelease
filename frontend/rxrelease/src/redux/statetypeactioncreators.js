@@ -6,7 +6,9 @@ import PromiseExecutor from '../lib/promises/promise_executor'
 import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
 import  * as statetyperequests from '../rest/requests/statetyperequests'
 import  * as statetypepromises from '../rest/promises/statetypepromises'
+import  * as capabilitypromises from '../rest/promises/capabilitypromises'
 import  * as settingspromises from '../rest/promises/settingspromises'
+import  * as configurationpromises from '../rest/promises/configurationpromises'
 
 
 import LogFactory from '../logging/LogFactory'
@@ -36,10 +38,11 @@ export function loadStatetypeManagement(entry) {
   }
 }
 
-export function statetypesLoaded(statetypes) {
+export function statetypesLoaded(statetypes, selected_configuration) {
   return {
     type: 'STATETYPES_LOADED',
-    statetypes: statetypes
+    statetypes: statetypes,
+    selected_configuration: selected_configuration
   }
 }
 
@@ -55,34 +58,22 @@ export function loadStatetype() {
   }
 }
 
-export function loadStatetypes(display_system) {
-
+export function loadStatetypes(configuration_id) {
   return function (dispatch) {
       var errorHandler = new AggregatedFieldsErrorHandler();
-      statetyperequests.getFilteredStatetypes(false)
-      .then(function(response){
-        var statetypes = []
-        var data = response.data
-        for(var i=0;i<data.length;i++) {
-          var statetype = data[i]
-          var newStateType = new StateType(statetype.id,
-            statetype.name,
-            statetype.module,
-            statetype.handler,
-            statetype.jobtype,
-            statetype.system)
-          stLogger.trace('statetype:')
-          stLogger.traceObject(newStateType)
-
-          statetypes.push(newStateType)
-        }
-        stLogger.trace('send statetypes')
-        stLogger.traceObject(statetypes)
-        dispatch(statetypesLoaded(statetypes))
-      }).catch(function(error) {
+      var e = new PromiseExecutor();
+      e.execute(configurationpromises.GET_CONFIGURATION,{ logger: stLogger, configuration_id: configuration_id})()
+      .then(e.execute(statetypepromises.GET_FILTERED_STATETYPES,{ logger: stLogger, system: false }))
+      .then(e.execute(function(response, properties){
+        stLogger.trace('statetypes to be dispatched')
+        stLogger.traceObject(properties.loaded_statetypes)
+        dispatch(statetypesLoaded(properties.loaded_statetypes, properties.selected_configuration))
+      }))
+      .catch(function(error) {
         errorHandler.addErrorResponse(error)
         errorHandler.handleErrors('GET_STATETYPES_FAILED',dispatch)
       })
+
   }
 }
 
@@ -93,14 +84,15 @@ export function openNewStateType(hostentry) {
     }
 }
 
-export function saveNewStateType(statetype_name,statetype_jobtype,statetype_module) {
+export function saveNewStateType(statetype_name,statetype_jobtype,statetype_module, capability_id) {
   return function (dispatch) {
 
     var errorHandler = new AggregatedFieldsErrorHandler();
-    //var statetype = StateTypeModel.newStateType(statetype_name, statetype_jobtype)
     var e = new PromiseExecutor();
-     e.execute(settingspromises.CREATE_OR_UPDATE_SETTINGSCATEGORY,{logger: stLogger, category: statetype_name})()
+     e.execute(settingspromises.CREATE_OR_UPDATE_SETTINGSCATEGORY,{category: statetype_name})()
     .then(e.execute(statetypepromises.CREATE_STATETYPE,{name: statetype_name, jobtype: statetype_jobtype, module: statetype_module}))
+    .then(e.execute(capabilitypromises.GET_CAPABILITY,{capability_id: capability_id}))
+    .then(e.execute(capabilitypromises.UPDATE_CAPABILITY,{}))
     .then(function(response) {
       dispatch( {
           type: 'SAVE_NEW_STATETYPE',

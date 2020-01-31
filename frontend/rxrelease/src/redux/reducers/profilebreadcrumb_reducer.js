@@ -26,7 +26,8 @@ export default function _host(state = initialProfileBreadcrumbState,action) {
      }
      case 'LOAD_RECIPE_FROM_CONFIGURATION':
      return  {
-       type: action.type
+       type: action.type,
+       selected_configuration: action.selected_configuration,
      }
     default:
     return state;

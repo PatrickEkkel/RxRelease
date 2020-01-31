@@ -1,4 +1,6 @@
 import  * as statetypeRequests from '../../rest/requests/statetyperequests'
+import StateType from '../../models/statetype'
+
 import StateTypeModel from '../../models/dbmodels/statetypemodel'
 
 export function CREATE_STATETYPE(response, properties) {
@@ -14,6 +16,35 @@ export function CREATE_STATETYPE(response, properties) {
   statetype.setStateSettings(settings_category)
   return statetypeRequests.postStatetype(statetype);
 
+}
+
+export function GET_FILTERED_STATETYPES(response, properties) {
+  var logger = properties.logger
+  var context = properties.context
+  var selected_configuration = properties.selected_configuration
+  logger.trace('loading statetypes from configuration')
+  logger.traceObject(selected_configuration)
+  return statetypeRequests.getFilteredStatetypes(false,selected_configuration.getCapabilityId())
+  .then(function(response){
+    var statetypes = []
+    var data = response.data
+    for(var i=0;i<data.length;i++) {
+      var statetype = data[i]
+      var newStateType = new StateType(statetype.id,
+        statetype.name,
+        statetype.module,
+        statetype.handler,
+        statetype.jobtype,
+        statetype.system)
+      logger.trace('statetype:')
+      logger.traceObject(newStateType)
+
+      statetypes.push(newStateType)
+    }
+    context.addItem('loaded_statetypes',statetypes)
+    logger.trace('send statetypes')
+    logger.traceObject(statetypes)
+  })
 }
 
 export function GET_STATETYPE(response, properties) {

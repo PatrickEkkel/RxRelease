@@ -37,7 +37,7 @@ var { type } = this.props;
 
 render() {
 
-var overviewPanel = <StatetypesPanel/>
+var overviewPanel = <StatetypesPanel selectedConfiguration={this.props.selectedConfiguration}/>
 var detailPanel = <StatetypeManagementPanel/>
 var currentPanel = null;
   switch (this.state.viewmode) {

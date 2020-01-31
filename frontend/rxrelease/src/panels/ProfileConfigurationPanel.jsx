@@ -3,21 +3,27 @@ import Table from '../components/Table';
 import Modal from '../components/Modal';
 import Button from '../components/Button';
 import ConfigurationPanel from './ConfigurationPanel';
+import BasicRxPanel from '../components/panels/BasicRxPanel';
+
 import  * as configurationActionCreators from '../redux/configurationactioncreators'
 import * as recipeActionCreators from '../redux/recipeactioncreator'
 import { connect } from 'react-redux'
 
 
-class ProfileConfigurationPanel extends React.Component {
+class ProfileConfigurationPanel extends BasicRxPanel {
 
   constructor() {
-    super();
+    super('CONFIGURATION','PROFILE_CONFIGURATION_PANEL');
     this.state =  {
       selected_profile: null,
       configurations: []};
   }
 
   onRowClick(entry) {
+    this.getLogger().trace('Selected configuration')
+    this.getLogger().traceObject(entry)
+    // Op dit punt moeten we dus de configuratie laden en de bijhorende capability
+
     this.props.dispatch(recipeActionCreators.loadRecipePanelFromConfiguration(entry,this.state.selected_profile))
   }
   close() {

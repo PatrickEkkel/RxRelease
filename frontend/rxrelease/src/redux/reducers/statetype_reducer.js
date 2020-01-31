@@ -46,7 +46,8 @@ export default function _statetype(state = initialHostState,action) {
     case 'STATETYPES_LOADED':
     return {
       type: action.type,
-      statetypes: action.statetypes
+      statetypes: action.statetypes,
+      selected_configuration: action.selected_configuration
     }
     case 'LOAD_STATETYPE_MANAGEMENT_FROM_STATETYPES':
     return {
