@@ -21,6 +21,7 @@ class StateTypeModel {
       getName() { return this.name},
       getModule() { return this.module},
       getId() { return this.id},
+      setId(value) { this.id = value; }
 
     }
   }

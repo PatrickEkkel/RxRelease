@@ -13,6 +13,9 @@ class CapabilityModel {
       getStatetypes() {
         return this.statetypes;
       },
+      addStatetype(statetype) {
+        this.statetypes.push(statetype)
+      },
       getId() {
         return this.id;
       },

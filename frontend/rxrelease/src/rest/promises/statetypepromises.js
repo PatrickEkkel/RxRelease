@@ -9,12 +9,17 @@ export function CREATE_STATETYPE(response, properties) {
   var statetype_module = properties.module
   var settings_category = properties.settings_category
   var logger = properties.logger
+  var context = properties.context
 
   var statetype = StateTypeModel.newStateType(null, statetype_name, null, statetype_module, null, null, statetype_jobtype)
   logger.trace("post new statetype")
   logger.traceObject(statetype)
   statetype.setStateSettings(settings_category)
-  return statetypeRequests.postStatetype(statetype);
+  return statetypeRequests.postStatetype(statetype).then(function(response) {
+    var data = response.data
+    statetype.setId(data['id'])
+    context.addItem('selected_statetype',statetype)
+  })
 
 }
 

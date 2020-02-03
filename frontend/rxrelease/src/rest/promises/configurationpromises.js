@@ -22,6 +22,6 @@ export function CREATE_CONFIGURATION(response, properties) {
   var selected_profile = properties.selected_profile
   var selected_capability = properties.selected_capability
 
-  var configuration_models = ConfigurationModel.newConfiguration(null,configuration_name, selected_profile[0],[], selected_capability )
+  var configuration_models = ConfigurationModel.newConfiguration(null,configuration_name, selected_profile[0],[], selected_capability.getId() )
   return profileconfigurationrequests.postConfiguration(configuration_models)
 }

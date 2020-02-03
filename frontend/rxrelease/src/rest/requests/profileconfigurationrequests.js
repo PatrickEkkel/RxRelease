@@ -13,6 +13,6 @@ export function postConfiguration(configuration) {
         name: configuration.getName(),
         profile: configuration.getProfileId(),
         hosts: configuration.getHosts(),
-        capability: configuration.getCapability().getId()
+        capability: configuration.getCapabilityId()
       });
 }

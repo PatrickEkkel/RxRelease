@@ -1,6 +1,6 @@
 import  * as capabilityrequests from '../requests/capabilityrequests'
 import CapabilityModel from '../../models/dbmodels/capabilitymodel'
-
+import StateTypeModel from '../../models/dbmodels/statetypemodel'
 
 export function GET_CAPABILITY(response, properties) {
 
@@ -9,7 +9,11 @@ export function GET_CAPABILITY(response, properties) {
   return capabilityrequests.getCapabilityById(capability_id).then(function(response) {
 
     var data = response.data
-    var newCapability = CapabilityModel.newCapability(data['id'],data['name'],data['statetypes'])
+    var newStatetypes = []
+    for (var i=0;i<data['statetypes'].length;i++) {
+     newStatetypes.push(StateTypeModel.newStateType(data['statetypes'][i]));
+    }
+    var newCapability = CapabilityModel.newCapability(data['id'],data['name'],newStatetypes)
     context.addItem('selected_capability',newCapability)
   })
 
@@ -17,6 +21,14 @@ export function GET_CAPABILITY(response, properties) {
 
 export function UPDATE_CAPABILITY(response, properties) {
  // TODO hier was ik gebleven
+ var selected_capability = properties.selected_capability;
+ var selected_statetype = properties.selected_statetype;
+ var logger = properties.logger;
+
+ logger.trace('Capability to update');
+ logger.traceObject(selected_capability)
+ selected_capability.addStatetype(selected_statetype)
+ capabilityrequests.putCapability(selected_capability)
 }
 
 export function CREATE_CAPABILITY(response, properties) {

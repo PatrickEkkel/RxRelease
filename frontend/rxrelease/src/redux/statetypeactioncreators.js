@@ -89,7 +89,7 @@ export function saveNewStateType(statetype_name,statetype_jobtype,statetype_modu
 
     var errorHandler = new AggregatedFieldsErrorHandler();
     var e = new PromiseExecutor();
-     e.execute(settingspromises.CREATE_OR_UPDATE_SETTINGSCATEGORY,{category: statetype_name})()
+     e.execute(settingspromises.CREATE_OR_UPDATE_SETTINGSCATEGORY,{category: statetype_name, logger: stLogger})()
     .then(e.execute(statetypepromises.CREATE_STATETYPE,{name: statetype_name, jobtype: statetype_jobtype, module: statetype_module}))
     .then(e.execute(capabilitypromises.GET_CAPABILITY,{capability_id: capability_id}))
     .then(e.execute(capabilitypromises.UPDATE_CAPABILITY,{}))

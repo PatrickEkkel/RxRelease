@@ -45,7 +45,8 @@ class StatetypesPanel extends BasicRxPanel {
         this.setState({showModal: nextProps.showModal})
       break;
       case 'INITIAL_STATETYPE_STATE':
-        this.props.dispatch(statetypeActionCreators.loadStatetypes())
+        var configuration_id = this.props.selectedConfiguration[0];
+        this.props.dispatch(statetypeActionCreators.loadStatetypes(configuration_id))
       break;
       case 'SAVE_NEW_STATETYPE':
       this.props.dispatch(statetypeActionCreators.initialStatetypeState())
