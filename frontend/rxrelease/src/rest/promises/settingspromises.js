@@ -168,6 +168,7 @@ export function GET_OR_CREATE_SETTING(response, properties) {
   var get_request = null;
   var search_param = null
 
+  // determine if we are searching category by name or by id
   if(typeof value_store !== 'undefined') {
       value = properties.context.getItem(value_store)
   }
@@ -181,10 +182,10 @@ export function GET_OR_CREATE_SETTING(response, properties) {
     search_param = category_id
     logger.trace("Retrieving category by id")
   }
+  
   logger.trace("category response")
   logger.traceObject(normalizedData)
 
-  // determine if we are searching category by name or by id
   return get_request(search_param).then(function(local_response) {
       normalizedData = jsonUtils.normalizeJson(local_response.data)
       if(normalizedData == null) {
