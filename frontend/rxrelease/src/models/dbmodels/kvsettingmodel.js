@@ -11,6 +11,7 @@ class KVSettingModel {
       getId: function() { return this.id },
       getKey: function() { return this.key },
       getValue: function() { return this.value },
+      setValue: function(value) { this.value = value},
       getCategory: function() { return this.category },
       setCategory: function(category) { this.category = category}
     }

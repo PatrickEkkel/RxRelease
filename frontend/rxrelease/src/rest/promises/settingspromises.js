@@ -107,13 +107,16 @@ return settingsRequests.getSettingsByCategoryId(category_id).then(function(respo
 export function UPDATE_SETTING(response, properties) {
 
   var logger = properties.logger
-
+  var salt_formula_name = properties.salt_formula_name
   logger.trace("output from GET_OR_CREATE_SETTING")
   logger.traceObject(response.data)
   var normalized_data = jsonUtils.normalizeJson(response.data)
   var setting  = KVSettingModel.mapKVSetting(normalized_data)
-  setting.setCategory(SettingsCategoryModel.newSettingsCategoryModel(normalized_data['category']))
+  setting.setValue(salt_formula_name)
+  logger.trace("Setting that is updated")
   logger.traceObject(setting)
+  logger.traceObject(properties.context)
+  setting.setCategory(SettingsCategoryModel.newSettingsCategoryModel(normalized_data['category']))
   return settingsRequests.putSetting(setting);
 
 }
@@ -182,7 +185,7 @@ export function GET_OR_CREATE_SETTING(response, properties) {
     search_param = category_id
     logger.trace("Retrieving category by id")
   }
-  
+
   logger.trace("category response")
   logger.traceObject(normalizedData)
 
