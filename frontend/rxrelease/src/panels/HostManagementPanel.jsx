@@ -147,14 +147,33 @@ class  HostManagementPanel  extends BasicRxPanel {
         <hr/>
         <div className="row">
           <div className="col-md-8">
-            <h3><b>Host States</b></h3>
+            <h3><b>System Host States</b></h3>
           </div>
         </div>
         <div className="row">
           &nbsp;
         </div>
-      <LabeledTable onLabelLoad={handleLabelLoad} labelText="Status" headers = {headers} data={states} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
-        <Button title="Install Host"  onClick={() => this.installHost()}/>
+      <div className="row">
+        <div className="col-md-8">
+          <LabeledTable onLabelLoad={handleLabelLoad} labelText="Status" headers = {headers} data={states} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-md-8">
+          <h3><b>User Host States</b></h3>
+        </div>
+      </div>
+      <div className="row">
+        &nbsp;
+      </div>
+      <div className="row">
+        <div className="col-md-8">
+          <LabeledTable onLabelLoad={handleLabelLoad} labelText="Status" headers = {headers} data={states} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
+        </div>
+      </div>
+      <Button title="Install Host"  onClick={() => this.installHost()}/>
+
       </div>
   }
 }
