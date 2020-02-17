@@ -9,7 +9,6 @@ from ..models import Host
 from ..models import StateType
 from ..models import State
 from ..models import Capability
-from ..models import ProfileType
 from ..core.services.stateservice import StateService
 
 logger = logging.getLogger(__name__)
@@ -35,7 +34,7 @@ class CreateView(generics.ListCreateAPIView):
         statetype_set = StateType.objects.all()
         host = serializer.save()
         stateservice = StateService()
-
+        # TODO, hier waren we gebleven, we willen dit omhangen naar Profile
         capabilities = host.profileType.capabilities
         for capability in capabilities.iterator():
             for statetype in capability.statetypes.iterator():

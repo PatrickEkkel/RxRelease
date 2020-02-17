@@ -1,6 +1,5 @@
 import Axios from 'axios';
 import Profile from '../models/profile'
-import ProfileType from '../models/profiletype'
 import ProfileFactory from '../factories/profileFactory'
 import LogFactory from '../logging/LogFactory'
 import GlobalSettings from '../config/global'
@@ -41,7 +40,7 @@ export function loadProfiletypeByName(name) {
   }
 }
 
-export function loadProfiletypes() {
+/*export function loadProfiletypes() {
   return function (dispatch) {
       var profiletypes = [];
       profiletypeRequests.getProfileTypes()
@@ -54,13 +53,13 @@ export function loadProfiletypes() {
       });
   }
 }
-
-export function profileTypesLoaded(profiletypes) {
+*/
+/*export function profileTypesLoaded(profiletypes) {
   return {
     type: 'PROFILE_TYPES_LOADED',
     profiletypes: profiletypes
   }
-}
+}*/
 
 export function loadProfiles() {
   return function (dispatch) {
@@ -70,10 +69,10 @@ export function loadProfiles() {
         for(var i=0;i<response.data.length;i++) {
           var id = response.data[i].id;
           var name = response.data[i].name;
-          var type = response.data[i].type;
-          var p = new Profile(id,name,type)
+          //var type = response.data[i].type;
+          var p = new Profile(id,name,null)
 
-        retrievedData[i] = [id,name,type];
+        retrievedData[i] = [id,name];
         }
           dispatch(profilesLoaded(retrievedData));
       }).catch(function(error) {

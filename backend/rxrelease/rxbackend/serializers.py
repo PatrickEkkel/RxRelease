@@ -9,7 +9,6 @@ from .models import State
 from .models import SimpleState
 from .models import ComplexState
 from .models import RepeatableState
-from .models import ProfileType
 from .models import StateType
 from .models import KVSetting
 from .models import CredentialsSetting
@@ -61,13 +60,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username')
 
 
-class ProfileTypeSerializer(serializers.ModelSerializer):
-    capabilities = CapabilityMTMSerializer(many=True, queryset=Capability.objects.all())
-
-    class Meta:
-        model = ProfileType
-        fields = ('id', 'name', 'system', 'capabilities')
-
 
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -88,7 +80,7 @@ class HostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Host
-        fields = ('id', 'hostname', 'ipaddress', 'description', 'status', 'profileType',
+        fields = ('id', 'hostname', 'ipaddress', 'description', 'status',
                   'connectioncredentials', 'hostSettings')
 
 
@@ -189,7 +181,7 @@ class CredentialsSettingsSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ('name', 'profiletype', 'id')
+        fields = ('name', 'id')
 
 
 class ConfigurationTabSerializer(serializers.ModelSerializer):

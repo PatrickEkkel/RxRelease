@@ -65,7 +65,7 @@ class  ProfilesPanel  extends BasicRxPanel {
   }
 
   render() {
-    const headers_1 = ['#','Profile','Profile type'];
+    const headers_1 = ['#','Profile'];
     var currentContext = this;
 
     return <div className="container">
@@ -81,7 +81,6 @@ const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._profiles.type,
     name: state._profiles.name,
-    profiletype: state._profiles.profiletype,
     profiles: state._profiles.profiles,
     reduxState: state,
   }

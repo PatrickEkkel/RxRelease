@@ -5,7 +5,6 @@ import LabeledDropdown from '../components/LabeledDropdown';
 import Button from '../components/Button';
 import BasicRxPanel from '../components/panels/BasicRxPanel';
 import  * as actionCreators from '../redux/actioncreators'
-import  * as profileActionCreators from '../redux/profileactioncreators'
 import Axios from 'axios';
 import { connect } from 'react-redux'
 
@@ -18,15 +17,15 @@ class  HostPanel  extends BasicRxPanel {
     this.props.changeAttr(e);
   }
   componentWillMount() {
-    this.getLogger().debug("curernt received state: " + type)
+    //this.getLogger().debug("curernt received state: " + type)
 
-    var {type} = this.props;
+    /*var {type} = this.props;
     switch(type) {
 
       case 'OPEN_NEW_HOST':
-        this.props.dispatch(profileActionCreators.loadProfiletypes())
+        //this.props.dispatch(profileActionCreators.loadProfiletypes())
       break;
-    }
+    } */
   }
   componentWillReceiveProps(nextProps) {
 
@@ -57,9 +56,6 @@ class  HostPanel  extends BasicRxPanel {
       </div>
       <div className="form-group">
        <LabeledTextField id="description" errorHandler={(id,callee) => this.handleError(id,callee)} placeholder="Description" label="Description" col="col-md-4" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
-      </div>
-      <div className="form-group">
-        <LabeledDropdown id="profiletype" errorHandler={(id,callee) => this.handleError(id,callee)} items={StandardListConverters.convertObjectListToDDS(this.state.profiletypes)} label="Type" col="col-md-2" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
       </div>
       </form>
    </div>

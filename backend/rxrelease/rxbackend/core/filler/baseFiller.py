@@ -5,7 +5,6 @@ from ...configuration.globalsettings import ApiUserSettings
 from ...models import StateType
 from ...models import SettingsCategory
 from ...models import Capability
-from ...models import ProfileType
 from ...models import Profile
 from ...models import Configuration
 from ...models import KVSetting
@@ -35,21 +34,15 @@ class BaseFiller:
         salt_module.save()
 
         # Built in profiletypes
-        buildin_default_rxrelease_profiletype = ProfileType.objects.create(name="Default")
         buildin_default_profile = Profile.objects.create(name="Default")
-        buildin_default_profile.profiletype = buildin_default_rxrelease_profiletype
         buildin_default_configuration = Configuration.objects.create(name="Default Configuration",
                                                                      profile=buildin_default_profile)
 
-        buildin_saltmaster_profiletype = ProfileType.objects.create(name="Salt Master")
-        buildin_saltmaster_profile = Profile.objects.create(name="RxRelease Salt Master")
-        buildin_saltmaster_profile.profiletype = buildin_saltmaster_profiletype
+        buildin_saltmaster_profile = Profile.objects.create(name="Salt Master")
         buildin_saltmaster_configuration = Configuration.objects.create(
             name="Salt master default Configuration", profile=buildin_saltmaster_profile)
 
-        buildin_saltminion_profiletype = ProfileType.objects.create(name="Salt Minion", system=True)
         buildin_saltminion_profile = Profile.objects.create(name="Salt Minion")
-        buildin_saltminion_profile.profiletype = buildin_saltminion_profiletype
 
         # Salt settings category maken
         salt_settings_category = SettingsCategory.objects.create(name="Salt Settings",
@@ -187,17 +180,20 @@ class BaseFiller:
         salt_master_capability.statetypes.add(accept_salt_master_state)
 
         salt_master_capability.dependentOn = standard_capability
-        buildin_saltmaster_profiletype.capabilities.add(standard_capability)
-        buildin_saltmaster_profiletype.capabilities.add(salt_master_capability)
-        buildin_default_rxrelease_profiletype.capabilities.add(standard_capability)
 
-        buildin_saltminion_profiletype.capabilities.add(standard_capability)
-        buildin_saltminion_profiletype.capabilities.add(salt_minion_capability)
+        # TODO: de capabilites moeten dus aan de Configuration gehangen worden
+        
+        #buildin_saltmaster_profiletype.capabilities.add(standard_capability)
+        #buildin_saltmaster_profiletype.capabilities.add(salt_master_capability)
+        #buildin_default_rxrelease_profiletype.capabilities.add(standard_capability)
+
+        #buildin_saltminion_profiletype.capabilities.add(standard_capability)
+        #buildin_saltminion_profiletype.capabilities.add(salt_minion_capability)
+
         # TODO: dit kan in principe weggehaald worden 'capabilities saven'
 
         standard_capability.save()
         salt_minion_capability.save()
         salt_master_capability.save()
-        buildin_saltmaster_profiletype.save()
         buildin_saltmaster_profile.save()
         buildin_saltmaster_configuration.save()

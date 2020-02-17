@@ -3,7 +3,6 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken import views
 from .views import profileviews
-from .views import profiletypeviews
 from .views import hostviews
 from .views import capabilityviews
 from .views import wizardviews
@@ -82,8 +81,6 @@ urlpatterns = [
 
     url(r'^users/$',userviews.CreateUserView.as_view(),name="create"),
     url(r'^users/(?P<pk>[0-9]+)/$', userviews.DetailsView.as_view(), name="details"),
-    url(r'^profiletypes/$', profiletypeviews.CreateView.as_view(), name="create"),
-    url(r'^profiletypes/(?P<pk>[0-9]+)/$', profiletypeviews.DetailsView.as_view(), name="details"),
 
     url(r'^settings/kvsettings$', kvsettingsview.CreateView.as_view(), name="create"),
     url(r'^settings/kvsettings$', kvsettingsview.CreateView.as_view(), name="create"),

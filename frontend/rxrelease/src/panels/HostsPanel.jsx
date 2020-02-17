@@ -24,7 +24,7 @@ class  HostsPanel  extends BasicRxPanel {
     this.props.dispatch(hostActionCreators.openNewHost());
   }
   saveAndClose() {
-    this.props.dispatch(hostActionCreators.saveNewHost(this.state.hostname,this.state.ipaddress,this.state.description,this.state.profiletype));
+    this.props.dispatch(hostActionCreators.saveNewHost(this.state.hostname,this.state.ipaddress,this.state.description));
   }
   close() {
     this.props.dispatch(hostActionCreators.initialHostState());
