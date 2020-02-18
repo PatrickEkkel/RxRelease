@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '../components/Button';
 import ProfilePanel from '../panels/ProfilePanel';
 import BasicRxPanel from '../components/panels/BasicRxPanel';
+import StandardListConverters from '../converters/StandardListConverters';
 import Table from '../components/Table';
 import Axios from 'axios';
 import  * as profileActionCreators from '../redux/profileactioncreators'
@@ -68,11 +69,16 @@ class  ProfilesPanel  extends BasicRxPanel {
     const headers_1 = ['#','Profile'];
     var currentContext = this;
 
+    var profiles = StandardListConverters.convertListToMap(this.state.profiles,function(item) {
+      return [item.getId(),item.getName()]
+    })
+
+
     return <div className="container">
         <Modal title="New Profile" saveAndClose={() => currentContext.saveAndClose()} close={() => currentContext.close()} showModal={currentContext.state.showModal}>
           <ProfilePanel changeAttr={(e) => currentContext.changeAttr(e)}/>
         </Modal>
-        <Table headers = {headers_1} data={this.state.profiles} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
+        <Table headers = {headers_1} data={profiles} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
         <Button title="New Profile"  onClick={() => currentContext.createProfile()}/>
    </div>
   }

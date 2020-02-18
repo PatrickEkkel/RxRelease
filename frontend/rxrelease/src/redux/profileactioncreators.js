@@ -40,26 +40,6 @@ export function loadProfiletypeByName(name) {
   }
 }
 
-/*export function loadProfiletypes() {
-  return function (dispatch) {
-      var profiletypes = [];
-      profiletypeRequests.getProfileTypes()
-      .then(function(response){
-        for(var i=0;i<response.data.length;i++) {
-
-        profiletypes[i] = new ProfileType(response.data[i].id,response.data[i].name)
-        }
-          dispatch(profileTypesLoaded(profiletypes));
-      });
-  }
-}
-*/
-/*export function profileTypesLoaded(profiletypes) {
-  return {
-    type: 'PROFILE_TYPES_LOADED',
-    profiletypes: profiletypes
-  }
-}*/
 
 export function loadProfiles() {
   return function (dispatch) {
@@ -69,13 +49,12 @@ export function loadProfiles() {
         for(var i=0;i<response.data.length;i++) {
           var id = response.data[i].id;
           var name = response.data[i].name;
-          //var type = response.data[i].type;
           var p = new Profile(id,name,null)
-
-        retrievedData[i] = [id,name];
+          retrievedData.push(p)
         }
           dispatch(profilesLoaded(retrievedData));
       }).catch(function(error) {
+         console.log(error)
          commonActions.notAuthorized(error.response.status,error,dispatch)
       });
   }

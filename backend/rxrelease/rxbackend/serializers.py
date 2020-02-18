@@ -81,7 +81,7 @@ class HostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Host
         fields = ('id', 'hostname', 'ipaddress', 'description', 'status',
-                  'connectioncredentials', 'hostSettings')
+                  'connectioncredentials', 'hostSettings','profile')
 
 
 class ConfigurationSerializer(serializers.ModelSerializer):

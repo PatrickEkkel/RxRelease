@@ -159,13 +159,13 @@ export function updateHost(host) {
   }
 }
 
-export function saveNewHost(hostname,ipaddress,description,profiletype) {
+export function saveNewHost(hostname,ipaddress,description,profile) {
   var settingsfactory = new SettingsFactory();
   var hostfactory = new HostFactory();
   //var profiletypefactory = new ProfileTypeFactory();
   var errorHandler = new AggregatedFieldsErrorHandler();
   var settingscategory = null;
-  var host = HostModel.newHost("", hostname, ipaddress, description, profiletype)
+  var host = HostModel.newHost("", hostname, ipaddress, description, profile)
   var e = new PromiseExecutor()
   return function (dispatch) {
     // before we save the host we want to initialize the new SettingsCategory

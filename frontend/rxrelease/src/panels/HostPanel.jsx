@@ -18,7 +18,7 @@ class  HostPanel  extends BasicRxPanel {
     this.props.changeAttr(e);
   }
   componentWillMount() {
-    this.getLogger().debug("curernt received state: " + type)
+    this.getLogger().debug("current received state: " + type)
 
     var {type} = this.props;
     switch(type) {
@@ -42,6 +42,8 @@ class  HostPanel  extends BasicRxPanel {
           this.setState({profiletypes: nextProps.profiletypes})
         break;
       case 'PROFILES_LOADED':
+        this.getLogger().trace('Loaded profiles')
+        this.getLogger().traceObject(nextProps.profiles)
         this.setState({profiles: nextProps.profiles})
       break;
     }
@@ -62,7 +64,7 @@ class  HostPanel  extends BasicRxPanel {
        <LabeledTextField id="description" errorHandler={(id,callee) => this.handleError(id,callee)} placeholder="Description" label="Description" col="col-md-4" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
       </div>
       <div className="form-group">
-        <LabeledDropdown id="profiles" selectedValue='None' errorHandler={(id,callee) => this.handleError(id,callee)} items={StandardListConverters.convertObjectListToDDS(this.state.profiles)} label="Profiles" col="col-md-4" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
+        <LabeledDropdown id="profile" selectedValue='None' errorHandler={(id,callee) => this.handleError(id,callee)} items={StandardListConverters.convertObjectListToDDS(this.state.profiles)} label="Profiles" col="col-md-4" labelcol="col-md-2" onChange={e => this.changeAttr(e)}/>
       </div>
       </form>
    </div>
@@ -73,6 +75,7 @@ const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._host.type,
     reduxState: state,
+    profiles: state._host.profiles,
     error_fields: state._host.error_fields,
   }
 }

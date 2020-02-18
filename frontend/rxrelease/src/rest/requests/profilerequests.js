@@ -6,7 +6,6 @@ export function postProfile(profile) {
  return  Axios.post(GlobalSettings.getBackendUrl() +  '/rxbackend/profiles/',
       {
       name: profile.getName(),
-      profiletype: profile.getProfileType()
     })
 }
 
