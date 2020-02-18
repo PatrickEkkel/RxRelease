@@ -33,16 +33,23 @@ class BaseFiller:
                                             configurationPanel="SALT_CONFIGURATION_PANEL",statetypePanel="SALT_STATETYPE_PANEL")
         salt_module.save()
 
+        standard_capability = Capability.objects.create(name="standard")
+
         # Built in profiletypes
         buildin_default_profile = Profile.objects.create(name="Default")
         buildin_default_configuration = Configuration.objects.create(name="Default Configuration",
-                                                                     profile=buildin_default_profile)
+                                                                     profile=buildin_default_profile,capability=standard_capability)
+
+
+        salt_master_capability = Capability.objects.create(name="salt-master")
 
         buildin_saltmaster_profile = Profile.objects.create(name="Salt Master")
         buildin_saltmaster_configuration = Configuration.objects.create(
-            name="Salt master default Configuration", profile=buildin_saltmaster_profile)
+            name="Salt master default Configuration", profile=buildin_saltmaster_profile,capability=salt_master_capability)
 
         buildin_saltminion_profile = Profile.objects.create(name="Salt Minion")
+        salt_minion_capability = Capability.objects.create(name="Salt-minion")
+        buildin_saltminion_configuration = Configuration.objects.create(name='Salt minion Default configuration',profile=buildin_saltminion_profile,capability=salt_minion_capability)
 
         # Salt settings category maken
         salt_settings_category = SettingsCategory.objects.create(name="Salt Settings",
@@ -161,11 +168,6 @@ class BaseFiller:
         #salt_api_state.save()
         #salt_run_state.save()
 
-        # capabilities
-        standard_capability = Capability.objects.create(name="standard")
-        salt_minion_capability = Capability.objects.create(name="salt-minion")
-        salt_master_capability = Capability.objects.create(name="salt-master")
-
         standard_capability.statetypes.add(passwordless_login_state)
         standard_capability.statetypes.add(sethostname_state)
         standard_capability.statetypes.add(prerequisites_state)
@@ -182,7 +184,7 @@ class BaseFiller:
         salt_master_capability.dependentOn = standard_capability
 
         # TODO: de capabilites moeten dus aan de Configuration gehangen worden
-        
+
         #buildin_saltmaster_profiletype.capabilities.add(standard_capability)
         #buildin_saltmaster_profiletype.capabilities.add(salt_master_capability)
         #buildin_default_rxrelease_profiletype.capabilities.add(standard_capability)

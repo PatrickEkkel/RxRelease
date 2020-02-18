@@ -33,7 +33,8 @@ class  HostsPanel  extends BasicRxPanel {
   }
   saveAndClose() {
     var profile = this.getProfileById(this.state.profile)
-    alert(profile)
+    this.getLogger().trace("saving host with profile")
+    this.getLogger().traceObject(profile)
     this.props.dispatch(hostActionCreators.saveNewHost(this.state.hostname,this.state.ipaddress,this.state.description, profile));
   }
   close() {

@@ -166,6 +166,8 @@ export function saveNewHost(hostname,ipaddress,description,profile) {
   var errorHandler = new AggregatedFieldsErrorHandler();
   var settingscategory = null;
   var host = HostModel.newHost("", hostname, ipaddress, description, profile)
+  haLogger.trace("saveNewHost for")
+  haLogger.traceObject(profile)
   var e = new PromiseExecutor()
   return function (dispatch) {
     // before we save the host we want to initialize the new SettingsCategory

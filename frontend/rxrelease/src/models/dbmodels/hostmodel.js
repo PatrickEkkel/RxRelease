@@ -2,10 +2,12 @@
 
 class HostModel {
   static newHost(_id,_hostname,_ipaddress,_description,_profile) {
+    alert(_profile)
     return { hostname: _hostname,
       id: _id,
       ipaddress: _ipaddress,
       description: _description,
+      profile: _profile,
       profile_id: _profile.getId(),connectioncredentials: null,
       setConnectionCredentials: function(connectioncredentials) { this.connectioncredentials = connectioncredentials},
       getHostname: function() { return this.hostname },

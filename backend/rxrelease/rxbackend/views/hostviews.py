@@ -9,6 +9,7 @@ from ..models import Host
 from ..models import StateType
 from ..models import State
 from ..models import Capability
+from ..models import Configuration
 from ..core.services.stateservice import StateService
 
 logger = logging.getLogger(__name__)
@@ -35,7 +36,11 @@ class CreateView(generics.ListCreateAPIView):
         host = serializer.save()
         stateservice = StateService()
         # TODO, hier waren we gebleven, we willen dit omhangen naar Profile
+        # we need to get all the capabilities for all configurations
         capabilities = host.profileType.capabilities
+        # Get all the configurations via the profile TODO: hier
+        #Configuration.objects.filter(profile=host.profile)
+
         for capability in capabilities.iterator():
             for statetype in capability.statetypes.iterator():
                 logger.debug("statetype.jobtype " + statetype.jobtype)
