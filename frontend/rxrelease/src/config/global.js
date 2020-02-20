@@ -17,7 +17,7 @@ constructor() {
   // Will only be used if we LOGMODULES contains te value list
   // To access Reducer Logging you can add the following 'REDUCER.<Reducer Name>', for example to get the HOST Reducer Logging add 'REDUCER.HOST'
   //this.ENABLED_LOGGING = ['HOSTS.HOSTMANAGEMENTPANEL','HOSTS.HOSTSPANEL','HOSTS.ACTIONCREATOR','REDUCER.HOST','PROFILES.ACTIONCREATOR']
-  this.ENABLED_LOGGING = ['SALTWIZARD.CONFIGUREHOST']
+  this.ENABLED_LOGGING = ['SALTWIZARD.ACTIONCREATOR']
 
 }
 

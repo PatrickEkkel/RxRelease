@@ -25,6 +25,8 @@ saveFormData() {
  // TODO: hier moeten we een factoryobject inzetten om een host object te maken
  var salt_api_creds = CredentialsModel.newCredentials(this.state.saltapi_username,this.state.saltapi_password)
  var ssh_creds = CredentialsModel.newCredentials(this.state.username,this.state.password)
+ this.getLogger().trace("Profile to be saved");
+ this.getLogger().traceObject(this.state.profile)
  var host = HostModel.newHost("",this.state.hostname,this.state.ipaddress,"Salt Master",this.state.profile)
 
 
@@ -96,17 +98,12 @@ componentWillReceiveProps(nextProps) {
   this.getLogger().debug("Configure host is recieving props")
   this.getLogger().debug("Current type: " + nextProps.type)
   this.getLogger().debug("Current Wizard Item: " + current_wizard_item)
-
-  super.componentWillReceiveProps(nextProps)
-  if(host_type == 'PROFILE_LOADED') {
+  if(type == 'PROFILE_LOADED') {
     this.getLogger().trace("Loaded profile:")
     this.getLogger().traceObject(profile)
     this.setState({stepCompleted: false, profile: profile})
-    this.props.dispatch(wizardActionCreators.waitForLoad())
   }
-
-  alert(host_type)
-  alert(type)
+  super.componentWillReceiveProps(nextProps)
 
 }
 render() {

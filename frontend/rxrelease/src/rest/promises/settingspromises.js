@@ -2,6 +2,7 @@ import  * as jsonUtils from '../../lib/json/utils'
 import  * as settingsRequests from '../../rest/requests/settingsrequests'
 import GlobalSettings from '../../config/global';
 import HostModel from '../../models/dbmodels/hostmodel'
+import ProfileModel from '../../models/dbmodels/profilemodel'
 import SettingsFactory from '../../factories/settingsFactory'
 import SettingsCategoryModel from '../../models/dbmodels/settingscategorymodel'
 import KVSettingModel from '../../models/dbmodels/kvsettingmodel'
@@ -68,7 +69,11 @@ export function CREATE_CREDENTIAL_SETTINGS_NEW(response,properties) {
   if(host != null) {
     swaLogger.debug("creds")
     swaLogger.traceObject(creds)
-    host = HostModel.mapHost(jsonUtils.normalizeJson(response.data))
+    swaLogger.trace("retrieved data")
+    swaLogger.traceObject(response.data)
+    var normalized_data = jsonUtils.normalizeJson(response.data)
+    normalized_data.profile = ProfileModel.newProfile(normalized_data.profile,'')
+    host = HostModel.mapHost(normalized_data)
     properties.current_host = host
     swaLogger.trace("saved host: ")
     swaLogger.traceObject(properties.current_host)
