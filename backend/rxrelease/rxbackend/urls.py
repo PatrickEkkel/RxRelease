@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^testfiller/$', fillerview.testFill, name="filler"),
     url(r'^saltfiller/$', fillerview.salt_fill, name="filler"),
     url(r'^profiles/(?P<pk>[0-9]+)/$', profileviews.DetailsView.as_view(), name="details"),
+    url(r'^profiles/search/$', profileviews.SearchView.as_view(), name="searchbyname"),
 
     url(r'^(?P<configuration_id>[0-9]+)/test/$', testview.test, name='results'),
     url(r'^configurations/$', configurationviews.CreateView.as_view(), name="create"),
@@ -40,7 +41,6 @@ urlpatterns = [
 
     url(r'^hosts/$', hostviews.CreateView.as_view(), name="create"),
     url(r'^hosts/(?P<pk>[0-9]+)/$', hostviews.DetailsView.as_view(), name="details"),
-    url(r'^hosts/search/byprofiletype/$', hostviews.SearchByProfiletypeView.as_view(), name="search by profiletype"),
     url(r'^hosts/search/byhostname/$', hostviews.SearchByHostnameView.as_view(), name="search by hostname"),
 
     url(r'^modules/$', moduleviews.CreateView.as_view(), name="create"),

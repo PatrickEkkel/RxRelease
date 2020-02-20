@@ -57,9 +57,6 @@ class StatetypesPanel extends BasicRxPanel {
         this.getLogger().traceObject(nextProps.statetypes)
         this.setState({statetypes: nextProps.statetypes,selected_configuration: nextProps.selected_configuration })
       break;
-      case 'SAVE_NEW_STATETYPE_FAILED':
-        alert('error!')
-      break;
     }
   }
 

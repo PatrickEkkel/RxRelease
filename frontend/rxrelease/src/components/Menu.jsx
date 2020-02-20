@@ -66,7 +66,6 @@ class Menu extends BasicRxPanel {
     else if(type == 'PLUGINS_LOADED') {
       this.getLogger().debug("plugins loaded")
       this.setState({loadedPlugins: plugins,selectedMenu: this.getSelectedMenu(),mode: "LOGGED_IN"})
-      //alert('plugins seem to be loaded')
     }
   }
   getPluginMenuItems() {

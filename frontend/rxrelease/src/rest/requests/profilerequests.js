@@ -9,6 +9,10 @@ export function postProfile(profile) {
     })
 }
 
+export function getProfilebyName(name) {
+  return Axios.get( GlobalSettings.getBackendUrl() + '/rxbackend/profiles/search/?name=' + name);
+}
+
 export function getProfiles() {
   return Axios.get( GlobalSettings.getBackendUrl() + '/rxbackend/profiles/');
 }

@@ -5,7 +5,6 @@ import LogFactory from '../logging/LogFactory'
 import GlobalSettings from '../config/global'
 import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
 import  * as profileRequests from '../rest/requests/profilerequests'
-import  * as profiletypeRequests from '../rest/requests/profiletyperequests'
 import  * as commonActions from './commonactions'
 
 
@@ -24,22 +23,18 @@ export function openNewProfile() {
       type: 'OPEN_NEW_PROFILE',
   }
 }
-export function loadProfiletypeByName(name) {
-  return function (dispatch) {
-      var profiletypes = [];
 
-      profiletypeRequests.getProfileTypes()
-      .then(function(response){
-        for(var i=0;i<response.data.length;i++) {
-          if(response.data[i].name == name) {
-            profiletypes.push(new ProfileType(response.data[i].id,response.data[i].name))
-          }
-        }
-          dispatch(profileTypesLoaded(profiletypes));
-      });
+
+export function loadProfile(name) {
+  return function(dispatch) {
+    profileRequests.getProfilebyName(name).then(function(response) {
+      var id = response.data[0].id;
+      var name = response.data[0].name;
+      var p = new Profile(id, name)
+      dispatch(profileLoaded(p))
+    })
   }
 }
-
 
 export function loadProfiles() {
   return function (dispatch) {
@@ -70,7 +65,12 @@ export function initialProfilesState() {
     type: 'INITIAL_PROFILES_STATE',
   }
 }
-
+export function profileLoaded(profile) {
+  return {
+    type: 'PROFILE_LOADED',
+    profile: profile
+  }
+}
 export function profilesLoaded(profiles) {
   return {
     type: 'PROFILES_LOADED',

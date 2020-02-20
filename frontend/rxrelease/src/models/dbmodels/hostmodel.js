@@ -2,7 +2,6 @@
 
 class HostModel {
   static newHost(_id,_hostname,_ipaddress,_description,_profile) {
-    alert(_profile)
     return { hostname: _hostname,
       id: _id,
       ipaddress: _ipaddress,

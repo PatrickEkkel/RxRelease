@@ -47,11 +47,6 @@ export default function _wizard(state = initialMenuState, action) {
        data: action.data,
        current_item: action.current_item
      }
-    case 'PROFILE_TYPES_LOADED':
-      return {
-        type: action.type,
-        profiletypes: action.profiletypes,
-      }
     default:
       return state
   }

@@ -47,6 +47,11 @@ export default function _host(state = initialHostState,action) {
       profiles: action.profiles,
       showModal: true // action.showModal
     }
+    case 'PROFILE_LOADED':
+    return {
+      type: action.type,
+      profile: action.profile
+    }
     case 'INSTALL_HOST':
     return {
       type: action.type,

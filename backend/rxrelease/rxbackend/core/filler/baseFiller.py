@@ -49,7 +49,8 @@ class BaseFiller:
 
         buildin_saltminion_profile = Profile.objects.create(name="Salt Minion")
         salt_minion_capability = Capability.objects.create(name="Salt-minion")
-        buildin_saltminion_configuration = Configuration.objects.create(name='Salt minion Default configuration',profile=buildin_saltminion_profile,capability=salt_minion_capability)
+        buildin_standard_saltminion_configuration = Configuration.objects.create(name='Default configuration',profile=buildin_saltminion_profile,capability=standard_capability)
+        buildin_saltminion_configuration = Configuration.objects.create(name='Salt minion configuration',profile=buildin_saltminion_profile,capability=salt_minion_capability)
 
         # Salt settings category maken
         salt_settings_category = SettingsCategory.objects.create(name="Salt Settings",
