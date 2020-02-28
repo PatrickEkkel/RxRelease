@@ -8,7 +8,9 @@ export function postProfile(profile) {
       name: profile.getName(),
     })
 }
-
+export function getProfilebyHostId(host) {
+  return Axios.get( GlobalSettings.getBackendUrl() + '/rxbackend/profiles/search/?host_id=' + host.getId());  
+}
 export function getProfilebyName(name) {
   return Axios.get( GlobalSettings.getBackendUrl() + '/rxbackend/profiles/search/?name=' + name);
 }

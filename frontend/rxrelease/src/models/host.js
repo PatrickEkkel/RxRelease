@@ -1,12 +1,12 @@
 
 class Host {
-constructor(id,hostname,ipaddress,description,status,profiletype) {
+constructor(id,hostname,ipaddress,description,status,profile) {
 
 this.id = id;
 this.hostname = hostname;
 this.ipaddress = ipaddress;
 this.description = description;
-this.profiletype = profiletype
+this.profile = profile
 this.status = status;
 this.states = [];
  }
@@ -27,8 +27,11 @@ getId() {
 getStatus() {
   return this.status;
 }
-getProfileType() {
-  return this.profiletype
+getProfile() {
+  return this.profile
+}
+setProfile(profile) {
+  this.profile = profile
 }
 
 setConnectionCredentials(connectioncredentials) {

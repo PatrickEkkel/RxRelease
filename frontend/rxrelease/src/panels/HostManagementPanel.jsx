@@ -44,7 +44,8 @@ class  HostManagementPanel  extends BasicRxPanel {
     var error_fields = nextProps.error_fields;
 
     if(type == "UPDATE_EXISTING_HOST") {
-      this.props.dispatch(hostActionCreators.hostupdated(this.state.selected_host))
+      //this.props.dispatch(hostActionCreators.hostupdated(this.state.selected_host))
+      this.props.dispatch(hostActionCreators.initialHostState())
       this.setState({success: true})
     }
     else if(type == "UPDATE_EXISTING_HOST_FAILED") {

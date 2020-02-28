@@ -32,7 +32,8 @@ export function putHost(host) {
  {
    hostname: host.getHostname(),
    ipaddress: host.getIpaddress(),
-   description: host.getDescription()
+   description: host.getDescription(),
+   profile: host.getProfile().getId()
  })
 
 }

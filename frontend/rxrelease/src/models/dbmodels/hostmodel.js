@@ -13,6 +13,10 @@ class HostModel {
       getIpaddress: function() { return this.ipaddress },
       getDescription: function() { return this.description },
       getProfile: function() { return this.profile },
+      setProfile: function(_profile) {
+          this.profile = _profile,
+          this.profile_id = _profile.getId()
+      },
       getConnectionCredentials: function() { return this.connectioncredentials } }
   }
   static mapHost(_model) {

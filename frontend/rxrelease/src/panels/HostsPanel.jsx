@@ -41,6 +41,7 @@ class  HostsPanel  extends BasicRxPanel {
     this.props.dispatch(hostActionCreators.initialHostState());
   }
   onRowClick(entry) {
+    this.getLogger().trace("Clicked")
     this.props.dispatch(hostActionCreators.loadHostManagement(entry));
   }
 

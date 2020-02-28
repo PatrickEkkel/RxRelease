@@ -35,7 +35,6 @@ class BaseFiller:
 
         standard_capability = Capability.objects.create(name="standard")
 
-        # Built in profiletypes
         buildin_default_profile = Profile.objects.create(name="Default")
         buildin_default_configuration = Configuration.objects.create(name="Default Configuration",
                                                                      profile=buildin_default_profile,capability=standard_capability)
@@ -45,7 +44,9 @@ class BaseFiller:
 
         buildin_saltmaster_profile = Profile.objects.create(name="Salt Master")
         buildin_saltmaster_configuration = Configuration.objects.create(
-            name="Salt master default Configuration", profile=buildin_saltmaster_profile,capability=salt_master_capability)
+            name="Default Salt-master Configuration", profile=buildin_saltmaster_profile,capability=salt_master_capability)
+        build_saltmaster_default = Configuration.objects.create(
+        name="Standard Default Saltmaster",profile=buildin_saltmaster_profile,capability=standard_capability)
 
         buildin_saltminion_profile = Profile.objects.create(name="Salt Minion")
         salt_minion_capability = Capability.objects.create(name="Salt-minion")

@@ -26,7 +26,6 @@ logger.addHandler(ch)
 class CreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
     queryset = Host.objects.all()
-    # profiletypes_queryset = ProfileType.objects.all()
     serializer_class = HostSerializer
 
     def perform_create(self, serializer):
@@ -58,6 +57,7 @@ class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = HostSerializer
 
 
+
 class SearchByHostnameView(generics.ListAPIView):
     serializer_class = HostSerializer
 
@@ -65,19 +65,4 @@ class SearchByHostnameView(generics.ListAPIView):
         pass
         hostname = self.request.query_params.get('hostname', None)
         host_queryset = Host.objects.filter(hostname=hostname)
-        return host_queryset
-
-
-class SearchByProfiletypeView(generics.ListAPIView):
-    serializer_class = HostSerializer
-
-    def get_queryset(self):
-        profiletype = self.request.query_params.get('profiletype', None)
-        profiletype_queryset = ProfileType.objects.filter(name=profiletype)
-        host_queryset = None
-        try:
-            profiletype_result = profiletype_queryset.get()
-            host_queryset = Host.objects.filter(profileType=profiletype_result.id)
-        except ObjectDoesNotExist:
-            host_queryset = None
         return host_queryset

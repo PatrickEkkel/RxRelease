@@ -65,6 +65,9 @@ var currentPanel = <HostsPanel key="profilespanel"/>
   switch (type) {
     case 'LOAD_HOST_MANAGEMENT_FROM_HOSTS':
       currentPanel = <HostManagementPanel/>
+      break;
+    case 'HOSTS_LOADED':
+      currentPanel = <HostsPanel key="profilespanel"/>
     break;
     default:
 
