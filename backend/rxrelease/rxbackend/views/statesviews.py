@@ -5,6 +5,7 @@ from ..serializers import InstallHostSerializer
 from ..serializers import HostStateHandlerSerializer
 from ..models import State
 from ..models import Capability
+from ..models import Configuration
 from ..models import Host
 from ..viewmodels import StateTypeHandler
 from ..core.jobs.api.job import Job
@@ -53,8 +54,9 @@ class InstallHostView(generics.UpdateAPIView):
         host_id = self.kwargs['pk']
         # Get TheHost so we can the profiletype
         selected_host = Host.objects.filter(id=host_id).get()
-        capabilities = selected_host.profileType.capabilities.all()
+        # get all capabilities
 
+        capabilities = [config.capability for config in Configuration.objects.filter(profile=selected_host.profile).all()]
         capability_treemap = DependencyTreeMap()
 
         # sort the capabilities by dependency
