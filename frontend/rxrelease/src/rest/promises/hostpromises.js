@@ -21,18 +21,17 @@ export function GET_STATES_FOR_HOST(response,properties) {
        if (response.data[i].simple_state != null) {
               logger.trace("simple_state applied")
               var state_response = response.data[i]
-              states.push(StateModel.newSimpleState(state_response.id,state_response.name,state_response.simple_state))
+              states.push(StateModel.newSimpleState(state_response.id,state_response.name,state_response.simple_state,state_response.statetype))
             }
        else if(response.data[i].repeatable_state != null)  {
               logger.trace("repeatable_state applied")
               var state_response  = response.data[i]
-              states.push(StateModel.newRepeatableState(state_response.id,state_response.name,state_response.repeatable_state))
+              states.push(StateModel.newRepeatableState(state_response.id,state_response.name,state_response.repeatable_state, state_response.statetype))
        }
        else if(response.data[i].complex_state != null) {
               logger.trace("complex_state applied")
               var state_response  = response.data[i]
-              states.push(StateModel.newComplexState(state_response.id,state_response.name,state_response.complex_state))
-              //states.push(StateModel.newRepeatableState(state_response.id,state_response.name,state_response.repeatable_state))
+              states.push(StateModel.newComplexState(state_response.id,state_response.name,state_response.complex_state, state_response.statetype))
        }
           logger.trace("states are loaded")
           logger.traceObject(states)
@@ -40,10 +39,7 @@ export function GET_STATES_FOR_HOST(response,properties) {
       }
       context.addItem('current_host',host)
       return response
-  })//.then(hostsRequests.getHostById(host.getId()))
-
-
-    //return hostsRequests.getHostById(host.getId())
+  })
   }
 
 export function CREATE_HOST_WITH_CONNECTION_CREDENTIALS(response,properties) {

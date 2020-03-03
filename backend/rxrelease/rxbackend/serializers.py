@@ -152,6 +152,7 @@ class StateSerializer(serializers.ModelSerializer):
     simple_state = SimpleStateSerializer(required=False, read_only=True)
     repeatable_state = RepeatableStateSerializer(required=False, read_only=True)
     complex_state = ComplexStateSerializer(required=False, read_only=True)
+    statetype = StateTypeSerializer(required=False, read_only=True)
 
     class Meta:
         model = State

@@ -17,7 +17,9 @@ class  HostManagementPanel  extends BasicRxPanel {
   constructor() {
     super('HOSTS','HOSTMANAGEMENTPANEL')
     this.state = {
-      selected_host: null
+      selected_host: null,
+      system_states: [],
+      user_states: [],
     }
   }
 
@@ -35,7 +37,24 @@ class  HostManagementPanel  extends BasicRxPanel {
     var {type,selected_host} = this.props;
     if(type == 'LOAD_HOST_MANAGEMENT_FROM_HOSTS') {
       this.getLogger().traceObject(selected_host)
-      this.setState({selected_host: selected_host})
+      var states = selected_host.getStates()
+      var system_states = []
+      var user_states = []
+      for(var i=0;i<states.length;i++) {
+        var statetype = states[i].statetype
+
+        if(statetype.system) {
+          system_states.push(states[i])
+        }
+        else {
+          user_states.push(states[i])
+        }
+      }
+
+      this.getLogger().trace("retrieved states")
+      this.getLogger().traceObject(states)
+
+      this.setState({selected_host: selected_host, user_states: user_states, system_states: system_states})
     }
   }
   componentWillReceiveProps(nextProps) {
@@ -44,7 +63,6 @@ class  HostManagementPanel  extends BasicRxPanel {
     var error_fields = nextProps.error_fields;
 
     if(type == "UPDATE_EXISTING_HOST") {
-      //this.props.dispatch(hostActionCreators.hostupdated(this.state.selected_host))
       this.props.dispatch(hostActionCreators.initialHostState())
       this.setState({success: true})
     }
@@ -69,7 +87,10 @@ class  HostManagementPanel  extends BasicRxPanel {
     var currentContext = this;
     var { type } = this.props
 
-    var states = StandardListConverters.convertListToMap(this.state.selected_host.getStates(),function(item) {
+    var system_states = StandardListConverters.convertListToMap(this.state.system_states,function(item) {
+      return stateComponents.renderStateAsString(item)
+    });
+    var user_states = StandardListConverters.convertListToMap(this.state.user_states,function(item) {
       return stateComponents.renderStateAsString(item)
     });
 
@@ -156,7 +177,7 @@ class  HostManagementPanel  extends BasicRxPanel {
         </div>
       <div className="row">
         <div className="col-md-8">
-          <LabeledTable onLabelLoad={handleLabelLoad} labelText="Status" headers = {headers} data={states} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
+          <LabeledTable onLabelLoad={handleLabelLoad} labelText="Status" headers = {headers} data={system_states} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
         </div>
       </div>
 
@@ -170,7 +191,7 @@ class  HostManagementPanel  extends BasicRxPanel {
       </div>
       <div className="row">
         <div className="col-md-8">
-          <LabeledTable onLabelLoad={handleLabelLoad} labelText="Status" headers = {headers} data={states} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
+          <LabeledTable onLabelLoad={handleLabelLoad} labelText="Status" headers = {headers} data={user_states} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
         </div>
       </div>
       <Button title="Install Host"  onClick={() => this.installHost()}/>

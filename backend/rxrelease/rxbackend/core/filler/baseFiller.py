@@ -161,15 +161,6 @@ class BaseFiller:
                                                                     connection_credentials=salt_settings_category, system=True)
 
 
-        #passwordless_login_state.save()
-        #sethostname_state.save()
-        #prerequisites_state.save()
-        #salt_minion_state.save()
-        #salt_master_state.save()
-        #salt_minion_master_state.save()
-        #salt_api_state.save()
-        #salt_run_state.save()
-
         standard_capability.statetypes.add(passwordless_login_state)
         standard_capability.statetypes.add(sethostname_state)
         standard_capability.statetypes.add(prerequisites_state)
@@ -184,15 +175,6 @@ class BaseFiller:
         salt_master_capability.statetypes.add(accept_salt_master_state)
 
         salt_master_capability.dependentOn = standard_capability
-
-        # TODO: de capabilites moeten dus aan de Configuration gehangen worden
-
-        #buildin_saltmaster_profiletype.capabilities.add(standard_capability)
-        #buildin_saltmaster_profiletype.capabilities.add(salt_master_capability)
-        #buildin_default_rxrelease_profiletype.capabilities.add(standard_capability)
-
-        #buildin_saltminion_profiletype.capabilities.add(standard_capability)
-        #buildin_saltminion_profiletype.capabilities.add(salt_minion_capability)
 
         # TODO: dit kan in principe weggehaald worden 'capabilities saven'
 
