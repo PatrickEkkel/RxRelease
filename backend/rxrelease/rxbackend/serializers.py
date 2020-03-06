@@ -182,7 +182,7 @@ class CredentialsSettingsSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ('name', 'id')
+        fields = ('name', 'id','inherited')
 
 
 class ConfigurationTabSerializer(serializers.ModelSerializer):

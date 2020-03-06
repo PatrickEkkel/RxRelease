@@ -8,34 +8,27 @@ import StandardListConverters from '../converters/StandardListConverters'
 import Axios from 'axios';
 import { connect } from 'react-redux'
 
-class  ProfilePanel  extends BasicRxPanel {
+class  ProfilePanel extends BasicRxPanel {
   constructor() {
-    super()
+    super('PROFILES','PROFILEPANEL')
     this.state = {
       profile_name: '',
       profile_type: '',
-      profiletypes: []
+      profiles: []
     }
   }
   changeAttr(e) {
     this.props.changeAttr(e);
   }
   componentWillMount() {
-
-    var {type} = this.props;
-
-    switch(type) {
-
-      case 'OPEN_NEW_PROFILE':
-      //  this.props.dispatch(profileActionCreators.profilesLoaded())
-      break;
-    }
+    this.getLogger().trace("Profiles that can be inherited")
+    this.getLogger().traceObject(this.props.profiles)
+    this.setState({profiles: this.props.profiles})
   }
   componentWillReceiveProps(nextProps) {
     var type = nextProps.type
     var error_fields = nextProps.error_fields;
     switch(type) {
-
       case 'SAVE_NEW_PROFILE_FAILED':
        this.setState({error_fields: error_fields, success: false})
       break;
@@ -48,6 +41,9 @@ class  ProfilePanel  extends BasicRxPanel {
       <form className="form-horizontal">
       <div className="form-group row">
        <LabeledTextField id="name" errorHandler={(id,callee) => this.handleError(id,callee)} placeholder="Profile name" label="Name" col="col-md-2" labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
+      </div>
+      <div className="form-group row">
+        <LabeledDropdown id="inheritedprofile" selectedValue='None' errorHandler={(id,callee) => this.handleError(id,callee)} items={StandardListConverters.convertObjectListToDDS(this.state.profiles)} label="Profiles" col="col-md-4" labelcol="col-md-1" onChange={e => this.changeAttr(e)}/>
       </div>
       </form>
    </div>

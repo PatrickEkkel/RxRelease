@@ -1,10 +1,11 @@
 import Axios from 'axios';
 import Profile from '../models/profile'
-import ProfileFactory from '../factories/profileFactory'
+import ProfileModel from '../models/dbmodels/profilemodel'
 import LogFactory from '../logging/LogFactory'
 import GlobalSettings from '../config/global'
 import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
 import  * as profileRequests from '../rest/requests/profilerequests'
+import  * as jsonUtils from '../lib/json/utils'
 import  * as commonActions from './commonactions'
 
 
@@ -30,7 +31,7 @@ export function loadProfile(name) {
     profileRequests.getProfilebyName(name).then(function(response) {
       var id = response.data[0].id;
       var name = response.data[0].name;
-      var p = new Profile(id, name)
+      var p = new ProfileModel(id, name)
       dispatch(profileLoaded(p))
     })
   }
@@ -44,6 +45,12 @@ export function loadProfiles() {
         for(var i=0;i<response.data.length;i++) {
           var id = response.data[i].id;
           var name = response.data[i].name;
+          var inherited = response.data[i].inherited
+
+          if(inherited != null) {
+            alert('blargh')
+          }
+
           var p = new Profile(id,name,null)
           retrievedData.push(p)
         }
@@ -84,12 +91,11 @@ export function loadConfigurationsPanel(selected_profile) {
     selected_profile: selected_profile
   }
 }
-export function saveNewProfile(profile_name,profile_type) {
+export function saveNewProfile(profile_name,inheritedprofile) {
   return function (dispatch) {
 
     var errorHandler = new AggregatedFieldsErrorHandler();
-    var profileFactory = new ProfileFactory();
-    var profile =  profileFactory.createProfile(profile_name,profile_type);
+    var profile = ProfileModel.newProfile(null,profile_name,inheritedprofile)
     profileRequests.postProfile(profile).then(function() {
         dispatch( {
             type: 'SAVE_NEW_PROFILE',

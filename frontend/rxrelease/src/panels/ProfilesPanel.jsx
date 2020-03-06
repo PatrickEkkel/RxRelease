@@ -76,7 +76,7 @@ class  ProfilesPanel  extends BasicRxPanel {
 
     return <div className="container">
         <Modal title="New Profile" saveAndClose={() => currentContext.saveAndClose()} close={() => currentContext.close()} showModal={currentContext.state.showModal}>
-          <ProfilePanel changeAttr={(e) => currentContext.changeAttr(e)}/>
+          <ProfilePanel changeAttr={(e) => currentContext.changeAttr(e)} profiles={this.state.profiles}/>
         </Modal>
         <Table headers = {headers_1} data={profiles} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
         <Button title="New Profile"  onClick={() => currentContext.createProfile()}/>
