@@ -10,10 +10,10 @@ import Modal from '../components/Modal';
 import { connect } from 'react-redux'
 
 
-class  ProfilesPanel  extends BasicRxPanel {
+class ProfilesPanel  extends BasicRxPanel {
 
   constructor() {
-    super()
+    super('PROFILES','PROFILESPANEL')
     var currentContext = this;
 
     this.state = {
@@ -32,7 +32,10 @@ class  ProfilesPanel  extends BasicRxPanel {
     this.setState({panelState: "reload"});
   }
   saveAndClose() {
-    this.props.dispatch(profileActionCreators.saveNewProfile(this.state.name,this.state.profiletype));
+    this.getLogger().trace('Inherited profile')
+    this.getLogger().traceObject(this.state.inheritedprofile)
+
+    this.props.dispatch(profileActionCreators.saveNewProfile(this.state.name,this.state.inheritedprofile));
   }
   close() {
       this.props.dispatch(profileActionCreators.initialProfilesState())

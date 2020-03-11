@@ -47,9 +47,6 @@ export function loadProfiles() {
           var name = response.data[i].name;
           var inherited = response.data[i].inherited
 
-          if(inherited != null) {
-            alert('blargh')
-          }
 
           var p = new Profile(id,name,null)
           retrievedData.push(p)
@@ -91,9 +88,9 @@ export function loadConfigurationsPanel(selected_profile) {
     selected_profile: selected_profile
   }
 }
-export function saveNewProfile(profile_name,inheritedprofile) {
+export function saveNewProfile(profile_name,inheritedprofile_id) {
   return function (dispatch) {
-
+    var inheritedprofile = ProfileModel.newProfile(inheritedprofile_id,null,null)
     var errorHandler = new AggregatedFieldsErrorHandler();
     var profile = ProfileModel.newProfile(null,profile_name,inheritedprofile)
     profileRequests.postProfile(profile).then(function() {

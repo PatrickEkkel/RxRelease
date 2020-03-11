@@ -8,7 +8,7 @@ class ProfileModel {
       inheritedprofile: _inheritedprofile,
       getId: function() { return this.id },
       getName: function() { return this.name },
-      getInherited: function() { return this.inheritedprofile}
+      getInherited: function() { return this.inheritedprofile }
     }
   }
 }

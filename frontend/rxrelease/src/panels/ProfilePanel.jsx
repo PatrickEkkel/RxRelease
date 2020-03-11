@@ -13,7 +13,7 @@ class  ProfilePanel extends BasicRxPanel {
     super('PROFILES','PROFILEPANEL')
     this.state = {
       profile_name: '',
-      profile_type: '',
+      inheritedprofile: '',
       profiles: []
     }
   }
