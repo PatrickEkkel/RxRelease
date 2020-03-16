@@ -31,7 +31,9 @@ export function loadProfile(name) {
     profileRequests.getProfilebyName(name).then(function(response) {
       var id = response.data[0].id;
       var name = response.data[0].name;
-      var p = new ProfileModel(id, name)
+      var p = ProfileModel.newProfile(id, name, null)
+      paLogger.trace('Loaded profile from backend')
+      paLogger.traceObject(response.data)
       dispatch(profileLoaded(p))
     })
   }
