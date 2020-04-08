@@ -56,12 +56,22 @@ class InstallHostView(generics.UpdateAPIView):
         selected_host = Host.objects.filter(id=host_id).get()
         # get all capabilities
 
-        capabilities = [config.capability for config in Configuration.objects.filter(profile=selected_host.profile).all()]
+        accumulated_capabilties = []
+
+
+        current_profile = selected_host.profile
+
+        while current_profile:
+            capabilities = [config.capability for config in Configuration.objects.filter(profile=current_profile).all()]
+            accumulated_capabilties += capabilities
+            current_profile = current_profile.inherited
+
         capability_treemap = DependencyTreeMap()
 
         # sort the capabilities by dependency
-
-        for capability in capabilities:
+        logger.debug("accumulated_capabilties found for host")
+        logger.debug(accumulated_capabilties)
+        for capability in accumulated_capabilties:
             parent = capability.dependentOn
             parent_id = None
             if parent == None:
@@ -167,6 +177,7 @@ class HostView(generics.ListAPIView):
         # alleen host id
         if host_id is not None and state_id is None and statetype_id is None:
             result_queryset = State.objects.filter(host_id=host_id)
+            #result_queryset = State.objects.none()
         # state_id,host_id
         if state_id is not None and host_id is not None:
             result_queryset = State.objects.filter(id=state_id).filter(host_id=host_id)

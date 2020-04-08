@@ -36,10 +36,16 @@ class CreateView(generics.ListCreateAPIView):
         stateservice = StateService()
         # TODO, hier waren we gebleven, we willen dit omhangen naar Profile
         # we need to get all the capabilities for all configurations
-        configurations = Configuration.objects.filter(profile=host.profile)
+
+
+        current_profile = host.profile
         capabilities = []
-        for configuration in configurations.iterator():
-            capabilities.append(configuration.capability)
+        while current_profile:
+            current_configurations = Configuration.objects.filter(profile=current_profile)
+            for configuration in current_configurations.iterator():
+                capabilities.append(configuration.capability)
+            current_profile = current_profile.inherited
+
         #capabilities = host.profileType.capabilities
         # Get all the configurations via the profile TODO: hier
 
