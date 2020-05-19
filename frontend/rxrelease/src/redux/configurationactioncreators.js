@@ -4,6 +4,7 @@ import PromiseExecutor from '../lib/promises/promise_executor'
 import GlobalSettings from '../config/global'
 
 import * as configurionpromises from '../rest/promises/configurationpromises'
+import * as profilepromises from '../rest/promises/profilepromises'
 import * as capabilitypromises  from '../rest/promises/capabilitypromises'
 
 
@@ -55,10 +56,13 @@ export function loadConfigurations(selected_profile) {
 export function saveNewConfiguration(configuration_name,selected_profile) {
     var e = new PromiseExecutor();
 
-
+    caLogger.trace('selected profile')
+    caLogger.traceObject(selected_profile)
     return function (dispatch) {
       e.execute(capabilitypromises.CREATE_CAPABILITY,{name: configuration_name, logger: caLogger})()
       .then(e.execute(configurionpromises.CREATE_CONFIGURATION,{configuration_name: configuration_name, selected_profile: selected_profile}))
+      .then(e.execute(profilepromises.UPDATE_PROFILE_BY_ID, {selected_profile: selected_profile}))
+      // update default configuration from parent profile
       .then(e.execute(function(response, properties) {
         var selected_capability =  properties.selected_capability
         var logger = properties.logger

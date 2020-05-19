@@ -80,6 +80,7 @@ class File(models.Model):
 class Profile(models.Model):
     name = models.CharField(max_length=200)
     inherited = models.ForeignKey('self',null=True, default=None, on_delete=models.PROTECT)
+    default_configuration = models.ForeignKey('Configuration', related_name='+',null=True,default=None)
     def __str__(self):
         return self.name
 
