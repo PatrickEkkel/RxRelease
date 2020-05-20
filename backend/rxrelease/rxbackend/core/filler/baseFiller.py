@@ -135,7 +135,7 @@ class BaseFiller:
                                                      , jobtype="SIMPLE_STATE", system=True)
         salt_master_state = StateType.objects.create(name="Salt-master",
                                                      handler="install-salt-master.py",
-                                                     dependentOn=prerequisites_state,
+                                                     dependentOn=None,
                                                      state_settings=global_category,
                                                      module="rxsalt", jobtype="SIMPLE_STATE", system=True)
         salt_minion_master_state = StateType.objects.create(name="Salt-minion-master",

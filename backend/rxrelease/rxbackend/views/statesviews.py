@@ -95,7 +95,8 @@ class InstallHostView(generics.UpdateAPIView):
         capabilityList = capability_treemap.toList()
         logger.debug("Amount of capabilities: " + str(len(capabilityList)))
         sorted_capability_statesmap = {}
-
+        logger.debug(capabilityList)
+        # the capability which is the leaf of the tree
         for kv in capabilityList:
             capability = kv[1]
             logger.debug("Current capability: " + str(capability))
@@ -112,7 +113,7 @@ class InstallHostView(generics.UpdateAPIView):
                 logger.debug("capability id: " + str(capability.id))
                 sorted_capability_statesmap[capability.id].append(state)
 
-        capability_queryset = Capability.objects.all()
+        #capability_queryset = Capability.objects.all()
         jobfactory = JobFactory()
         newJob = jobfactory.createNewJob("StateHandlerJob")
 
@@ -120,19 +121,26 @@ class InstallHostView(generics.UpdateAPIView):
 
         treemap = DependencyTreeMap()
         logger.debug("found capabilities: " + str(len(sorted_capability_statesmap)))
+        last_element = None
         for key in sorted_capability_statesmap:
             logger.debug(
                 "how many states are being found: " + str(len(sorted_capability_statesmap[key])))
             logger.debug("current capability: " + str(key))
+            if last_element:
+                pass
+
             for state in sorted_capability_statesmap[key]:
                 logger.info("state: " + str(state))
                 parent = state.statetype.dependentOn
                 parent_id = None
-                if parent == None:
+                if parent is None and last_element is None:
                     parent_id = -1
+                elif parent is None and last_element is not None:
+                    parent_id = last_element.statetype.dependentOn.id
                 else:
                     parent_id = parent.id
                 treemap.addItem(state.statetype.id, state, parent_id)
+                last_element = state
 
         treemap.merge()
         statesList = treemap.toList()

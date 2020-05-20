@@ -41,9 +41,14 @@ class CreateView(generics.ListCreateAPIView):
         current_profile = host.profile
         capabilities = []
         while current_profile:
-            current_configurations = Configuration.objects.filter(profile=current_profile)
-            for configuration in current_configurations.iterator():
-                capabilities.append(configuration.capability)
+            capability = current_profile.default_configuration.capability
+            if current_profile.inherited:
+                inherited_capability = current_profile.inherited.default_configuration.capability
+                capability.dependentOn = inherited_capability
+            capabilities.append(capability)
+            #current_configurations = Configuration.objects.filter(profile=current_profile)
+            #for configuration in current_configurations.iterator():
+            #    capabilities.append(configuration.capability)
             current_profile = current_profile.inherited
 
         #capabilities = host.profileType.capabilities
@@ -52,6 +57,7 @@ class CreateView(generics.ListCreateAPIView):
         for capability in capabilities:
             for statetype in capability.statetypes.iterator():
                 logger.debug("statetype.jobtype " + statetype.jobtype)
+                logger.debug("statetype.name " + statetype.name)
                 # TODO factory,dao? have to look at how to do this
                 state = stateservice.create_state(statetype, host)
 
