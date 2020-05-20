@@ -3,10 +3,10 @@ import GlobalSettings from '../../config/global';
 
 
 export function putProfile(profile) {
-  return Axios.put(GlobalSettings.getBackendUrl() + '/rxbackend/profiles/' + profile.getId(),
+  return Axios.put(GlobalSettings.getBackendUrl() + '/rxbackend/profiles/' + profile.getId() + '/',
     {
       name: profile.getName(),
-      inherited: 0,// profile.getInherited().getId(),
+      inherited: profile.getInherited().getId(),
       default_configuration: profile.getDefaultConfiguration().getId()
 
     }

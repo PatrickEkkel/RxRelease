@@ -9,7 +9,7 @@ class ConfigurationModel {
       profile_id: _profile_id,
       hosts: _hosts,
       capability_id: _capability_id,
-
+      setId(value) { this.id = value },
       getId() { return this.id },
       getName() { return this.name },
       getProfileId() { return this.profile_id },

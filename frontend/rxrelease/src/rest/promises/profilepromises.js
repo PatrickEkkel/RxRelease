@@ -18,8 +18,14 @@ export function GET_PROFILE_BY_ID(response, properties) {
   var logger = properties.logger
   var host = properties.current_host
   var context = properties.context
+  var profile_id = properties.profile_id
 
-  return profileRequests.getProfilebyId()
+  return profileRequests.getProfilebyId(profile_id).then(function(r) {
+    var data = r.data
+    var profilemodel = ProfileModel.newProfile(data['id'], data['name'],
+    ProfileModel.newProfile(data['inherited'], null, null))
+    context.addItem('selected_profile', profilemodel)
+  })
 }
 
 export function GET_PROFILE_BY_HOST(response, properties) {

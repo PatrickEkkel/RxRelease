@@ -36,8 +36,11 @@ class BaseFiller:
         standard_capability = Capability.objects.create(name="standard")
 
         buildin_default_profile = Profile.objects.create(name="Default")
+
         buildin_default_configuration = Configuration.objects.create(name="Default Configuration",
                                                                      profile=buildin_default_profile,capability=standard_capability)
+        buildin_default_profile.default_configuration = buildin_default_configuration
+        buildin_default_profile.save()
 
 
         salt_master_capability = Capability.objects.create(name="salt-master")
@@ -45,6 +48,10 @@ class BaseFiller:
         buildin_saltmaster_profile = Profile.objects.create(name="Salt Master")
         buildin_saltmaster_configuration = Configuration.objects.create(
             name="Default Salt-master Configuration", profile=buildin_saltmaster_profile,capability=salt_master_capability)
+        buildin_saltmaster_profile.default_configuration = buildin_saltmaster_configuration
+        buildin_saltmaster_profile.inherited = buildin_default_profile
+        buildin_saltmaster_profile.save()
+
         build_saltmaster_default = Configuration.objects.create(
         name="Standard Default Saltmaster",profile=buildin_saltmaster_profile,capability=standard_capability)
 
@@ -52,7 +59,8 @@ class BaseFiller:
         salt_minion_capability = Capability.objects.create(name="Salt-minion")
         buildin_standard_saltminion_configuration = Configuration.objects.create(name='Default configuration',profile=buildin_saltminion_profile,capability=standard_capability)
         buildin_saltminion_configuration = Configuration.objects.create(name='Salt minion configuration',profile=buildin_saltminion_profile,capability=salt_minion_capability)
-
+        buildin_saltminion_profile.default_configuration = buildin_saltminion_configuration
+        buildin_saltminion_profile.save()
         # Salt settings category maken
         salt_settings_category = SettingsCategory.objects.create(name="Salt Settings",
                                                                  prefix="salt")

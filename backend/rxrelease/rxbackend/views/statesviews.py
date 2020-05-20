@@ -60,11 +60,20 @@ class InstallHostView(generics.UpdateAPIView):
 
 
         current_profile = selected_host.profile
+        default_configuration = selected_host.profile.default_configuration
+
 
         while current_profile:
-            capabilities = [config.capability for config in Configuration.objects.filter(profile=current_profile).all()]
-            accumulated_capabilties += capabilities
-            current_profile = current_profile.inherited
+            capability = current_profile.default_configuration.capability
+            #capabilities = [config.capability for config in Configuration.objects.filter(profile=current_profile).all()]
+            #accumulated_capabilties.append(capability)
+            if current_profile.inherited:
+                current_profile = current_profile.inherited
+                inherited_capability = current_profile.default_configuration.capability
+                capability.dependentOn = inherited_capability
+            else:
+                current_profile = None
+            accumulated_capabilties.append(capability)
 
         capability_treemap = DependencyTreeMap()
 
@@ -72,6 +81,8 @@ class InstallHostView(generics.UpdateAPIView):
         logger.debug("accumulated_capabilties found for host")
         logger.debug(accumulated_capabilties)
         for capability in accumulated_capabilties:
+            logger.debug('processing capability')
+            logger.debug(capability.__dict__)
             parent = capability.dependentOn
             parent_id = None
             if parent == None:

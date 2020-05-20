@@ -22,7 +22,11 @@ export function CREATE_CONFIGURATION(response, properties) {
   var selected_profile = properties.selected_profile
   var selected_capability = properties.selected_capability
   var context = properties.context
-  var configuration_models = ConfigurationModel.newConfiguration(null,configuration_name, selected_profile[0],[], selected_capability.getId() )
-  context.addItem('selected_configuration', configuration_models)
-  return profileconfigurationrequests.postConfiguration(configuration_models)
+
+  var configuration_model = ConfigurationModel.newConfiguration(null,configuration_name, selected_profile[0],[], selected_capability.getId() )
+  return profileconfigurationrequests.postConfiguration(configuration_model).then(function(response) {
+    var data = response.data
+    configuration_model.setId(data['id'])
+    context.addItem('selected_configuration', configuration_model)
+  })
 }

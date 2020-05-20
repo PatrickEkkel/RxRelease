@@ -58,10 +58,13 @@ export function saveNewConfiguration(configuration_name,selected_profile) {
 
     caLogger.trace('selected profile')
     caLogger.traceObject(selected_profile)
+    var profile_id = selected_profile[0]
+
     return function (dispatch) {
       e.execute(capabilitypromises.CREATE_CAPABILITY,{name: configuration_name, logger: caLogger})()
       .then(e.execute(configurionpromises.CREATE_CONFIGURATION,{configuration_name: configuration_name, selected_profile: selected_profile}))
-      .then(e.execute(profilepromises.UPDATE_PROFILE_BY_ID, {selected_profile: selected_profile}))
+      .then(e.execute(profilepromises.GET_PROFILE_BY_ID,{ profile_id: profile_id}))
+      .then(e.execute(profilepromises.UPDATE_PROFILE_BY_ID, {profile_id: profile_id}))
       // update default configuration from parent profile
       .then(e.execute(function(response, properties) {
         var selected_capability =  properties.selected_capability
