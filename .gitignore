@@ -3,5 +3,6 @@ __init__.pyc
 node_modules/**
 package-lock.json
 .venv/**
+env/**
 
 
