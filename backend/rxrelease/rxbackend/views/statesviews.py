@@ -81,82 +81,23 @@ class InstallHostView(generics.UpdateAPIView):
         # sort the capabilities by dependency
         logger.debug("accumulated_capabilties found for host")
         logger.debug(accumulated_capabilties)
-        #for capability in accumulated_capabilties:
-        #    logger.debug('processing capability')
-        #    logger.debug(capability.__dict__)
-        #    parent = capability.dependentOn
-        #    parent_id = None
-        #    if parent == None:
-        #        parent_id = -1
-        #    else:
-        #        parent_id = parent.id
-        #    capability_treemap.addItem(capability.id, capability, parent_id)
 
-        #capability_treemap.merge()
-        #capabilityList = capability_treemap.toList()
-        #logger.debug("Amount of capabilities: " + str(len(capabilityList)))
-        #sorted_capability_statesmap = {}
-        #logger.debug(capabilityList)
-        # the capability which is the leaf of the tree
-        #for kv in capabilityList:
-        #    capability = kv[1]
-        #    logger.debug("Current capability: " + str(capability))
-
-        #    statetypes = capability.statetypes.all()
-            # filter out repeatable states, they are not scheduled via the dependency tree
-        #    capability_states = State.objects.filter(host_id=host_id).filter(
-        #        statetype_id__in=statetypes, repeatable_state__isnull=True).all()
-
-        #    sorted_capability_statesmap[capability.id] = []
-        #    for state in capability_states:
-                # get all the states that belong to this capability for
-        #        logger.debug("found state: " + str(state))
-        #        logger.debug("capability id: " + str(capability.id))
-        #        sorted_capability_statesmap[capability.id].append(state)
-
-        #capability_queryset = Capability.objects.all()
-        drs = DependencyResolverService(accumulated_capabilties, host_id)
-
-        sorted_capability_statesmap = drs.resolve()
         jobfactory = JobFactory()
         newJob = jobfactory.createNewJob("StateHandlerJob")
 
         actionFactory = jobActionFactory.JobActionFactory(newJob)
 
-        treemap = DependencyTreeMap()
-        logger.debug("found capabilities: " + str(len(sorted_capability_statesmap)))
-        last_element = None
-        for key in sorted_capability_statesmap:
-            logger.debug(
-                "how many states are being found: " + str(len(sorted_capability_statesmap[key])))
-            logger.debug("current capability: " + str(key))
-            if last_element:
-                pass
-
-            for state in sorted_capability_statesmap[key]:
-                logger.info("state: " + str(state))
-                parent = state.statetype.dependentOn
-                parent_id = None
-                if parent is None and last_element is None:
-                    parent_id = -1
-                elif parent is None and last_element is not None:
-                    parent_id = last_element.statetype.dependentOn.id
-                else:
-                    parent_id = parent.id
-                treemap.addItem(state.statetype.id, state, parent_id)
-                last_element = state
-
-        treemap.merge()
-        statesList = treemap.toList()
-
+        drs = DependencyResolverService(accumulated_capabilties, host_id)
+        statesList = drs.resolve()
         scheduler_service = SchedulerService()
+
         for kv in statesList:
             # TODO: this is problematic for complex states,
             base_state = kv[1]
+            print("state: " + base_state.name)
             if base_state.simple_state is not None:
                 simple_state = base_state.simple_state
                 if simple_state.installed == False:
-                    print("state: " + str(state))
                     if base_state.statetype.handler is not None:
                         handlerRequest = RequestBuilder().build_request_with_state(base_state)
                         logger.debug(str(handlerRequest))
@@ -164,7 +105,7 @@ class InstallHostView(generics.UpdateAPIView):
                         # encode the request for transport
                         handlerRequest.setKeyValList(
                             Utils.escapeJsonForTransport(handlerRequest.getKeyValList()))
-                        action = actionFactory.createAction('INSTALL', state.name,
+                        action = actionFactory.createAction('INSTALL', base_state.name,
                                                         handlerRequest.getAsPayload())
                         scheduler_service.schedule_state(action)
             elif base_state.complex_state is not None:
@@ -179,7 +120,7 @@ class InstallHostView(generics.UpdateAPIView):
                         logger.debug("dit is het request in string formaat")
                         handlerRequest.setKeyValList(
                             Utils.escapeJsonForTransport(handlerRequest.getKeyValList()))
-                        action = actionFactory.createAction('INSTALL', state.name,
+                        action = actionFactory.createAction('INSTALL', base_state.name,
                                                             handlerRequest.getAsPayload())
                         scheduler_service.schedule_state(action)
                 else:
