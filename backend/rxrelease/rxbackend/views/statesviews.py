@@ -123,6 +123,8 @@ class InstallHostView(generics.UpdateAPIView):
                         action = actionFactory.createAction('INSTALL', base_state.name,
                                                             handlerRequest.getAsPayload())
                         scheduler_service.schedule_state(action)
+                    else:
+                        logger.debug(f'no statetype handler found for {base_state.name}, not possible to execute state')
                 else:
                     logger.debug(f'complex state has state {complex_state_status}, state will be ignored for this run ')
                 # call jobfeed, with the correct parameters
