@@ -100,7 +100,9 @@ urlpatterns = [
     url(r'^statetypes/search/$', statetypeviews.SearchView.as_view(), name="search"),
     url(r'^statetypes/$', statetypeviews.CreateView.as_view(), name="create"),
     url(r'^statetypes/(?P<pk>[0-9]+)/$', statetypeviews.DetailsView.as_view(), name="details"),
+    url(r'^statetypes/custom/$', statetypeviews.CreateCustomStateType.as_view(), name="details"),
     url(r'^statetypes/handlehoststate$', statetypeviews.HandleHostState.as_view(), name="create"),
     url(r'^statetypes/search/byname/$', statetypeviews.SearchbyNameView.as_view(), name="search by name"),
+
 
 ]

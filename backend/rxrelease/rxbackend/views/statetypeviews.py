@@ -49,6 +49,15 @@ class HandleHostState(generics.CreateAPIView):
         logger.debug("Handling State for host " + selected_host.ipaddress)
 
 
+class CreateCustomStateType(generics.CreateAPIView):
+    serializer_class = StateTypeSerializer
+
+    def perform_create(self, serializer):
+        logger.debug('create custom statetype called')
+        """Save the post data when creating a new bucketlist."""
+        serializer.save()
+
+
 class CreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
     queryset = StateType.objects.all()
