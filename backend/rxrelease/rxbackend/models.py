@@ -105,8 +105,6 @@ class Configuration(models.Model):
         return self.name
 
 
-
-
 class KVSetting(models.Model):
     key = models.CharField(max_length=255)
     value = models.CharField(max_length=255)

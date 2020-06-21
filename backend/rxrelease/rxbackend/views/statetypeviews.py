@@ -1,5 +1,6 @@
 import logging, sys
 import os.path
+from django.db.models.signals import post_save
 from rest_framework import generics
 from ..serializers import StateTypeSerializer
 from ..serializers import HostSerializer
@@ -9,6 +10,7 @@ from ..models import State
 from ..models import Host
 from ..models import Capability
 from ..core import statehandler
+from ..plugins.statetypeservice import StateTypeService
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -53,9 +55,21 @@ class CreateCustomStateType(generics.CreateAPIView):
     serializer_class = StateTypeSerializer
 
     def perform_create(self, serializer):
+        validated_data = serializer.validated_data
+        print(validated_data)
         logger.debug('create custom statetype called')
         """Save the post data when creating a new bucketlist."""
         serializer.save()
+
+
+def save_custom_statetype(sender, instance, **kwargs):
+    statetype_service = StateTypeService()
+    # system statetypes should be provisioned from  scratch
+    if not instance.system:
+        statetype_service.create_custom_statetype(instance)
+
+
+post_save.connect(save_custom_statetype, sender=StateType)
 
 
 class CreateView(generics.ListCreateAPIView):
