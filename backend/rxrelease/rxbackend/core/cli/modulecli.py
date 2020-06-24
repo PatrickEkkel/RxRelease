@@ -56,8 +56,8 @@ class ModuleCLI:
         global_kv_settings = settings_api.get_kv_settingscategory_byname('Global Settings')
         # assuming we have a result we pick the first itemi in the index
         state_credentials_settings = None
-        if statetype[0]['connection_credentials_id'] is not None:
-            state_credentials_settings = settings_api.kv_credentials_bycategory_id(statetype[0]['connection_credentials_id'])[0]
+        if statetype[0]['connection_credentials'] is not None:
+            state_credentials_settings = settings_api.kv_credentials_bycategory_id(statetype[0]['connection_credentials'])[0]
 
         credentials_settings = settings_api.kv_credentials(host[0]['connectioncredentials'])
 
@@ -91,8 +91,11 @@ class ModuleCLI:
         if state_credentials_settings is not None:
             statetype_username = state_credentials_settings['username']
             statetype_password = state_credentials_settings['password']
-            settings_dict[prefix + '-username'] = statetype_username
-            settings_dict[prefix + '-password'] = statetype_password
+            if prefix:
+                settings_dict[prefix + '-username'] = statetype_username
+                settings_dict[prefix + '-password'] = statetype_password
+            else:
+                logger.debug('no prefix found, defaulting to standard username password')
 
         settings_dict['username'] = host_username
         settings_dict['password'] = host_password
