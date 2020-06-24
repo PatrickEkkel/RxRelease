@@ -78,10 +78,10 @@ class SaltApi:
                 zf.write(os.path.join(root, file), zip_root)
 
         zf.close()
-        client.send_file(zf.filename, formula_dir)
+        client.send_file(zf.filename, formula_dir,sudo=True)
         client.send_blocking_command(
-            'cd ' + formula_dir + ' && unzip -o ' + ntpath.basename(zf.filename))
-        client.send_blocking_command('cd ' + formula_dir + '&& rm ' + ntpath.basename(zf.filename))
+            'cd ' + formula_dir + ' && sudo unzip -o ' + ntpath.basename(zf.filename))
+        client.send_blocking_command('cd ' + formula_dir + '&& sudo rm ' + ntpath.basename(zf.filename))
 
     def ping(self, target):
         api = self._connect()

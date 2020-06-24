@@ -37,8 +37,11 @@ class RxStatetype:
             category=statetype.state_settings)
             KVSetting.objects.create(key='api-mode', value='PRODUCTION',
             category=statetype.state_settings)
-            # assuming salt-master, because a reall multimaster scenario is not really 
+            # assuming salt-master, because a reall multimaster scenario is not really
             KVSetting.objects.create(key='trigger-host', value='salt-master',
-            category=statetype.state_settings))
+            category=statetype.state_settings)
+
+            KVSetting.objects.create(key="trigger-statetype", value="Salt-Run-State",
+            category=statetype.state_settings)
         else:
             logger.debug('settings for rxsalt statetype already exists')
