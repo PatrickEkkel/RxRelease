@@ -1,6 +1,7 @@
 import logging, sys
 from ...models import KVSetting
 from ...models import SettingsCategory
+from ...models import CredentialsSetting
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -18,9 +19,20 @@ class RxStatetype:
     def get_module_name(self):
         return 'rxsalt'
 
+    def do_module_actions(self, statetype):
+        logger.debug('couple salt credentials to statetype')
+        salt_settings_category = SettingsCategory.objects.filter(name='Salt Settings').get()
+        statetype.connection_credentials = salt_settings_category
+        statetype.save()
+
+
     def create_statetype_configuration(self, statetype):
 
         settings_count = KVSetting.objects.filter(category=statetype.state_settings).count()
+
+        # salt statetypes should always be using salt-settings, therefore
+        # configure salt-settings on the statetype
+        #statetype.save()
 
         if settings_count == 0:
             logger.debug('creating configuration for rxsalt statetype')

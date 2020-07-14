@@ -20,6 +20,13 @@ class StateTypeService:
         rx_statetype = RxStatetype()
         self.services[rx_statetype.get_module_name()] = rx_statetype
 
+    def do_module_actions(self, statetype):
+        service = self.services.get(statetype.module)
+        if service:
+            service.do_module_actions(statetype)
+        else:
+            logger.debug(f"no service found for statetypemodule: {statetype.module}")
+
     def create_custom_statetype(self, statetype):
         service = self.services.get(statetype.module)
         if service:

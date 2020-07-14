@@ -67,8 +67,8 @@ class SaltApi:
                                + formula_name)
 
         client = SSHWrapper.with_connection_details(self.ssh_connectiondetails)
-        client.send_blocking_command('mkdir -p ' + salt_home_dir)
-        client.send_blocking_command('mkdir -p ' + formula_dir)
+        client.send_blocking_command('sudo mkdir -p ' + salt_home_dir)
+        client.send_blocking_command('sudo mkdir -p ' + formula_dir)
 
         zf = RxLocalCache.create_temp_archive(formula_name)
         for root, dirs, files in os.walk(localstore.get_filestore_location_with_context()):

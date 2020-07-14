@@ -56,10 +56,12 @@ class CreateCustomStateType(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         validated_data = serializer.validated_data
-        print(validated_data)
+        print(validated_data['module'])
+        statetype_service = StateTypeService()
+        instance = serializer.save()
+        statetype_service.do_module_actions(instance)
         logger.debug('create custom statetype called')
-        """Save the post data when creating a new bucketlist."""
-        serializer.save()
+        #serializer.save()
 
 
 def save_custom_statetype(sender, instance, **kwargs):
