@@ -23,6 +23,7 @@ class RxStatetype:
         logger.debug('couple salt credentials to statetype')
         salt_settings_category = SettingsCategory.objects.filter(name='Salt Settings').get()
         statetype.connection_credentials = salt_settings_category
+        statetype.handler = 'task-schedule.py'
         statetype.save()
 
 
