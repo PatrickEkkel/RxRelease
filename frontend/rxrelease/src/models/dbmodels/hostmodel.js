@@ -1,21 +1,26 @@
 
 
 class HostModel {
-  static newHost(_id,_hostname,_ipaddress,_description,_profiletype) {
+  static newHost(_id,_hostname,_ipaddress,_description,_profile) {
     return { hostname: _hostname,
       id: _id,
       ipaddress: _ipaddress,
       description: _description,
-      profiletype_id: _profiletype,connectioncredentials: null,
+      profile: _profile,
+      profile_id: _profile.getId(),connectioncredentials: null,
       setConnectionCredentials: function(connectioncredentials) { this.connectioncredentials = connectioncredentials},
       getHostname: function() { return this.hostname },
       getIpaddress: function() { return this.ipaddress },
       getDescription: function() { return this.description },
-      getProfileType: function() { return this.profiletype_id },
+      getProfile: function() { return this.profile },
+      setProfile: function(_profile) {
+          this.profile = _profile,
+          this.profile_id = _profile.getId()
+      },
       getConnectionCredentials: function() { return this.connectioncredentials } }
   }
   static mapHost(_model) {
-    return HostModel.newHost(_model.id,_model.hostname,_model.ipaddress,_model.description,_model.profiletype)
+    return HostModel.newHost(_model.id,_model.hostname,_model.ipaddress,_model.description,_model.profile)
   }
 }
 

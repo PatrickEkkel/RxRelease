@@ -4,6 +4,7 @@ import logging,sys,os,importlib
 import zmq
 from backend.rxrelease.rxbackend.core.cli.actions import *
 from backend.rxrelease.rxbackend.rxsalt.cli.actions import *
+from backend.rxrelease.rxbackend.rxdockercompose.cli.actions import *
 from backend.rxrelease.rxbackend.configuration.globalsettings import ApiUserSettings,NetworkSettings,RemoteSettings
 from backend.rxrelease.rxbackend.core.restapi.REST_authentication import REST_authentication
 from backend.rxrelease.rxbackend.core.jobs.zmq.scheduler_service import SchedulerService,ActionFactory

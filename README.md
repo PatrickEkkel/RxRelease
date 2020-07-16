@@ -46,3 +46,6 @@ Boostrap salt-master easy way
 
 curl -L https://bootstrap.saltstack.com -o install_salt.sh
 sudo sh install_salt.sh -P -M
+=======
+# activate .venv
+source .venv/bin/activate

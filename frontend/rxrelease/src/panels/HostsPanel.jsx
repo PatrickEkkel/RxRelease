@@ -23,13 +23,25 @@ class  HostsPanel  extends BasicRxPanel {
   createHost() {
     this.props.dispatch(hostActionCreators.openNewHost());
   }
+  getProfileById(id) {
+    var profiles = this.state.profiles
+    for(var i=0;i<profiles.length;i++) {
+      if(profiles[i].getId() == id) {
+        return profiles[i];
+      }
+    }
+  }
   saveAndClose() {
-    this.props.dispatch(hostActionCreators.saveNewHost(this.state.hostname,this.state.ipaddress,this.state.description,this.state.profiletype));
+    var profile = this.getProfileById(this.state.profile)
+    this.getLogger().trace("saving host with profile")
+    this.getLogger().traceObject(profile)
+    this.props.dispatch(hostActionCreators.saveNewHost(this.state.hostname,this.state.ipaddress,this.state.description, profile));
   }
   close() {
     this.props.dispatch(hostActionCreators.initialHostState());
   }
   onRowClick(entry) {
+    this.getLogger().trace("Clicked")
     this.props.dispatch(hostActionCreators.loadHostManagement(entry));
   }
 
@@ -59,6 +71,9 @@ class  HostsPanel  extends BasicRxPanel {
     else if(nextProps.type == 'INITIAL_HOSTS_STATE') {
           this.props.dispatch(hostActionCreators.loadHosts())
     }
+    else if(nextProps.type == 'PROFILES_LOADED') {
+      this.setState({profiles: nextProps.profiles})
+    }
   }
 
   render() {
@@ -83,6 +98,7 @@ const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._host.type,
     showModal: state._host.showModal,
+    profiles: state._host.profiles,
     hosts: state._host.hosts
   }
 }

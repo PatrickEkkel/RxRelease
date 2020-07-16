@@ -8,10 +8,10 @@ export function pluginTabsLoaded() {
   }
 }
 
-export function pluginInfoObtained() {
+export function pluginInfoObtained(obtained_plugins) {
   return {
     type: 'PLUGIN_INFO_OBTAINED',
-    //obtained_plugins: obtained_plugins
+    plugins: obtained_plugins
   }
 
 }

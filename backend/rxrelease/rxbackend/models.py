@@ -16,6 +16,7 @@ class Module(models.Model):
     active = models.BooleanField(default=False)
     menuoptionname = models.CharField(max_length=255)
     configurationPanel = models.CharField(max_length=255, default=None)
+    statetypePanel = models.CharField(max_length=255, default=None)
 
 
 class SettingsCategory(models.Model):
@@ -52,6 +53,8 @@ class StateType(models.Model):
     module = models.CharField(max_length=255, null=True, default=None)
     jobtype = models.CharField(max_length=255, null=True, default="SIMPLE_STATE")
     dependentOn = models.ForeignKey('self', null=True, default=None, on_delete=models.PROTECT)
+    system = system = models.BooleanField(default=False)
+
 
     def __str__(self):
         return self.name
@@ -66,12 +69,6 @@ class Capability(models.Model):
         return self.name
 
 
-class ProfileType(models.Model):
-    name = models.CharField(max_length=255)
-    capabilities = models.ManyToManyField(Capability)
-    system = models.BooleanField(default=True)
-
-
 class File(models.Model):
     filename = models.CharField(max_length=255)
     path = models.CharField(max_length=255)
@@ -82,28 +79,36 @@ class File(models.Model):
 
 class Profile(models.Model):
     name = models.CharField(max_length=200)
-    profiletype = models.ForeignKey(ProfileType, null=True, on_delete=models.PROTECT)
-
+    inherited = models.ForeignKey('self',null=True, default=None, on_delete=models.PROTECT)
+    default_configuration = models.ForeignKey('Configuration', related_name='+',null=True,default=None,on_delete=models.PROTECT)
     def __str__(self):
         return self.name
-
-class KVSetting(models.Model):
-    key = models.CharField(max_length=255)
-    value = models.CharField(max_length=255)
-    category = models.ForeignKey(SettingsCategory, on_delete=models.PROTECT)
-
 
 class Host(models.Model):
     hostname = models.CharField(max_length=255)
     ipaddress = models.CharField(max_length=15)
     description = models.CharField(max_length=400)
     status = models.CharField(max_length=255, default="UNMANAGED")
+    profile = models.ForeignKey(Profile,on_delete=models.PROTECT)
     connectioncredentials = models. \
         ForeignKey(CredentialsSetting, default=None, null=True, on_delete=models.PROTECT)
     hostSettings = models. \
         ForeignKey(SettingsCategory, default=None, null=True, on_delete=models.PROTECT)
-    profileType = models. \
-        ForeignKey(ProfileType, default=None, null=True, on_delete=models.PROTECT)
+
+
+class Configuration(models.Model):
+    name = models.CharField(max_length=200)
+    hosts = models.ManyToManyField(Host)
+    profile = models.ForeignKey(Profile, on_delete=models.PROTECT)
+    capability = models.ForeignKey(Capability, on_delete=models.PROTECT, default=None, blank=True, null=True)
+    def __str__(self):
+        return self.name
+
+
+class KVSetting(models.Model):
+    key = models.CharField(max_length=255)
+    value = models.CharField(max_length=255)
+    category = models.ForeignKey(SettingsCategory, on_delete=models.PROTECT)
 
 
 class SimpleState(models.Model):
@@ -134,14 +139,6 @@ class State(models.Model):
     def __str__(self):
         return self.name
 
-
-class Configuration(models.Model):
-    name = models.CharField(max_length=200)
-    hosts = models.ManyToManyField(Host)
-    profile = models.ForeignKey(Profile, on_delete=models.PROTECT)
-
-    def __str__(self):
-        return self.name
 
 
 class WizardStatus(models.Model):

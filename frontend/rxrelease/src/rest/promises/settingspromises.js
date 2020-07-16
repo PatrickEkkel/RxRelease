@@ -2,6 +2,7 @@ import  * as jsonUtils from '../../lib/json/utils'
 import  * as settingsRequests from '../../rest/requests/settingsrequests'
 import GlobalSettings from '../../config/global';
 import HostModel from '../../models/dbmodels/hostmodel'
+import ProfileModel from '../../models/dbmodels/profilemodel'
 import SettingsFactory from '../../factories/settingsFactory'
 import SettingsCategoryModel from '../../models/dbmodels/settingscategorymodel'
 import KVSettingModel from '../../models/dbmodels/kvsettingmodel'
@@ -21,14 +22,28 @@ export function UPDATE_SETTINGS_WITH_CATEGORY(response,properties) {
 export function CREATE_OR_UPDATE_SETTINGSCATEGORY(response,properties) {
 
     var category = properties.category
+    var context = properties.context
+    var logger = properties.logger
 
-    var normalizedData = jsonUtils.normalizeJson(response.data)
+    var normalizedData = null;
+    if(typeof response !== 'undefined') {
+      normalizedData = jsonUtils.normalizeJson(response.data)
+    }
     // if the response from getting the category is null, create a new category
     if(normalizedData == null) {
-      return settingsRequests.postSettingCategory(category);
+      return settingsRequests.postSettingCategory(category).then(function(response) {
+        var new_settingscategory = SettingsCategoryModel.mapSettingsCategoryModel(response.data)
+        context.addItem('settings_category',new_settingscategory)
+        return response
+      })
     }
     else {
-      return settingsRequests.getSettingCategoryByName(category.name)
+      return settingsRequests.getSettingCategoryByName(category.name).then(function(response) {
+        var settingscategory = SettingsCategoryModel.mapSettingsCategoryModel(response.data)
+        context.addItem('settings_category',settingscategory)
+
+        return response
+      })
     }
 }
 // NOTE: deze methode is deprecated, neit meer gebruiken, gebruik ipv dit gedrocht CREATE_CREDENTIAL_SETTINGS_NEW
@@ -54,7 +69,11 @@ export function CREATE_CREDENTIAL_SETTINGS_NEW(response,properties) {
   if(host != null) {
     swaLogger.debug("creds")
     swaLogger.traceObject(creds)
-    host = HostModel.mapHost(jsonUtils.normalizeJson(response.data))
+    swaLogger.trace("retrieved data")
+    swaLogger.traceObject(response.data)
+    var normalized_data = jsonUtils.normalizeJson(response.data)
+    normalized_data.profile = ProfileModel.newProfile(normalized_data.profile,'')
+    host = HostModel.mapHost(normalized_data)
     properties.current_host = host
     swaLogger.trace("saved host: ")
     swaLogger.traceObject(properties.current_host)
@@ -77,29 +96,118 @@ export function CREATE_SETTINGSCATEGORY_IF_NOT_EXISTS(response,properties) {
     return response;
   }
 }
+export function GET_CATEGORY_BY_ID(response, properties) {
+
+var logger = properties.logger
+var category_id = properties.settings_category_id
+var context = properties.context
+return settingsRequests.getSettingsByCategoryId(category_id).then(function(response) {
+  var data = response.data
+  logger.trace("received category from backend")
+  logger.traceObject(data)
+  context.addItem('category',SettingsCategoryModel.mapSettingsCategoryModel(data))
+})
+}
+
+export function UPDATE_SETTING(response, properties) {
+
+  var logger = properties.logger
+  var salt_formula_name = properties.salt_formula_name
+  logger.trace("output from GET_OR_CREATE_SETTING")
+  logger.traceObject(response.data)
+  var normalized_data = jsonUtils.normalizeJson(response.data)
+  var setting  = KVSettingModel.mapKVSetting(normalized_data)
+  setting.setValue(salt_formula_name)
+  logger.trace("Setting that is updated")
+  logger.traceObject(setting)
+  logger.traceObject(properties.context)
+  setting.setCategory(SettingsCategoryModel.newSettingsCategoryModel(normalized_data['category']))
+  return settingsRequests.putSetting(setting);
+
+}
+export function GET_SETTING(response, properties) {
+var key = properties.key
+var category_id = properties.category_id
+var context = properties.context
+var logger = properties.logger
+
+logger.trace("get category id: " + category_id)
+if(typeof category_id !== 'undefined') {
+
+// first get the category
+
+return settingsRequests.getSettingsCategoryById(category_id).then(function(response) {
+  var normalizedData = jsonUtils.normalizeJson(response.data)
+
+  var settingsCategory = SettingsCategoryModel
+  .newSettingsCategoryModel(normalizedData['id'], normalizedData['name'], normalizedData['prefix'])
+
+  return settingsRequests.getSettingByKeyAndCategory(key,settingsCategory)
+}).then(function(response) {
+  var normalizedData = jsonUtils.normalizeJson(response.data)
+  var mapped_setting = KVSettingModel.mapKVSetting(normalizedData)
+  context.addItem('selected_setting', mapped_setting)
+  logger.trace('Retrieving setting value from backend')
+  logger.traceObject(normalizedData)
+  return response
+})
+
+}
+else {
+  logger.trace("category_id undefined, refusing request")
+  return null;
+}
+
+
+}
 
 export function GET_OR_CREATE_SETTING(response, properties) {
 
+
   var key = properties.key
   var value = properties.value
-  var category = properties.category
+  var category_name = properties.category_name
+  var category_id = properties.category_id
+  var value_store = properties.value_store
   var logger = properties.logger
   var normalizedData = null;
   var settingsCategory = null;
   var setting = null;
+  var get_request = null;
+  var search_param = null
+
+  // determine if we are searching category by name or by id
+  if(typeof value_store !== 'undefined') {
+      value = properties.context.getItem(value_store)
+  }
+  if(typeof category_name !== 'undefined') {
+    get_request = settingsRequests.getSettingCategoryByName
+    search_param = category_name
+    logger.trace('Retrieving category by name')
+  }
+  else if (typeof category_id !== 'undefined') {
+    get_request = settingsRequests.getSettingsCategoryById
+    search_param = category_id
+    logger.trace("Retrieving category by id")
+  }
+
   logger.trace("category response")
   logger.traceObject(normalizedData)
 
-  return settingsRequests.getSettingCategoryByName(category).then(function(local_response) {
+  return get_request(search_param).then(function(local_response) {
       normalizedData = jsonUtils.normalizeJson(local_response.data)
       if(normalizedData == null) {
-        logger.debug("can't find SettingsCategory: " + category)
+        logger.trace("can't find SettingsCategory")
+        logger.traceObject(category_name)
       }
       else {
         settingsCategory = SettingsCategoryModel
         .newSettingsCategoryModel(normalizedData['id'], normalizedData['name'], normalizedData['prefix'])
         setting = KVSettingModel.newKVSetting(null, key, value,settingsCategory)
       }
+      logger.trace('key: ' + key)
+      logger.trace('settings category')
+      logger.traceObject(settingsCategory)
       return settingsRequests.getSettingByKeyAndCategory(key,settingsCategory)
   }).then(function(local_response) {
 

@@ -9,7 +9,6 @@ from .models import State
 from .models import SimpleState
 from .models import ComplexState
 from .models import RepeatableState
-from .models import ProfileType
 from .models import StateType
 from .models import KVSetting
 from .models import CredentialsSetting
@@ -52,7 +51,7 @@ class HostTestSerializer(serializers.PrimaryKeyRelatedField, serializers.ModelSe
 class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Module
-        fields = ('id', 'name', 'active', 'menuoptionname', 'configurationPanel')
+        fields = ('id', 'name', 'active', 'menuoptionname', 'configurationPanel','statetypePanel')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -60,13 +59,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username')
 
-
-class ProfileTypeSerializer(serializers.ModelSerializer):
-    capabilities = CapabilityMTMSerializer(many=True, queryset=Capability.objects.all())
-
-    class Meta:
-        model = ProfileType
-        fields = ('id', 'name', 'system', 'capabilities')
 
 
 class FileSerializer(serializers.ModelSerializer):
@@ -88,8 +80,8 @@ class HostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Host
-        fields = ('id', 'hostname', 'ipaddress', 'description', 'status', 'profileType',
-                  'connectioncredentials', 'hostSettings')
+        fields = ('id', 'hostname', 'ipaddress', 'description', 'status',
+                  'connectioncredentials', 'hostSettings','profile')
 
 
 class ConfigurationSerializer(serializers.ModelSerializer):
@@ -97,7 +89,7 @@ class ConfigurationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Configuration
-        fields = ('id', 'name', 'profile', 'hosts')
+        fields = ('id', 'name', 'profile', 'hosts','capability')
 
 
 class HostStateHandlerSerializer(serializers.ModelSerializer):
@@ -121,7 +113,7 @@ class StateTypeMTMSerializer(serializers.PrimaryKeyRelatedField, serializers.Mod
 class StateTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = StateType
-        fields = ('id', 'name', 'handler', 'module', 'dependentOn', 'state_settings', 'jobtype','connection_credentials_id')
+        fields = ('id', 'name', 'handler', 'module', 'dependentOn', 'state_settings', 'jobtype', 'system', 'connection_credentials')
 
 
 class CapabilitySerializer(serializers.ModelSerializer):
@@ -160,6 +152,7 @@ class StateSerializer(serializers.ModelSerializer):
     simple_state = SimpleStateSerializer(required=False, read_only=True)
     repeatable_state = RepeatableStateSerializer(required=False, read_only=True)
     complex_state = ComplexStateSerializer(required=False, read_only=True)
+    statetype = StateTypeSerializer(required=False, read_only=True)
 
     class Meta:
         model = State
@@ -189,7 +182,7 @@ class CredentialsSettingsSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ('name', 'profiletype', 'id')
+        fields = ('name', 'id','inherited','default_configuration')
 
 
 class ConfigurationTabSerializer(serializers.ModelSerializer):

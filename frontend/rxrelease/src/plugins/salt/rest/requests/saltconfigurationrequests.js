@@ -3,6 +3,14 @@ import GlobalSettings from '../../../../config/global'
 
 var settings = new GlobalSettings();
 
+export function getSaltFormulabyName(name) {
+  return Axios.get(GlobalSettings.getBackendUrl() + '/rxbackend/rxsalt/formulas/search?name=' + name);  
+}
+
+export function getSaltFormulaById(id) {
+  return Axios.get(GlobalSettings.getBackendUrl() + '/rxbackend/rxsalt/formulas/' + id + '/');
+}
+
 
 export function GetAllFormulas() {
   return Axios.get(GlobalSettings.getBackendUrl() + '/rxbackend/rxsalt/formulas/');

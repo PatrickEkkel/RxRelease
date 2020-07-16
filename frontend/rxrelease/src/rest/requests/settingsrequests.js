@@ -27,6 +27,7 @@ export function postCredentialSettings(settings) {
   })
 }
 
+
 export function postSetting(setting) {
 var backend_url = GlobalSettings.getBackendUrl();
 
@@ -54,8 +55,20 @@ export function putSettingByKey(setting) {
     category_id: setting.getCategory().getId()
     })
 }
+
+export function putSetting(setting) {
+
+  var backend_url = GlobalSettings.getBackendUrl();
+
+  return Axios.put(backend_url + '/rxbackend/settings/kvsettings/' + setting.getId() + '/',{
+    key: setting.getKey(),
+    value: setting.getValue() ,
+    category: setting.getCategory().getId()
+  })
+
+}
 // NOTE: this method does not seem to be used
-export function putSetting(category,key,value) {
+/*export function putSetting(category,key,value) {
   srLogger.trace("updating setting with key: " + key + " and value: " + value)
   var backend_url = GlobalSettings.getBackendUrl();
   return Axios.put(backend_url + '/rxbackend/settings/kvsettings/' + key + '/', {
@@ -64,7 +77,7 @@ export function putSetting(category,key,value) {
     category: settings.getSettingCategory().getId()
   })
 
-}
+} */
 
 export function putCredentialSettings(settings) {
   srLogger.trace("voordat we de settings opslaan eerst even een kijkje nemen")

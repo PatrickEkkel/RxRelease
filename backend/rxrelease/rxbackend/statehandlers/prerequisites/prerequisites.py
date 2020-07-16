@@ -38,6 +38,7 @@ client = SSHWrapper.with_keys(data['remoteuser'],inputmapping.getIpAddress(), da
 if data['os'] == "CentOS":
  # first remove salt, if it was already installed
  client.send_blocking_command('sudo yum install -y wget')
+ client.send_blocking_command('sudo yum install -y unzip')
  client.send_blocking_command('wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm')
  client.send_blocking_command('sudo rpm -ivh epel-release-latest-7.noarch.rpm')
 

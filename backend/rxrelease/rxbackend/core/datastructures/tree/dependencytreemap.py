@@ -25,7 +25,12 @@ class DependencyTreeMap:
         if len(self.treeList) < 2 and len(self.treeList) > 0:
             return self.treeList[0].toList()
         else:
-            logger.debug("calling toList without calling merge is not supported")
+            logger.debug(self.treeList)
+            for tree in self.treeList:
+                logger.debug("tree contents")
+                logger.debug(tree.toList())
+            logger.debug("calling toList without calling merge is not supported or DependencyTreeMap was not able to merge the tree")
+            # we have multiple trees, 
             return []
 
     def merge(self):

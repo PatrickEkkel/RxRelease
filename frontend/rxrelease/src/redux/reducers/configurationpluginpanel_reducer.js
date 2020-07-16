@@ -12,9 +12,14 @@ export default function _configuration_plugin_panel(state = initialConfiguration
       case 'PLUGIN_INFO_OBTAINED':
       return {
         type: action.type,
-      
+        plugins: action.plugins
+
       }
-      break;
+      case 'PLUGINS_LOADED':
+      return {
+        type: action.type,
+        plugins: action.plugins
+      }
       case 'PLUGIN_TABS_LOADED':
       return {
         type: action.type

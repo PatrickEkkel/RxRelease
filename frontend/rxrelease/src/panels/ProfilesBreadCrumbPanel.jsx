@@ -1,7 +1,7 @@
 import React from 'react';
 import BreadCrumb from '../components/BreadCrumb'
 import ProfilesPanel from './ProfilesPanel';
-import RecipePanel from './RecipePanel';
+import ProfileConfigurationPluginPanel from './ProfileConfigurationPluginPanel';
 import ProfileConfigurationPanel from './ProfileConfigurationPanel';
 import Modal from '../components/Modal';
 import  * as profileActionCreators from '../redux/profileactioncreators'
@@ -15,7 +15,8 @@ constructor() {
  super();
  this.state = {
    breadcrumbItems: [],
-   selected_profile: null
+   selected_profile: null,
+   selected_configuration: null
  }
 }
 
@@ -30,6 +31,7 @@ componentWillReceiveProps(nextProps) {
       bc_items = ['Profiles','Configuration']
     break;
     case 'LOAD_RECIPE_FROM_CONFIGURATION':
+    this.setState({selected_configuration: nextProps.selected_configuration})
       bc_items = ['Profiles','Configuration','Recipe'];
     break;
     case 'INITIAL_PROFILE_BREADCRUMBSTATE':
@@ -81,7 +83,7 @@ switch(type) {
     currentPanel = <ProfileConfigurationPanel/>
   break;
   case 'LOAD_RECIPE_FROM_CONFIGURATION':
-    currentPanel = <RecipePanel/>
+    currentPanel = <ProfileConfigurationPluginPanel selectedConfiguration={this.state.selected_configuration}/>
 }
 return <div><BreadCrumb items={this.state.breadcrumbItems} onClick={(clickedItem) => currentContext.breadCrumbOnClick(clickedItem) } ref={(container) => {currentContext.breadcrumbHandle = container}}/>{currentPanel}</div>
 }
@@ -90,7 +92,8 @@ return <div><BreadCrumb items={this.state.breadcrumbItems} onClick={(clickedItem
 const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._profilebreadcrumb.type,
-    selected_profile: state._profilebreadcrumb.selected_profile
+    selected_profile: state._profilebreadcrumb.selected_profile,
+    selected_configuration: state._profilebreadcrumb.selected_configuration
   }
 }
 

@@ -1,11 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import ConfigurationFactory from '../../factories/configurationFactory'
-import Button from '../../components/Button'
-import LabeledDropdown from '../../components/LabeledDropdown'
-import * as dcConfigurationActions from './actions/dockercomposeconfigurationactions'
+import ConfigurationFactory from '../../../factories/configurationFactory'
+import Button from '../../../components/Button'
+import LabeledDropdown from '../../../components/LabeledDropdown'
+import * as dcConfigurationActions from '../actions/dockercomposeconfigurationactions'
 
-class DockerComposeConfiguration extends React.Component {
+class DockerComposeConfigurationPanel extends React.Component {
 
   constructor() {
     super()
@@ -68,5 +68,5 @@ const mapStateToProps = (state/*, props*/) => {
     dcConfiguration: state._dockercompose_recipe.dcConfiguration
   }
 }
-const ConnectedDockerComposeConfiguration = connect(mapStateToProps)(DockerComposeConfiguration)
-export default ConnectedDockerComposeConfiguration;
+const ConnectedDockerComposeConfigurationPanel = connect(mapStateToProps)(DockerComposeConfigurationPanel)
+export default ConnectedDockerComposeConfigurationPanel;

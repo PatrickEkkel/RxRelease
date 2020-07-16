@@ -53,7 +53,6 @@ this.getLogger().debug("WizardBasePanel recieved nextProps with type: " + nextPr
 var type = nextProps.type;
 var current_wizard_item = nextProps.current_wizard_item;
 
-
 if(type == 'WAIT_FOR_SAVE') {
   this.waitForSave(nextProps);
 }

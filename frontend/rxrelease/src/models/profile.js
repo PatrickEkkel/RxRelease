@@ -1,9 +1,8 @@
 
 class Profile {
-  constructor(id,name,profiletype) {
+  constructor(id,name) {
   this.id = id;
   this.name = name;
-  this.profiletype = profiletype;
   }
 
   setProfileType(profiletype) {
@@ -12,11 +11,11 @@ class Profile {
   setName(name) {
     this.name = name
   }
+  getId() {
+    return this.id;
+  }
   getName() {
     return this.name;
-  }
-  getProfileType() {
-    return this.profiletype;
   }
 }
 

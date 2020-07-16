@@ -34,17 +34,23 @@ export default function _host(state = initialHostState,action) {
       type: action.type,
       installed_host: action.installed_host
     }
-    case 'PROFILE_TYPES_LOADED':
-    return {
-      type: action.type,
-      showModal: true,
-      profiletypes: action.profiletypes,
-    }
+
     case 'HOSTS_LOADED':
     return {
       type: action.type,
       showModal: false,
       hosts: action.hosts
+    }
+    case 'PROFILES_LOADED':
+    return {
+      type: action.type,
+      profiles: action.profiles,
+      showModal: true // action.showModal
+    }
+    case 'PROFILE_LOADED':
+    return {
+      type: action.type,
+      profile: action.profile
     }
     case 'INSTALL_HOST':
     return {

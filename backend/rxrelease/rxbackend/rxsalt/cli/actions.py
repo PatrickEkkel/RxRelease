@@ -172,7 +172,6 @@ def sync_salt_formula(salt_formula):
         .create_action_from_host(salt_master, settings_dict, statetype)
     connection.scheduler_service.schedule_state(action)
 
-
 def send_salt_command(minion_id, command, salt_api_mode):
     # we need to get the saltmaster host object so we know where to send our commands
     connection = Connection.get_connection()

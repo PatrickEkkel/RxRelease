@@ -35,7 +35,7 @@ class SettingsPanel extends BasicRxPanel {
     this.props.dispatch(settingsActionCreator.loadAllSettingsCategories())
   }
   onRowClick() {
-    alert('blablabla')
+    
   }
 
   close() {

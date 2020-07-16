@@ -15,10 +15,9 @@ constructor() {
   // if this contins NONE, deny any loggging, if it contains ALL, ALLOW everything to get trought, if it contains LIST, log only the components/subcomponents that are listed
   this.LOGMODULES = "LIST"
   // Will only be used if we LOGMODULES contains te value list
-  // To access Reducer Logging you can add the following 'REDUCER.<Reducer Name>', for example to get the HOST Redcuer Logging add 'REDUCER.HOST'
+  // To access Reducer Logging you can add the following 'REDUCER.<Reducer Name>', for example to get the HOST Reducer Logging add 'REDUCER.HOST'
   //this.ENABLED_LOGGING = ['HOSTS.HOSTMANAGEMENTPANEL','HOSTS.HOSTSPANEL','HOSTS.ACTIONCREATOR','REDUCER.HOST','PROFILES.ACTIONCREATOR']
-  this.ENABLED_LOGGING = ['HOSTS.ACTIONCREATOR','SALT.CONFIGURATIONPANEL','SALT_CONFIGURATION.ACTIONCREATOR']
-
+  this.ENABLED_LOGGING = ['SALT.STATETYPE_CONFIGURATIONPANEL']
 
 }
 

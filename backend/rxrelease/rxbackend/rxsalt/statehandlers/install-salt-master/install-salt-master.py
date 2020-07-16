@@ -37,9 +37,10 @@ try:
    client.send_blocking_command("sudo yum install -y https://repo.saltstack.com/yum/redhat/salt-repo-2018.3-1.el7.noarch.rpm")
    client.send_blocking_command('sudo yum remove -y salt-master')
    client.send_blocking_command('sudo rm -rf /etc/salt')
+   client.send_blocking_command('sudo firewall-cmd --zone=public --permanent --add-port=4505-4506/tcp')
    client.send_blocking_command('sudo yum install -y salt-master')
    client.send_blocking_command('sudo systemctl start salt-master')
-   client.send_blocking_command('sudo systecmtl enable salt-master')
+   client.send_blocking_command('sudo systemctl enable salt-master')
    client.send_blocking_command('sudo chown -R ' + RemoteSettings.remoteuser + ':users' + ' /srv/salt')
 
    reststates_api = REST_states(auth_token)

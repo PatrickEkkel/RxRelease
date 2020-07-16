@@ -1,5 +1,6 @@
 import logging, sys
 import os.path
+from django.db.models.signals import post_save
 from rest_framework import generics
 from ..serializers import StateTypeSerializer
 from ..serializers import HostSerializer
@@ -9,6 +10,7 @@ from ..models import State
 from ..models import Host
 from ..models import Capability
 from ..core import statehandler
+from ..plugins.statetypeservice import StateTypeService
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -49,6 +51,29 @@ class HandleHostState(generics.CreateAPIView):
         logger.debug("Handling State for host " + selected_host.ipaddress)
 
 
+class CreateCustomStateType(generics.CreateAPIView):
+    serializer_class = StateTypeSerializer
+
+    def perform_create(self, serializer):
+        validated_data = serializer.validated_data
+        print(validated_data['module'])
+        statetype_service = StateTypeService()
+        instance = serializer.save()
+        statetype_service.do_module_actions(instance)
+        logger.debug('create custom statetype called')
+        #serializer.save()
+
+
+def save_custom_statetype(sender, instance, **kwargs):
+    statetype_service = StateTypeService()
+    # system statetypes should be provisioned from  scratch
+    if not instance.system:
+        statetype_service.create_custom_statetype(instance)
+
+
+post_save.connect(save_custom_statetype, sender=StateType)
+
+
 class CreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
     queryset = StateType.objects.all()
@@ -83,3 +108,25 @@ class SearchbyNameView(generics.ListAPIView):
         name = self.request.query_params.get('name', None)
         statetype_queryset = StateType.objects.filter(name=name)
         return statetype_queryset
+
+class SearchView(generics.ListAPIView):
+    serializer_class = StateTypeSerializer
+
+    def get_queryset(self):
+        system_statetypes =  self.request.query_params.get('system', None)
+        capability =    self.request.query_params.get('capability', None)
+        system_statetypes = system_statetypes == 'True'
+        filter = False
+        if system_statetypes is not None:
+            result_queryset = StateType.objects.filter(system=system_statetypes)
+            filter = True
+
+        if capability is not None and system_statetypes is not None:
+            filter = True
+            result_queryset = Capability.objects.filter(id=capability).get().statetypes.filter(system=system_statetypes)#.statetypes
+                #.filter(system=system_statetypes)
+
+        if not filter:
+            return StateType.objects.all
+        else:
+            return result_queryset

@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '../components/Button';
 import ProfilePanel from '../panels/ProfilePanel';
 import BasicRxPanel from '../components/panels/BasicRxPanel';
+import StandardListConverters from '../converters/StandardListConverters';
 import Table from '../components/Table';
 import Axios from 'axios';
 import  * as profileActionCreators from '../redux/profileactioncreators'
@@ -9,10 +10,10 @@ import Modal from '../components/Modal';
 import { connect } from 'react-redux'
 
 
-class  ProfilesPanel  extends BasicRxPanel {
+class ProfilesPanel  extends BasicRxPanel {
 
   constructor() {
-    super()
+    super('PROFILES','PROFILESPANEL')
     var currentContext = this;
 
     this.state = {
@@ -31,7 +32,10 @@ class  ProfilesPanel  extends BasicRxPanel {
     this.setState({panelState: "reload"});
   }
   saveAndClose() {
-    this.props.dispatch(profileActionCreators.saveNewProfile(this.state.name,this.state.profiletype));
+    this.getLogger().trace('Inherited profile')
+    this.getLogger().traceObject(this.state.inheritedprofile)
+
+    this.props.dispatch(profileActionCreators.saveNewProfile(this.state.name,this.state.inheritedprofile));
   }
   close() {
       this.props.dispatch(profileActionCreators.initialProfilesState())
@@ -65,14 +69,19 @@ class  ProfilesPanel  extends BasicRxPanel {
   }
 
   render() {
-    const headers_1 = ['#','Profile','Profile type'];
+    const headers_1 = ['#','Profile'];
     var currentContext = this;
+
+    var profiles = StandardListConverters.convertListToMap(this.state.profiles,function(item) {
+      return [item.getId(),item.getName()]
+    })
+
 
     return <div className="container">
         <Modal title="New Profile" saveAndClose={() => currentContext.saveAndClose()} close={() => currentContext.close()} showModal={currentContext.state.showModal}>
-          <ProfilePanel changeAttr={(e) => currentContext.changeAttr(e)}/>
+          <ProfilePanel changeAttr={(e) => currentContext.changeAttr(e)} profiles={this.state.profiles}/>
         </Modal>
-        <Table headers = {headers_1} data={this.state.profiles} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
+        <Table headers = {headers_1} data={profiles} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
         <Button title="New Profile"  onClick={() => currentContext.createProfile()}/>
    </div>
   }
@@ -81,7 +90,6 @@ const mapStateToProps = (state/*, props*/) => {
   return {
     type: state._profiles.type,
     name: state._profiles.name,
-    profiletype: state._profiles.profiletype,
     profiles: state._profiles.profiles,
     reduxState: state,
   }
