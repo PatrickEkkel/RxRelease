@@ -1,4 +1,4 @@
-import logging,sys
+import logging,sys,os
 
 from .shell import Shell
 from .connectiondetails import ConnectionDetails
@@ -45,8 +45,15 @@ class SSHWrapper:
     def send_command_with_output(self,command):
      pass
 
-    def send_file(self,sourcefile,destfile):
-     return self.shell.scp_file(self.connection_details, sourcefile, destfile)
+    def send_file(self,sourcefile,destfile,sudo=False):
+
+     if sudo:
+        target = '/tmp/' + os.path.basename(sourcefile)
+        # use /tmp for this purpose, should be no problem
+        self.shell.scp_file(self.connection_details, sourcefile,target)
+        return self.send_blocking_command(f'sudo cp {target} {destfile}')
+     else:
+         return self.shell.scp_file(self.connection_details, sourcefile, destfile)
 
 
     def send_blocking_command(self,command):

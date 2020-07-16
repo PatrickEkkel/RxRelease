@@ -32,7 +32,8 @@ export function putHost(host) {
  {
    hostname: host.getHostname(),
    ipaddress: host.getIpaddress(),
-   description: host.getDescription()
+   description: host.getDescription(),
+   profile: host.getProfile().getId()
  })
 
 }
@@ -44,7 +45,7 @@ return Axios.post(backend_url + '/rxbackend/hosts/',{
   hostname: host.getHostname(),
   ipaddress: host.getIpaddress(),
   description: host.getDescription(),
-  profileType: host.getProfileType(),
+  profile: host.getProfile().getId(),
   connectioncredentials: host.getConnectionCredentials().getId()
 })
 

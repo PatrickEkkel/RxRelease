@@ -3,7 +3,6 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken import views
 from .views import profileviews
-from .views import profiletypeviews
 from .views import hostviews
 from .views import capabilityviews
 from .views import wizardviews
@@ -33,6 +32,7 @@ urlpatterns = [
     url(r'^testfiller/$', fillerview.testFill, name="filler"),
     url(r'^saltfiller/$', fillerview.salt_fill, name="filler"),
     url(r'^profiles/(?P<pk>[0-9]+)/$', profileviews.DetailsView.as_view(), name="details"),
+    url(r'^profiles/search/$', profileviews.SearchView.as_view(), name="searchbyname"),
 
     url(r'^(?P<configuration_id>[0-9]+)/test/$', testview.test, name='results'),
     url(r'^configurations/$', configurationviews.CreateView.as_view(), name="create"),
@@ -41,7 +41,6 @@ urlpatterns = [
 
     url(r'^hosts/$', hostviews.CreateView.as_view(), name="create"),
     url(r'^hosts/(?P<pk>[0-9]+)/$', hostviews.DetailsView.as_view(), name="details"),
-    url(r'^hosts/search/byprofiletype/$', hostviews.SearchByProfiletypeView.as_view(), name="search by profiletype"),
     url(r'^hosts/search/byhostname/$', hostviews.SearchByHostnameView.as_view(), name="search by hostname"),
 
     url(r'^modules/$', moduleviews.CreateView.as_view(), name="create"),
@@ -82,8 +81,6 @@ urlpatterns = [
 
     url(r'^users/$',userviews.CreateUserView.as_view(),name="create"),
     url(r'^users/(?P<pk>[0-9]+)/$', userviews.DetailsView.as_view(), name="details"),
-    url(r'^profiletypes/$', profiletypeviews.CreateView.as_view(), name="create"),
-    url(r'^profiletypes/(?P<pk>[0-9]+)/$', profiletypeviews.DetailsView.as_view(), name="details"),
 
     url(r'^settings/kvsettings$', kvsettingsview.CreateView.as_view(), name="create"),
     url(r'^settings/kvsettings$', kvsettingsview.CreateView.as_view(), name="create"),
@@ -100,10 +97,12 @@ urlpatterns = [
     url(r'^settingscategory/(?P<pk>[0-9]+)/$', settingscategoryview.DetailsView.as_view(), name="details"),
     url(r'^settingscategory/search/$', settingscategoryview.SearchView.as_view(), name="byhost"),
 
-
+    url(r'^statetypes/search/$', statetypeviews.SearchView.as_view(), name="search"),
     url(r'^statetypes/$', statetypeviews.CreateView.as_view(), name="create"),
     url(r'^statetypes/(?P<pk>[0-9]+)/$', statetypeviews.DetailsView.as_view(), name="details"),
+    url(r'^statetypes/custom/$', statetypeviews.CreateCustomStateType.as_view(), name="details"),
     url(r'^statetypes/handlehoststate$', statetypeviews.HandleHostState.as_view(), name="create"),
     url(r'^statetypes/search/byname/$', statetypeviews.SearchbyNameView.as_view(), name="search by name"),
+
 
 ]

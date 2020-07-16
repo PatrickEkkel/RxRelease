@@ -1,7 +1,6 @@
 from django.http import HttpResponse
 from django.db import models
 from ..models import Profile
-from ..models import ProfileType
 # TODO: this is a violation of the one way principle, consider removing this dependency
 from rxbackend.rxsalt.filler.saltFiller import SaltFiller
 from ..core.filler.baseFiller import BaseFiller

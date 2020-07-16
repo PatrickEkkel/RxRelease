@@ -1,12 +1,11 @@
 import Axios from 'axios';
 import Profile from '../models/profile'
-import ProfileType from '../models/profiletype'
-import ProfileFactory from '../factories/profileFactory'
+import ProfileModel from '../models/dbmodels/profilemodel'
 import LogFactory from '../logging/LogFactory'
 import GlobalSettings from '../config/global'
 import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
 import  * as profileRequests from '../rest/requests/profilerequests'
-import  * as profiletypeRequests from '../rest/requests/profiletyperequests'
+import  * as jsonUtils from '../lib/json/utils'
 import  * as commonActions from './commonactions'
 
 
@@ -25,40 +24,18 @@ export function openNewProfile() {
       type: 'OPEN_NEW_PROFILE',
   }
 }
-export function loadProfiletypeByName(name) {
-  return function (dispatch) {
-      var profiletypes = [];
 
-      profiletypeRequests.getProfileTypes()
-      .then(function(response){
-        for(var i=0;i<response.data.length;i++) {
-          if(response.data[i].name == name) {
-            profiletypes.push(new ProfileType(response.data[i].id,response.data[i].name))
-          }
-        }
-          dispatch(profileTypesLoaded(profiletypes));
-      });
-  }
-}
 
-export function loadProfiletypes() {
-  return function (dispatch) {
-      var profiletypes = [];
-      profiletypeRequests.getProfileTypes()
-      .then(function(response){
-        for(var i=0;i<response.data.length;i++) {
-
-        profiletypes[i] = new ProfileType(response.data[i].id,response.data[i].name)
-        }
-          dispatch(profileTypesLoaded(profiletypes));
-      });
-  }
-}
-
-export function profileTypesLoaded(profiletypes) {
-  return {
-    type: 'PROFILE_TYPES_LOADED',
-    profiletypes: profiletypes
+export function loadProfile(name) {
+  return function(dispatch) {
+    profileRequests.getProfilebyName(name).then(function(response) {
+      var id = response.data[0].id;
+      var name = response.data[0].name;
+      var p = ProfileModel.newProfile(id, name, null)
+      paLogger.trace('Loaded profile from backend')
+      paLogger.traceObject(response.data)
+      dispatch(profileLoaded(p))
+    })
   }
 }
 
@@ -70,13 +47,15 @@ export function loadProfiles() {
         for(var i=0;i<response.data.length;i++) {
           var id = response.data[i].id;
           var name = response.data[i].name;
-          var type = response.data[i].type;
-          var p = new Profile(id,name,type)
+          var inherited = response.data[i].inherited
 
-        retrievedData[i] = [id,name,type];
+
+          var p = new Profile(id,name,null)
+          retrievedData.push(p)
         }
           dispatch(profilesLoaded(retrievedData));
       }).catch(function(error) {
+         console.log(error)
          commonActions.notAuthorized(error.response.status,error,dispatch)
       });
   }
@@ -92,7 +71,12 @@ export function initialProfilesState() {
     type: 'INITIAL_PROFILES_STATE',
   }
 }
-
+export function profileLoaded(profile) {
+  return {
+    type: 'PROFILE_LOADED',
+    profile: profile
+  }
+}
 export function profilesLoaded(profiles) {
   return {
     type: 'PROFILES_LOADED',
@@ -106,12 +90,11 @@ export function loadConfigurationsPanel(selected_profile) {
     selected_profile: selected_profile
   }
 }
-export function saveNewProfile(profile_name,profile_type) {
+export function saveNewProfile(profile_name,inheritedprofile_id) {
   return function (dispatch) {
-
+    var inheritedprofile = ProfileModel.newProfile(inheritedprofile_id,null,null)
     var errorHandler = new AggregatedFieldsErrorHandler();
-    var profileFactory = new ProfileFactory();
-    var profile =  profileFactory.createProfile(profile_name,profile_type);
+    var profile = ProfileModel.newProfile(null,profile_name,inheritedprofile)
     profileRequests.postProfile(profile).then(function() {
         dispatch( {
             type: 'SAVE_NEW_PROFILE',

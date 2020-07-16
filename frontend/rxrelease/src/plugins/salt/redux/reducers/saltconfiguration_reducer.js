@@ -62,6 +62,11 @@ export default function _saltconfiguration(state = initialSettingsState,action) 
       contents: action.contents,
       selected_file: action.selected_file
     }
+    case 'UPDATE_EXISTING_STATETYPE':
+    return {
+      type: action.type,
+      updated_statetype: action.statetype
+    }
     default:
     return state;
   }

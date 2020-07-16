@@ -41,17 +41,17 @@ export default function _wizard(state = initialMenuState, action) {
        type: action.type,
        wizard_state: action.wizard_state
     }
+    case 'PROFILE_LOADED':
+    return {
+      type: action.type,
+      profile: action.profile
+    }
     case 'STORE_WIZARD_DATA':
      return {
        type: action.type,
        data: action.data,
        current_item: action.current_item
      }
-    case 'PROFILE_TYPES_LOADED':
-      return {
-        type: action.type,
-        profiletypes: action.profiletypes,
-      }
     default:
       return state
   }

@@ -2,7 +2,7 @@
 postgresql_service:
  file.managed:
   - name: /usr/lib/systemd/system/postgresql.service
-  - source: salt://postgresql/postgresql.service
+  - source: salt://PostgreSQL/postgresql.service
 
 
 postgresql-server:

@@ -12,7 +12,6 @@ import CredentialsModel from '../models/dbmodels/credentialsmodel'
 import StateFactory from '../factories/stateFactory'
 import SettingsFactory from '../factories/settingsFactory'
 import PromiseExecutor from '../lib/promises/promise_executor'
-import ProfileTypeFactory from '../factories/profiletypeFactory'
 import GlobalSettings from '../config/global'
 import AggregatedFieldsErrorHandler from '../rest/errorhandlers/aggregatedfieldserrorhandler'
 import  * as commonActions from './commonactions'
@@ -20,6 +19,7 @@ import  * as settingsRequests from '../rest/requests/settingsrequests'
 import  * as hostsRequests from '../rest/requests/hostrequests'
 import  * as statesRequests from '../rest/requests/statesrequests'
 import  * as settingsPromises from '../rest/promises/settingspromises'
+import  * as profilePromises from '../rest/promises/profilepromises'
 import  * as jsonUtils from '../lib/json/utils'
 import  * as hostPromises from '../rest/promises/hostpromises'
 
@@ -69,11 +69,25 @@ export function loadHostManagement(hostentry) {
   var e = new PromiseExecutor()
   return function (dispatch) {
       statesRequests.getStatesByHost(host)
-      .then(e.execute(hostPromises.GET_STATES_FOR_HOST,{logger: haLogger,current_host: host}))
-      .then(function(response) {
-        var data = jsonUtils.normalizeJson(response.data);
-        var connectioncredentials_id =  data.connectioncredentials
-        return settingsRequests.getCredentialSettingsByHostById(connectioncredentials_id);
+      .then(e.execute(profilePromises.GET_PROFILE_BY_HOST,{profile: null, current_host: host, logger: haLogger}))
+      .then(function(response){
+        var logger = e.stored_state.logger
+        var selected_profile = e.stored_state.selected_profile
+        var selected_host = e.stored_state.current_host
+        logger.trace("mapping profile")
+        logger.traceObject(selected_profile)
+        logger.trace("mapping host")
+        logger.traceObject(selected_host)
+        selected_host.setProfile(selected_profile)
+        e.addItem('current_host',selected_host)
+        return response })
+      .then(e.execute(hostPromises.GET_STATES_FOR_HOST,{}))
+      .then(function(r) {
+        return hostsRequests.getHostById(host.getId()).then(function(response) {
+          var data = jsonUtils.normalizeJson(response.data);
+          var connectioncredentials_id =  data.connectioncredentials
+          return settingsRequests.getCredentialSettingsByHostById(connectioncredentials_id);
+        })
       }).then(function(response) {
         var data = jsonUtils.normalizeJson(response.data);
 
@@ -87,7 +101,7 @@ export function loadHostManagement(hostentry) {
 
        haLogger.trace('dispatch LOAD_HOST_MANAGEMENT_FROM_HOSTS')
        haLogger.traceObject(host)
-       dispatch(hostManagementLoaded(host));
+       dispatch(hostManagementLoaded(e.stored_state.current_host));
 
      }).catch(function(error) {
        console.log(error)
@@ -145,9 +159,13 @@ export function updateHost(host) {
       hostsRequests.putHost(host).catch(function(error) {
         errorHandler.addErrorResponse(error)
       }).then(function() {
+        haLogger.trace('putting host to backend')
+        haLogger.traceObject(host)
+
        return settingsRequests.putCredentialSettings(host.getConnectionCredentials());
      }).then(function() {
        if(!errorHandler.handleErrors('UPDATE_EXISTING_HOST_FAILED',dispatch)) {
+         haLogger.trace('Updating host')
        dispatch({
            type: 'UPDATE_EXISTING_HOST',
            selected_host: host,
@@ -160,13 +178,15 @@ export function updateHost(host) {
   }
 }
 
-export function saveNewHost(hostname,ipaddress,description,profiletype) {
+export function saveNewHost(hostname,ipaddress,description,profile) {
   var settingsfactory = new SettingsFactory();
   var hostfactory = new HostFactory();
   //var profiletypefactory = new ProfileTypeFactory();
   var errorHandler = new AggregatedFieldsErrorHandler();
   var settingscategory = null;
-  var host = HostModel.newHost("", hostname, ipaddress, description, profiletype)
+  var host = HostModel.newHost("", hostname, ipaddress, description, profile)
+  haLogger.trace("saveNewHost for")
+  haLogger.traceObject(profile)
   var e = new PromiseExecutor()
   return function (dispatch) {
     // before we save the host we want to initialize the new SettingsCategory
@@ -183,7 +203,7 @@ export function saveNewHost(hostname,ipaddress,description,profiletype) {
     .then(e.execute(hostPromises.CREATE_HOST_WITH_CONNECTION_CREDENTIALS,{logger: haLogger,current_host: host}))
     .then(e.execute(hostPromises.DISPATCH_SAVE_HOST,{logger: haLogger, dispatch: dispatch}))
     .then(e.execute(settingsPromises.GET_OR_CREATE_SETTINGSCATEGORY_FROM_HOST, {logger: haLogger, category: host.getHostname()}))
-    .then(e.execute(settingsPromises.GET_OR_CREATE_SETTING,{ logger: haLogger, category: settings.SETTING_CATEGORY_GLOBAL,key: 'sshport',value: '22' }))
+    .then(e.execute(settingsPromises.GET_OR_CREATE_SETTING,{ logger: haLogger, category_name: settings.SETTING_CATEGORY_GLOBAL,key: 'sshport',value: '22' }))
     .catch(function(error) {
         errorHandler.addErrorResponse(error)
         errorHandler.handleErrors('SAVE_NEW_HOST_FAILED',dispatch)

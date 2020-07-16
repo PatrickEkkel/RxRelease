@@ -5,7 +5,6 @@ from ...configuration.globalsettings import ApiUserSettings
 from ...models import StateType
 from ...models import SettingsCategory
 from ...models import Capability
-from ...models import ProfileType
 from ...models import Profile
 from ...models import Configuration
 from ...models import KVSetting

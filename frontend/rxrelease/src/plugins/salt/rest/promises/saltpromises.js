@@ -1,6 +1,7 @@
 import SaltFormulaModel from '../../models/dbmodels/saltformulamodel'
 import FileModel from '../../../../models/dbmodels/filemodel'
 import  * as saltConfigurationRequests from '../../rest/requests/saltconfigurationrequests'
+import  * as jsonUtils from '../../../../lib/json/utils'
 
 
 export function GET_SALTFORMULA_LOGS(response, properties) {
@@ -9,14 +10,41 @@ export function GET_SALTFORMULA_LOGS(response, properties) {
   var logger = properties.logger
   var saltFormulas = response
   var configuration_loaded = properties.configuration_loaded
-  /*for (var i=0;i<saltFormulas.length;i++) {
-    logger.trace("Retrieve logs for saltformula")
-    logger.traceObject(saltConfigurationRequests.getLastSaltLogByFormulaname(saltFormulas[i]))
-
-
-  } */
-
   dispatch(configuration_loaded(response))
+}
+
+
+export function GET_SALTFORMULA(response, properties) {
+  var logger = properties.logger
+  var saltformula_id = properties.saltformula_id
+  var saltformula_name = properties.saltformula_name
+  var context = properties.context
+  var value = null;
+  var get_request = null;
+
+  if(typeof saltformula_id !== 'undefined') {
+    get_request = saltConfigurationRequests.getSaltFormulaById
+    value = saltformula_id
+  }
+  else if (typeof saltformula_name !== 'undefined') {
+    get_request = saltConfigurationRequests.getSaltFormulabyName
+    value = saltformula_name
+
+  }
+
+  return get_request(value).then(
+    function(response) {
+
+      var data = response.data
+      logger.trace('recieved Saltformula')
+      var saltformula = jsonUtils.normalizeJson(response.data)
+      logger.traceObject(data)
+       // put the saltformula in the value field for the next promise
+       var mapped_saltformula = SaltFormulaModel.mapSaltFormula(saltformula)
+       context.addItem('salt_formula_name',mapped_saltformula.getName())
+       context.addItem('selected_saltformula',mapped_saltformula)
+    }
+  )
 }
 
 export function GET_SALTFORMULAS(response, properties) {

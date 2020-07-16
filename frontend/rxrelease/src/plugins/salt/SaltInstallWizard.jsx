@@ -36,11 +36,10 @@ class SaltInstallWizard extends BasicRxPanel {
     this.getLogger().trace("host_type: " + host_type)
     this.getLogger().trace("host host_management_type: " + hostmanagement_type)
     if(type == 'WIZARD_STATE_LOADED') {
-
       this.getLogger().trace("wizard_state")
       this.getLogger().traceObject(wizard_state)
       if(wizard_state['wizard_status'] == 'COMPLETED' && host_type == 'INITIAL_HOSTS_STATE') {
-        //this.setState({show_wizard: false})
+        this.setState({show_wizard: false})
         this.props.dispatch(hostActionCreators.getHostByProfiletypeId("Salt Master"))
       }
       else if(wizard_state['wizard_status'] == 'COMPLETED' && host_type == 'HOSTS_LOADED' &&  hostmanagement_type == 'INITIAL_HOST_MANAGEMENT_STATE') {
