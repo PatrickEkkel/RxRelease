@@ -52,28 +52,29 @@ class  App  extends  BasicRxPanel {
     var navbarClick = function(id) {
       switch(id) {
         case "Settings":
-          store.dispatch(toplevelActionCreators.loadSettingsPanel())
+          store.dispatch(toplevelActionCreators.loadSettingsPanel());
         break;
         case "Logout":
-          store.dispatch(toplevelActionCreators.logout())
+          store.dispatch(toplevelActionCreators.logout());
       }
     }
     var menuClick = function(id) {
 
       switch (id) {
         case "Profiles":
-            store.dispatch(toplevelActionCreators.loadProfilesPanel())
+            store.dispatch(toplevelActionCreators.loadProfilesPanel());
           break;
         case "Hosts":
-           store.dispatch(toplevelActionCreators.loadHostsPanel())
+           store.dispatch(toplevelActionCreators.loadHostsPanel());
           break;
         case "Logging":
+          store.dispatch(toplevelActionCreators.loadLoggingPanel());
           break;
         case "Configuration":
-          store.dispatch(toplevelActionCreators.loadConfigurationPanel())
+          store.dispatch(toplevelActionCreators.loadConfigurationPanel());
           break;
         default:
-         store.dispatch(toplevelActionCreators.loadModulePanel(id))
+         store.dispatch(toplevelActionCreators.loadModulePanel(id));
       }
     }
 

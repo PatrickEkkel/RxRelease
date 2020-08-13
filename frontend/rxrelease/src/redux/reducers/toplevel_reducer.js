@@ -23,6 +23,10 @@ export default function _toplevel(state = initialConfigurationState,action) {
      return {
        type: action.type
      }
+    case 'LOAD_LOGGING_PANEL':
+     return {
+       type: action.type
+     }
     case 'LOAD_CONFIGURATION_PANEL':
     return {
       type: action.type

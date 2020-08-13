@@ -37,6 +37,13 @@ export function loadModulePanel(panelId) {
     PanelId: panelId
   }
 }
+
+export function loadLoggingPanel() {
+  return {
+    type: 'LOAD_LOGGING_PANEL'
+  }
+}
+
 export function loadConfigurationPanel() {
   return {
     type: 'LOAD_CONFIGURATION_PANEL'

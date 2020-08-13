@@ -6,14 +6,16 @@ import ProfilesPanel from '../panels/ProfilesPanel';
 import HostsPanel from '../panels/HostsPanel';
 import ConfigurationPanel from '../panels/Configuration/ConfigurationPanel'
 import HostsBreadCrumbPanel from '../panels/HostsBreadCrumbPanel';
+import LoggingBreadCrumbPanel from '../panels/LoggingBreadCrumbPanel';
 import SettingsPanel from '../panels/SettingsPanel';
-import LoginPanel from '../panels/LoginPanel'
-import ModulesPanel from '../panels/ModulesPanel'
+import LoggingPanel from '../panels/LoggingPanel';
+import LoginPanel from '../panels/LoginPanel';
+import ModulesPanel from '../panels/ModulesPanel';
 
 import ProfilesBreadCrumbPanel from '../panels/ProfilesBreadCrumbPanel';
-import  * as profileActionCreators from '../redux/profileactioncreators'
-import  * as hostActionCreators from '../redux/hostactioncreators'
-import  * as loginActionCreators from '../redux/loginactioncreators'
+import  * as profileActionCreators from '../redux/profileactioncreators';
+import  * as hostActionCreators from '../redux/hostactioncreators';
+import  * as loginActionCreators from '../redux/loginactioncreators';
 
 
 class  ComponentContainer  extends BasicRxPanel {
@@ -59,6 +61,10 @@ class  ComponentContainer  extends BasicRxPanel {
         break;
       case  'LOAD_SETTINGS_PANEL':
         this.setState({innerComponent: <SettingsPanel/>})
+        this.props.dispatch()
+        break;
+      case 'LOAD_LOGGING_PANEL':
+        this.setState({innerComponent: <LoggingBreadCrumbPanel/> })
         this.props.dispatch()
         break;
       case 'LOAD_CONFIGURATION_PANEL':
