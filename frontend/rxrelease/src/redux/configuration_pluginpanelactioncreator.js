@@ -2,6 +2,11 @@ import Axios from 'axios';
 import  * as jsonUtils from '../lib/json/utils'
 
 
+export function initalState() {
+  return {
+    type: 'INITIAL_CONFIGURATION_PLUGINPANEL_STATE'
+  }
+}
 export function pluginTabsLoaded() {
   return {
     type: 'PLUGIN_TABS_LOADED'

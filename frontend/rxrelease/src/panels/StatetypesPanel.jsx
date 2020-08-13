@@ -63,6 +63,9 @@ class StatetypesPanel extends BasicRxPanel {
   saveAndClose() {
     this.props.dispatch(statetypeActionCreators.saveNewStateType(this.state.name,this.state.jobtype, this.state.module,this.state.selected_configuration.getCapabilityId()))
   }
+  close() {
+    this.props.dispatch(statetypeActionCreators.initialStatetypeState())
+  }
 
   createStateType() {
     this.props.dispatch(statetypeActionCreators.openNewStateType());

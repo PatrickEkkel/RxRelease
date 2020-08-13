@@ -47,6 +47,8 @@ class ConfigurationPanel  extends BasicRxPanel {
   componentWillMount() {
 
     var {type, loaded_plugins} = this.props;
+    this.getLogger().trace('loaded plugins')
+    this.getLogger().traceObject(loaded_plugins)
     switch (type) {
       case 'INITIAL_CONFIGURATION_PLUGINPANEL_STATE':
           this.props.dispatch(pluginsactionCreators.loadEnabledPlugins())
@@ -55,6 +57,9 @@ class ConfigurationPanel  extends BasicRxPanel {
         this.setState({plugins: loaded_plugins})
         this.props.dispatch(configurationpluginactionCreators.pluginInfoObtained(loaded_plugins))
 
+        break;
+      case 'PLUGIN_TABS_LOADED':
+        this.props.dispatch(pluginsactionCreators.loadEnabledPlugins())
         break;
       default:
         break;
@@ -65,6 +70,10 @@ class ConfigurationPanel  extends BasicRxPanel {
       switch (nextProps.type) {
         case 'INITIAL_CONFIGURATION_PLUGINPANEL_STATE':
           this.props.dispatch(pluginsactionCreators.loadEnabledPlugins())
+          break;
+        case 'PLUGINS_LOADED':
+          this.setState({plugins: nextProps.plugins})
+          this.props.dispatch(configurationpluginactionCreators.pluginInfoObtained(loaded_plugins))
           break;
         case 'PLUGIN_INFO_OBTAINED':
           this.props.dispatch(configurationpluginactionCreators.pluginTabsLoaded(nextProps.plugins))
