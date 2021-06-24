@@ -10,6 +10,7 @@ class StateTypeHandler(models.Model):
     handlerCommand = models.CharField(max_length=255)
 
 
+
 class InstallHost(models.Model):
     managed = False
     host_id = models.IntegerField(null=True, default=None)

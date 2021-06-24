@@ -2,13 +2,16 @@ import logging, sys, os.path
 from rest_framework import generics
 from ..serializers import StateSerializer
 from ..serializers import InstallHostSerializer
+from ..serializers import HostSerializer
 from ..serializers import HostStateHandlerSerializer
 from ..models import State
+from ..models import StateType
 from ..models import Capability
 from ..models import Configuration
 from ..models import Host
 from ..viewmodels import StateTypeHandler
 from ..core.jobs.api.job import Job
+from ..core.services.stateservice import StateService
 from ..core.jobs.api.jobfactory import JobFactory
 from ..core.jobs.api import jobActionFactory
 from ..core.jobs.statetypes.handlerrequest import HandlerRequest
@@ -44,15 +47,49 @@ class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = StateSerializer
 
 
+
+class RefreshHostView(generics.UpdateAPIView):
+    serializer_class = InstallHostSerializer
+
+    def _find_statetype(self, host_id,statetype):
+        host_states = State.objects.filter(host_id=host_id).all()
+        for host_state in host_states:
+            if host_state.statetype_id == statetype.id:
+                return host_state
+
+        return None
+
+
+
+
+    def get_queryset(self):
+        logger.info("refreshing host")
+        host_id = self.kwargs['pk']
+        host = Host.objects.get(id=host_id)
+        # get the available statetypes
+        available_statetypes =  host.profile.default_configuration.capability.statetypes.all()
+        new_statetypes = []
+        for available_statetype in available_statetypes:
+            if not self._find_statetype(host_id, available_statetype):
+                #State.objects.create(name=available_statetype.name, statetype=available_statetype)
+                state_service = StateService()
+                state_service.create_state(available_statetype, host)
+                print('create a new state with the name' + available_statetype.name)
+
+
+        return Host.objects.filter(id=host_id)
+
 # Everything is configured, now only thing that leaves us is to test this piece of entangled code
-
-
 class InstallHostView(generics.UpdateAPIView):
     serializer_class = InstallHostSerializer
 
     def get_queryset(self):
         logger.info("installing host")
         host_id = self.kwargs['pk']
+        # Get all the current statetypes associated with the Host
+        # Get all the statetypes that are on the profile.
+        # check which are missing and add them.
+
         # Get TheHost so we can the profiletype
         selected_host = Host.objects.filter(id=host_id).get()
         # get all capabilities

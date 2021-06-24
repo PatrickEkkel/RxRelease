@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "grunt": "node_modules/.bin/grunt",
+    "serve": "webpack serve"
+  },
   "name": "rxrelease",
   "version": "0.0.1",
   "private": true,
@@ -7,12 +11,13 @@
     "requirejs": "latest"
   },
   "devDependencies": {
-    "mocha": "latest",
     "chai": "latest",
-    "grunt": "0.3",
-    "grunt-exec": "latest"
-  },
-  "scripts": {
-    "grunt": "node_modules/.bin/grunt"
+    "grunt": "^1.4.1",
+    "grunt-exec": "latest",
+    "mocha": "latest",
+    "react-hot-loader": "^4.13.0",
+    "webpack": "^5.39.1",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "latest"
   }
 }

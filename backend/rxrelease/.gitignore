@@ -1,0 +1,6 @@
+.idea
+rxrelease/bin
+rxrelease/lib
+rxrelease/lib64
+rxrelease/pyvenv.cfg
+

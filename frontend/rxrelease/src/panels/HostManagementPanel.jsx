@@ -10,6 +10,7 @@ import StateFactory from '../factories/stateFactory'
 import StandardListConverters from '../converters/StandardListConverters'
 import InfoBox from '../components/InfoBox'
 import { connect } from 'react-redux'
+import {updateHost, updateHostState} from "../redux/hostactioncreators";
 
 
 class  HostManagementPanel  extends BasicRxPanel {
@@ -76,6 +77,13 @@ class  HostManagementPanel  extends BasicRxPanel {
   getHost() {
     return this.state.selected_host
   }
+
+  updateHost() {
+    this.getLogger().trace("Updating the host")
+    this.getLogger().traceObject(this.getHost())
+    this.props.dispatch(hostActionCreators.updateHostState(this.getHost()))
+  }
+
   installHost() {
     // TODO: hier een methode inbouwen die de saved_host ophaalt uit een methode (via props of state)
     this.getLogger().trace("installing the host")
@@ -194,8 +202,14 @@ class  HostManagementPanel  extends BasicRxPanel {
           <LabeledTable onLabelLoad={handleLabelLoad} labelText="Status" headers = {headers} data={user_states} onRowClick={(entry) => currentContext.onRowClick(entry)}/>
         </div>
       </div>
-      <Button title="Install Host"  onClick={() => this.installHost()}/>
-
+      <div className="btn-toolbar">
+        <div className="btn-group mr-2">
+            <Button title="Install Host"  onClick={() => this.installHost()}/>
+        </div>
+        <div className="btn-group mr-2">
+            <Button title="Update Configuration" onClick={() => this.updateHost()}/>
+        </div>
+      </div>
       </div>
   }
 }

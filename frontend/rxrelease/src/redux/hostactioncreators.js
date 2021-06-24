@@ -41,6 +41,15 @@ export function installHost(host) {
     })
   }
 }
+
+export function updateHostState(host) {
+    return function (dispatch) {
+        hostsRequests.putRefreshHostStates(host).then(function(response ) {
+            // TODO: implement callback
+        })
+    }
+}
+
 export function getHostByProfiletypeId(profiletype_id) {
 
 return function (dispatch) {
